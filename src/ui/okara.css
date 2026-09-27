@@ -576,21 +576,25 @@
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
     display:flex; flex-direction:column; gap:var(--space-xs);
   }
+  /* Dropdown-list (182:6851) and dropdown-item (183:6858), Sept 27: group label Heading/Medium (16 Medium, 16, 0) in
+     text/primary; items 36 high, padding 8, radius/sm, gap 8, Body/Large/Medium (16 Medium, 20, -2%) in text/secondary
+     with a 12px icon in surface/tertiary. Hover (and the keyboard's active row): surface/accent-light, text/primary,
+     icon action/primary. Group: label and items 8 apart, items 4 apart; Simple: items touch. */
   .ds-dd-block{ display:flex; flex-direction:column; gap:var(--space-xs); }
-  .ds-dd-group{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--text-primary); }   /* Dropdown-list group label, Sept 22 pull: 14px SemiBold /15.2 -1% */
+  .ds-dd-group{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
   .ds-dd-items{ display:flex; flex-direction:column; gap:var(--space-tn); }
   .ds-dd-menu:not(.is-group) .ds-dd-items{ gap:0; }
   .ds-dd-item{
-    padding:var(--space-tn) var(--space-xs); border-radius:var(--radius-sm); cursor:pointer;
-    font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    padding:var(--space-xs); border-radius:var(--radius-sm); cursor:pointer; box-sizing:border-box;
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    transition:background-color .12s ease, color .12s ease;
   }
-  /* dropdown-item (DS 183:6858) as a menu action: optional 12px left icon in action/primary, 4px gap. */
-  .ds-dd-item.has-icon{ display:flex; align-items:center; gap:var(--space-tn); }
-  .ds-dd-item.has-icon svg{ flex-shrink:0; color:var(--action-primary); }
-  .ds-dd-item:hover{ background:var(--surface-accent-light); }
+  .ds-dd-item.has-icon{ display:flex; align-items:center; gap:var(--space-xs); }
+  .ds-dd-item.has-icon svg{ flex-shrink:0; color:var(--surface-tertiary); transition:color .12s ease; }
+  .ds-dd-item:hover, .ds-dd-item.is-active{ background:var(--surface-accent-light); color:var(--text-primary); }
+  .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:focus-visible svg{ color:var(--action-primary); }
   button.ds-dd-item{ border:none; background:transparent; font-family:inherit; text-align:left; width:100%; }
-  button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); outline:none; }
-  .ds-dd-item.is-active{ background:var(--surface-accent-light); }
+  button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); outline:none; }
 
   /* ---- Add-year pill: overlays the year-tabs row itself (not a row pushed
      below it) — matches the "Nav tabs - Add year" component (DS node 79:1242,
@@ -1190,7 +1194,8 @@
   .ds-avatar{
     width:40px; height:40px; border-radius:var(--radius-full); background:var(--surface-accent); color:var(--text-white); flex-shrink:0;
     display:inline-flex; align-items:center; justify-content:center;
-    font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+    /* avatar (221:1044), Sept 27: the initial in Body/Large/Medium (16 Medium, 20, -2%). */
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
 
   /* User nav (230:618): actions (8px top padding, bell) 16px left of the user. */
   .ds-user-nav{ display:flex; align-items:flex-start; gap:var(--space-md); }
