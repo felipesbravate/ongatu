@@ -600,6 +600,8 @@ async def main():
             await ann.click('#user-menu-btn'); await ann.click('#menu-account'); await ann.wait_for_url('**/account'); await ann.wait_for_selector('#profile')
             check('Account page: three cards and the Side menu (Edit profile, Security, Data and privacy)', await ann.locator('.acct-card').count() == 3
                   and await ann.eval_on_selector_all('.acct-menu .ds-menu-item', 'els => els.map(e => e.textContent)') == ['Edit profile', 'Security', 'Data and privacy'])
+            ab = await ann.evaluate("() => [...document.querySelectorAll('.acct-card')].map(e => getComputedStyle(e).borderTopStyle)")
+            check('Account page cards have no border', ab == ['none'] * 3, ab)
             await ann.click('#menu-data'); await ann.wait_for_timeout(900)
             sm = await ann.evaluate('''() => [...document.querySelectorAll('.acct-menu .ds-menu-item')].map(e => [e.getBoundingClientRect().height, e.classList.contains('is-selected')])''')
             check('Side menu: every item 40 high, clicking one selects it (no jump)', all(h == 40 for h, _ in sm) and [x for _, x in sm] == [False, False, True], sm)

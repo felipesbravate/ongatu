@@ -1378,7 +1378,7 @@
   .acct-cards{ width:800px; min-width:0; display:flex; flex-direction:column; gap:var(--space-lg); }
   .acct-card{
     display:flex; flex-direction:column; gap:var(--space-xl); padding:var(--space-lg) var(--space-xl) var(--space-xl);
-    background:var(--surface-primary); border:1px solid var(--border-default); border-radius:var(--radius-md); scroll-margin-top:88px;
+    background:var(--surface-primary); border:none; border-radius:var(--radius-md); scroll-margin-top:88px; /* no border, like the dashboard cards (Sept 27) */
   }
   .acct-card-head{ display:flex; flex-direction:column; gap:var(--space-tn); }
   .acct-card-head h2{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
