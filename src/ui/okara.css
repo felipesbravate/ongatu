@@ -1262,15 +1262,33 @@
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
     max-height:min(480px, calc(100vh - 120px)); overflow-y:auto;
   }
-  /* notification-item (228:469): padding 16, gap 4, radius/sm; Hover fills surface/accent-light. */
+  /* notification-item (228:469, Sept 27): padding 16, gap 4, radius/sm; text Body/Medium/Medium, 16 from the action.
+     Hover fills surface/accent-light. */
   .ds-notif-item{ display:flex; flex-direction:column; gap:var(--space-tn); padding:var(--space-md); border-radius:var(--radius-sm); transition:background-color .12s ease; }
   .ds-notif-item:hover{ background:var(--surface-accent-light); }
   .ds-notif-when{ display:flex; align-items:center; gap:var(--space-tn); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-accent); }
   .ds-notif-dot{ position:relative; width:10px; height:10px; flex-shrink:0; }
   .ds-notif-dot::before{ content:''; position:absolute; left:3.33px; top:3.33px; width:3.33px; height:3.33px; border-radius:50%; background:var(--surface-accent); }
-  .ds-notif-content{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-xs); }
-  .ds-notif-text{ flex:1 1 auto; min-width:0; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-primary); overflow-wrap:anywhere; }
+  .ds-notif-content{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-md); }
+  .ds-notif-text{ flex:1 1 auto; min-width:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-primary); overflow-wrap:anywhere; }
   .ds-notif-content .btn-pill{ flex-shrink:0; }
+  /* Notification State=Mobile (407:905): a full page over the app, surface/primary. Bar 64 high, padding 24/8, gap 8;
+     then 16 down, the items 12 apart with 16px sides and a border/secondary divider between them. */
+  .ds-notif-page{
+    position:fixed; inset:0; z-index:90; overflow-y:auto; overscroll-behavior:contain;
+    display:flex; flex-direction:column; gap:var(--space-md); background:var(--surface-primary);
+    padding-bottom:calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+  }
+  .ds-notif-page-nav{
+    position:sticky; top:0; z-index:1; flex-shrink:0; box-sizing:border-box; height:64px;
+    display:flex; align-items:center; gap:var(--space-xs); padding:var(--space-lg) var(--space-xs); background:var(--surface-primary);
+  }
+  .ds-notif-page-title{
+    flex:1 1 auto; min-width:0; margin:0; color:var(--text-primary);
+    font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls);
+  }
+  .ds-notif-page-list{ display:flex; flex-direction:column; gap:var(--space-sm); padding:0 var(--space-md); }
+  .ds-notif-page-list .ds-divider{ width:100%; }
 
   /* progress-bar (238:676): 8px surface/secondary track; the fill is a left-to-right gradient #76c8a4 → data/green (unbound in Figma). */
   .ds-progress{ height:8px; border-radius:var(--radius-full); background:var(--surface-secondary); overflow:hidden; }
@@ -1479,6 +1497,13 @@
   /* Errors and "code sent" are not in the design: a Body/Small line under the field, status/fail for errors. */
   .login-msg{ margin:0; color:var(--critical); font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
   .login-msg.is-ok{ color:var(--text-secondary); }
+  /* Phones (Ongatu 369:11424): 40 from the top, 16px sides, logo block and card 24 apart; the card has no border and
+     40/16 padding. */
+  @media (max-width:640px){
+    .login-page{ padding:var(--space-xl) var(--space-md); }
+    .login-content{ gap:var(--space-lg); }
+    .login-card{ border:none; padding:var(--space-xl) var(--space-md); }
+  }
   #forgot-form, #resend-form{ display:none; }
 
   /* ---- mobile-nav-item (375:961) and mobile-bottom-nav (378:673) ---- */

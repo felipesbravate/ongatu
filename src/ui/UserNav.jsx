@@ -1,21 +1,24 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { Children, Fragment, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Button, RoundButton } from './Button.jsx';
 import { Icon } from './Icon.jsx';
-import { bell, chevronDown } from './icons.js';
+import { arrowStraightLeft, bell, chevronDown } from './icons.js';
+import { useMobile } from './useMobile.js';
 
 const cx = (...c) => c.filter(Boolean).join(' ');
 
-// Closes a popover on a click outside `ref` or on Escape.
-export function useDismiss(open, ref, onClose) {
+// Closes a popover on a click outside `ref` (and `alsoRef`, e.g. a part rendered elsewhere) or on Escape.
+export function useDismiss(open, ref, onClose, alsoRef) {
   useEffect(() => {
     if (!open) return;
-    const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    const inside = (r, t) => r && r.current && r.current.contains(t);
+    const onDoc = (e) => { if (ref.current && !inside(ref, e.target) && !inside(alsoRef, e.target)) onClose(); };
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     const t = setTimeout(() => document.addEventListener('click', onDoc), 0);
     document.addEventListener('keydown', onKey);
     return () => { clearTimeout(t); document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); };
-  }, [open, ref, onClose]);
+  }, [open, ref, onClose, alsoRef]);
 }
 
 // avatar (DS 221:1044): 40px circle. Style=Text: surface/accent with the initial; Style=Image: the picture, cropped
@@ -96,15 +99,36 @@ export function NotificationItem({ date, time, children, action }) {
 
 // Notification (DS 228:455): bell (Round button, Small, Tertiary) with a red-orange dot when something is new.
 // Active: the bell turns Active and the list opens below it, right-aligned.
+// State=Mobile (407:905, Ongatu 381:6397): on a phone the bell opens a full page over the app: a 64px bar (back arrow =
+// Round button Small Tertiary, "Notifications" in Heading/Large) and the items 12 apart with a divider between them.
 export function Notification({ open, onToggle, onClose, unread, children }) {
   const ref = useRef(null);
-  useDismiss(open, ref, onClose);
+  const pageRef = useRef(null);
+  const mobile = useMobile();
+  useDismiss(open, ref, onClose, pageRef);
+  useEffect(() => {
+    if (!(open && mobile)) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [open, mobile]);
+  const items = Children.toArray(children).filter(Boolean);
   return (
     <div className={cx('ds-notif', open && 'is-open')} ref={ref}>
-      <RoundButton icon={bell} size="small" active={open} id="notif-btn" label={unread ? 'Notifications (new)' : 'Notifications'}
+      <RoundButton icon={bell} size="small" active={open && !mobile} id="notif-btn" label={unread ? 'Notifications (new)' : 'Notifications'}
         aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'} onClick={onToggle} />
       {unread && <span className="ds-notif-badge" aria-hidden="true" />}
-      {open && <div className="ds-notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">{children}</div>}
+      {open && !mobile && <div className="ds-notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">{children}</div>}
+      {open && mobile && createPortal(
+        <div className="ds-notif-page" id="notif-panel" role="dialog" aria-modal="true" aria-labelledby="notif-page-title" ref={pageRef}>
+          <div className="ds-notif-page-nav">
+            <RoundButton icon={arrowStraightLeft} size="small" id="notif-back" label="Back" onClick={onClose} />
+            <h2 className="ds-notif-page-title" id="notif-page-title">Notifications</h2>
+          </div>
+          <div className="ds-notif-page-list">
+            {items.map((it, i) => <Fragment key={it.key || i}>{i > 0 && <hr className="ds-divider" />}{it}</Fragment>)}
+          </div>
+        </div>, document.body)}
     </div>
   );
 }

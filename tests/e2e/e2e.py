@@ -79,6 +79,12 @@ async def main():
             check('sign in (335:7580): vertical logo 160 x 127, 80 from the top, tagline, 480 card with 40 padding, 40 below the header',
                   lg['title'] == 'Sign in or create an account' and lg['tagline'] == 'Take charge of your money' and lg['logo'] == [160, 127, 'vertical'] and lg['top'] == 80
                   and lg['card'] == [480, '40px', '16px', 'rgb(203, 202, 197)'] and abs(lg['gap'] - 40) < 1 and lg['label'] == 'ENTER YOUR EMAIL', lg)
+            lp = await b.new_page(viewport={'width': 390, 'height': 844}); await lp.goto(BASE + '/login'); await lp.wait_for_selector('#email-submit')
+            lm = await lp.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), card = document.querySelector('.login-card'), logo = document.querySelector('.login-header .ds-logo');
+                return { top: Math.round(r(logo).top), card: [Math.round(r(card).left), Math.round(r(card).width), cs(card).padding, cs(card).borderTopWidth], gap: Math.round(r(card).top - r(document.querySelector('.login-tagline')).bottom), scrollW: document.documentElement.scrollWidth }; }""")
+            check('sign in on a phone (369:11424): logo 40 from the top, card 358 wide at 16, padding 40/16, no border, 24 below the tagline',
+                  lm == {'top': 40, 'card': [16, 358, '40px 16px', '0px'], 'gap': 24, 'scrollW': 390}, lm)
+            await lp.close()
             await sp.fill('#login-email', 'newbie@example.com'); await sp.click('#email-submit'); await sp.wait_for_selector('#signup-submit')
             check('a new address gets "Create account": name, the address filled in, no "we sent" line yet (342:7702)',
                   await sp.inner_text('.login-title') == 'Create account' and await sp.input_value('#signup-email') == 'newbie@example.com' and await sp.locator('.login-sub').count() == 0)
@@ -213,6 +219,15 @@ async def main():
             await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
             st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
             check('phone: header and year/month nav stay at the top when scrolled (369:12607)', st2 == [0, 64], st2)
+            await mp.click('#notif-btn'); await mp.wait_for_selector('.ds-notif-page')
+            np_ = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e);
+                const pg = q('.ds-notif-page'), nav = q('.ds-notif-page-nav'), t = q('.ds-notif-page-title'), list = q('.ds-notif-page-list'), it = list.querySelector('.ds-notif-item');
+                return { page: [Math.round(r(pg).width), Math.round(r(pg).height), cs(pg).backgroundColor], nav: [r(nav).height, cs(nav).paddingLeft, Math.round(r(q('#notif-back')).width)],
+                         title: [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight], list: [cs(list).rowGap, cs(list).paddingLeft, Math.round(r(list).top - r(nav).bottom)], itemX: it ? Math.round(r(it).left) : null }; }""")
+            check('phone: the bell opens the Notifications page (407:905): full screen, 64 bar, back 32, Heading/Large 20/500/20, items 12 apart at 16',
+                  np_['page'][:2] == [390, 844] and np_['page'][2] == 'rgb(255, 255, 255)' and np_['nav'] == [64, '8px', 32] and np_['title'] == ['20px', '500', '20px'] and np_['list'] == ['12px', '16px', 16] and np_['itemX'] == 16, np_)
+            await mp.click('#notif-back'); await mp.wait_for_timeout(200)
+            check('phone: the back arrow closes the Notifications page', await mp.locator('.ds-notif-page').count() == 0)
             await mp.click('#mnav-add'); await mp.wait_for_timeout(500)
             check('phone: the bottom nav + opens Add an entry', await mp.locator('#add-panel.open').count() == 1)
             await mp.close()
@@ -501,6 +516,8 @@ async def main():
             await pg.click('#notif-btn'); await pg.wait_for_selector('#notif-panel')
             item = pg.locator('#notif-panel .ds-notif-item', has_text='ann@example.com is waiting for your approval.')
             check('admin: the notification names the account waiting for approval', await item.count() == 1, await pg.inner_text('#notif-panel'))
+            ni = await item.evaluate("e => { const cs = x => getComputedStyle(x), t = e.querySelector('.ds-notif-text'), c = e.querySelector('.ds-notif-content'); return [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight, cs(c).columnGap]; }")
+            check('notification-item (228:469): text 14/500/18, 16 from the action', ni == ['14px', '500', '18px', '16px'], ni)
             await item.get_by_text('Approve', exact=True).click(); await pg.wait_for_timeout(400)
             check('approving from the notification clears it', await pg.locator('#user-nav .ds-notif-badge').count() == 0)
             await pg.keyboard.press('Escape')
