@@ -612,6 +612,11 @@ async def main():
             await ann.fill('#first-name', 'Annabel'); await ann.fill('#last-name', 'Lee'); await ann.click('#profile-save')
             await ann.wait_for_selector('#ds-toast.visible', timeout=4000)
             await ann.wait_for_timeout(300); await ann.click('#user-menu-btn'); await ann.wait_for_selector('.ds-user-name')
+            await ann.wait_for_timeout(250)
+            um = await ann.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect();
+                const c = document.getElementById('user-menu'), n = c.querySelector('.ds-user-name'), m = c.querySelector('.ds-menu-items');
+                return { w: r(c).width, name: [cs(n).fontSize, cs(n).fontWeight, cs(n).lineHeight], menuW: r(m).width, menuR: Math.round(r(c).right - r(m).right), closed: Math.round(r(document.querySelector('.ds-user-trigger')).width) }; }""")
+            check('user (221:1048): card 240 wide, name 16/500/20, menu 202 wide flush right, closed pill 76', um['w'] == 240 and um['name'] == ['16px', '500', '20px'] and um['menuW'] == 202 and um['menuR'] == 5 and um['closed'] == 76, um)
             check('the first name reaches the user menu', (await ann.inner_text('.ds-user-name')).strip() == 'Annabel', await ann.inner_text('.ds-user-name'))
             await ann.click('#menu-account'); await ann.wait_for_timeout(400)
             check('choosing an item keeps the user menu open (Account on the Account page does nothing)', await ann.locator('#user-menu').count() == 1 and ann.url.endswith('/account'))
