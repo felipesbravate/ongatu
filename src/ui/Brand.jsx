@@ -1,6 +1,7 @@
 'use client';
 import { Icon } from './Icon.jsx';
 import { checkmark } from './icons.js';
+import { useMobile } from './useMobile.js';
 
 const cx = (...c) => c.filter(Boolean).join(' ');
 
@@ -62,10 +63,12 @@ export function Checkbox({ checked, onChange, id, children }) {
 
 // App header (DS 285:600): full width, 64 high, padding 8/40, surface/body; the Symbol logo (48) on the left and the
 // User nav on the right. On the page it sits 40px from the top and sticks to the top edge when the page scrolls.
+// On phones (Ongatu 342:7994) the bar is 64 high with 16 padding and a 32px logo; the user menu gives way to the bottom nav.
 export function AppHeader({ children, homeHref = '/' }) {
+  const mobile = useMobile();
   return (
     <header className="ds-app-header" id="app-header">
-      <a className="ds-app-header-logo" href={homeHref} aria-label="Ongatu, dashboard"><Logo variant="symbol" height={48} /></a>
+      <a className="ds-app-header-logo" href={homeHref} aria-label="Ongatu, dashboard"><Logo variant="symbol" height={mobile ? 32 : 48} /></a>
       {children}
     </header>
   );

@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
-import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, RoundButton, SideMenu, Toggle, useToast } from '../ui/index.js';
+import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, MobileBottomNav, RoundButton, SideMenu, Toggle, useToast } from '../ui/index.js';
 import { arrowStraightLeft, lock, trash, upload } from '../ui/icons.js';
 import { api, deleteMe, deleteMyData, getMe, getSignIn, setSignIn, signOut } from './api.js';
 import { AccountNav } from './AccountBar.jsx';
@@ -72,6 +72,7 @@ export default function AccountApp() {
           </div>
         </div>
       </div>
+      <MobileBottomNav selection="account" image={profile.image} onAdd={() => { location.href = '/?add=1'; }} />
       {toastEl}
       {confirmModal}
     </>

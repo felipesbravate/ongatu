@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, Button, MenuList, RoundButton, useDismiss, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR } from './model.js';
 
@@ -19,6 +19,12 @@ export function HeroLeft({ model, y, monthIdx }) {
     { label: 'Savings/Investments', value: c.invest, color: 'var(--kpi-invest)',
       detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate - ${fmtMoneyShort(c.invest, cur)} saved of ${fmtMoneyShort(c.income, cur)} income` : 'No income recorded' },
   ];
+  // Phones (Ongatu 342:7993): "Savings & Investments", and the rate as "↑ 8% rate of monthly income".
+  const mobile = useMobile();
+  if (mobile) {
+    tiles[2] = { ...tiles[2], label: 'Savings & Investments', indicator: c.income > 0 ? arrowStraightUp : null,
+      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly income` : 'No income recorded' };
+  }
   // Expense allocation
   const total = Math.max(1, c.expenseTotal);
   // At a glance
@@ -37,7 +43,7 @@ export function HeroLeft({ model, y, monthIdx }) {
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
-        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} />)}
+        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} indicator={t.indicator} />)}
       </div>
       <div className="card alloc-card">
         <h2>Expense allocation</h2>
@@ -49,7 +55,7 @@ export function HeroLeft({ model, y, monthIdx }) {
               <div className="alloc-col" key={g}>
                 <div className="alloc-pct">{pct.toFixed(0)}%</div>
                 <div className="alloc-bar" style={{ height: `${Math.max(6, pct * 0.8).toFixed(1)}px`, background: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g] }} />
-                <div className="alloc-name">{g}</div>
+                <div className="alloc-name">{mobile ? SHORT_GROUP[g] : g}</div>
               </div>
             );
           })}
@@ -74,6 +80,9 @@ export function HeroLeft({ model, y, monthIdx }) {
 
 // ---------------- Tracker card ----------------
 const TOP_TABS = [{ value: 'Income', label: 'Income' }, { value: 'Investments', label: 'Savings/Investments' }, { value: 'Expenses', label: 'Expenses' }];
+// Phones (342:7993) shorten the tab and the allocation names.
+const TOP_TABS_MOBILE = TOP_TABS.map((t) => (t.value === 'Investments' ? { ...t, label: 'Savings' } : t));
+const SHORT_GROUP = { Fixed: 'Fixed', Variable: 'Var', Extra: 'Extra', Additional: 'Add' };
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');
 
@@ -82,6 +91,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   const bd = model.buildBreakdown(y, monthIdx, breakdownType);
   const eligible = model.isFutureMonth(y, monthIdx);
   const topTab = topTabFor(breakdownType);
+  const mobile = useMobile();
   const color = GROUP_COLOR[breakdownType];
   // Always the user's order (the year's categories), never re-sorted by amount: bars and the list below match.
   const rows = bd.rows;
@@ -114,7 +124,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       <div className="bd-content">
         <div className="bd-controllers">
           <div className="bd-tabs-stack">
-            <Segments id="breakdown-top-seg" options={TOP_TABS} value={topTab} onChange={(v) => onTab(v === 'Expenses' ? breakdownGroup : v, null)} />
+            <Segments id="breakdown-top-seg" options={mobile ? TOP_TABS_MOBILE : TOP_TABS} value={topTab} onChange={(v) => onTab(v === 'Expenses' ? breakdownGroup : v, null)} />
             <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={GROUP_TABS} value={breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>

@@ -308,7 +308,6 @@
   header.top{ position:relative; margin-bottom:var(--space-lg); }
   .app-title{ font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--ink); }
   .app-sub{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); margin-top:var(--space-xs); }
-  @media (max-width:600px){ .app-title{ font-size:24px; line-height:32px; } }  /* no mobile title style in Figma yet */
 
   /* ---- Buttons — matches DS "Button" component (Components page, node 4:43) exactly:
      Size=Medium/Small/Tiny × Style=Primary/Secondary/Tertiary, pulled directly from the
@@ -688,7 +687,9 @@
      columns per Figma's redesigned mini-grid -- Income/Expenses stay
      side-by-side above it. */
   .mini-grid .mini-kpi:nth-child(3){ grid-column:1 / -1; }
-  .mini-kpi{ background:var(--surface); border:none; border-radius:var(--radius-md); padding:var(--space-md); }
+  /* KPI card (28:68) and Expense card (130:3844), Sept 27: label, value and details stacked 8 apart. */
+  .mini-kpi{ background:var(--surface); border:none; border-radius:var(--radius-md); padding:var(--space-md); display:flex; flex-direction:column; gap:var(--space-xs); }
+  .mini-kpi .value, .mini-kpi .detail{ margin-top:0 !important; }
   .mini-kpi .label{ display:flex; align-items:center; gap:var(--space-xs); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mini-kpi .dot{ width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
   /* KPI card (DS 28:68): label 12px SemiBold, line height auto, tracking 0; the details line is mono 12 Medium -4% in text/secondary, 8px under the value. */
@@ -734,6 +735,7 @@
     background:var(--surface); border:none; border-radius:var(--radius-md);
     padding:var(--space-md); display:flex; flex-direction:column; gap:var(--space-xs);
   }
+  .ticker-item .ti-val, .ticker-item .ti-delta{ margin-top:0 !important; }
   .ticker-item .ti-top{ display:flex; align-items:center; gap:8px; }
   .ticker-item .ti-dot{ width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-white); }
   .ticker-item .ti-name{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); }
@@ -1473,3 +1475,70 @@
   .login-msg.is-ok{ color:var(--text-secondary); }
   #forgot-form, #resend-form{ display:none; }
 
+  /* ---- mobile-nav-item (375:961) and mobile-bottom-nav (378:673) ---- */
+  .ds-mnav{ display:none; }
+  .ds-mnav-item{
+    display:inline-flex; align-items:center; justify-content:center; gap:var(--space-tn); width:104px; height:56px; box-sizing:border-box;
+    padding:var(--space-xs) var(--space-lg); border-radius:var(--radius-lg); border:none; background:transparent; color:var(--text-primary);
+    text-decoration:none; cursor:pointer; font-family:inherit; flex-shrink:0; transition:background-color .12s ease;
+  }
+  .ds-mnav-item.is-selected{ padding:var(--space-xs) var(--space-md); background:var(--surface-accent-light); color:var(--text-accent); }
+  .ds-mnav-item svg{ display:block; flex-shrink:0; }
+  .ds-mnav-item:focus-visible, .ds-mnav-action .round-btn:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
+  .ds-mnav-img{ width:24px; height:24px; border-radius:var(--radius-full); object-fit:cover; display:block; flex-shrink:0; }
+  .ds-mnav-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:-0.02em; white-space:nowrap; }
+  .ds-mnav-action{ position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); display:flex; padding:var(--space-xs); }
+
+  /* ---- Phones: Ongatu 342:7993 (top of the page) and 369:12607 (scrolled). 16px sides; the header (logo 32 + bell)
+     and the year/month nav stay at the top while the page scrolls; cards 24 apart in this order: Balance, KPIs, Tracker,
+     Expense allocation, the chart, At a glance; the bottom nav replaces the user menu and the Add button. ---- */
+  @media (max-width:640px){
+    body{ padding:0; }
+    .app-top-gap{ display:none; }
+    .ds-app-header{ margin:0; padding:var(--space-md); height:64px; align-items:center; }
+    .ds-app-header .ds-user{ display:none; }
+    .ds-app-header .ds-user-nav-actions{ padding-top:0; }
+    .wrap{ padding:var(--space-md) var(--space-md) 144px; }
+    header.top{ margin-bottom:0; }
+    .app-title{ font-size:40px; line-height:48px; }
+    .app-sub{ margin-top:var(--space-xs); }
+    /* Year and month nav: one scrolling row each, pinned under the header; the right edge fades out. */
+    .actions-wrap{ position:sticky; top:64px; z-index:20; background:var(--surface-body); margin:0 calc(-1 * var(--space-md)); padding:var(--space-md); }
+    .actions-wrap::after{ content:''; position:absolute; top:0; right:0; bottom:0; width:55px; pointer-events:none; background:linear-gradient(90deg, transparent, var(--surface-body)); }
+    .actions-row{ flex-wrap:nowrap; }
+    .top-nav{ min-width:0; width:100%; }
+    .months{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin-right:calc(-1 * var(--space-md)); padding-right:var(--space-md); }
+    .months::-webkit-scrollbar, .year-tabs::-webkit-scrollbar{ display:none; }
+    .year-tabs{ scrollbar-width:none; }
+    .row1{ display:flex; flex-direction:column; gap:var(--space-lg); margin-top:0; }
+    .hero-left, .hero-right{ display:contents; }
+    .balance-card{ order:1; padding:var(--space-lg); }
+    .mini-grid{ order:2; gap:12px var(--space-md); }
+    .breakdown-card{ order:3; }
+    .alloc-card{ order:4; }
+    .hero-chart{ order:5; }
+    .glance-card{ order:6; }
+    .ticker-strip, .wrap > .yoy-heading, .wrap > .yoy-sub, .wrap > .yoy{ display:none; }
+    .card:not(.balance-card){ padding:var(--space-md); }
+    .balance-card .label{ font-size:14px; line-height:14px; color:var(--text-secondary); }
+    .balance-card .value{ font-size:32px; }
+    #tracker-add-btn{ display:none; }
+    .alloc-bars{ justify-content:center; }
+    /* The Add entry panel has no phone design: it takes the whole width and keeps its fields inside it. */
+    .add-panel{ width:100%; max-width:100%; padding:var(--space-lg) var(--space-md); }
+    .add-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    .add-grid > *{ min-width:0; }
+    .alloc-col{ min-width:36px; }
+    .alloc-bar{ width:36px; }
+    .breakdown-card h2{ font-size:16px; line-height:16px; }
+    .ds-mnav{
+      display:flex; justify-content:center; position:fixed; left:0; right:0; bottom:0; z-index:35;
+      padding:var(--space-lg) var(--space-xs); background:linear-gradient(180deg, rgba(255,255,255,0), var(--surface-primary));
+      pointer-events:none;
+    }
+    .ds-mnav-pill{
+      position:relative; display:flex; align-items:center; justify-content:space-between; width:326px; max-width:100%; box-sizing:border-box;
+      padding:var(--space-xs); border-radius:var(--radius-full); background:color-mix(in srgb, var(--surface-primary) 88%, transparent);
+      box-shadow:0 3px 12px color-mix(in srgb, var(--text-primary) 12%, transparent); pointer-events:auto;
+    }
+  }

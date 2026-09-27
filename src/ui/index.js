@@ -18,3 +18,5 @@ export { PanelHeader } from './Panel.jsx';
 export { Modal, Illustration } from './Modal.jsx';
 export * as illustrations from './illustrations.js';
 export * from './format.js';
+export { MobileNavItem, MobileBottomNav } from './MobileNav.jsx';
+export { useMobile } from './useMobile.js';

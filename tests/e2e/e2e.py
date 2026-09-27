@@ -197,6 +197,25 @@ async def main():
             check('dashboard cards, KPI boxes and expense cards have no border', len(bw) >= 8 and all(x == '0px none' for x in bw), bw)
             gp = await pg.evaluate("() => { const g = s => getComputedStyle(document.querySelector(s)); return [g('.row1').columnGap, g('.hero-left').rowGap, g('.hero-right').rowGap, g('.yoy').columnGap, g('.mini-grid').columnGap, g('.mini-grid').rowGap, g('.ticker-strip').columnGap]; }")
             check('cards 24 apart (317:6754); KPI boxes and Expense cards 16', gp == ['24px'] * 4 + ['16px'] * 3, gp)
+            # phones (Ongatu 342:7993, 369:12607)
+            mp = await admin_ctx.new_page(); await mp.set_viewport_size({'width': 390, 'height': 844})
+            await mp.goto(BASE + '/'); await mp.wait_for_selector('#user-nav'); await mp.wait_for_timeout(900)
+            mo = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = s => q(s).getBoundingClientRect(), vis = s => !!q(s) && getComputedStyle(q(s)).display !== 'none';
+                const cards = ['.balance-card', '.mini-grid', '.breakdown-card', '.alloc-card', '.hero-chart', '.glance-card'].map(s => Math.round(r(s).top));
+                return { header: [r('#app-header').height, Math.round(r('.ds-app-header-logo svg').width)], user: vis('.ds-user'), bell: vis('#notif-btn'), add: vis('#tracker-add-btn'), nav: vis('#mobile-nav'),
+                         ticker: vis('.ticker-strip'), side: Math.round(r('.balance-card').left), title: getComputedStyle(q('.app-title')).fontSize, cards, scrollW: document.documentElement.scrollWidth,
+                         pill: [Math.round(r('.ds-mnav-pill').width), Math.round(r('#mnav-home').height)], home: q('#mnav-home').getAttribute('aria-current'), seg: [...document.querySelectorAll('#breakdown-top-seg button')].map(b => b.textContent) }; }""")
+            check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 40px title; no sideways scroll',
+                  mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '40px' and mo['scrollW'] <= 390, mo)
+            check('phone: Balance, KPIs, Tracker, Expense allocation, chart, At a glance, in that order; no Expense cards; Add is in the bottom nav',
+                  mo['cards'] == sorted(mo['cards']) and not mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Income', 'Savings', 'Expenses'], mo)
+            check('phone: bottom nav (378:673) 326 pill, 56 high items, Home selected', mo['pill'] == [326, 56] and mo['home'] == 'page', mo)
+            await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
+            st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
+            check('phone: header and year/month nav stay at the top when scrolled (369:12607)', st2 == [0, 64], st2)
+            await mp.click('#mnav-add'); await mp.wait_for_timeout(500)
+            check('phone: the bottom nav + opens Add an entry', await mp.locator('#add-panel.open').count() == 1)
+            await mp.close()
             check('Segments sit on surface/secondary, tags are 4px Label chips', d['segBg'] == 'rgb(239, 238, 229)' and d['tag'] == ['4px', 'rgb(239, 238, 229)'], d)
             check('allocation bars are 48 wide, 16 apart', d['allocBar'] == '48px' and d['allocGap'] == '16px', d)
             check('month row is indented 56', d['monthsPad'] == '56px', d)
