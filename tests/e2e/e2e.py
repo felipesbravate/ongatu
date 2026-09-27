@@ -270,7 +270,7 @@ async def main():
             check('Toast (DS 304:659): surface/dark, 12px/500/14 white, 16px gap, 48 high, 240 wide at least, radius 8, 14px X',
                   all(tv[k]['bg'] == 'rgb(22, 21, 15)' and tv[k]['font'] == ['12px', '500', '14px', '-0.24px', 'rgb(255, 255, 255)'] and tv[k]['gap'] == '16px' and tv[k]['h'] == 48 and tv[k]['w'] >= 240 and tv[k]['r'] == '8px' and tv[k]['padR'] == '16px' and tv[k]['close'] == [14] for k in tv), tv)
             check('Toast strip: 16px, full height; Positive brand/mint, Negative data/red, Neutral surface/tertiary',
-                  all(tv[k]['strip'][:2] == [16, 48] for k in tv) and [tv[k]['strip'][2] for k in ('success', 'fail', 'neutral')] == ['rgb(19, 208, 117)', 'rgb(189, 0, 7)', 'rgb(96, 93, 83)'], tv)
+                  all(tv[k]['strip'][:2] == [16, 48] for k in tv) and [tv[k]['strip'][2] for k in ('success', 'fail', 'neutral')] == ['rgb(19, 208, 117)', 'rgb(189, 0, 7)', 'rgb(116, 113, 103)'], tv)
             check('Toast sits top-right (Ongatu 238:7184): 24px from the right, 116 from the top', all(abs(tv[k]['top'] - 116) < 1 and abs(tv[k]['right'] - 24) < 1 for k in tv), tv)
             sz = await pg.evaluate("""() => { const out = {}; const host = document.body;
                 for (const z of ['md', 'sm', 'tiny']) { const w = document.createElement('div'); w.className = 'ds-dd ds-dd--' + z; w.innerHTML = '<button class="ds-dd-trigger"><span class="ds-dd-label">A</span></button>'; host.appendChild(w);
@@ -291,7 +291,7 @@ async def main():
                               ph: getComputedStyle(e.querySelector('input'), '::placeholder').fontWeight };
                 [e, f, de, df, dd].forEach((w) => w.remove()); return out; }""")
             check('Empty = border/default + text/secondary; Filled = border/selected-item + text/primary; Disable text = text/muted',
-                  st['inEmpty'] == 'rgb(203, 202, 197)' and st['inFilled'] == 'rgb(144, 138, 246)' and st['ddEmpty'] == ['rgb(203, 202, 197)', 'rgb(96, 93, 83)']
+                  st['inEmpty'] == 'rgb(203, 202, 197)' and st['inFilled'] == 'rgb(144, 138, 246)' and st['ddEmpty'] == ['rgb(203, 202, 197)', 'rgb(116, 113, 103)']
                   and st['ddFilled'] == ['rgb(144, 138, 246)', 'rgb(22, 21, 15)'] and st['ddDisabled'] == 'rgb(150, 146, 132)', st)
             yd = await pg.evaluate("""() => { const cs = e => getComputedStyle(e), tab = document.createElement('div'); tab.className = 'year-tab'; tab.style.cssText = 'position:relative;width:48px;height:32px;margin:40px';
                 tab.innerHTML = '<button class="year-btn">2031</button><button class="year-del-btn" aria-label="Delete"><svg data-icon="x" viewBox="0 0 10 10" width="10" height="10"></svg></button>'; document.body.appendChild(tab);
@@ -569,7 +569,7 @@ async def main():
             await pg.locator('.bd-row, .meter-row', has_text='Budget only').first.locator('.note-count').click(); await pg.wait_for_timeout(250)
             t = await pg.evaluate("() => { const b = document.querySelector('.note-count.is-open'), cs = getComputedStyle(b); return { head: document.querySelector('#note-tip .tip-head')?.textContent, items: document.querySelectorAll('#note-tip .tip-item').length, foot: !!document.querySelector('#note-tip .tip-foot'), hr: !!document.querySelector('#note-tip .tip-head-divider'), empty: document.querySelector('#note-tip .tip-empty')?.textContent, icon: b.classList.contains('is-icon') && !!b.querySelector('svg'), bg: cs.backgroundColor, color: cs.color }; }")
             check('budget without entries (354:618): header, divider, "There\'s no entries yet."', 'Budget set' in (t['head'] or '') and t['items'] == 0 and not t['foot'] and t['hr'] and t['empty'] == "There's no entries yet.", t)
-            check('budget without entries: the counter is Type=Icon (Chart), pressed = surface/tertiary with surface/secondary icon', t['icon'] and t['bg'] == 'rgb(96, 93, 83)' and t['color'] == 'rgb(239, 238, 229)', t)
+            check('budget without entries: the counter is Type=Icon (Chart), pressed = surface/tertiary with surface/secondary icon', t['icon'] and t['bg'] == 'rgb(116, 113, 103)' and t['color'] == 'rgb(239, 238, 229)', t)
             await pg.locator('.bd-row, .meter-row', has_text='Budget only').first.locator('.note-count').click(); await pg.wait_for_timeout(200)
             await pg.click('#breakdown-top-seg button[data-v=Income]'); await pg.wait_for_timeout(300)
             await pg.locator('.bd-row, .meter-row', has_text='Estimated pay').first.locator('.note-count').click(); await pg.wait_for_timeout(250)

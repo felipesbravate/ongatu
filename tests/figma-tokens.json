@@ -5,7 +5,7 @@
     "neutral/surface": "#ffffff",
     "neutral/surface-secondary": "#efeee5",
     "neutral/ink": "#16150f",
-    "neutral/ink-2": "#605d53",
+    "neutral/ink-medium": "#747167",
     "neutral/ink-muted": "#928e80",
     "neutral/border": "#16150f",
     "brand/indigo": "#4f46e5",
@@ -57,7 +57,7 @@
       "alias": "neutral/ink"
     },
     "text/secondary": {
-      "alias": "neutral/ink-2"
+      "alias": "neutral/ink-medium"
     },
     "text/muted": {
       "alias": "neutral/stone-500"
@@ -162,7 +162,7 @@
       "alias": "brand/indigo-mid"
     },
     "surface/tertiary": {
-      "alias": "neutral/ink-2"
+      "alias": "neutral/ink-medium"
     },
     "surface/body": {
       "alias": "neutral/off-white"

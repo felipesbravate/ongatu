@@ -13,7 +13,7 @@
     --primitive-neutral-surface: #ffffff;
     --primitive-neutral-surface-secondary: #efeee5;
     --primitive-neutral-ink: #16150f;
-    --primitive-neutral-ink-2: #605d53;
+    --primitive-neutral-ink-medium: #747167;
     --primitive-neutral-ink-muted: #928e80;
     --primitive-neutral-border: #16150f;
     --primitive-brand-indigo: #4f46e5;
@@ -58,7 +58,7 @@
     --surface-primary: var(--primitive-neutral-surface);
     --surface-secondary: var(--primitive-neutral-surface-secondary);
     --text-primary: var(--primitive-neutral-ink);
-    --text-secondary: var(--primitive-neutral-ink-2);
+    --text-secondary: var(--primitive-neutral-ink-medium);
     --text-muted: var(--primitive-neutral-stone-500);
     --border-default: var(--primitive-neutral-stone-300);
     --border-secondary: var(--primitive-neutral-stone-50);
@@ -93,7 +93,7 @@
     --text-white: var(--primitive-neutral-surface);
     --text-accent: var(--primitive-brand-indigo);
     --text-accent-light: var(--primitive-brand-indigo-mid);
-    --surface-tertiary: var(--primitive-neutral-ink-2);
+    --surface-tertiary: var(--primitive-neutral-ink-medium);
     --surface-body: var(--primitive-neutral-off-white);
     --surface-accent: var(--primitive-brand-indigo);
     --surface-accent-dark: var(--primitive-brand-indigo-900);
