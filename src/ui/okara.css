@@ -547,18 +547,18 @@
   .ds-dd{ position:relative; display:block; min-width:0; }
   .ds-dd > select{ display:none; }
   .ds-dd-trigger{
-    /* Sizes, Dropdown 71:1096 (Sept 26): Medium h48 px16, 14px Body/Medium/Medium; Small h40 p8, 12px Body/Small/Medium;
-       Tiny h32 p8 — every size in Body/Medium/Medium (14 Medium, 18, -2%; re-read Sept 26 evening). Gap 8, radius/sm.
+    /* Sizes, Dropdown 71:1096 (re-read Sept 27): Medium h48 px16 and Small h40 p8 in Body/Large/Medium (16/500/20, -2%);
+       Tiny h32 p8 in Body/Medium/Medium (14/500/18). Chevron 12. Gap 8, radius/sm.
        Empty: border/default, text/secondary. Filled: border/selected-item, text/primary. Active (open or focused):
        border/focus. Disable: surface/secondary, text/muted. The default here is Small. */
     display:flex; align-items:center; justify-content:space-between; gap:var(--space-xs);
     width:100%; height:40px; padding:0 var(--space-xs); box-sizing:border-box;
     background:transparent; border:1px solid var(--border-default); border-radius:var(--radius-sm);
-    font-family:inherit; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); text-align:left; color:var(--text-primary); cursor:pointer;
+    font-family:inherit; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); text-align:left; color:var(--text-primary); cursor:pointer;
     transition:border-color .12s ease, box-shadow .12s ease;
   }
   .ds-dd--md .ds-dd-trigger{ height:48px; padding:0 var(--space-md); }
-  .ds-dd--tiny .ds-dd-trigger{ height:32px; }
+  .ds-dd--tiny .ds-dd-trigger{ height:32px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .ds-dd-label{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .ds-dd-trigger svg{ flex-shrink:0; color:var(--action-primary); transition:transform .12s ease; }
   .ds-dd.is-empty .ds-dd-trigger{ color:var(--text-secondary); }
@@ -1055,7 +1055,7 @@
   .date-dd input[type="date"]::-webkit-datetime-edit{ opacity:0; }
   .date-dd input[type="date"]::-webkit-calendar-picker-indicator{ position:absolute; inset:0; width:auto; height:auto; opacity:0; cursor:pointer; }
   .date-dd-label{ position:absolute; left:var(--space-md); right:36px; top:50%; transform:translateY(-50%); pointer-events:none;
-    font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .date-dd .date-dd-chevron{ position:absolute; right:var(--space-md); top:50%; transform:translateY(-50%); width:12px; height:12px; color:var(--action-primary); pointer-events:none; }
   .dz-text{ display:flex; flex-direction:column; align-items:center; gap:var(--space-tn); }
   .dz-line{ display:flex; align-items:center; justify-content:center; gap:var(--space-tn); flex-wrap:wrap; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--ink); }
@@ -1266,6 +1266,7 @@
      Hover fills surface/accent-light. */
   .ds-notif-item{ display:flex; flex-direction:column; gap:var(--space-tn); padding:var(--space-md); border-radius:var(--radius-sm); transition:background-color .12s ease; }
   .ds-notif-item:hover{ background:var(--surface-accent-light); }
+  .ds-notif-item:hover .ds-notif-content{ gap:var(--space-xs); } /* Hover: text and action 8 apart (Default 16), as in Figma */
   .ds-notif-when{ display:flex; align-items:center; gap:var(--space-tn); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-accent); }
   .ds-notif-dot{ position:relative; width:10px; height:10px; flex-shrink:0; }
   .ds-notif-dot::before{ content:''; position:absolute; left:3.33px; top:3.33px; width:3.33px; height:3.33px; border-radius:50%; background:var(--surface-accent); }
@@ -1364,7 +1365,7 @@
   .ds-check input:focus-visible + .ds-check-box{ outline:2px solid var(--border-focus); outline-offset:2px; }
   .ds-check-label{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-primary); }
 
-  /* ---- Input (71:1093, re-read Sept 26 evening). Every size writes Body/Medium/Medium (DM Sans 14 Medium, 18, -2%),
+  /* ---- Input (71:1093, re-read Sept 27). Medium and Small write Body/Large/Medium (16/500/20, -2%), Tiny Body/Medium/Medium (14/500/18),
      placeholder included. Medium h48 px16; Small h40 p8; Tiny h32 px8; gap 8, radius/sm.
      Empty: border/default, text/secondary. Filled: border/selected-item, text/primary. Focus: border/focus.
      Disable: surface/secondary, border/default, text/muted. `placeholder` defaults to " " so an empty field reads as Empty. ---- */
@@ -1378,7 +1379,7 @@
   .ds-input:has(input:focus){ border-color:var(--border-focus); }
   .ds-input input{
     flex:1; min-width:0; height:auto; border:none; outline:none; background:transparent; padding:0; font-family:inherit;
-    font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-primary);
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-primary);
   }
   .ds-input input::placeholder{ color:var(--text-secondary); opacity:1; }
   .ds-input.is-disabled, .ds-input.is-disabled:hover, .ds-input.is-disabled:has(input){ background:var(--surface-secondary); border-color:var(--border-default); }
@@ -1387,6 +1388,7 @@
   .ds-input svg{ color:var(--surface-tertiary); flex-shrink:0; }
   .ds-input.small{ height:40px; padding:var(--space-xs); }
   .ds-input.tiny{ height:32px; padding:0 var(--space-xs); }
+  .ds-input.tiny input{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
 
   /* avatar, Style=Image and the 88px Account avatar (initial in Value/XL: Martian Mono Medium 36). */
   .ds-avatar.is-image{ background:var(--surface-secondary); overflow:hidden; }

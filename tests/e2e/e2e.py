@@ -278,10 +278,10 @@ async def main():
                 for (const z of ['', 'small', 'tiny']) { const w = document.createElement('span'); w.className = 'ds-input ' + z; w.innerHTML = '<input value="A">'; host.appendChild(w);
                   const c = getComputedStyle(w), i = getComputedStyle(w.firstChild); out['in-' + (z || 'medium')] = [w.getBoundingClientRect().height, c.paddingLeft, i.fontSize, i.fontWeight, i.lineHeight]; w.remove(); }
                 return out; }""")
-            check('Dropdown sizes (71:1096): Medium 48 / 16, Small 40 / 8, Tiny 32 / 8; all 14px 500 18',
-                  sz['dd-md'] == [48, '16px', '14px', '500', '18px'] and sz['dd-sm'] == [40, '8px', '14px', '500', '18px'] and sz['dd-tiny'] == [32, '8px', '14px', '500', '18px'], sz)
-            check('Input sizes (71:1093): Medium 48 / 16, Small 40 / 8, Tiny 32 / 8; all 14px 500 18',
-                  sz['in-medium'] == [48, '16px', '14px', '500', '18px'] and sz['in-small'] == [40, '8px', '14px', '500', '18px'] and sz['in-tiny'] == [32, '8px', '14px', '500', '18px'], sz)
+            check('Dropdown sizes (71:1096, Sept 27): Medium 48 / 16 and Small 40 / 8 in 16/500/20; Tiny 32 / 8 in 14/500/18',
+                  sz['dd-md'] == [48, '16px', '16px', '500', '20px'] and sz['dd-sm'] == [40, '8px', '16px', '500', '20px'] and sz['dd-tiny'] == [32, '8px', '14px', '500', '18px'], sz)
+            check('Input sizes (71:1093, Sept 27): Medium 48 / 16 and Small 40 / 8 in 16/500/20; Tiny 32 / 8 in 14/500/18',
+                  sz['in-medium'] == [48, '16px', '16px', '500', '20px'] and sz['in-small'] == [40, '8px', '16px', '500', '20px'] and sz['in-tiny'] == [32, '8px', '14px', '500', '18px'], sz)
             st = await pg.evaluate("""() => { const host = document.body, mk = (h) => { const w = document.createElement('div'); w.innerHTML = h; host.appendChild(w); return w; };
                 const e = mk('<span class="ds-input"><input placeholder="Label"></span>'), f = mk('<span class="ds-input"><input placeholder="Label" value="Felipe"></span>'),
                       de = mk('<div class="ds-dd ds-dd--md is-empty"><button class="ds-dd-trigger">Select</button></div>'), df = mk('<div class="ds-dd ds-dd--md"><button class="ds-dd-trigger">Rent</button></div>'),
@@ -387,7 +387,7 @@ async def main():
                          itemGap: its.length > 1 ? r(its[1]).top - r(its[0]).bottom : 4, itemX: r(its[0]).left - r(menu).left - 1, tFont: [cs(t).fontSize, cs(t).lineHeight, cs(t).letterSpacing], tPad: cs(t).padding, tBg: cs(t).backgroundColor, tSel: cs(its[0]).fontWeight }; }""")
             check('menu (Dropdown-list 182:6851): padding 16, group label 16/500/16 flush, rows 36 high with 8 padding, 4 apart, 16/500/20',
                   m['pad'] == '16px' and m['gFont'] == ['16px', '500', '16px'] and abs(m['gX'] - 16) < 0.6 and m['itemH'] == 36 and m['itemPad'] == '8px' and m['iFont'] == ['16px', '500', '20px'] and m['itemGap'] == 4 and abs(m['itemX'] - 16) < 0.6, m)
-            check('trigger in the panel: 14px / 18px / -0.28px, 16px side padding, no fill', m['tFont'] == ['14px', '18px', '-0.28px'] and m['tPad'] == '0px 16px' and m['tBg'] == 'rgba(0, 0, 0, 0)', m)
+            check('trigger in the panel: 16px / 20px / -0.32px, 16px side padding, no fill', m['tFont'] == ['16px', '20px', '-0.32px'] and m['tPad'] == '0px 16px' and m['tBg'] == 'rgba(0, 0, 0, 0)', m)
             await pg.keyboard.press('Escape'); await pg.wait_for_selector('.ds-dd-menu', state='detached')
             # keyboard: open with Enter, move, choose with Enter; Escape only closes the menu
             await pg.focus('#entry-item-trigger'); await pg.keyboard.press('Enter'); await pg.wait_for_selector('.ds-dd-menu')
@@ -518,6 +518,9 @@ async def main():
             check('admin: the notification names the account waiting for approval', await item.count() == 1, await pg.inner_text('#notif-panel'))
             ni = await item.evaluate("e => { const cs = x => getComputedStyle(x), t = e.querySelector('.ds-notif-text'), c = e.querySelector('.ds-notif-content'); return [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight, cs(c).columnGap]; }")
             check('notification-item (228:469): text 14/500/18, 16 from the action', ni == ['14px', '500', '18px', '16px'], ni)
+            await item.hover(); await pg.wait_for_timeout(150)
+            nh = await item.evaluate("e => getComputedStyle(e.querySelector('.ds-notif-content')).columnGap")
+            check('notification-item Hover: text and action 8 apart', nh == '8px', nh)
             await item.get_by_text('Approve', exact=True).click(); await pg.wait_for_timeout(400)
             check('approving from the notification clears it', await pg.locator('#user-nav .ds-notif-badge').count() == 0)
             await pg.keyboard.press('Escape')
