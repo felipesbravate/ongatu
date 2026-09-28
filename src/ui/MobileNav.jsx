@@ -17,6 +17,9 @@ export function MobileNavItem({ type = 'section', icon, image, label, selected, 
   }
   const inner = (
     <>
+      {/* The selected background is its own layer so it can slide between tabs across page loads
+          (cross-document View Transition "mnav-pill", see okara.css). */}
+      {selected && <span className="ds-mnav-pillbg" aria-hidden="true" />}
       {image ? <img className="ds-mnav-img" src={image} alt="" /> : <Icon icon={icon} size={24} />}
       {selected && <span className="ds-mnav-label">{label}</span>}
     </>
@@ -27,9 +30,9 @@ export function MobileNavItem({ type = 'section', icon, image, label, selected, 
     : <button type="button" className={cls} id={id} aria-label={label} aria-current={selected ? 'page' : undefined} onClick={onClick}>{inner}</button>;
 }
 
-// mobile-bottom-nav (DS 378:673), Selection=Home | Account. A 326-wide pill (white 88%, radius/full, 8px padding,
-// Nav shadow 0 3 12 ink@12%) holding Home, the Add action (centred) and Account, over a 24px band that fades from
-// transparent to white. Fixed to the bottom of the screen; phones only (hidden above 640px).
+// mobile-bottom-nav (DS 378:673), Selection=Home | Account. A full-width pill (12px from the screen edges; surface/primary 88%,
+// radius/full, space/xs sides and space/nav-padding-y top/bottom, Nav shadow 0 3 12 ink@12%) holding Home and Account
+// (136 x 56 each) and the 48px Add action centred, over a 24px band that fades from transparent to white. Fixed to the bottom of the screen; phones only (hidden above 640px).
 export function MobileBottomNav({ selection = 'home', onAdd, image, homeHref = '/', accountHref = '/account' }) {
   return (
     <nav className="ds-mnav" id="mobile-nav" aria-label="Main">

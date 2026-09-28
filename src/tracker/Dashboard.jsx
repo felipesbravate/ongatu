@@ -19,11 +19,12 @@ export function HeroLeft({ model, y, monthIdx }) {
     { label: 'Savings/Investments', value: c.invest, color: 'var(--kpi-invest)',
       detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate - ${fmtMoneyShort(c.invest, cur)} saved of ${fmtMoneyShort(c.income, cur)} income` : 'No income recorded' },
   ];
-  // Phones (Ongatu 342:7993): "Savings & Investments", and the rate as "↑ 8% rate of monthly income".
+  // Phones (Ongatu 342:7993, Sept 28): "Incomes", "Savings & Investments", and the rate as "↑ 8% rate of monthly Incomes".
   const mobile = useMobile();
   if (mobile) {
+    tiles[0] = { ...tiles[0], label: 'Incomes' };
     tiles[2] = { ...tiles[2], label: 'Savings & Investments', indicator: c.income > 0 ? arrowStraightUp : null,
-      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly income` : 'No income recorded' };
+      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly Incomes` : 'No income recorded' };
   }
   // Expense allocation
   const total = Math.max(1, c.expenseTotal);
@@ -81,7 +82,8 @@ export function HeroLeft({ model, y, monthIdx }) {
 // ---------------- Tracker card ----------------
 const TOP_TABS = [{ value: 'Income', label: 'Income' }, { value: 'Investments', label: 'Savings/Investments' }, { value: 'Expenses', label: 'Expenses' }];
 // Phones (342:7993) shorten the tab and the allocation names.
-const TOP_TABS_MOBILE = TOP_TABS.map((t) => (t.value === 'Investments' ? { ...t, label: 'Savings' } : t));
+// Phones (Ongatu 342:7993, Sept 28): Incomes | Save/Invest | Expenses.
+const TOP_TABS_MOBILE = TOP_TABS.map((t) => (t.value === 'Investments' ? { ...t, label: 'Save/Invest' } : t.value === 'Income' ? { ...t, label: 'Incomes' } : t));
 const SHORT_GROUP = { Fixed: 'Fixed', Variable: 'Var', Extra: 'Extra', Additional: 'Add' };
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');

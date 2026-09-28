@@ -214,8 +214,8 @@ async def main():
             check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 40px title; no sideways scroll',
                   mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '40px' and mo['scrollW'] <= 390, mo)
             check('phone: Balance, KPIs, Tracker, Expense allocation, chart, At a glance, in that order; no Expense cards; Add is in the bottom nav',
-                  mo['cards'] == sorted(mo['cards']) and not mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Income', 'Savings', 'Expenses'], mo)
-            check('phone: bottom nav (378:673) 326 pill, 56 high items, Home selected', mo['pill'] == [326, 56] and mo['home'] == 'page', mo)
+                  mo['cards'] == sorted(mo['cards']) and not mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
+            check('phone: bottom nav (378:673) full-width 366 pill (12px from the edges), 56 high items, Home selected', mo['pill'] == [366, 56] and mo['home'] == 'page', mo)
             await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
             st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
             check('phone: header and year/month nav stay at the top when scrolled (369:12607)', st2 == [0, 64], st2)

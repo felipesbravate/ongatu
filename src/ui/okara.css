@@ -645,7 +645,7 @@
      "Tags nav" node (pl-space-xl), not space-2xl (48px) as a prior pass inferred
      from "round button + gap should line up under the tab labels." That inference
      was a coincidence, not what Figma actually specifies. ---- */
-  .months{ display:flex; gap:var(--space-xs); flex-wrap:wrap; padding-left:56px; }  /* round button 40 + tabs gap 16 */
+  .months{ display:flex; gap:var(--space-xs); flex-wrap:wrap; padding-left:var(--space-tags-indent); }  /* round button 40 + tabs gap 16 */
   .month-btn{
     /* Month selector (DS node 4:171): 12px SemiBold, line height auto, tracking 0 (the Sept 22 pull dropped the +2%).
        The pill stays 20px high; Hover and Press use action/recessed-hover and -press. */
@@ -1518,16 +1518,20 @@
   /* ---- mobile-nav-item (375:961) and mobile-bottom-nav (378:673) ---- */
   .ds-mnav{ display:none; }
   .ds-mnav-item{
-    display:inline-flex; align-items:center; justify-content:center; gap:var(--space-tn); width:104px; height:56px; box-sizing:border-box;
+    position:relative; isolation:isolate;
+    display:inline-flex; align-items:center; justify-content:center; gap:var(--space-xs); width:136px; height:56px; box-sizing:border-box;
     padding:var(--space-xs) var(--space-lg); border-radius:var(--radius-lg); border:none; background:transparent; color:var(--text-primary);
     text-decoration:none; cursor:pointer; font-family:inherit; flex-shrink:0; transition:background-color .12s ease;
   }
-  .ds-mnav-item.is-selected{ padding:var(--space-xs) var(--space-md); background:var(--surface-accent-light); color:var(--text-accent); }
+  .ds-mnav-item.is-selected{ padding:var(--space-xs) var(--space-md); gap:var(--space-tn); color:var(--text-accent); }
+  .ds-mnav-pillbg{ position:absolute; inset:0; z-index:-1; border-radius:var(--radius-lg); background:var(--surface-accent-light); view-transition-name:mnav-pill; }
   .ds-mnav-item svg{ display:block; flex-shrink:0; }
   .ds-mnav-item:focus-visible, .ds-mnav-action .round-btn:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
   .ds-mnav-img{ width:24px; height:24px; border-radius:var(--radius-full); object-fit:cover; display:block; flex-shrink:0; }
   .ds-mnav-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:-0.02em; white-space:nowrap; }
-  .ds-mnav-action{ position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); display:flex; padding:var(--space-xs); }
+  .ds-mnav-action{ position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); display:flex; }
+  /* The Add action is a 48px primary Round button in the nav (DS 378:673), not the 40px Medium size. */
+  .ds-mnav-action .round-btn{ width:48px; height:48px; }
 
   /* ---- Phones: Ongatu 342:7993 (top of the page) and 369:12607 (scrolled). 16px sides; the header (logo 32 + bell)
      and the year/month nav stay at the top while the page scrolls; cards 24 apart in this order: Balance, KPIs, Tracker,
@@ -1573,12 +1577,31 @@
     .breakdown-card h2{ font-size:16px; line-height:16px; }
     .ds-mnav{
       display:flex; justify-content:center; position:fixed; left:0; right:0; bottom:0; z-index:35;
-      padding:var(--space-lg) var(--space-xs); background:linear-gradient(180deg, rgba(255,255,255,0), var(--surface-primary));
+      padding:var(--space-lg) var(--space-sm); background:linear-gradient(180deg, var(--surface-primary-transparent), var(--surface-primary));
       pointer-events:none;
     }
     .ds-mnav-pill{
-      position:relative; display:flex; align-items:center; justify-content:space-between; width:326px; max-width:100%; box-sizing:border-box;
-      padding:var(--space-xs); border-radius:var(--radius-full); background:color-mix(in srgb, var(--surface-primary) 88%, transparent);
+      position:relative; display:flex; align-items:center; justify-content:space-between; width:100%; box-sizing:border-box;
+      padding:var(--space-nav-padding-y) var(--space-xs); border-radius:var(--radius-full); view-transition-name:mnav; background:color-mix(in srgb, var(--surface-primary) 88%, transparent);
       box-shadow:0 3px 12px color-mix(in srgb, var(--text-primary) 12%, transparent); pointer-events:auto;
     }
+    /* Touch targets: month chips (20px) and year tabs (32px) keep their drawn size but get a 44px-high hit area.
+       Their rows scroll sideways, and a scroll container clips on every side, so the rows get matching room above/below.
+       Year tabs grow upwards (12px), month chips 8px up and 16px down, so the two never overlap in the 8px between the rows. */
+    .months{ padding-top:8px; padding-bottom:16px; margin-top:-8px; margin-bottom:-16px; }
+    .month-btn{ position:relative; }
+    .month-btn::after{ content:''; position:absolute; inset:-8px -4px -16px; }
+    .year-tabs{ padding-top:12px; margin-top:-12px; }
+    .year-btn{ position:relative; }
+    .year-btn::after{ content:''; position:absolute; inset:-12px 0 0; }
+  }
+
+  /* Home <-> Account on phones: the lavender pill slides to the other tab while the page changes (Felipe, Sept 28).
+     Cross-document View Transitions (Safari 18.2+, Chrome 126+); other browsers just load the page as before.
+     The nav keeps its place; the rest of the page cross-fades quickly. */
+  @media (max-width:640px) and (prefers-reduced-motion:no-preference){
+    @view-transition{ navigation:auto; }
+    ::view-transition-group(mnav-pill){ animation-duration:.2s; animation-timing-function:cubic-bezier(.2,0,0,1); }
+    ::view-transition-old(mnav-pill), ::view-transition-new(mnav-pill){ height:100%; }
+    ::view-transition-group(root){ animation-duration:.15s; }
   }
