@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 /** Supabase client bound to the request cookies (anon key: it can only run auth calls, the tables are locked). */
@@ -20,3 +21,18 @@ export async function currentUser() {
   const full = data.user.user_metadata && data.user.user_metadata.full_name;
   return { id: data.user.id, email: data.user.email ?? null, name: typeof full === 'string' ? full.slice(0, 80) : null };
 }
+
+/**
+ * Native app: the access token arrives as `Authorization: Bearer <jwt>` instead of a cookie.
+ * Same rule as above: getUser(jwt) re-validates it with Supabase. Returns the user or null.
+ * @param {string} token
+ */
+export async function userFromBearer(token) {
+  if (!token || token.length > 4096) return null;
+  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { data, error } = await sb.auth.getUser(token);
+  if (error || !data?.user) return null;
+  const full = data.user.user_metadata && data.user.user_metadata.full_name;
+  return { id: data.user.id, email: data.user.email ?? null, name: typeof full === 'string' ? full.slice(0, 80) : null };
+}
+

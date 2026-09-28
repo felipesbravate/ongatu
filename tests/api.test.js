@@ -214,3 +214,13 @@ test('profile status is cached per request burst but approvals apply at once', a
   assert.equal((await call('POST', '/api/admin/users/u-ann/approve', boss)).status, 200);
   assert.equal((await call('GET', '/api/db/entries', ann)).status, 200, 'approval is visible immediately');
 });
+
+test('native app: bearer-authenticated writes skip the cookie CSRF check; cookie writes still need it', async () => {
+  const { deps } = setup();
+  const noCsrf = { method: 'POST', path: '/api/db/entries', user: boss, body: { a: 1 }, headers: {} };
+  assert.equal((await handle(noCsrf, deps)).status, 403);
+  assert.equal((await handle({ ...noCsrf, authKind: 'cookie' }, deps)).status, 403);
+  const r = await handle({ ...noCsrf, authKind: 'bearer' }, deps);
+  assert.equal(r.status, 201);
+  assert.equal((await handle({ ...noCsrf, authKind: 'bearer', user: null }, deps)).status, 401);
+});

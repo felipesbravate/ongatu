@@ -75,3 +75,9 @@ export function safeError(/** @type {any} */ e) {
   }
   return { code: 'internal', message: 'Something went wrong' };
 }
+
+/** Bearer token from an Authorization header (native app), or null. @param {string | null | undefined} header */
+export function bearerToken(header) {
+  const m = /^Bearer ([A-Za-z0-9._~+/=-]+)$/.exec(header || '');
+  return m ? m[1] : null;
+}

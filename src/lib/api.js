@@ -1,7 +1,8 @@
 // @ts-check
 // Framework-agnostic API. Both the Next.js route handlers and the mock dev server call `handle`.
 //   handle(req, deps) -> { status, body }
-// req  : { method, path (no query), headers (lower-case keys), body (parsed JSON or undefined), user ({id,email}|null) }
+// req  : { method, path (no query), headers (lower-case keys), body (parsed JSON or undefined), user ({id,email}|null),
+//          authKind ('cookie' default | 'bearer' for the native app) }
 // deps : { vault, profiles, usage, ai, admins, appOrigin, limiter, dailyReadCap, accounts? }
 import { effectiveStatus, passesCsrf, safeError } from './security.js';
 import { VaultError } from './vault.js';
@@ -38,7 +39,8 @@ export async function handle(req, deps) {
   const user = req.user;
   const { method, path } = req;
   try {
-    if (!passesCsrf(req, deps.appOrigin)) return json(403, { error: { code: 'forbidden', message: 'Cross-site request refused' } });
+    // CSRF only exists for cookie auth: browsers attach cookies on their own, never an Authorization header.
+    if (req.authKind !== 'bearer' && !passesCsrf(req, deps.appOrigin)) return json(403, { error: { code: 'forbidden', message: 'Cross-site request refused' } });
     if (!req.user) return json(401, { error: { code: 'unauthenticated', message: 'Sign in first' } });
     let profile = await cachedProfile(deps, user.id);
     if (!profile) {

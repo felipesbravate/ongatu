@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { securityHeaders } from '../../../src/lib/headers.js';
-import { currentUser } from '../../../src/server/auth.js';
+import { currentUser, userFromBearer } from '../../../src/server/auth.js';
+import { bearerToken } from '../../../src/lib/security.js';
 import { getDeps, handle } from '../../../src/server/deps.js';
 
 export const runtime = 'nodejs';
@@ -15,7 +16,12 @@ async function run(request) {
     if (raw) { try { body = JSON.parse(raw); } catch { return NextResponse.json({ error: { code: 'bad_input', message: 'Invalid JSON' } }, { status: 400 }); } }
   }
   const headers = Object.fromEntries(request.headers);
-  const r = await handle({ method: request.method, path: url, headers, body, user: await currentUser() }, getDeps());
+  // Native app sends a bearer token; the web app uses the session cookie. With a bearer header present the
+  // cookie is ignored entirely, so one request never mixes both.
+  const token = bearerToken(request.headers.get('authorization'));
+  const authKind = token ? 'bearer' : 'cookie';
+  const user = token ? await userFromBearer(token) : await currentUser();
+  const r = await handle({ method: request.method, path: url, headers, body, user, authKind }, getDeps());
   return NextResponse.json(r.body, { status: r.status, headers: securityHeaders() });
 }
 export { run as GET, run as POST, run as PUT, run as DELETE };
