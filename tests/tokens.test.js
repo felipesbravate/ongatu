@@ -68,3 +68,8 @@ test('every --type-* used in the CSS is a Figma text style', () => {
   const used = new Set([...css.matchAll(/var\((--type-[\w-]+)\)/g)].map((m) => m[1]));
   for (const v of used) assert.ok(decl[v] !== undefined, `${v} is used but not generated from a Figma text style`);
 });
+
+test('native app tokens (mobile/src/theme/tokens.ts) are generated from the same Figma snapshot', async () => {
+  const { execFileSync } = await import('node:child_process');
+  execFileSync(process.execPath, ['scripts/sync-tokens-native.mjs', '--check'], { stdio: 'pipe' });
+});
