@@ -45,7 +45,7 @@ export function Modal({ open, onClose, title, description, illustration, primary
       </div>
       {(primary || secondary) && (
         <div className="ds-modal-actions">
-          {secondary && <Button variant="secondary" onClick={secondary.onClick} disabled={secondary.disabled} id={secondary.id}>{secondary.label}</Button>}
+          {secondary && <Button variant="tertiary" onClick={secondary.onClick} disabled={secondary.disabled} id={secondary.id}>{secondary.label}</Button>}
           {primary && <Button variant={primary.destructive ? 'destructive' : 'primary'} onClick={primary.onClick} disabled={primary.disabled} id={primary.id}>{primary.label}</Button>}
         </div>
       )}

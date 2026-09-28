@@ -13,18 +13,16 @@ export function HeroLeft({ model, y, monthIdx }) {
   const prev = monthIdx > 0 ? model.computeMonth(y, monthIdx - 1) : null;
   const d = prev ? c.balance - prev.balance : 0;
   const tiles = [
-    { label: 'Income', value: c.income, color: 'var(--kpi-income)' },
-    { label: 'Expenses', value: c.expenseTotal, color: 'var(--kpi-expense)' },
+    // Ongatu 211:18753 (Sept 28): "Incomes", and a static "↑ details" line under Incomes and Expenses (no action, per Felipe).
+    { label: 'Incomes', value: c.income, color: 'var(--kpi-income)', indicator: arrowStraightUp, detail: 'details' },
+    { label: 'Expenses', value: c.expenseTotal, color: 'var(--kpi-expense)', indicator: arrowStraightUp, detail: 'details' },
     // The Savings rate card folded into this tile (Cost-tracker 2:2, Sept 22).
     { label: 'Savings/Investments', value: c.invest, color: 'var(--kpi-invest)',
-      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate - ${fmtMoneyShort(c.invest, cur)} saved of ${fmtMoneyShort(c.income, cur)} income` : 'No income recorded' },
+      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate - ${fmtMoneyShort(c.invest, cur)} saved of ${fmtMoneyShort(c.income, cur)} Incomes` : 'No income recorded' },
   ];
   // Phones (Ongatu 342:7993, Sept 28): "Incomes", "Savings & Investments", and the rate as "↑ 8% rate of monthly Incomes".
   const mobile = useMobile();
   if (mobile) {
-    // "↑ details" under Incomes and Expenses is a static line: nothing happens on tap (Felipe, Sept 28).
-    tiles[0] = { ...tiles[0], label: 'Incomes', indicator: arrowStraightUp, detail: 'details' };
-    tiles[1] = { ...tiles[1], indicator: arrowStraightUp, detail: 'details' };
     tiles[2] = { ...tiles[2], label: 'Savings & Investments', indicator: c.income > 0 ? arrowStraightUp : null,
       detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly Incomes` : 'No income recorded' };
   }
@@ -46,7 +44,7 @@ export function HeroLeft({ model, y, monthIdx }) {
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
-        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} indicator={t.indicator} euroSize={mobile ? 16 : undefined} />)}
+        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} indicator={t.indicator} euroSize={16} />)}
       </div>
       <div className="card alloc-card">
         <h2>Expense allocation</h2>
@@ -82,10 +80,11 @@ export function HeroLeft({ model, y, monthIdx }) {
 }
 
 // ---------------- Tracker card ----------------
-const TOP_TABS = [{ value: 'Income', label: 'Income' }, { value: 'Investments', label: 'Savings/Investments' }, { value: 'Expenses', label: 'Expenses' }];
+// Ongatu 211:18753 and 342:7993 (Sept 28): Incomes | Save/Invest | Expenses on every screen size.
+const TOP_TABS = [{ value: 'Income', label: 'Incomes' }, { value: 'Investments', label: 'Save/Invest' }, { value: 'Expenses', label: 'Expenses' }];
 // Phones (342:7993) shorten the tab and the allocation names.
 // Phones (Ongatu 342:7993, Sept 28): Incomes | Save/Invest | Expenses.
-const TOP_TABS_MOBILE = TOP_TABS.map((t) => (t.value === 'Investments' ? { ...t, label: 'Save/Invest' } : t.value === 'Income' ? { ...t, label: 'Incomes' } : t));
+const TOP_TABS_MOBILE = TOP_TABS;
 const SHORT_GROUP = { Fixed: 'Fixed', Variable: 'Var', Extra: 'Extra', Additional: 'Add' };
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');
@@ -149,8 +148,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
-            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={mobile ? 20 : undefined} />)
-            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={mobile ? 20 : undefined} />)}
+            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
+            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={20} />)}
         </div>
         <div id="itemslist" className="bd-list">
           {!bd.flat && bd.rows.length > 0 && rows.map((r, i) => (
@@ -158,7 +157,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
               <div className="bd-block">
                 <div className="bd-block-title">{r.category}</div>
                 {r.items.map((it) => (
-                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={mobile ? 16 : undefined} />
+                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={16} />
                 ))}
               </div>
             </FragmentDivider>
@@ -292,18 +291,10 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
   const up = pct >= 0, since = y.months[firstPop].slice(0, 3);
   const color = { incomes: tok('--chart-income'), expenses: tok('--chart-expense'), investments: tok('--chart-invest') };
   const path = (vals) => vals.map((v, i) => (i === 0 ? 'M' : 'L') + x(i).toFixed(1) + ' ' + yScale(v).toFixed(1)).join(' ');
-  const pin = (i) => {
-    const px = x(i), py = yScale(totals.incomes[i]), right = i > 7, lx = right ? px - 8 : px + 8, ta = right ? 'end' : 'start';
-    return (
-      <g key={'pin' + i}>
-        <text className="pin-label" x={lx} y={py - 14} textAnchor={ta}>{fmtMoneyShort(totals.incomes[i], cur)}</text>
-        <text className="pin-label-sub" x={lx} y={py - 26} textAnchor={ta}>{y.months[i].slice(0, 3).toUpperCase()}</text>
-      </g>
-    );
-  };
   const cw = (W - padL - padR) / 11;
   // Phones (Trend_Chart_Section 342:8068): "€3.900 Incomes avg" = the average income of the months that have data
-  // (Felipe, Sept 28), two lines (Incomes, Expenses), no change chip, no axis letters, no pins.
+  // (Felipe, Sept 28), two lines (Incomes, Expenses), no change chip. On every size (211:18753 too): no axis letters, pins,
+  // point markers or month line.
   const mobile = useMobile();
   const incomeMonths = populated.filter((i) => totals.incomes[i] > 0);
   const avgIncome = incomeMonths.length ? incomeMonths.reduce((a, i) => a + totals.incomes[i], 0) / incomeMonths.length : 0;
@@ -311,25 +302,20 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
     <div className={'card hero-chart' + (mobile ? ' is-compact' : '')}>
       <div className="hc-top">
         <div>
-          <div className="hc-label">{mobile ? 'Incomes · Expenses · Savings' : 'Income · Expenses · Savings'}</div>
-          <div className="hc-value" id="hero-value">{mobile ? fmtMoneyShort(avgIncome, cur) + ' Incomes avg' : fmtMoney(totals.incomes[monthIdx], cur) + ' income'}</div>
+          <div className="hc-label">Incomes · Expenses · Savings</div>
+          <div className="hc-value" id="hero-value">{mobile ? fmtMoneyShort(avgIncome, cur) + ' Incomes avg' : fmtMoneyShort(totals.incomes[monthIdx], cur) + ' Incomes'}</div>
         </div>
-        {!mobile && <Label type={up ? 'positive' : 'negative'} icon={up ? plus : minus} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
+        {!mobile && <Label type={up ? 'positive' : 'negative'} icon={up ? arrowStraightUp : arrowStraightDown} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
           {`${Math.abs(pct).toFixed(1)}% since ${since}`}
         </Label>}
       </div>
       <div className="chart-wrap" style={{ marginTop: 16 }}>
         <svg id="trend-chart" ref={svgRef} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
           {[0, 1, 2, 3].map((g) => { const gy = padT + g * ((H - padT - padB) / 3); return <line key={'g' + g} className="gridline" x1="0" x2={W} y1={gy} y2={gy} />; })}
-          {!mobile && y.months.map((m, i) => <text key={'a' + i} className="axis-label" x={x(i)} y={H - 8} textAnchor="middle">{m.slice(0, 1)}</text>)}
-          <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
           {!mobile && <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />}
           <path d={path(totals.incomes)} fill="none" stroke={color.incomes} strokeWidth="2.5" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
-          <line className="baseline" x1={x(monthIdx)} x2={x(monthIdx)} y1={padT} y2={H - padB} strokeDasharray="3,3" />
-          {(mobile ? ['incomes', 'expenses'] : ['incomes', 'expenses', 'investments']).map((k) => totals[k].map((v, i) => <circle key={k + i} cx={x(i)} cy={yScale(v)} r={i === monthIdx ? 4 : 2.5} fill={color[k]} stroke="var(--surface)" strokeWidth="1.5" />))}
-          {!mobile && populated.length > 0 && pin(firstPop)}
-          {!mobile && populated.length > 0 && lastPop !== firstPop && pin(lastPop)}
-          {Array.from({ length: 12 }, (_, i) => (
+                              {Array.from({ length: 12 }, (_, i) => (
             <rect key={'r' + i} data-mi={i} x={x(i) - cw / 2} y={padT} width={cw} height={H - padT - padB} fill="transparent" style={{ cursor: 'pointer' }}
               onMouseEnter={() => setTip({ i, ...tipPos(svgRef.current, x(i), yScale(totals.incomes[i])) })} onMouseLeave={() => setTip((t) => t && { ...t, hide: true })}
               onClick={() => onMonth(i)} />
@@ -340,7 +326,7 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
         </div>
       </div>
       <div className="legend">
-        <span><span className="swatch" style={{ background: 'var(--chart-income)' }} />{mobile ? 'Incomes' : 'Income'}</span>
+        <span><span className="swatch" style={{ background: 'var(--chart-income)' }} />Incomes</span>
         <span><span className="swatch" style={{ background: 'var(--chart-expense)' }} />Expenses</span>
         {!mobile && <span><span className="swatch" style={{ background: 'var(--chart-invest)' }} />Savings</span>}
       </div>

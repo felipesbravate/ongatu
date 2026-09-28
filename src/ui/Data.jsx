@@ -28,11 +28,11 @@ export function KpiCard({ label, dotColor, value, currency, detail, indicator, e
 
 // Expense card (DS 130:3844): initial badge + name, the Value, and a details row
 // (arrow icon + change, coloured by direction). delta: { icon, text, color } or null (shows —).
-export function ExpenseCard({ name, initial, badgeColor, value, currency, delta }) {
+export function ExpenseCard({ name, initial, badgeColor, value, currency, delta, euroSize = 16 }) {
   return (
     <div className="ticker-item">
       <div className="ti-top"><span className="ti-dot" style={{ background: badgeColor }}>{initial}</span><span className="ti-name">{name}</span></div>
-      <div className="ti-val"><Money value={value} currency={currency} /></div>
+      <div className="ti-val"><Money value={value} currency={currency} iconSize={euroSize} /></div>
       <div className="ti-delta" style={{ color: delta ? delta.color : 'var(--text-secondary)' }}>
         {delta ? <><Icon icon={delta.icon} size={12} /><span>{delta.text}</span></> : '—'}
       </div>

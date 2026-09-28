@@ -1536,6 +1536,31 @@
   /* The Add action is a 48px primary Round button in the nav (DS 378:673), not the 40px Medium size. */
   .ds-mnav-action .round-btn{ width:48px; height:48px; }
 
+  /* ---- DS pull, Sept 28 afternoon (Okara components + Ongatu 211:18753). Sizes and text styles as the components now are:
+     Month selector and Label 24 high in Body/Medium/Medium (14); Segments 48 (tabs 40), Sub-segments 40 (tabs 32), both in
+     Body/Large/Medium (16) with 8 between tabs; Button Medium 48 high in Body/Large/Medium; KPI and Expense card labels
+     Body/Medium/Medium; Meter and breakdown-row names Body/Large/Medium, amounts Value/Medium; breakdown-row 32 high; block
+     titles Heading/Medium; Balance card 12 between its lines; Label chips keep the case they are given. ---- */
+  .month-btn{ height:24px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .insight-tag, .hc-delta{ height:24px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); text-transform:none; }
+  .seg-tabs{ gap:var(--space-xs); padding:var(--space-tn); }
+  .seg-tabs button{ height:40px; padding:var(--space-xs); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .seg-tabs.sub{ height:40px; box-sizing:border-box; }
+  .seg-tabs.sub button{ height:32px; padding:0 var(--space-xs); }
+  .btn-pill{ height:48px; padding:0 var(--space-md); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .btn-pill.small{ height:40px; }
+  .mini-kpi .label, .ticker-item .ti-name{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .meter-row .meter-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .meter-row .meter-amt, .bd-row .n{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); }
+  .bd-row{ height:32px; }
+  .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .bd-block{ gap:0; }
+  .bd-block-title{ margin-bottom:var(--space-xs); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .balance-card .value, .balance-card .pill-delta{ margin-top:var(--space-sm); }
+  .hero-chart .hc-label{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  /* The 16px Euro sits right against the figure in KPI, Expense card and breakdown-row values; Meters keep a 4px gap (20px Euro). */
+  .mini-kpi .value .money, .ticker-item .ti-val .money, .bd-row .n .money{ gap:0; }
+
   /* ---- Phones: Ongatu 342:7993 (top of the page) and 369:12607 (scrolled). 16px sides; the header (logo 32 + bell)
      and the year/month nav stay at the top while the page scrolls; cards 24 apart in this order: Balance, KPIs, Tracker,
      Expense allocation, the chart, At a glance; the bottom nav replaces the user menu and the Add button. ---- */
@@ -1590,10 +1615,11 @@
     }
     /* Touch targets: month chips (20px) and year tabs (32px) keep their drawn size but get a 44px-high hit area.
        Their rows scroll sideways, and a scroll container clips on every side, so the rows get matching room above/below.
-       Year tabs grow upwards (12px), month chips 8px up and 16px down, so the two never overlap in the 8px between the rows. */
-    .months{ padding-top:8px; padding-bottom:16px; margin-top:-8px; margin-bottom:-16px; }
+       Year tabs grow upwards (12px), month chips (24 high since Sept 28) 8px up and 12px down, so the two never overlap in the
+       8px between the rows. */
+    .months{ padding-top:8px; padding-bottom:12px; margin-top:-8px; margin-bottom:-12px; }
     .month-btn{ position:relative; }
-    .month-btn::after{ content:''; position:absolute; inset:-8px -4px -16px; }
+    .month-btn::after{ content:''; position:absolute; inset:-8px -4px -12px; }
     .year-tabs{ padding-top:12px; margin-top:-12px; }
     .year-btn{ position:relative; }
     .year-btn::after{ content:''; position:absolute; inset:-12px 0 0; }
@@ -1623,6 +1649,7 @@
     .meter-row .meter-amt, .bd-row .n{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); }
     .meter-row .meter-amt .money{ gap:var(--space-tn); }
     .bd-row .n .money{ gap:0; }
+    .bd-row{ height:24px; }
     .bd-block{ gap:var(--space-tn); }
     .bd-block-title{ margin-bottom:var(--space-sm); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
     .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
