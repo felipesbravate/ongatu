@@ -39,8 +39,8 @@
     --primitive-neutral-charcoal-800: #32312c;
     --primitive-neutral-charcoal-900: #1f1e19;
     --primitive-neutral-stone-50: #efeee5;
-    --primitive-status-red-deep: #bd0007;
     --primitive-neutral-stone-100: #e4e3da;
+    --primitive-status-red-deep: #bd0007;
     --primitive-neutral-stone-150: #deddd4;
     --primitive-neutral-stone-300: #cbcac5;
     --primitive-neutral-stone-325: #cac9c0;
@@ -48,11 +48,14 @@
     --primitive-status-ochre-deep: #7a5703;
     --primitive-data-orange: #ffba3a;
     --primitive-status-green-pale: #e3f4ec;
-    --primitive-neutral-stone-400: #aaa698;
     --primitive-status-red-pale: #ffc4c6;
+    --primitive-neutral-stone-400: #aaa698;
     --primitive-neutral-stone-500: #969284;
     --primitive-status-yellow-pale: #ffe9b7;
     --primitive-neutral-off-white: #f9f9f7;
+    --primitive-data-green-light: #76c8a4;
+    --primitive-neutral-surface-transparent: #ffffff00;
+    --primitive-neutral-off-white-transparent: #f9f9f700;
 
     /* Collection: Color */
     --surface-primary: var(--primitive-neutral-surface);
@@ -107,6 +110,8 @@
     --status-success: var(--primitive-status-green-deep);
     --status-fail: var(--primitive-data-red);
     --status-warning: var(--primitive-status-ochre-deep);
+    --surface-primary-transparent: var(--primitive-neutral-surface-transparent);
+    --surface-body-transparent: var(--primitive-neutral-off-white-transparent);
 
     /* Collection: Spacing */
     --space-tn: 4px;
@@ -117,6 +122,9 @@
     --space-xl: 40px;
     --space-2xl: 48px;
     --space-3xl: 80px;
+    --space-nav-padding-y: 6px;
+    --space-control-gap: 10px;
+    --space-tags-indent: 56px;
 
     /* Collection: Radius */
     --radius-ty: 4px;
@@ -124,6 +132,7 @@
     --radius-md: 16px;
     --radius-lg: 24px;
     --radius-full: 999px;
+    --radius-card: 20px;
 
     /* Collection: Opacity */
     --opacity-disabled: 0.4;
@@ -266,8 +275,6 @@
     /* Hairlines (chart gridlines, footer rule): text/primary at 9% and 16%, as drawn in the chart. */
     --border:      color-mix(in srgb, var(--text-primary) 9%, transparent);
     --border-2:    color-mix(in srgb, var(--text-primary) 16%, transparent);
-    /* Card corner radius: Figma draws every card at 20, which is not a Radius variable. */
-    --radius-card: 20px;
     /* Series colours of the trend chart, as the lines are drawn in Figma (Sept 22):
        Income = indigo 2.5px (the file binds it to border/focus, same #4f46e5), Expenses = data/pink, Savings = data/lime.
        The file's legend paints the Savings swatch #17a768 (green) although the line is lime; the swatch follows the line here. */
@@ -1291,9 +1298,9 @@
   .ds-notif-page-list{ display:flex; flex-direction:column; gap:var(--space-sm); padding:0 var(--space-md); }
   .ds-notif-page-list .ds-divider{ width:100%; }
 
-  /* progress-bar (238:676): 8px surface/secondary track; the fill is a left-to-right gradient #76c8a4 → data/green (unbound in Figma). */
+  /* progress-bar (238:676): 8px surface/secondary track; the fill is a left-to-right gradient data/green-light → data/green (both Primitives, bound in Figma Sept 28). */
   .ds-progress{ height:8px; border-radius:var(--radius-full); background:var(--surface-secondary); overflow:hidden; }
-  .ds-progress-fill{ height:100%; border-radius:var(--radius-full); background:linear-gradient(90deg, #76c8a4 0%, var(--primitive-data-green) 100%); transition:width .3s ease; }
+  .ds-progress-fill{ height:100%; border-radius:var(--radius-full); background:linear-gradient(90deg, var(--primitive-data-green-light) 0%, var(--primitive-data-green) 100%); transition:width .3s ease; }
 
   /* Modal (DS 273:632): 540 wide, surface/primary, radius/md, shadow 0 0 8 ink@8%, padding 16/16/24/16, sections 40 apart.
      Header: the close Round button (Small, Tertiary) on the right. Content: 0 24 padding, 8 gap; the title block is the

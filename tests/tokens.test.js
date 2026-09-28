@@ -57,7 +57,7 @@ test('outside the token block, only Color variables and aliases are used (no Pri
   const body = css.slice(css.indexOf('/* @tokens:end */'))
     .replace(/\/\*[\s\S]*?\*\//g, '');         // comments may quote old values
   const prims = [...body.matchAll(/var\((--primitive-[\w-]+)\)/g)].map((m) => m[1])// Primitives a DS component binds directly (no Color variable for them): allocation labels, the Notification dot, the progress fill.
-    .filter((p) => !['--primitive-neutral-ink-muted', '--primitive-data-red-orange', '--primitive-data-green', '--primitive-brand-indigo', '--primitive-brand-mint', '--primitive-brand-mint-light'].includes(p));
+    .filter((p) => !['--primitive-neutral-ink-muted', '--primitive-data-red-orange', '--primitive-data-green', '--primitive-data-green-light', '--primitive-brand-indigo', '--primitive-brand-mint', '--primitive-brand-mint-light'].includes(p));
   assert.deepEqual(prims, [], 'bind a Color variable instead of a Primitive');
   const colours = new Set(Object.values(figma.Primitives).map((v) => String(v).toLowerCase()));
   const hits = [...body.slice(body.indexOf('*{ box-sizing')).matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0].toLowerCase()).filter((h) => colours.has(h) && h !== '#ffffff');
