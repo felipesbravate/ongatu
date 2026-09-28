@@ -14,3 +14,7 @@ coverage/
 .env*
 *.bak
 *.bak[0-9]*
+
+# Local scratch
+Claude outputs/
+test-decrypt.*
