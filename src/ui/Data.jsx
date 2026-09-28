@@ -16,11 +16,11 @@ export const Divider = (props) => <hr className="ds-divider" {...props} />;
 
 // KPI card (DS 28:68): dot + uppercase label, the Value, an optional mono details line.
 // `indicator` (Show indicator): a 12px arrow icon before the details, in surface/tertiary.
-export function KpiCard({ label, dotColor, value, currency, detail, indicator }) {
+export function KpiCard({ label, dotColor, value, currency, detail, indicator, euroSize }) {
   return (
     <div className="mini-kpi">
       <div className="label"><span className="dot" style={{ background: dotColor }} />{label}</div>
-      <div className="value"><Money value={value} currency={currency} /></div>
+      <div className="value"><Money value={value} currency={currency} iconSize={euroSize} /></div>
       {detail && <div className="detail">{indicator && <Icon icon={indicator} size={12} />}<span>{detail}</span></div>}
     </div>
   );
@@ -41,13 +41,13 @@ export function ExpenseCard({ name, initial, badgeColor, value, currency, delta 
 }
 
 // Meter (DS): name + amount over a rounded track. state: undefined | 'estimate' | 'removed'. `counter` sits after the name.
-export function Meter({ name, amount, max, currency, color, state, counter }) {
+export function Meter({ name, amount, max, currency, color, state, counter, euroSize }) {
   const pct = Math.max(0, Math.min(1, amount / max));
   return (
     <div className={'meter-row' + (state === 'estimate' ? ' is-estimate' : state === 'removed' ? ' is-removed' : '')}>
       <div className="meter-top">
         <span className="meter-name">{name}{counter}</span>
-        <span className="meter-amt">{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} /></span>
+        <span className="meter-amt">{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} iconSize={euroSize} /></span>
       </div>
       <div className="meter-track"><div className="meter-fill" style={{ width: `${(pct * 100).toFixed(1)}%`, '--seg-color': color }} /></div>
     </div>
@@ -55,11 +55,11 @@ export function Meter({ name, amount, max, currency, color, state, counter }) {
 }
 
 // Breakdown row (DS 124:3667, Default): name (+ counter) and the right-aligned Value.
-export function BreakdownRow({ name, amount, currency, state, counter }) {
+export function BreakdownRow({ name, amount, currency, state, counter, euroSize }) {
   return (
     <div className={'bd-row' + (state === 'estimate' ? ' is-estimate' : state === 'removed' ? ' is-removed' : '')}>
       <span className="bd-item-name">{name}{counter}</span>
-      <span className="n">{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} /></span>
+      <span className="n">{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} iconSize={euroSize} /></span>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 {
-  "_note": "Snapshot of the Okara Design System Variables (Figma file 7glNMA9d7iVJFf2CvyrzAb), read Sept 25, 2026 (Typography collection added the same day: DM Sans + Martian Mono). Values are hex or numbers; {\"alias\": name} points at a variable in Primitives. To update: re-read Figma, write this file, run `node scripts/sync-tokens.mjs` (rewrites the token block in src/ui/okara.css), then `npm test`. Sept 25: every SemiBold text style set to Medium (500) except Display/Title (page titles), which stays SemiBold. Sept 26: + neutral/stone-50, border/secondary (Divider, dropdown list, notification panel, user card), border/tertiary (divider in the Entries tooltip). Later Sept 26: + neutral/stone-500; text/muted and action/disable now stone-500; + border/selected-item (brand/indigo-light: the border of a filled Input or Dropdown). Sept 28: + space/nav-padding-y 6, space/control-gap 10, space/tags-indent 56, radius/card 20, data/green-light, neutral/surface-transparent, neutral/off-white-transparent, surface/primary-transparent, surface/body-transparent (native-app cleanup).",
+  "_note": "Snapshot of the Okara Design System Variables (Figma file 7glNMA9d7iVJFf2CvyrzAb), read Sept 25, 2026 (Typography collection added the same day: DM Sans + Martian Mono). Values are hex or numbers; {\"alias\": name} points at a variable in Primitives. To update: re-read Figma, write this file, run `node scripts/sync-tokens.mjs` (rewrites the token block in src/ui/okara.css), then `npm test`. Sept 25: every SemiBold text style set to Medium (500) except Display/Title (page titles), which stays SemiBold. Sept 26: + neutral/stone-50, border/secondary (Divider, dropdown list, notification panel, user card), border/tertiary (divider in the Entries tooltip). Later Sept 26: + neutral/stone-500; text/muted and action/disable now stone-500; + border/selected-item (brand/indigo-light: the border of a filled Input or Dropdown). Sept 28: + space/nav-padding-y 6, space/control-gap 10, space/tags-indent 56, radius/card 20, data/green-light, neutral/surface-transparent, neutral/off-white-transparent, surface/primary-transparent, surface/body-transparent (native-app cleanup). Later Sept 28: text styles re-read (Headings 600 and tracking 0, Heading/Large 20/24, Value/Large 16).",
   "Primitives": {
     "neutral/page": "#eef5f4",
     "neutral/surface": "#ffffff",
@@ -260,7 +260,7 @@
     "Value/Large": {
       "family": "mono",
       "weight": 500,
-      "size": 20,
+      "size": 16,
       "lineHeight": null,
       "letterSpacing": 0
     },
@@ -280,28 +280,28 @@
     },
     "Heading/XL": {
       "family": "sans",
-      "weight": 500,
+      "weight": 600,
       "size": 24,
       "lineHeight": 24,
-      "letterSpacing": -1
+      "letterSpacing": 0
     },
     "Heading/Large": {
       "family": "sans",
-      "weight": 500,
+      "weight": 600,
       "size": 20,
-      "lineHeight": 20,
-      "letterSpacing": -1
+      "lineHeight": 24,
+      "letterSpacing": 0
     },
     "Heading/Medium": {
       "family": "sans",
-      "weight": 500,
+      "weight": 600,
       "size": 16,
       "lineHeight": 16,
       "letterSpacing": 0
     },
     "Heading/Small": {
       "family": "sans",
-      "weight": 500,
+      "weight": 600,
       "size": 14,
       "lineHeight": 14,
       "letterSpacing": 0
@@ -310,7 +310,7 @@
       "family": "sans",
       "weight": 500,
       "size": 16,
-      "lineHeight": 20,
+      "lineHeight": 22,
       "letterSpacing": -2
     },
     "Body/Large/SemiBold": {
@@ -367,7 +367,7 @@
       "weight": 500,
       "size": 12,
       "lineHeight": 12,
-      "letterSpacing": 0
+      "letterSpacing": -2
     },
     "Label/Default/Medium": {
       "family": "sans",
@@ -390,18 +390,18 @@
       "lineHeight": 10,
       "letterSpacing": -2
     },
-    "Label/Tiny/Medium": {
-      "family": "sans",
-      "weight": 500,
-      "size": 10,
-      "lineHeight": 10,
-      "letterSpacing": -2
-    },
     "Badge/SemiBolt": {
       "family": "sans",
       "weight": 500,
       "size": 8,
       "lineHeight": 8,
+      "letterSpacing": -2
+    },
+    "Label/Tiny/Medium": {
+      "family": "sans",
+      "weight": 500,
+      "size": 10,
+      "lineHeight": 10,
       "letterSpacing": -2
     }
   }

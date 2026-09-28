@@ -148,7 +148,7 @@ export const text = {
   },
   "ValueLarge": {
     "fontFamily": "MartianMono_500Medium",
-    "fontSize": 20
+    "fontSize": 16
   },
   "ValueMedium": {
     "fontFamily": "MartianMono_500Medium",
@@ -161,31 +161,29 @@ export const text = {
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 24,
-    "lineHeight": 24,
-    "letterSpacing": -0.24
+    "lineHeight": 24
   },
   "HeadingLarge": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 20,
-    "lineHeight": 20,
-    "letterSpacing": -0.2
+    "lineHeight": 24
   },
   "HeadingMedium": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 16,
     "lineHeight": 16
   },
   "HeadingSmall": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 14,
     "lineHeight": 14
   },
   "BodyLargeMedium": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 16,
-    "lineHeight": 20,
+    "lineHeight": 22,
     "letterSpacing": -0.32
   },
   "BodyLargeSemiBold": {
@@ -233,7 +231,8 @@ export const text = {
   "LabelDefaultSemiBold": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 12,
-    "lineHeight": 12
+    "lineHeight": 12,
+    "letterSpacing": -0.24
   },
   "LabelDefaultMedium": {
     "fontFamily": "DMSans_500Medium",
@@ -252,17 +251,17 @@ export const text = {
     "lineHeight": 10,
     "letterSpacing": -0.2
   },
-  "LabelTinyMedium": {
-    "fontFamily": "DMSans_500Medium",
-    "fontSize": 10,
-    "lineHeight": 10,
-    "letterSpacing": -0.2
-  },
   "BadgeSemiBolt": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 8,
     "lineHeight": 8,
     "letterSpacing": -0.16
+  },
+  "LabelTinyMedium": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 10,
+    "lineHeight": 10,
+    "letterSpacing": -0.2
   }
 } as const;
 

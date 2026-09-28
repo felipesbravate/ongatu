@@ -1,7 +1,7 @@
 'use client';
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
-import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, edit, minus, plus, reload } from '../ui/icons.js';
+import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR } from './model.js';
 
 const tok = (name) => (typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(name).trim());
@@ -22,7 +22,9 @@ export function HeroLeft({ model, y, monthIdx }) {
   // Phones (Ongatu 342:7993, Sept 28): "Incomes", "Savings & Investments", and the rate as "↑ 8% rate of monthly Incomes".
   const mobile = useMobile();
   if (mobile) {
-    tiles[0] = { ...tiles[0], label: 'Incomes' };
+    // "↑ details" under Incomes and Expenses is a static line: nothing happens on tap (Felipe, Sept 28).
+    tiles[0] = { ...tiles[0], label: 'Incomes', indicator: arrowStraightUp, detail: 'details' };
+    tiles[1] = { ...tiles[1], indicator: arrowStraightUp, detail: 'details' };
     tiles[2] = { ...tiles[2], label: 'Savings & Investments', indicator: c.income > 0 ? arrowStraightUp : null,
       detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly Incomes` : 'No income recorded' };
   }
@@ -44,7 +46,7 @@ export function HeroLeft({ model, y, monthIdx }) {
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
-        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} indicator={t.indicator} />)}
+        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} indicator={t.indicator} euroSize={mobile ? 16 : undefined} />)}
       </div>
       <div className="card alloc-card">
         <h2>Expense allocation</h2>
@@ -113,9 +115,21 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
     );
   };
   const state = (r) => (r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined);
+  // Phones (Tracker_Card_mobile 442:5153): the card stops at 555px with the Expander (DS 475:743) over its bottom;
+  // "See all" opens the whole list. Expanded state and "See less" are not in the design (Claude's choice, to confirm).
+  const [expanded, setExpanded] = useState(false);
+  const cardRef = useRef(null);
+  const [tall, setTall] = useState(false);
+  useLayoutEffect(() => {
+    const el = cardRef.current;
+    if (!mobile || !el) { setTall(false); return; }
+    setTall(el.scrollHeight > 555 + 1);
+  });
+  useEffect(() => { setExpanded(false); }, [breakdownType, monthIdx, y.year]);
+  const collapsed = mobile && tall && !expanded;
 
   return (
-    <div className="card breakdown-card">
+    <div className={'card breakdown-card' + (collapsed ? ' is-collapsed' : '')} ref={cardRef}>
       <div className="bd-header">
         <div className="bd-title">
           <h2>Tracker</h2>
@@ -135,8 +149,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
-            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} />)
-            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} />)}
+            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={mobile ? 20 : undefined} />)
+            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={mobile ? 20 : undefined} />)}
         </div>
         <div id="itemslist" className="bd-list">
           {!bd.flat && bd.rows.length > 0 && rows.map((r, i) => (
@@ -144,13 +158,20 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
               <div className="bd-block">
                 <div className="bd-block-title">{r.category}</div>
                 {r.items.map((it) => (
-                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} />
+                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={mobile ? 16 : undefined} />
                 ))}
               </div>
             </FragmentDivider>
           ))}
         </div>
       </div>
+      {mobile && tall && (
+        <div className={'ds-expander' + (expanded ? ' is-open' : '')}>
+          <Button variant="tertiary" icon={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
+            {expanded ? 'See less' : 'See all'}
+          </Button>
+        </div>
+      )}
       <ItemTip tip={tip} actions={actions} />
     </div>
   );
@@ -281,28 +302,33 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
     );
   };
   const cw = (W - padL - padR) / 11;
+  // Phones (Trend_Chart_Section 342:8068): "€3.900 Incomes avg" = the average income of the months that have data
+  // (Felipe, Sept 28), two lines (Incomes, Expenses), no change chip, no axis letters, no pins.
+  const mobile = useMobile();
+  const incomeMonths = populated.filter((i) => totals.incomes[i] > 0);
+  const avgIncome = incomeMonths.length ? incomeMonths.reduce((a, i) => a + totals.incomes[i], 0) / incomeMonths.length : 0;
   return (
-    <div className="card hero-chart">
+    <div className={'card hero-chart' + (mobile ? ' is-compact' : '')}>
       <div className="hc-top">
         <div>
-          <div className="hc-label">Income · Expenses · Savings</div>
-          <div className="hc-value" id="hero-value">{fmtMoney(totals.incomes[monthIdx], cur) + ' income'}</div>
+          <div className="hc-label">{mobile ? 'Incomes · Expenses · Savings' : 'Income · Expenses · Savings'}</div>
+          <div className="hc-value" id="hero-value">{mobile ? fmtMoneyShort(avgIncome, cur) + ' Incomes avg' : fmtMoney(totals.incomes[monthIdx], cur) + ' income'}</div>
         </div>
-        <Label type={up ? 'positive' : 'negative'} icon={up ? plus : minus} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
+        {!mobile && <Label type={up ? 'positive' : 'negative'} icon={up ? plus : minus} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
           {`${Math.abs(pct).toFixed(1)}% since ${since}`}
-        </Label>
+        </Label>}
       </div>
       <div className="chart-wrap" style={{ marginTop: 16 }}>
         <svg id="trend-chart" ref={svgRef} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
           {[0, 1, 2, 3].map((g) => { const gy = padT + g * ((H - padT - padB) / 3); return <line key={'g' + g} className="gridline" x1="0" x2={W} y1={gy} y2={gy} />; })}
-          {y.months.map((m, i) => <text key={'a' + i} className="axis-label" x={x(i)} y={H - 8} textAnchor="middle">{m.slice(0, 1)}</text>)}
+          {!mobile && y.months.map((m, i) => <text key={'a' + i} className="axis-label" x={x(i)} y={H - 8} textAnchor="middle">{m.slice(0, 1)}</text>)}
           <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
-          <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
+          {!mobile && <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />}
           <path d={path(totals.incomes)} fill="none" stroke={color.incomes} strokeWidth="2.5" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
           <line className="baseline" x1={x(monthIdx)} x2={x(monthIdx)} y1={padT} y2={H - padB} strokeDasharray="3,3" />
-          {['incomes', 'expenses', 'investments'].map((k) => totals[k].map((v, i) => <circle key={k + i} cx={x(i)} cy={yScale(v)} r={i === monthIdx ? 4 : 2.5} fill={color[k]} stroke="var(--surface)" strokeWidth="1.5" />))}
-          {populated.length > 0 && pin(firstPop)}
-          {populated.length > 0 && lastPop !== firstPop && pin(lastPop)}
+          {(mobile ? ['incomes', 'expenses'] : ['incomes', 'expenses', 'investments']).map((k) => totals[k].map((v, i) => <circle key={k + i} cx={x(i)} cy={yScale(v)} r={i === monthIdx ? 4 : 2.5} fill={color[k]} stroke="var(--surface)" strokeWidth="1.5" />))}
+          {!mobile && populated.length > 0 && pin(firstPop)}
+          {!mobile && populated.length > 0 && lastPop !== firstPop && pin(lastPop)}
           {Array.from({ length: 12 }, (_, i) => (
             <rect key={'r' + i} data-mi={i} x={x(i) - cw / 2} y={padT} width={cw} height={H - padT - padB} fill="transparent" style={{ cursor: 'pointer' }}
               onMouseEnter={() => setTip({ i, ...tipPos(svgRef.current, x(i), yScale(totals.incomes[i])) })} onMouseLeave={() => setTip((t) => t && { ...t, hide: true })}
@@ -314,9 +340,9 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
         </div>
       </div>
       <div className="legend">
-        <span><span className="swatch" style={{ background: 'var(--chart-income)' }} />Income</span>
+        <span><span className="swatch" style={{ background: 'var(--chart-income)' }} />{mobile ? 'Incomes' : 'Income'}</span>
         <span><span className="swatch" style={{ background: 'var(--chart-expense)' }} />Expenses</span>
-        <span><span className="swatch" style={{ background: 'var(--chart-invest)' }} />Savings</span>
+        {!mobile && <span><span className="swatch" style={{ background: 'var(--chart-invest)' }} />Savings</span>}
       </div>
     </div>
   );

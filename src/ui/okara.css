@@ -151,7 +151,7 @@
     --type-value-xl-weight: 500;
     --type-value-xl-lh: normal;
     --type-value-xl-ls: 0;
-    --type-value-large-size: 20px;
+    --type-value-large-size: 16px;
     --type-value-large-weight: 500;
     --type-value-large-lh: normal;
     --type-value-large-ls: 0;
@@ -164,24 +164,24 @@
     --type-value-small-lh: normal;
     --type-value-small-ls: -0.04em;
     --type-heading-xl-size: 24px;
-    --type-heading-xl-weight: 500;
+    --type-heading-xl-weight: 600;
     --type-heading-xl-lh: 24px;
-    --type-heading-xl-ls: -0.01em;
+    --type-heading-xl-ls: 0;
     --type-heading-large-size: 20px;
-    --type-heading-large-weight: 500;
-    --type-heading-large-lh: 20px;
-    --type-heading-large-ls: -0.01em;
+    --type-heading-large-weight: 600;
+    --type-heading-large-lh: 24px;
+    --type-heading-large-ls: 0;
     --type-heading-medium-size: 16px;
-    --type-heading-medium-weight: 500;
+    --type-heading-medium-weight: 600;
     --type-heading-medium-lh: 16px;
     --type-heading-medium-ls: 0;
     --type-heading-small-size: 14px;
-    --type-heading-small-weight: 500;
+    --type-heading-small-weight: 600;
     --type-heading-small-lh: 14px;
     --type-heading-small-ls: 0;
     --type-body-large-medium-size: 16px;
     --type-body-large-medium-weight: 500;
-    --type-body-large-medium-lh: 20px;
+    --type-body-large-medium-lh: 22px;
     --type-body-large-medium-ls: -0.02em;
     --type-body-large-semibold-size: 16px;
     --type-body-large-semibold-weight: 500;
@@ -214,7 +214,7 @@
     --type-label-default-semibold-size: 12px;
     --type-label-default-semibold-weight: 500;
     --type-label-default-semibold-lh: 12px;
-    --type-label-default-semibold-ls: 0;
+    --type-label-default-semibold-ls: -0.02em;
     --type-label-default-medium-size: 12px;
     --type-label-default-medium-weight: 500;
     --type-label-default-medium-lh: 12px;
@@ -227,14 +227,14 @@
     --type-label-tiny-semibold-weight: 500;
     --type-label-tiny-semibold-lh: 10px;
     --type-label-tiny-semibold-ls: -0.02em;
-    --type-label-tiny-medium-size: 10px;
-    --type-label-tiny-medium-weight: 500;
-    --type-label-tiny-medium-lh: 10px;
-    --type-label-tiny-medium-ls: -0.02em;
     --type-badge-semibolt-size: 8px;
     --type-badge-semibolt-weight: 500;
     --type-badge-semibolt-lh: 8px;
     --type-badge-semibolt-ls: -0.02em;
+    --type-label-tiny-medium-size: 10px;
+    --type-label-tiny-medium-weight: 500;
+    --type-label-tiny-medium-lh: 10px;
+    --type-label-tiny-medium-ls: -0.02em;
     /* @tokens:end */
 
     /* ================================================================
@@ -711,6 +711,9 @@
   .money{ display:inline-flex; align-items:center; justify-content:flex-end; gap:var(--space-tn); }
   .money-ic{ display:inline-flex; width:12px; height:12px; flex-shrink:0; color:var(--text-primary); }
   .money-ic svg{ display:block; }
+  /* Larger Euro sizes used on phones (KPI value and breakdown rows 16, meters 20): the box follows the icon. */
+  .money-ic[data-s="16"]{ width:16px; height:16px; }
+  .money-ic[data-s="20"]{ width:20px; height:20px; }
 
   /* ---- Hero chart card — nested in .hero-right after Row2, sized to that
      column's width (822px), not the full page width ---- */
@@ -1605,3 +1608,50 @@
     ::view-transition-old(mnav-pill), ::view-transition-new(mnav-pill){ height:100%; }
     ::view-transition-group(root){ animation-duration:.15s; }
   }
+
+  /* ---- Phones, Sept 28 frames (Ongatu 342:7993, Tracker_Card_mobile 442:5153, 420:6020) ---- */
+  @media (max-width:640px){
+    .card{ border-radius:var(--radius-md); }
+    /* KPI cards: 16px Euro right against the figure. */
+    .mini-kpi .value .money{ gap:0; }
+    /* Tracker: tabs across the whole width, 40 high, Body/Large/Medium; sub-tabs share the width too. */
+    .bd-controllers, .bd-tabs-stack{ width:100%; }
+    #breakdown-top-seg, #breakdown-group-seg{ width:100%; flex-wrap:nowrap; gap:var(--space-xs); box-sizing:border-box; }
+    #breakdown-top-seg button, #breakdown-group-seg button{ flex:1 1 0; min-width:0; }
+    #breakdown-top-seg button{ height:40px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); }
+    .meter-row .meter-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    .meter-row .meter-amt, .bd-row .n{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); }
+    .meter-row .meter-amt .money{ gap:var(--space-tn); }
+    .bd-row .n .money{ gap:0; }
+    .bd-block{ gap:var(--space-tn); }
+    .bd-block-title{ margin-bottom:var(--space-sm); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+    .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+    /* Expander (DS 475:743): the card stops at 555px; an 88px band fades to white over its bottom with "See all". */
+    .breakdown-card{ position:relative; }
+    .breakdown-card.is-collapsed{ max-height:555px; overflow:hidden; box-sizing:border-box; }
+    .ds-expander{
+      position:absolute; left:0; right:0; bottom:0; height:88px; box-sizing:border-box; display:flex; align-items:flex-end; justify-content:center;
+      padding:var(--space-xs) 0; background:linear-gradient(180deg, var(--surface-primary-transparent) 0%, var(--surface-primary) 53.365%);
+    }
+    .ds-expander .btn-pill{ height:40px; padding:0 var(--space-md); gap:var(--space-tn); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); }
+    .ds-expander.is-open{ position:static; height:auto; padding:var(--space-md) 0 0; background:none; }
+    .ds-expander.is-open svg{ transform:rotate(180deg); }
+    /* Chart (Trend_Chart_Section 342:8068): label Heading/Small in text/secondary, Value/Large, 10px legend with 8px dots. */
+    .hero-chart.is-compact .hc-label{ color:var(--text-secondary); }
+    .hero-chart.is-compact .hc-value{ margin-top:var(--space-tn); }
+    .hero-chart.is-compact .legend{ gap:var(--space-sm); font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); color:var(--text-secondary); }
+    .hero-chart.is-compact .legend span{ gap:var(--space-tn); }
+    .hero-chart.is-compact .legend .swatch{ width:8px; height:8px; border-radius:var(--radius-full); }
+    /* Modal, Surface=Mobile (DS 443:1484; Ongatu 420:6020): a bottom sheet, full width, top corners radius/md. */
+    .ds-modal{ width:100%; max-width:100%; margin:auto 0 0; padding:0 0 var(--space-lg); border-radius:var(--radius-md) var(--radius-md) 0 0; gap:var(--space-lg); max-height:calc(100dvh - 48px); overflow:auto; }
+    .ds-modal[open]{ animation:ds-sheet-in .25s cubic-bezier(.2,0,0,1); }
+    .ds-modal-header{ padding:var(--space-xs); }
+    .ds-modal-header .round-btn{ width:40px; height:40px; }
+    .ds-modal-content{ padding:0 var(--space-md); gap:var(--space-lg); }
+    .ds-modal-text{ gap:var(--space-xs); }
+    .ds-modal-description{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); }
+    .ds-modal-actions{ padding:0 var(--space-md); margin-top:var(--space-md); }
+    .ds-modal-actions .btn-pill{ flex:1 1 0; width:auto; height:48px; justify-content:center; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; }
+    .ds-modal-actions .btn-pill.ghost{ border-color:transparent; }
+  }
+  @keyframes ds-sheet-in{ from{ transform:translateY(100%); } to{ transform:none; } }

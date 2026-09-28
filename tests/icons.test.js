@@ -76,5 +76,7 @@ test('Icon draws the Figma frames: 20 = 0 0 20 20, 12/10 = 1 1 18 18, redrawn X/
   assert.equal(iconFrame(icons.plus, 10).viewBox, '1 1 18 18');
   assert.equal(iconFrame(icons.x, 12).viewBox, '0 0 12 12');
   assert.equal(iconFrame(icons.euro, 10).viewBox, '0 0 10 10');
-  assert.equal(iconFrame(icons.plus, 16).px, 20);
+  assert.equal(iconFrame(icons.plus, 16).viewBox, '0 0 20 20');
+  assert.equal(iconFrame(icons.plus, 24).px, 24);
+  assert.equal(iconFrame(icons.plus, 14).px, 20);
 });
