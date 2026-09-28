@@ -19,6 +19,7 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
   const chosen = flat.find((o) => String(o.value) === String(value ?? ''));
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
+  const [placeTick, setPlaceTick] = useState(0);
   const wrapRef = useRef(null), triggerRef = useRef(null), menuRef = useRef(null), byMouse = useRef(false);
 
   const close = useCallback(() => { setOpen(false); setActive(-1); }, []);
@@ -43,6 +44,7 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
     if (!menu || !trigger) return;
     const r = trigger.getBoundingClientRect();
     menu.style.setProperty('--dd-w', r.width + 'px');
+    menu.style.maxHeight = '';
     const gap = 4, edge = 8, natural = menu.offsetHeight, mw = menu.offsetWidth;
     const below = window.innerHeight - r.bottom - gap - edge, above = r.top - gap - edge;
     let top, h;
@@ -50,13 +52,16 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
     menu.style.maxHeight = Math.max(h, 80) + 'px';
     menu.style.top = Math.max(edge, top) + 'px';
     menu.style.left = Math.max(edge, Math.min(r.left, window.innerWidth - mw - edge)) + 'px';
-  }, [open]);
+  }, [open, placeTick]);
 
   // Close on outside pointer, page scroll or resize.
   useEffect(() => {
     if (!open) return;
     const onDown = (e) => { if (!menuRef.current?.contains(e.target) && !wrapRef.current?.contains(e.target)) close(); };
-    const onScroll = (e) => { if (!menuRef.current?.contains(e.target)) close(); };
+    // A scroll that lands right after opening is the browser bringing a half-hidden trigger into view (focus on click):
+    // it must not close the menu it just opened.
+    const openedAt = performance.now();
+    const onScroll = (e) => { if (menuRef.current?.contains(e.target)) return; if (performance.now() - openedAt > 250) close(); else setPlaceTick((t) => t + 1); };
     document.addEventListener('pointerdown', onDown, true);
     document.addEventListener('scroll', onScroll, true);
     window.addEventListener('resize', close);
@@ -67,8 +72,14 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
   useEffect(() => {
     if (!open || active < 0) return;
     if (byMouse.current) { byMouse.current = false; return; }
-    const el = menuRef.current?.querySelectorAll('.ds-dd-item')[active];
-    if (el) el.scrollIntoView({ block: 'nearest' });
+    const menu = menuRef.current;
+    const el = menu?.querySelectorAll('.ds-dd-item')[active];
+    // Scroll the menu only: scrollIntoView would also scroll the panel behind it, and a scroll closes the menu.
+    if (el) {
+      const top = el.offsetTop, bottom = top + el.offsetHeight;
+      if (top < menu.scrollTop) menu.scrollTop = top;
+      else if (bottom > menu.scrollTop + menu.clientHeight) menu.scrollTop = bottom - menu.clientHeight;
+    }
   }, [open, active]);
 
   const onKeyDown = (ev) => {

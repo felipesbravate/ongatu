@@ -6,18 +6,20 @@
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
-import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, MobileBottomNav, RoundButton, SideMenu, Toggle, useToast } from '../ui/index.js';
-import { arrowStraightLeft, lock, trash, upload } from '../ui/icons.js';
+import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, MobileBottomNav, SideMenu, Toggle, useToast } from '../ui/index.js';
+import { Icon } from '../ui/Icon.jsx';
+import { arrowStraightLeft, cancel, lock, security, trash, user } from '../ui/icons.js';
 import { api, deleteMe, deleteMyData, getMe, getSignIn, setSignIn, signOut } from './api.js';
 import { AccountNav } from './AccountBar.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
 import { useBudgetAlertsStandalone } from './alerts.js';
 import { avatarFromFile, removeAvatar, saveAvatar, saveProfile, useProfile } from './profile.js';
 
+// Side menu labels and icons as in Ongatu 250:3399 (Sept 28).
 const SECTIONS = [
-  { id: 'profile', label: 'Edit profile' },
-  { id: 'security', label: 'Security' },
-  { id: 'data', label: 'Data and privacy' },
+  { id: 'profile', label: 'Personal information', icon: user },
+  { id: 'security', label: 'Security', icon: lock },
+  { id: 'data', label: 'Data & privacy', icon: security },
 ];
 const EXPORT_COLLECTIONS = ['years', 'entries', 'budgets', 'budgetDefaults', 'overrides', 'settings'];
 
@@ -63,7 +65,7 @@ export default function AccountApp() {
         </header>
         <div className="acct-content">
           <SideMenu className="acct-menu" label="Account sections" value={active}
-            items={SECTIONS.map((s) => ({ key: s.id, id: 'menu-' + s.id, label: s.label, href: '#' + s.id }))}
+            items={SECTIONS.map((s) => ({ key: s.id, id: 'menu-' + s.id, label: s.label, icon: s.icon, href: '#' + s.id }))}
             onSelect={(key, e) => { e.preventDefault(); setActive(key); document.getElementById(key).scrollIntoView({ behavior: 'smooth', block: 'start' }); }} />
           <div className="acct-cards">
             <ProfileCard me={me} profile={profile} confirm={confirm} showToast={showToast} />
@@ -114,8 +116,9 @@ function ProfileCard({ me, profile, confirm, showToast }) {
         <div className="acct-avatar-row">
           <Avatar large name={profile.name} image={profile.image} />
           <div className="acct-avatar-actions">
-            <Button size="small" variant="secondary" icon={upload} id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Upload an image</Button>
-            <RoundButton icon={trash} size="small" variant="secondary" className="is-destructive" id="avatar-delete" label="Delete picture" disabled={!profile.image} onClick={askRemove} />
+            {/* 250:3399: "Add image" (Button Tiny Secondary, 32 high) and a 32px tertiary Round button with a 12px Trash. */}
+            <Button size="tiny" variant="secondary" id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Add image</Button>
+            <button type="button" className="round-btn small is-destructive" id="avatar-delete" aria-label="Delete picture" disabled={!profile.image} onClick={askRemove}><Icon icon={trash} size={12} /></button>
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden id="avatar-file" onChange={onFile} />
           </div>
         </div>
@@ -224,7 +227,7 @@ function DataCard({ me, confirm, showToast }) {
   });
   return (
     <section className="acct-card" id="data" aria-labelledby="data-title">
-      <div className="acct-card-head"><h2 id="data-title">Data and privacy</h2><p>Manage your data with Ongatu.</p></div>
+      <div className="acct-card-head"><h2 id="data-title">Data &amp; privacy</h2><p>Manage your data with Ongatu.</p></div>
       <div className="acct-card-body acct-data">
         <div className="acct-data-row">
           <div className="acct-meta"><h3>Import</h3><p>Import your data from different platforms or spreadsheet.</p></div>
@@ -247,7 +250,7 @@ function DataCard({ me, confirm, showToast }) {
             <p>Completely erase your credentials, billing context, settings, and all active tracking histories. This action cannot be undone.</p>
             <Checkbox id="delete-confirm" checked={sure} onChange={setSure}>I confirm that I want to close my account and permanently delete all associated data.</Checkbox>
           </div>
-          <Button size="small" variant="destructive" id="delete-account-btn" onClick={deleteAccount} disabled={!sure}>Delete account</Button>
+          <Button size="small" variant="destructive" icon={cancel} id="delete-account-btn" onClick={deleteAccount} disabled={!sure}>Delete account</Button>
         </div>
       </div>
     </section>

@@ -1561,6 +1561,59 @@
   /* The 16px Euro sits right against the figure in KPI, Expense card and breakdown-row values; Meters keep a 4px gap (20px Euro). */
   .mini-kpi .value .money, .ticker-item .ti-val .money, .bd-row .n .money{ gap:0; }
 
+  /* ---- Panels, Sept 28 (Ongatu 229:19280 Add entry, 232:5852 Year budget). Panel: no padding at the top, a 64px modal-nav
+     (16px sides) with the 32px Round close button on the left, then everything 40 in from the sides and 40 apart.
+     Header: Heading/XL title, 16 above the hint in Body/Large/Medium, text/secondary. Field labels Body/Medium/Medium
+     (the copy is upper case), 8 above their field; form rows and columns 16 apart. Date: border/default with a Calendar icon.
+     Year budget: Group = Heading/Medium title + 24px secondary + Round button (8 apart), rows touch, 32px X in action/primary,
+     16px Euro before a Value/Medium figure in link/default; groups 16 apart with Dividers; 40px buttons. ---- */
+  .add-panel, #add-panel{ padding:0 var(--space-xl) var(--space-xl); gap:var(--space-xl); box-shadow:0 0 64px rgba(22,21,15,.24); border-left-color:var(--border-card); }
+  .panel-nav{ display:flex; align-items:center; height:64px; flex-shrink:0; box-sizing:border-box; margin:0 calc(var(--space-md) - var(--space-xl)); padding:0 var(--space-md);
+    position:sticky; top:0; z-index:2; background:var(--surface-primary); }
+  .panel-close .panel-close-back{ display:none; }
+  .add-panel-header{ display:flex; flex-direction:column; align-items:stretch; gap:var(--space-md); }
+  .add-panel-title{ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
+  #add-panel .add-panel-hint, .budget-panel .add-panel-hint, #budget-panel-hint{ margin:0; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .ap-main{ gap:var(--space-xl); }
+  .ap-section{ gap:var(--space-lg); }
+  .dropzone{ background:var(--surface-body); border-color:var(--border-default); padding:var(--space-xl) var(--space-lg); }
+  .dz-line, .dz-line .ds-action-link, .dz-hint{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .dz-line{ color:var(--text-primary); }
+  .dz-hint{ color:var(--text-secondary); }
+  .add-panel .field-label, .ap-manual .field-label, #add-panel .field label{ margin-bottom:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); text-transform:uppercase; color:var(--text-secondary); }
+  #add-panel .field label{ margin-bottom:var(--space-xs); }
+  .add-panel .field-group{ gap:var(--space-xs); }
+  #add-panel .add-grid{ gap:var(--space-md); }
+  .ap-manual .add-actions{ margin-top:0; }
+  .date-dd{ border-color:var(--border-default); }
+  .date-dd:hover{ border-color:var(--state-border-hover); }
+  .date-dd-label{ color:var(--text-secondary); }
+  .date-dd .date-dd-chevron{ width:16px; height:16px; color:var(--text-primary); }
+  .budget-panel .add-panel-content{ gap:var(--space-xl); }
+  .budget-type-section{ gap:var(--space-md); }
+  .budget-group{ gap:var(--space-xs); }
+  .budget-group-head{ display:flex; align-items:center; gap:var(--space-xs); }
+  .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
+  .round-btn.budget-group-add{ border-color:var(--border-dark); }
+  .budget-row.bd-row{ height:32px; gap:var(--space-tn); }
+  .budget-row .br-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .budget-row .bd-value{ gap:0; }
+  .budget-row .bd-value .bd-euro{ width:16px; height:16px; }
+  .budget-row .bd-amount{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); color:var(--link-default); }
+  .budget-row .br-remove svg{ color:var(--action-primary); }
+  /* Account (Ongatu 250:3399, Sept 28): Side menu 312 wide in Body/Large/Medium, 48 before the 800px cards (1160 in all,
+     centred); "Add image" = Button Tiny Secondary at 32 (12 sides, Body/Medium/Medium, border/dark); the Trash Round button
+     is Small Tertiary with the icon in action/destructive. */
+  .acct-content{ gap:var(--space-2xl); }
+  .acct-menu.ds-side-menu{ width:312px; }
+  @media (max-width:1100px){ .acct-content{ gap:var(--space-lg); } .acct-menu.ds-side-menu{ width:auto; } }
+  .ds-menu-item{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  #avatar-upload.btn-pill.tiny{ height:32px; padding:0 var(--space-sm); border-color:var(--border-dark); color:var(--text-primary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  #avatar-delete.is-destructive{ color:var(--action-destructive); }
+  #avatar-delete:disabled{ opacity:var(--opacity-disabled); cursor:not-allowed; background:transparent; }
+  /* Nav tabs - Add year (Ongatu 265:18832): the button is 32 high, 12 side padding, a 12px Plus 4 before "Add year" in Body/Medium/Medium. */
+  .year-add-pill .btn-pill.tiny{ height:32px; padding:0 var(--space-sm); gap:var(--space-tn); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+
   /* ---- Phones: Ongatu 342:7993 (top of the page) and 369:12607 (scrolled). 16px sides; the header (logo 32 + bell)
      and the year/month nav stay at the top while the page scrolls; cards 24 apart in this order: Balance, KPIs, Tracker,
      Expense allocation, the chart, At a glance; the bottom nav replaces the user menu and the Add button. ---- */
@@ -1598,6 +1651,13 @@
     .alloc-bars{ justify-content:center; }
     /* The Add entry panel has no phone design: it takes the whole width and keeps its fields inside it. */
     .add-panel{ width:100%; max-width:100%; padding:var(--space-lg) var(--space-md); }
+    /* Screen=Mobile panels (229:18167, 415:16066): 16px sides, the modal-nav's close is a back arrow. */
+    .add-panel, #add-panel{ padding:0 var(--space-md) var(--space-xl); }
+    .panel-nav{ margin:0; padding:0; }
+    .panel-close .panel-close-x{ display:none; }
+    .panel-close .panel-close-back{ display:block; }
+    .add-panel .seg-tabs{ display:flex; width:100%; box-sizing:border-box; }
+    .add-panel .seg-tabs button{ flex:1 1 0; min-width:0; }
     .add-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
     .add-grid > *{ min-width:0; }
     .alloc-col{ min-width:36px; }

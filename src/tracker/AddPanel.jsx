@@ -2,12 +2,12 @@
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
 import { ActionLink, Button, Divider, Dropdown, Field, FieldGroup, Input, PanelHeader, ProgressBar, RoundButton, Segments } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { chevronDown, documentIcon, euro, image, questionFilled, upload, x } from '../ui/icons.js';
+import { calendar, chevronDown, documentIcon, euro, image, questionFilled, upload, x } from '../ui/icons.js';
 import { sample } from './api.js';
 import { DocReader, docIconName, docMeta } from './reader.js';
 import { EXP_GROUPS, TYPE_OPTS, fmtDateEU, fmtNum, parseAmount, periodKeyOfDate, periodLabel, periodMismatch, todayISO, typeKeyOf, yearLabelOfDate } from './model.js';
 
-const ENTRY_TYPES = [{ value: 'income', label: 'Income' }, { value: 'investment', label: 'Savings/Investment' }, { value: 'expense', label: 'Expenses' }];
+const ENTRY_TYPES = [{ value: 'income', label: 'Incomes' }, { value: 'investment', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }];
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const simpleOpts = (values) => values.map((v) => ({ value: v, label: v }));
 
@@ -65,6 +65,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateVal]);
 
+  const manualReady = !!desc.trim() && !!itemVal && (!isExp || !!catVal) && parseAmount(amount) > 0;
   const resetManual = () => {
     setDesc(''); setAmount(''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
     setStatus(null); setCat(''); setItem('');
@@ -147,11 +148,9 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     <>
       <div className={'add-panel-backdrop' + (open ? ' open' : '')} id="add-panel-backdrop" onClick={onClose} />
       <div ref={panelRef} className={'add-panel' + (open ? ' open' : '')} id="add-panel" role="dialog" aria-modal="true" aria-labelledby="add-panel-title">
-        <div className={'ap-header' + (showReading ? ' is-faded' : '')}>
-          <PanelHeader closeId="entry-close-btn" titleId="add-panel-title" onClose={onClose}
+        <PanelHeader closeId="entry-close-btn" titleId="add-panel-title" onClose={onClose} faded={showReading}
             title={review ? `Review ${review.rows.length} ${review.rows.length === 1 ? 'entry' : 'entries'} from ${reviewFiles} ${reviewFiles === 1 ? 'file' : 'files'}` : 'Add an entry'}
-            hint={review ? "Check your entries. Change anything that's wrong, or remove what doesn't belong." : 'Upload receipts or statements or enter the information by hand.'} />
-        </div>
+          hint={review ? "Check your entries. Change anything that's wrong, or remove what doesn't belong." : 'Upload receipts or statements or enter the information by hand.'} />
 
         <div className="ap-main" id="ap-main" hidden={!!review}>
           <section className="ap-section" id="ap-upload">
@@ -224,7 +223,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 <Dropdown id="entry-period" size="md" emptyOption={false} value={periodKey} options={model.periodOptions()} onChange={(v) => { setPeriod(v); setPeriodTouched(true); }} />
               </Field>
               <Field className="span-2" label="Description" htmlFor="entry-desc">
-                <Input id="entry-desc" placeholder="e.g. Yego ride" autoComplete="off" value={desc} onChange={(e) => setDesc(e.target.value)} />
+                <Input id="entry-desc" placeholder="e.g., Grocery store" autoComplete="off" value={desc} onChange={(e) => setDesc(e.target.value)} />
               </Field>
               <Field id="entry-category-field" label="Category" htmlFor="entry-cat-trigger" hidden={!isExp}>
                 <Dropdown id="entry-cat" size="md" value={catVal} options={isExp ? simpleOpts(Object.keys(gc).sort()) : []} onChange={(v) => setCat(v)} />
@@ -232,23 +231,23 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               <Field id="entry-item-field" className={isExp ? undefined : 'span-2'} label="Sub-category" htmlFor="entry-item-trigger">
                 <Dropdown id="entry-item" size="md" value={itemVal} options={simpleOpts(pool)} disabled={isExp && !catVal} onChange={(v) => setItem(v)} />
               </Field>
-              <Field label="Date" htmlFor="entry-date">
-                {/* Drawn as the Dropdown (DS 71:1096) the design uses for Date: dd/mm/yyyy and a chevron; the native picker opens on click. */}
-                <div className="date-dd">
-                  <input ref={dateRef} id="entry-date" type="date" defaultValue={todayISO()} min={bounds.min} max={bounds.max}
-                    onClick={(e) => { try { e.currentTarget.showPicker(); } catch { /* older browsers open it themselves */ } }} />
-                  <span className="date-dd-label" aria-hidden="true">{fmtDateEU(dateVal) || 'dd/mm/yyyy'}</span>
-                  <Icon icon={chevronDown} size={12} className="date-dd-chevron" />
-                </div>
-              </Field>
               <Field label="Amount" htmlFor="entry-amount">
                 <Input id="entry-amount" icon={euro} type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} onChange={(e) => setAmount(e.target.value)}
                   onBlur={(e) => { if (e.target.value.trim()) setAmount(fmtNum(parseAmount(e.target.value))); }} />
               </Field>
+              <Field label="Date" htmlFor="entry-date">
+                {/* Drawn as the field 229:19280 uses for Date: dd/mm/yyyy and a Calendar icon; the native picker opens on click. */}
+                <div className="date-dd">
+                  <input ref={dateRef} id="entry-date" type="date" defaultValue={todayISO()} min={bounds.min} max={bounds.max}
+                    onClick={(e) => { try { e.currentTarget.showPicker(); } catch { /* older browsers open it themselves */ } }} />
+                  <span className="date-dd-label" aria-hidden="true">{fmtDateEU(dateVal) || 'dd/mm/yyyy'}</span>
+                  <Icon icon={calendar} size={16} className="date-dd-chevron" />
+                </div>
+              </Field>
             </div>
             <div className="add-actions">
-              <Button id="entry-submit" disabled={busy} onClick={submitManual}>Add</Button>
-              <Button variant="tertiary" id="entry-cancel" onClick={resetManual}>Cancel</Button>
+              {/* 229:19280: one Submit, at 40% until the form has what an entry needs (no Cancel in the Sept 28 frames). */}
+              <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Submit</Button>
               <span className={'add-status' + (status && status.err ? ' err' : '')} id="entry-status" role="status">{status ? status.text : ''}</span>
             </div>
           </section>

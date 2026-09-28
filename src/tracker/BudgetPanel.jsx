@@ -5,9 +5,9 @@ import { Icon } from '../ui/Icon.jsx';
 import { checkmark, euro, plus, x } from '../ui/icons.js';
 import { EXP_GROUPS, MONTH_ABBR, fmtNum, parseAmount } from './model.js';
 
-const TYPES = [{ value: 'income', label: 'Income' }, { value: 'investment', label: 'Savings/Investments' }, { value: 'expense', label: 'Expenses' }];
+const TYPES = [{ value: 'income', label: 'Incomes' }, { value: 'investment', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }];
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
-const COMBOS = [{ type: 'income', group: null, label: 'Income' }, { type: 'investment', group: null, label: 'Savings/Investments' }, ...EXP_GROUPS.map((g) => ({ type: 'expense', group: g, label: g }))];
+const COMBOS = [{ type: 'income', group: null, label: 'Income' }, { type: 'investment', group: null, label: 'Save/Invest' }, ...EXP_GROUPS.map((g) => ({ type: 'expense', group: g, label: g }))];
 let seq = 0;
 
 // Panel - Year budget (Cost-tracker 232:5852).
@@ -51,6 +51,13 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   const removeRow = (key) => mapRows((rows) => rows.filter((r) => r.key !== key));
   const setEditing = (key, editing) => mapRows((rows) => rows.map((r) => (r.key === key ? { ...r, editing } : r)));
   const rowProps = { onValue: setValue, onRemove: removeRow, onEditing: setEditing };
+  const addItem = (i, it) => patchSection(i, (x) => {
+    const r = { key: ++seq, type: x.type, group: x.group, ...it, computed: 0, isCustomized: false, value: fmtNum(it.amount) };
+    if (x.type !== 'expense') return { ...x, adding: false, empty: false, pre: [...x.pre, r] };
+    const bi = x.blocks.findIndex((b) => b.category === it.category);
+    const blocks = bi >= 0 ? x.blocks.map((b, k) => (k === bi ? { ...b, rows: [...b.rows, r] } : b)) : [...x.blocks, { category: it.category, rows: [r] }];
+    return { ...x, adding: false, empty: false, blocks };
+  });
   const allRows = () => sections.flatMap((s) => [...s.pre, ...s.rows, ...s.blocks.flatMap((b) => b.rows)]);
 
   const create = async () => {
@@ -80,23 +87,24 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
             {sections.map((s, i) => (
               <div key={s.type + (s.group || '')} className="budget-type-section" data-type={s.type} data-group={s.group || ''}
                 hidden={!(s.type === topTab && (topTab !== 'expense' || s.group === group))}>
-                {s.pre.map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}
-                {s.adding
-                  ? <AddItemRow type={s.type} label={s.label} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))}
-                      onAdd={(it) => patchSection(i, (x) => {
-                        const r = { key: ++seq, type: s.type, group: s.group, ...it, computed: 0, isCustomized: false, value: fmtNum(it.amount) };
-                        if (s.type !== 'expense') return { ...x, adding: false, empty: false, pre: [...x.pre, r] };
-                        const bi = x.blocks.findIndex((b) => b.category === it.category);
-                        const blocks = bi >= 0 ? x.blocks.map((b, k) => (k === bi ? { ...b, rows: [...b.rows, r] } : b)) : [...x.blocks, { category: it.category, rows: [r] }];
-                        return { ...x, adding: false, empty: false, blocks };
-                      })} />
-                  : <ActionLink icon={plus} className="budget-add-link" onClick={() => patchSection(i, (x) => ({ ...x, adding: true }))}><span>{s.type === 'expense' ? `New ${s.label.toLowerCase()} expense` : `New ${s.label}`}</span></ActionLink>}
+                {/* 232:5852 (Sept 28): each group is its title with a 24px + Round button (secondary) that adds an item to it;
+                    groups are 16 apart with a Divider between them. An empty section keeps the "+ New" link (the frames draw none). */}
+                {s.type !== 'expense' && !s.empty && (
+                  <div className="budget-group">
+                    <GroupHeader title={s.label} onAdd={() => patchSection(i, (x) => ({ ...x, adding: '' }))} />
+                    {s.adding === '' && <AddItemRow type={s.type} label={s.label} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))} onAdd={(it) => addItem(i, it)} />}
+                    <div className="budget-items">{[...s.pre, ...s.rows].map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
+                  </div>
+                )}
+                {s.empty && (s.adding !== false
+                  ? <AddItemRow type={s.type} label={s.label} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))} onAdd={(it) => addItem(i, it)} />
+                  : <ActionLink icon={plus} className="budget-add-link" onClick={() => patchSection(i, (x) => ({ ...x, adding: '' }))}><span>{s.type === 'expense' ? `New ${s.label.toLowerCase()} expense` : `New ${s.label}`}</span></ActionLink>)}
                 {s.empty && <div className="budget-empty">{isMonth ? 'Nothing planned here for this month — use "+ New" above to add an item.' : 'No historical data yet for this section — use "+ New" above to add an item, or create the year and add entries as they come in.'}</div>}
-                {s.rows.length > 0 && <div className="budget-items">{s.rows.map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>}
                 {s.blocks.map((b, bi) => (
                   <BlockFrag key={b.category} divider={bi > 0}>
                     <div className="budget-group">
-                      <div className="budget-cat-title">{b.category}</div>
+                      <GroupHeader title={b.category} onAdd={() => patchSection(i, (x) => ({ ...x, adding: b.category }))} />
+                      {s.adding === b.category && <AddItemRow type={s.type} label={b.category} category={b.category} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))} onAdd={(it) => addItem(i, it)} />}
                       <div className="budget-items">{b.rows.map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                     </div>
                   </BlockFrag>
@@ -106,8 +114,8 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
           </div>
         </div>
         <div className="add-actions">
-          <Button id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save' : 'Create year'}</Button>
-          <Button variant="tertiary" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
+          <Button size="small" id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save' : 'Create year'}</Button>
+          <Button size="small" variant="tertiary" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
           <span className={'add-status' + (status && status.err ? ' err' : '')} id={isMonth ? 'month-budget-status' : 'budget-status'}>{status ? status.text : ''}</span>
         </div>
       </div>
@@ -115,6 +123,12 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   );
 }
 const BlockFrag = ({ divider, children }) => <>{divider && <hr className="ds-divider budget-divider" />}{children}</>;
+const GroupHeader = ({ title, onAdd }) => (
+  <div className="budget-group-head">
+    <div className="budget-cat-title">{title}</div>
+    <RoundButton icon={plus} size="tiny" variant="secondary" className="budget-group-add" label={`Add an item to ${title}`} onClick={onAdd} />
+  </div>
+);
 
 // A budget row: breackdown-row (DS 124:3667), Entry off, Action on. Default: name, € and the figure as an Action link;
 // Editing (the figure clicked): an Input, Size=Tiny, and 24px right padding. The Action is a Tiny Tertiary Round button
@@ -132,9 +146,9 @@ function BudgetRow({ r, onValue, onRemove, onEditing }) {
             <input ref={input} type="text" inputMode="decimal" className="br-input" aria-label={`Monthly budget for ${r.item}`} defaultValue={r.value}
               onBlur={(e) => done(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onEditing(r.key, false); } }} /></label>
-        : <span className="bd-value"><Icon icon={euro} size={12} className="bd-euro" />
+        : <span className="bd-value"><Icon icon={euro} size={16} className="bd-euro" />
             <button type="button" className="bd-amount br-amount" aria-label={`Monthly budget for ${r.item}: ${r.value}. Edit`} onClick={() => onEditing(r.key, true)}>{r.value}</button></span>}
-      {!r.editing && <RoundButton icon={x} size="tiny" className="br-remove" label={`Remove ${r.item}`} onClick={() => onRemove(r.key)} />}
+      {!r.editing && <button type="button" className="round-btn small br-remove" aria-label={`Remove ${r.item}`} onClick={() => onRemove(r.key)}><Icon icon={x} size={12} /></button>}
     </div>
   );
 }
@@ -145,8 +159,8 @@ function monthSections(rows) {
 }
 
 // Inline "+ New {label}" (the Add expense overlay 119:12764, as an inline row).
-function AddItemRow({ type, label, onAdd, onCancel }) {
-  const [cat, setCat] = useState(''); const [name, setName] = useState(''); const [amt, setAmt] = useState('');
+function AddItemRow({ type, label, category, onAdd, onCancel }) {
+  const [cat, setCat] = useState(category || ''); const [name, setName] = useState(''); const [amt, setAmt] = useState('');
   const nameRef = useRef(null);
   const ok = () => {
     const item = name.trim();
@@ -156,8 +170,8 @@ function AddItemRow({ type, label, onAdd, onCancel }) {
   return (
     <div className="budget-add-row">
       <div className="budget-add-fields">
-        <span className="budget-add-label">{label + (type === 'expense' ? ' expense' : '')}</span>
-        {type === 'expense' && <Input size="tiny" className="budget-add-cat" type="text" placeholder="Category" aria-label="Category" value={cat} onChange={(e) => setCat(e.target.value)} />}
+        {category == null && <span className="budget-add-label">{label + (type === 'expense' ? ' expense' : '')}</span>}
+        {type === 'expense' && category == null && <Input size="tiny" className="budget-add-cat" type="text" placeholder="Category" aria-label="Category" value={cat} onChange={(e) => setCat(e.target.value)} />}
         <Input size="tiny" className="budget-add-name" ref={nameRef} type="text" placeholder="Item name" aria-label="Item name" value={name} onChange={(e) => setName(e.target.value)} />
         <Input size="tiny" className="budget-add-amt" icon={euro} type="text" inputMode="decimal" placeholder="0,00" aria-label="Amount" value={amt} onChange={(e) => setAmt(e.target.value)} />
       </div>
