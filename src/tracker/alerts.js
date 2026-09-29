@@ -6,20 +6,28 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { db } from './api.js';
 import { createModel, yearsFromDocs } from './model.js';
 
+// `seen`: alerts the bell has shown (the red dot goes when the list is opened). `read`: alerts the user marked as read
+// ("Mark as read" on the item, Ongatu 211:19682); a read alert no longer offers the link. Both live in settings/notifications.
 export function useSeenAlerts() {
-  const [seen, setSeen] = useState(null); // null while loading
+  const [state, setState] = useState(null); // { seen: Set, read: Set }, null while loading
   useEffect(() => db.collection('settings').onSnapshot((snap) => {
     const d = snap.docs.find((x) => x.id === 'notifications');
     const v = d ? d.data() : null;
-    setSeen(new Set(v && Array.isArray(v.seen) ? v.seen : []));
+    setState({ seen: new Set(v && Array.isArray(v.seen) ? v.seen : []), read: new Set(v && Array.isArray(v.read) ? v.read : []) });
   }), []);
+  const save = useCallback((next) => {
+    setState({ seen: new Set(next.seen), read: new Set(next.read) });
+    db.doc('settings/notifications').set(next).catch(() => {});
+  }, []);
   const markSeen = useCallback((ids) => {
-    if (!seen || ids.every((id) => seen.has(id))) return;
-    const next = [...new Set([...seen, ...ids])].slice(-300);
-    setSeen(new Set(next));
-    db.doc('settings/notifications').set({ seen: next }).catch(() => {});
-  }, [seen]);
-  return [seen, markSeen];
+    if (!state || ids.every((id) => state.seen.has(id))) return;
+    save({ seen: [...new Set([...state.seen, ...ids])].slice(-300), read: [...state.read] });
+  }, [state, save]);
+  const markRead = useCallback((id) => {
+    if (!state || state.read.has(id)) return;
+    save({ seen: [...new Set([...state.seen, id])].slice(-300), read: [...state.read, id].slice(-300) });
+  }, [state, save]);
+  return [state ? state.seen : null, markSeen, state ? state.read : null, markRead];
 }
 
 const COLLECTIONS = ['years', 'entries', 'overrides', 'budgets', 'budgetDefaults'];

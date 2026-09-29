@@ -262,12 +262,11 @@
     --type-badge-semibolt-ls: -0.02em;
     /* @tokens:end */
 
-    /* Screen layout spacing (Sept 29). The Ongatu screens still bind their page and card layout to the old Spacing
-       collection, which has one value for every device; only the DS components moved to Surface (Mobile / Desktop).
-       So the layout keeps these fixed numbers and the components (the Sept 29 block at the end) follow the mode.
-       If the screens are rebound to Surface in Figma, point these at var(--space-*) instead. */
-    --layout-tn: 4px; --layout-xs: 8px; --layout-sm: 12px; --layout-md: 16px; --layout-lg: 24px; --layout-xl: 40px;
-    --layout-2xl: 48px; --layout-3xl: 80px; --layout-nav-padding-y: 6px; --layout-control-gap: 10px; --layout-tags-indent: 56px;
+    /* Screen layout spacing. Sept 29 (later): the Ongatu screens are rebound to Surface, so the layout follows the
+       Mobile / Desktop mode like the components. Kept as aliases so the layout rules read as layout. */
+    --layout-tn: var(--space-tn); --layout-xs: var(--space-xs); --layout-sm: var(--space-sm); --layout-md: var(--space-md);
+    --layout-lg: var(--space-lg); --layout-xl: var(--space-xl); --layout-2xl: var(--space-2xl); --layout-3xl: var(--space-3xl);
+    --layout-nav-padding-y: var(--space-nav-padding-y); --layout-control-gap: var(--space-control-gap); --layout-tags-indent: var(--space-tags-indent);
 
 
     /* ================================================================
@@ -1850,6 +1849,8 @@
   /* Month selector 4:171: space/tn space/sm, Body/Medium/SemiBold, radius/full; the height hugs (24 / 18). */
   .month-btn{ height:auto; padding:var(--space-tn) var(--space-sm);
     font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+  /* The dashed border of an estimated month comes off its padding, so every chip keeps the DS height. */
+  .month-btn.estimated{ padding:calc(var(--space-tn) - 1px) calc(var(--space-sm) - 1px); }
   /* menu-item 304:528 (fixed 40, space/sm, space/xs gap, 24px icon slot) and Side menu 304:553 (space/tn apart). */
   .ds-side-menu{ gap:var(--space-tn); }
   .ds-menu-item{ height:40px; padding:var(--space-sm); gap:var(--space-xs); }
@@ -1872,11 +1873,19 @@
   .mini-kpi, .ticker-item{ padding:var(--space-md); gap:var(--space-xs); border-radius:var(--radius-md); }
   /* Balance card 441:1057: space/lg padding, space/sm gap, radius/card. */
   .balance-card{ padding:var(--space-lg); border-radius:var(--radius-card); }
-  .balance-card .value, .balance-card .pill-delta{ margin-top:var(--space-sm); }
+  .balance-card .value, .balance-card .pill-delta, .balance-card .balance-details{ margin-top:var(--space-sm); }
+  /* Balance card "↑ details" (441:1057): 12px arrow, space/tn, Value/Small in text/secondary. */
+  .balance-details{ display:flex; align-items:center; gap:var(--space-tn); font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-secondary); }
+  .balance-details svg{ flex-shrink:0; color:var(--text-secondary); }
   /* Meter 25:37: name row space/md apart, space/tn above the 8px bar. */
   .meter-row .meter-track{ margin-top:var(--space-tn); }
   /* breackdown-row 124:3667: hugs the Tiny round button (32 / 24), space/tn apart. */
   .bd-row{ height:auto; min-height:calc(2 * var(--space-xs) + 16px); gap:var(--space-tn); }
+  /* Entry tooltip counter 146:5252: fixed 14 high, space/tn sides, the count in Label/Default/SemiBold. */
+  .note-count{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); }
+  /* Tooltip entry item 144:4426: fixed 24 high, space/xs gaps; name and date in Body/Medium/Medium (date text/secondary),
+     amount Value/Small after a 12px Euro, Micro round button. */
+  #note-tip .tip-name, #note-tip .tip-date{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   /* Label 211:859: fixed 24 high, space/xs sides, space/tn gap, radius/ty, Body/Medium/Medium. */
   .insight-tag, .hc-delta{ height:24px; padding:0 var(--space-xs); gap:var(--space-tn); border-radius:var(--radius-ty);
     font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
@@ -1884,13 +1893,17 @@
   .ds-notif-item{ padding:var(--space-md); gap:var(--space-xs); border-radius:var(--radius-sm); }
   .ds-notif-when{ gap:var(--space-tn); font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
   .ds-notif-content{ gap:var(--space-md); }
+  /* Content (date row + text) space/xs apart, then the Action link "Mark as read" while unread (228:469, 211:19682). */
+  .ds-notif-body{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ds-notif-mark{ align-self:flex-start; }
   /* Notification 228:455: the bell is a Small Round button (40). */
   .ds-notif{ width:40px; height:40px; }
   .ds-notif-panel{ top:48px; }
   /* Toast 304:659 */
   .ds-toast{ gap:var(--space-md); padding:0 var(--space-md) 0 0; border-radius:var(--radius-sm); }
   .ds-toast-msg{ padding:var(--space-md) 0; }
-  .ds-toast .ds-toast-close{ margin-top:var(--space-md); }
+  .ds-toast{ min-height:0; }
+  .ds-toast .ds-toast-close{ margin:var(--space-md) 0; }
   /* Modal 443:1484, Surface=Desktop: no side padding, space/lg below, sections space/lg apart; Top-nav space/xs round a
      Small close; Content space/md sides, space/2xl gap; the text block space/lg sides, space/xl gap, text space/sm;
      Actions space/3xl sides, space/md apart, buttons share the width. (Surface=Mobile is in the phone block below.) */
@@ -1909,6 +1922,18 @@
   .ds-user-info{ gap:var(--space-xs); padding-left:var(--space-xs); }
   /* App header 285:600: 64 high, space/xs space/xl. */
   @media (min-width:641px){ .ds-app-header{ padding:var(--space-xs) max(var(--space-xl), calc((100% - 1238px) / 2 - 16px)); } }
+  /* Main page layout, Ongatu 211:18753 (rebound to Surface Sept 29): Body space/2xl, page header space/lg (title block
+     space/xs, nav rows space/xs), Content space/md between the 360px left column and the right column, and space/md
+     between cards in each column; cards padding space/lg. Phones keep their own layout (342:7993). */
+  @media (min-width:641px){
+    .row1{ grid-template-columns:360px 1fr; gap:var(--space-md); margin-bottom:var(--space-md); }
+    .hero-left, .hero-right{ gap:var(--space-md); }
+    .yoy{ gap:var(--space-md); }
+    /* The desktop frame places the App header 40 from the top and the page 40 under it (absolute positions in Figma,
+       not variables), so these stay 40 in both modes. */
+    .app-top-gap{ height:40px; }
+    .wrap{ padding-top:40px; }
+  }
   @media (max-width:640px){
     /* Modal Surface=Mobile: space/lg below and between sections, Top-nav space/xs, Content space/md sides and space/xl
        gaps, text space/xs, Actions space/md apart with no side padding. */

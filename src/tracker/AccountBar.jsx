@@ -31,7 +31,7 @@ export function AccountNav({ me, profile, alerts = [], onOpenAlert }) {
   const [busy, setBusy] = useState({});
   const [dialog, setDialog] = useState(null); // 'admin'
   const close = useCallback(() => setOpen(null), []);
-  const [seen, markSeen] = useSeenAlerts();
+  const [seen, markSeen, read, markRead] = useSeenAlerts();
 
   const loadPending = useCallback(async () => {
     if (!me || !me.isAdmin) return;
@@ -59,7 +59,8 @@ export function AccountNav({ me, profile, alerts = [], onOpenAlert }) {
           {alerts.map((a) => {
             const w = whenOf(a.at);
             return (
-              <NotificationItem key={a.id} date={w.date} time={w.time}
+              <NotificationItem key={a.id} date={w.date} time={w.time} id={'notif-' + a.id}
+                onMarkRead={read && !read.has(a.id) ? () => markRead(a.id) : undefined}
                 action={onOpenAlert ? { label: 'View', onClick: () => { setOpen(null); onOpenAlert(a); } } : undefined}>
                 {`${a.item} (${a.group}) is over budget in ${MON[a.mi]}: ${fmtMoney(a.spent, 'EUR')} of ${fmtMoney(a.budget, 'EUR')}.`}
               </NotificationItem>

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR } from './model.js';
+import { Icon } from '../ui/Icon.jsx';
 
 const tok = (name) => (typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(name).trim());
 
@@ -38,9 +39,13 @@ export function HeroLeft({ model, y, monthIdx }) {
       <div className="card balance-card">
         <div className="label">Balance this month</div>
         <div className="value" id="balance-value">{fmtMoney(c.balance, cur)}</div>
-        <span className="pill-delta" id="balance-delta" style={prev ? { color: d >= 0 ? 'var(--good)' : 'var(--critical)' } : undefined}>
-          {prev ? `${d >= 0 ? '↑' : '↓'} ${fmtMoneyShort(Math.abs(d), cur)} vs last month` : ''}
-        </span>
+        {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
+            phones (342:7993) keep the month change. */}
+        {mobile
+          ? <span className="pill-delta" id="balance-delta" style={prev ? { color: d >= 0 ? 'var(--good)' : 'var(--critical)' } : undefined}>
+              {prev ? `${d >= 0 ? '↑' : '↓'} ${fmtMoneyShort(Math.abs(d), cur)} vs last month` : ''}
+            </span>
+          : <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>}
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
@@ -115,7 +120,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   };
   const state = (r) => (r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined);
   // Phones (Tracker_Card_mobile 442:5153): the card stops at 555px with the Expander (DS 475:743) over its bottom;
-  // "See all" opens the whole list. Expanded state and "See less" are not in the design (Claude's choice, to confirm).
+  // "See all" opens the whole list; open, it reads "See less" (not drawn in Figma; kept, Felipe Sept 29).
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
   const [tall, setTall] = useState(false);

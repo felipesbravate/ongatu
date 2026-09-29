@@ -1,7 +1,7 @@
 'use client';
 import { Children, Fragment, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, RoundButton } from './Button.jsx';
+import { ActionLink, Button, RoundButton } from './Button.jsx';
 import { Icon } from './Icon.jsx';
 import { arrowStraightLeft, bell, chevronDown } from './icons.js';
 import { useMobile } from './useMobile.js';
@@ -13,7 +13,8 @@ export function useDismiss(open, ref, onClose, alsoRef) {
   useEffect(() => {
     if (!open) return;
     const inside = (r, t) => r && r.current && r.current.contains(t);
-    const onDoc = (e) => { if (ref.current && !inside(ref, e.target) && !inside(alsoRef, e.target)) onClose(); };
+    // A click on something the click itself removed ("Mark as read" hides its own link) is not a click outside.
+    const onDoc = (e) => { if (!e.target.isConnected) return; if (ref.current && !inside(ref, e.target) && !inside(alsoRef, e.target)) onClose(); };
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     const t = setTimeout(() => document.addEventListener('click', onDoc), 0);
     document.addEventListener('keydown', onKey);
@@ -84,15 +85,19 @@ export function UserMenu({ name, image, open, onToggle, onClose, items }) {
   );
 }
 
-// notification-item (DS 228:469): date · time in text/accent, the text, and an optional Tiny Secondary action.
-export function NotificationItem({ date, time, children, action }) {
+// notification-item (DS 228:469): date · time, the text with an optional Micro Secondary action, and — while the item
+// is unread — the "Mark as read" Action link under it (Ongatu 211:19682). `onMarkRead` omitted = read (no link).
+export function NotificationItem({ date, time, children, action, onMarkRead, id }) {
   return (
-    <div className="ds-notif-item">
-      <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
-      <div className="ds-notif-content">
-        <div className="ds-notif-text">{children}</div>
-        {action && <Button variant="secondary" size="tiny" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
+    <div className={'ds-notif-item' + (onMarkRead ? ' is-unread' : '')} id={id}>
+      <div className="ds-notif-body">
+        <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
+        <div className="ds-notif-content">
+          <div className="ds-notif-text">{children}</div>
+          {action && <Button variant="secondary" size="micro" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
+        </div>
       </div>
+      {onMarkRead && <ActionLink className="ds-notif-mark" onClick={onMarkRead}>Mark as read</ActionLink>}
     </div>
   );
 }
