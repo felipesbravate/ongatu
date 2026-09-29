@@ -193,7 +193,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                       <div className="doc-info"><div className="doc-name" title={d.name}>{d.name}</div><div className={'doc-meta' + (bad ? ' err' : '')}>{docMeta(d)}</div></div>
                       {d.status === 'preparing' ? <span className="doc-pct">{d.pct}%</span>
                         : d.status === 'reading' ? null
-                        : <RoundButton icon={x} size="tiny" className="doc-remove" label={'Remove ' + d.name} onClick={() => { setDocStatus(null); reader.remove(d.id); }} />}
+                        : <RoundButton icon={x} size="micro" iconSize={12} className="doc-remove" label={'Remove ' + d.name} onClick={() => { setDocStatus(null); reader.remove(d.id); }} />}
                     </div>
                   );
                 })}
@@ -405,7 +405,7 @@ function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
   const typeLabel = (TYPE_OPTS.find((t) => t.key === typeKey) || TYPE_OPTS.find((t) => t.key === 'expense:Variable')).label;
   const catLabel = rowCatLabel(r);
   const dateTitle = has('date') ? `The date of this entry doesn't match the month and year selected (${periodLabel(period)}).` : r.date;
-  const rm = <div className="c-rm"><RoundButton icon={x} size="tiny" className="rv-rm" data-rm={r.id} label={'Remove ' + (r.description || 'entry')} /></div>;
+  const rm = <div className="c-rm"><RoundButton icon={x} size="micro" iconSize={12} className="rv-rm" data-rm={r.id} label={'Remove ' + (r.description || 'entry')} /></div>;
   const date = <span className={'c-date rv-date' + (has('date') ? ' bad' : '')} title={dateTitle}>{shortDate(r.date)}</span>;
   if (!editing) {
     const link = (field, text, ph, bad) => <button type="button" className={'ds-action-link rv-link' + (bad ? ' bad' : '')} data-edit={r.id} data-focus={field} title={text || ph}>{text || ph}</button>;

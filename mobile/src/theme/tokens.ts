@@ -117,8 +117,8 @@ export const space = {
   "xl": 40,
   "2xl": 48,
   "3xl": 80,
-  "navPaddingY": 6,
-  "controlGap": 10,
+  "navPaddingY": 8,
+  "controlGap": 12,
   "tagsIndent": 56
 } as const;
 
@@ -183,11 +183,11 @@ export const text = {
   "BodyLargeMedium": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 16,
-    "lineHeight": 22,
+    "lineHeight": 20,
     "letterSpacing": -0.32
   },
   "BodyLargeSemiBold": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 16,
     "lineHeight": 20,
     "letterSpacing": -0.32
@@ -195,19 +195,19 @@ export const text = {
   "BodyMediumRegular": {
     "fontFamily": "DMSans_400Regular",
     "fontSize": 14,
-    "lineHeight": 18,
+    "lineHeight": 16,
     "letterSpacing": -0.28
   },
   "BodyMediumMedium": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 14,
-    "lineHeight": 18,
+    "lineHeight": 16,
     "letterSpacing": -0.28
   },
   "BodyMediumSemiBold": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 14,
-    "lineHeight": 18,
+    "lineHeight": 16,
     "letterSpacing": -0.28
   },
   "BodySmallRegular": {
@@ -229,10 +229,10 @@ export const text = {
     "letterSpacing": -0.24
   },
   "LabelDefaultSemiBold": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 12,
     "lineHeight": 12,
-    "letterSpacing": -0.24
+    "letterSpacing": 0.24
   },
   "LabelDefaultMedium": {
     "fontFamily": "DMSans_500Medium",
@@ -251,17 +251,17 @@ export const text = {
     "lineHeight": 10,
     "letterSpacing": -0.2
   },
-  "BadgeSemiBolt": {
-    "fontFamily": "DMSans_500Medium",
-    "fontSize": 8,
-    "lineHeight": 8,
-    "letterSpacing": -0.16
-  },
   "LabelTinyMedium": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 10,
     "lineHeight": 10,
     "letterSpacing": -0.2
+  },
+  "BadgeSemiBolt": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 8,
+    "lineHeight": 8,
+    "letterSpacing": -0.16
   }
 } as const;
 

@@ -24,5 +24,8 @@ export function Icon({ icon, size = 20, ...rest }) {
       </svg>
     );
   }
+  // type 'paths' (Sept 29): one <path> per Figma vector path, so paths that overlap add up (as in Figma) instead of
+  // cutting each other out under one fill rule.
+  if (ic.type === 'paths') return <svg {...common} fill="currentColor">{ic.paths.map((p, i) => <path key={i} fillRule={p.fillRule} d={p.d} />)}</svg>;
   return <svg {...common} fill="currentColor"><path fillRule={ic.fillRule} d={ic.d} /></svg>;
 }

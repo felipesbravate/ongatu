@@ -166,7 +166,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       </div>
       {mobile && tall && (
         <div className={'ds-expander' + (expanded ? ' is-open' : '')}>
-          <Button variant="tertiary" icon={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
+          <Button variant="tertiary" size="small" icon={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
             {expanded ? 'See less' : 'See all'}
           </Button>
         </div>
@@ -184,7 +184,7 @@ function TrackerMenu({ onAdjustBudget }) {
   useDismiss(open, ref, close);
   return (
     <div className="bd-menu" ref={ref}>
-      <RoundButton icon={actionsIcon} id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
+      <RoundButton icon={actionsIcon} size="small" id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
       {open && <MenuList id="tracker-menu" items={[{ key: 'budget', id: 'adjust-budget', label: "Adjust month's budget", icon: edit, onSelect: () => { setOpen(false); onAdjustBudget(); } }]} />}
     </div>
   );

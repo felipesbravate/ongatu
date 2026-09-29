@@ -6,7 +6,10 @@ import { readFileSync } from 'node:fs';
 // src/ui/okara.css with the same value, Color variables must point at the same Primitive as in Figma, and the
 // app's short aliases must point at the right Figma variable.
 const css = readFileSync(new URL('../src/ui/okara.css', import.meta.url), 'utf8');
-const root = css.slice(css.indexOf(':root{'), css.indexOf('*{ box-sizing'));
+const root = css.slice(css.indexOf(':root{'), css.indexOf('/* @tokens-mobile:start */'));
+const mobileBlock = css.slice(css.indexOf('/* @tokens-mobile:start */'), css.indexOf('/* @tokens-mobile:end */'));
+const mobileDecl = {};
+for (const m of mobileBlock.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) mobileDecl[m[1]] = m[2].trim();
 const decl = {};
 for (const m of root.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) decl[m[1]] = m[2].trim();
 const figma = JSON.parse(readFileSync(new URL('./figma-tokens.json', import.meta.url), 'utf8'));
@@ -23,7 +26,7 @@ test('every Figma variable is in :root with the same value (aliases as var() to 
     if (collection === 'TextStyles') {
       for (const [name, s] of Object.entries(vars)) {
         const k = '--type-' + kebab(name);
-        const want = { size: s.size + 'px', weight: String(s.weight), lh: s.lineHeight == null ? 'normal' : s.lineHeight + 'px', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
+        const want = { size: `var(${cssName('Surface', s.sizeVar)})`, weight: String(s.weight), lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
         for (const [p, v] of Object.entries(want)) assert.equal(decl[`${k}-${p}`], v, `${k}-${p}: code has ${decl[`${k}-${p}`]}, Figma ${name} has ${v}`);
       }
       continue;
@@ -33,6 +36,12 @@ test('every Figma variable is in :root with the same value (aliases as var() to 
       const got = decl[key];
       assert.ok(got !== undefined, `${key} (Figma ${collection}/${name}) is missing`);
       let want;
+      if (collection === 'Surface') {
+        assert.equal(got, value.Desktop + 'px', `${key}: code has ${got}, Figma Desktop has ${value.Desktop}`);
+        const mob = mobileDecl[key] ?? got;
+        assert.equal(mob, value.Mobile + 'px', `${key} on phones: code has ${mob}, Figma Mobile has ${value.Mobile}`);
+        continue;
+      }
       if (value && typeof value === 'object') want = `var(${cssName('Primitives', value.alias)})`;
       else if (typeof value === 'number') want = collection === 'Opacity' ? String(value > 1 ? value / 100 : value) : value + 'px';
       else if (collection === 'Typography') want = `"${value}", ${FONT_FALLBACK[name] || 'sans-serif'}`;
@@ -67,6 +76,10 @@ test('outside the token block, only Color variables and aliases are used (no Pri
 test('every --type-* used in the CSS is a Figma text style', () => {
   const used = new Set([...css.matchAll(/var\((--type-[\w-]+)\)/g)].map((m) => m[1]));
   for (const v of used) assert.ok(decl[v] !== undefined, `${v} is used but not generated from a Figma text style`);
+});
+
+test('the Mobile Surface values apply under the phone query', () => {
+  assert.match(mobileBlock, /@media \(max-width:640px\)\{\s*:root\{/);
 });
 
 test('native app tokens (mobile/src/theme/tokens.ts) are generated from the same Figma snapshot', async () => {

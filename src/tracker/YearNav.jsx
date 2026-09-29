@@ -70,7 +70,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
   };
   return (
     <div className={'year-add-pill' + (open ? ' open' : '')} id="year-add-panel" role="dialog" aria-label="Add a year">
-      <RoundButton icon={x} id="year-add-cancel" label="Close" active onClick={onClose} />
+      <RoundButton icon={x} size="small" id="year-add-cancel" label="Close" active onClick={onClose} />
       <div className="year-add-pill-inputs">
         <div className="year-add-pill-year">
           <Dropdown id="year-add-year" ariaLabel="Year" size="tiny" placeholder="Year" value={label} onChange={setLabel} options={yearOptions} />
@@ -80,7 +80,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
             options={[{ value: 'EUR', label: 'EUR' }, { value: 'SEK', label: 'SEK' }]} />
         </div>
       </div>
-      <Button size="tiny" icon={plus} id="year-add-submit" onClick={submit}>Add year</Button>
+      <Button size="tiny" icon={plus} iconSize={12} id="year-add-submit" onClick={submit}>Add year</Button>
       <span className={'add-status' + (status && status.err ? ' err' : '')} id="year-add-status">{status ? status.text : ''}</span>
     </div>
   );

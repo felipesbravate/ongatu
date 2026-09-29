@@ -113,27 +113,6 @@
     --surface-primary-transparent: var(--primitive-neutral-surface-transparent);
     --surface-body-transparent: var(--primitive-neutral-off-white-transparent);
 
-    /* Collection: Spacing */
-    --space-tn: 4px;
-    --space-xs: 8px;
-    --space-sm: 12px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 40px;
-    --space-2xl: 48px;
-    --space-3xl: 80px;
-    --space-nav-padding-y: 6px;
-    --space-control-gap: 10px;
-    --space-tags-indent: 56px;
-
-    /* Collection: Radius */
-    --radius-ty: 4px;
-    --radius-sm: 8px;
-    --radius-md: 16px;
-    --radius-lg: 24px;
-    --radius-full: 999px;
-    --radius-card: 20px;
-
     /* Collection: Opacity */
     --opacity-disabled: 0.4;
     --opacity-background: 0.24;   /* Figma stores this one as a percentage (24) */
@@ -142,100 +121,154 @@
     --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
+    /* Collection: Surface (Desktop mode; Mobile below) */
+    --size-display-title: 32px;
+    --size-value-xl: 24px;
+    --size-value-lg: 14px;
+    --size-value-md: 12px;
+    --size-value-sm: 11px;
+    --size-heading-xl: 20px;
+    --size-heading-lg: 16px;
+    --size-heading-md: 14px;
+    --size-heading-sm: 12px;
+    --size-body-lg: 14px;
+    --size-body-md: 12px;
+    --size-body-sm: 11px;
+    --size-label-default: 11px;
+    --size-label-tiny: 10px;
+    --size-badge: 8px;
+    --lh-display-title: 38px;
+    --lh-heading-xl: 20px;
+    --lh-heading-lg: 20px;
+    --lh-heading-md: 14px;
+    --lh-heading-sm: 12px;
+    --lh-body-lg-medium: 16px;
+    --lh-body-lg-semibold: 16px;
+    --lh-body-md: 14px;
+    --lh-body-sm: 12px;
+    --lh-label-default: 11px;
+    --lh-label-tiny: 10px;
+    --lh-badge: 8px;
+    --space-tn: 2px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --space-2xl: 40px;
+    --space-3xl: 64px;
+    --space-nav-padding-y: 4px;
+    --space-control-gap: 8px;
+    --space-tags-indent: 48px;
+    --radius-ty: 4px;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 999px;
+    --radius-card: 20px;
+
     /* Collection: TextStyles */
-    --type-display-title-size: 40px;
+    --type-display-title-size: var(--size-display-title);
     --type-display-title-weight: 600;
-    --type-display-title-lh: 48px;
+    --type-display-title-lh: var(--lh-display-title);
     --type-display-title-ls: 0;
-    --type-value-xl-size: 32px;
+    --type-value-xl-size: var(--size-value-xl);
     --type-value-xl-weight: 500;
     --type-value-xl-lh: normal;
     --type-value-xl-ls: 0;
-    --type-value-large-size: 16px;
+    --type-value-large-size: var(--size-value-lg);
     --type-value-large-weight: 500;
     --type-value-large-lh: normal;
     --type-value-large-ls: 0;
-    --type-value-medium-size: 14px;
+    --type-value-medium-size: var(--size-value-md);
     --type-value-medium-weight: 500;
     --type-value-medium-lh: normal;
     --type-value-medium-ls: -0.04em;
-    --type-value-small-size: 12px;
+    --type-value-small-size: var(--size-value-sm);
     --type-value-small-weight: 500;
     --type-value-small-lh: normal;
     --type-value-small-ls: -0.04em;
-    --type-heading-xl-size: 24px;
+    --type-heading-xl-size: var(--size-heading-xl);
     --type-heading-xl-weight: 600;
-    --type-heading-xl-lh: 24px;
+    --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
-    --type-heading-large-size: 20px;
+    --type-heading-large-size: var(--size-heading-lg);
     --type-heading-large-weight: 600;
-    --type-heading-large-lh: 24px;
+    --type-heading-large-lh: var(--lh-heading-lg);
     --type-heading-large-ls: 0;
-    --type-heading-medium-size: 16px;
+    --type-heading-medium-size: var(--size-heading-md);
     --type-heading-medium-weight: 600;
-    --type-heading-medium-lh: 16px;
+    --type-heading-medium-lh: var(--lh-heading-md);
     --type-heading-medium-ls: 0;
-    --type-heading-small-size: 14px;
+    --type-heading-small-size: var(--size-heading-sm);
     --type-heading-small-weight: 600;
-    --type-heading-small-lh: 14px;
+    --type-heading-small-lh: var(--lh-heading-sm);
     --type-heading-small-ls: 0;
-    --type-body-large-medium-size: 16px;
+    --type-body-large-medium-size: var(--size-body-lg);
     --type-body-large-medium-weight: 500;
-    --type-body-large-medium-lh: 22px;
+    --type-body-large-medium-lh: var(--lh-body-lg-medium);
     --type-body-large-medium-ls: -0.02em;
-    --type-body-large-semibold-size: 16px;
-    --type-body-large-semibold-weight: 500;
-    --type-body-large-semibold-lh: 20px;
+    --type-body-large-semibold-size: var(--size-body-lg);
+    --type-body-large-semibold-weight: 600;
+    --type-body-large-semibold-lh: var(--lh-body-lg-semibold);
     --type-body-large-semibold-ls: -0.02em;
-    --type-body-medium-regular-size: 14px;
+    --type-body-medium-regular-size: var(--size-body-md);
     --type-body-medium-regular-weight: 400;
-    --type-body-medium-regular-lh: 18px;
+    --type-body-medium-regular-lh: var(--lh-body-md);
     --type-body-medium-regular-ls: -0.02em;
-    --type-body-medium-medium-size: 14px;
+    --type-body-medium-medium-size: var(--size-body-md);
     --type-body-medium-medium-weight: 500;
-    --type-body-medium-medium-lh: 18px;
+    --type-body-medium-medium-lh: var(--lh-body-md);
     --type-body-medium-medium-ls: -0.02em;
-    --type-body-medium-semibold-size: 14px;
-    --type-body-medium-semibold-weight: 500;
-    --type-body-medium-semibold-lh: 18px;
+    --type-body-medium-semibold-size: var(--size-body-md);
+    --type-body-medium-semibold-weight: 600;
+    --type-body-medium-semibold-lh: var(--lh-body-md);
     --type-body-medium-semibold-ls: -0.02em;
-    --type-body-small-regular-size: 12px;
+    --type-body-small-regular-size: var(--size-body-sm);
     --type-body-small-regular-weight: 400;
-    --type-body-small-regular-lh: 14px;
+    --type-body-small-regular-lh: var(--lh-body-sm);
     --type-body-small-regular-ls: -0.02em;
-    --type-body-small-medium-size: 12px;
+    --type-body-small-medium-size: var(--size-body-sm);
     --type-body-small-medium-weight: 500;
-    --type-body-small-medium-lh: 14px;
+    --type-body-small-medium-lh: var(--lh-body-sm);
     --type-body-small-medium-ls: -0.02em;
-    --type-body-small-semibold-size: 12px;
+    --type-body-small-semibold-size: var(--size-body-sm);
     --type-body-small-semibold-weight: 500;
-    --type-body-small-semibold-lh: 14px;
+    --type-body-small-semibold-lh: var(--lh-body-sm);
     --type-body-small-semibold-ls: -0.02em;
-    --type-label-default-semibold-size: 12px;
-    --type-label-default-semibold-weight: 500;
-    --type-label-default-semibold-lh: 12px;
-    --type-label-default-semibold-ls: -0.02em;
-    --type-label-default-medium-size: 12px;
+    --type-label-default-semibold-size: var(--size-label-default);
+    --type-label-default-semibold-weight: 600;
+    --type-label-default-semibold-lh: var(--lh-label-default);
+    --type-label-default-semibold-ls: 0.02em;
+    --type-label-default-medium-size: var(--size-label-default);
     --type-label-default-medium-weight: 500;
-    --type-label-default-medium-lh: 12px;
+    --type-label-default-medium-lh: var(--lh-label-default);
     --type-label-default-medium-ls: -0.02em;
-    --type-label-tiny-regular-size: 10px;
+    --type-label-tiny-regular-size: var(--size-label-tiny);
     --type-label-tiny-regular-weight: 500;
-    --type-label-tiny-regular-lh: 10px;
+    --type-label-tiny-regular-lh: var(--lh-label-tiny);
     --type-label-tiny-regular-ls: 0;
-    --type-label-tiny-semibold-size: 10px;
+    --type-label-tiny-semibold-size: var(--size-label-tiny);
     --type-label-tiny-semibold-weight: 500;
-    --type-label-tiny-semibold-lh: 10px;
+    --type-label-tiny-semibold-lh: var(--lh-label-tiny);
     --type-label-tiny-semibold-ls: -0.02em;
-    --type-badge-semibolt-size: 8px;
-    --type-badge-semibolt-weight: 500;
-    --type-badge-semibolt-lh: 8px;
-    --type-badge-semibolt-ls: -0.02em;
-    --type-label-tiny-medium-size: 10px;
+    --type-label-tiny-medium-size: var(--size-label-tiny);
     --type-label-tiny-medium-weight: 500;
-    --type-label-tiny-medium-lh: 10px;
+    --type-label-tiny-medium-lh: var(--lh-label-tiny);
     --type-label-tiny-medium-ls: -0.02em;
+    --type-badge-semibolt-size: var(--size-badge);
+    --type-badge-semibolt-weight: 500;
+    --type-badge-semibolt-lh: var(--lh-badge);
+    --type-badge-semibolt-ls: -0.02em;
     /* @tokens:end */
+
+    /* Screen layout spacing (Sept 29). The Ongatu screens still bind their page and card layout to the old Spacing
+       collection, which has one value for every device; only the DS components moved to Surface (Mobile / Desktop).
+       So the layout keeps these fixed numbers and the components (the Sept 29 block at the end) follow the mode.
+       If the screens are rebound to Surface in Figma, point these at var(--space-*) instead. */
+    --layout-tn: 4px; --layout-xs: 8px; --layout-sm: 12px; --layout-md: 16px; --layout-lg: 24px; --layout-xl: 40px;
+    --layout-2xl: 48px; --layout-3xl: 80px; --layout-nav-padding-y: 6px; --layout-control-gap: 10px; --layout-tags-indent: 56px;
+
 
     /* ================================================================
        App aliases — the short names the rest of this file already uses,
@@ -297,13 +330,55 @@
     --font-size-default: 14px;  /* Body/Default, Heading/Card, Value/Medium — the baseline */
   }
 
+  /* @tokens-mobile:start */
+  /* Generated by scripts/sync-tokens.mjs: the Surface collection in its Mobile mode. Do not edit by hand. */
+  @media (max-width:640px){
+    :root{
+      --size-display-title: 40px;
+      --size-value-xl: 32px;
+      --size-value-lg: 16px;
+      --size-value-md: 14px;
+      --size-value-sm: 12px;
+      --size-heading-xl: 24px;
+      --size-heading-lg: 20px;
+      --size-heading-md: 16px;
+      --size-heading-sm: 14px;
+      --size-body-lg: 16px;
+      --size-body-md: 14px;
+      --size-body-sm: 12px;
+      --size-label-default: 12px;
+      --lh-display-title: 48px;
+      --lh-heading-xl: 24px;
+      --lh-heading-lg: 24px;
+      --lh-heading-md: 16px;
+      --lh-heading-sm: 14px;
+      --lh-body-lg-medium: 20px;
+      --lh-body-lg-semibold: 20px;
+      --lh-body-md: 16px;
+      --lh-body-sm: 14px;
+      --lh-label-default: 12px;
+      --space-tn: 4px;
+      --space-xs: 8px;
+      --space-sm: 12px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 40px;
+      --space-2xl: 48px;
+      --space-3xl: 80px;
+      --space-nav-padding-y: 8px;
+      --space-control-gap: 12px;
+      --space-tags-indent: 56px;
+    }
+  }
+  /* @tokens-mobile:end */
+
   *{ box-sizing:border-box; }
   html{ background:var(--page); }
   body{
     margin:0; background:var(--page); color:var(--ink);
-    font-family:var(--font-sans); font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); padding:0 var(--space-xl);
+    font-family:var(--font-sans); font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); padding:0 var(--layout-xl);
   }
-  .wrap{ max-width:1238px; margin:0 auto; padding-block:var(--space-xl) 72px; }
+  .wrap{ max-width:1238px; margin:0 auto; padding-block:var(--layout-xl) 72px; }
   h1,h2,h3{ font-family:inherit; margin:0; font-weight:500; }
 
   /* ---- Header ---- */
@@ -312,16 +387,16 @@
      Header, Nav and Content are 40 apart. */
   /* Page header (260:12306): the title block, then the year/month nav space/lg (24) below it. The User nav is in the
      App header. */
-  header.top{ position:relative; margin-bottom:var(--space-lg); }
+  header.top{ position:relative; margin-bottom:var(--layout-lg); }
   .app-title{ font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--ink); }
-  .app-sub{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); margin-top:var(--space-xs); }
+  .app-sub{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); margin-top:var(--layout-xs); }
 
   /* ---- Buttons — matches DS "Button" component (Components page, node 4:43) exactly:
      Size=Medium/Small/Tiny × Style=Primary/Secondary/Tertiary, pulled directly from the
      live variant geometry (radius/full, action/default fill, border/default stroke,
      text/white / text/primary text, 4px icon-label gap) rather than approximated. ---- */
   .btn-pill{
-    font-family:inherit; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); padding:var(--space-xs) var(--space-md);
+    font-family:inherit; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); padding:var(--layout-xs) var(--layout-md);
     border-radius:var(--radius-full); border:1px solid transparent; background:var(--ink); color:var(--text-white); cursor:pointer;
     display:inline-flex; align-items:center; gap:4px; height:40px;
     transition: background-color .12s ease, color .12s ease, border-color .12s ease, box-shadow .12s ease, opacity .12s ease;
@@ -343,7 +418,7 @@
      modifiers matching the DS component's real dimensions; not yet applied to any
      button in the markup below (every button here is Size=Medium today). */
   .btn-pill.small{ height:32px; }
-  .btn-pill.tiny{ height:24px; font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); padding:var(--space-tn) var(--space-xs); }
+  .btn-pill.tiny{ height:24px; font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); padding:var(--layout-tn) var(--layout-xs); }
   /* Medium buttons carry a 20px icon (Button/Size=Medium with Plus). */
   .btn-pill svg{ display:block; flex-shrink:0; }
   /* "+Add entry" is the one Button instance node 2:2 actually shows at 16px/-0.16px
@@ -361,7 +436,7 @@
   .btn-pill.destructive:hover{ background:linear-gradient(rgba(22,21,15,.12),rgba(22,21,15,.12)),var(--action-destructive); }
   .btn-pill.destructive:active{ background:linear-gradient(rgba(22,21,15,.2),rgba(22,21,15,.2)),var(--action-destructive); }
   .btn-pill.destructive:disabled:hover{ background:var(--action-destructive); }
-  .btn-plain{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink-2); background:none; border:none; cursor:pointer; padding:var(--space-xs) 4px; border-radius:var(--radius-sm); transition:color .12s ease, background-color .12s ease; }
+  .btn-plain{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink-2); background:none; border:none; cursor:pointer; padding:var(--layout-xs) 4px; border-radius:var(--radius-sm); transition:color .12s ease, background-color .12s ease; }
   .btn-plain:hover{ color:var(--state-ink-hover); background:var(--surface-2); }
   .btn-plain:active{ color:var(--state-ink-press); background:var(--state-surface2-press); }
 
@@ -374,7 +449,7 @@
   /* Label: the closest thing to a replacement for the deleted "Tag" component —
      radius/ty (4px) pill, bg/dark fill, 10px SemiBold white text. */
   .ds-label{
-    display:inline-flex; align-items:center; padding:0 var(--space-xs); height:20px;
+    display:inline-flex; align-items:center; padding:0 var(--layout-xs); height:20px;
     border-radius:var(--radius-ty); background:var(--ink); color:var(--text-white);
     font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); white-space:nowrap;
   }
@@ -407,15 +482,15 @@
      CSS opacity compounds onto all descendants regardless of their own
      opacity value, so the pill has to sit outside the dimmed subtree or it
      would fade along with everything else. ---- */
-  .actions-wrap{ position:relative; margin-bottom:var(--space-xl); }
-  .actions-row{ display:flex; gap:var(--space-lg); align-items:flex-end; transition:opacity .18s ease; }
+  .actions-wrap{ position:relative; margin-bottom:var(--layout-xl); }
+  .actions-row{ display:flex; gap:var(--layout-lg); align-items:flex-end; transition:opacity .18s ease; }
   .actions-row.dimmed{ opacity:var(--opacity-background); pointer-events:none; }
   /* "Add year" open (Cost-tracker 229:19777): everything but the pill fades to opacity/background (24%). */
   .wrap > header.top, .wrap > .row1, .wrap > .yoy-heading, .wrap > .yoy-sub, .wrap > .yoy, .wrap > footer.note{ transition:opacity .18s ease; }
   .wrap.is-adding-year > header.top, .wrap.is-adding-year > .row1, .wrap.is-adding-year > .yoy-heading, .wrap.is-adding-year > .yoy-sub,
   .wrap.is-adding-year > .yoy, .wrap.is-adding-year > footer.note, body:has(.wrap.is-adding-year) .ds-app-header{ opacity:var(--opacity-background); pointer-events:none; }
   .ds-app-header{ transition:opacity .18s ease; }
-  .top-nav{ display:flex; flex-direction:column; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
+  .top-nav{ display:flex; flex-direction:column; gap:var(--layout-xs); flex:1 1 auto; min-width:0; }
 
   /* ---- Year nav: underline tabs, not pills (matches Nav tabs / Tab components,
      DS nodes 59:850 / 53:801, re-confirmed Sept 19 2026: round button stays 40px,
@@ -424,7 +499,7 @@
      space-md (16px), not space-xs (8px). the owner's Figma file has now moved this
      component's exact sizing three times; this is the current live value,
      verified by a fresh pull, not carried over from an older doc note. ---- */
-  .years{ display:flex; align-items:center; gap:var(--space-md); }
+  .years{ display:flex; align-items:center; gap:var(--layout-md); }
   /* Round button, Style=Secondery (Figma's own spelling) — border/default stroke,
      no fill; was incorrectly using --ink (near-black) as the border color, corrected
      to match the real component's #cbcac5. */
@@ -443,12 +518,12 @@
   .year-add-btn:hover{ background:var(--state-surface2-hover); border-color:var(--state-border-hover); color:var(--ink); }
   .year-add-btn:active{ background:var(--state-surface2-press); border-color:var(--state-border-hover); color:var(--ink); }
   .year-add-btn svg{ display:block; }
-  .year-tabs{ display:flex; flex:1 1 auto; align-items:center; gap:var(--space-md); overflow-x:auto;
+  .year-tabs{ display:flex; flex:1 1 auto; align-items:center; gap:var(--layout-md); overflow-x:auto;
     /* room for the delete button (top -4px, right -7px): a scroll container clips on every side */
     padding:4px 8px 0 0; margin:-4px -8px 0 0; }
   .year-btn{
     font-family:inherit; font-size:var(--type-body-large-semibold-size); font-weight:var(--type-body-large-semibold-weight); line-height:var(--type-body-large-semibold-lh); letter-spacing:var(--type-body-large-semibold-ls); color:var(--ink-2); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer;
-    height:32px; width:auto; padding:0 var(--space-tn); flex-shrink:0;
+    height:32px; width:auto; padding:0 var(--layout-tn); flex-shrink:0;
     transition: color .12s ease, border-color .12s ease;
   }
   .year-btn:hover{ color:var(--accent); }
@@ -516,7 +591,7 @@
        surface/tertiary). Message: Body/Small/Medium white, 16px above and below. Right: Micro round button, X in surface/body.
        Position (Ongatu "Toast position" 238:7184): 24px from the right, 116px from the top (12px under the app header). */
     position:fixed; right:24px; top:116px; z-index:70;
-    display:flex; align-items:stretch; gap:var(--space-md); min-height:48px; padding:0 var(--space-md) 0 0;
+    display:flex; align-items:stretch; gap:var(--layout-md); min-height:48px; padding:0 var(--layout-md) 0 0;
     width:max-content; min-width:240px; max-width:min(400px, calc(100vw - 48px)); box-sizing:border-box; overflow:hidden;
     border-radius:var(--radius-sm); background:var(--surface-dark);
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
@@ -527,10 +602,10 @@
   .ds-toast.fail .ds-toast-strip{ background:var(--action-destructive); }
   .ds-toast.neutral .ds-toast-strip{ background:var(--surface-tertiary); }
   .ds-toast-msg{
-    flex:1 1 auto; min-width:0; align-self:center; padding:var(--space-md) 0;
+    flex:1 1 auto; min-width:0; align-self:center; padding:var(--layout-md) 0;
     font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-white);
   }
-  .ds-toast .ds-toast-close{ align-self:flex-start; margin-top:var(--space-md); color:var(--surface-body); }
+  .ds-toast .ds-toast-close{ align-self:flex-start; margin-top:var(--layout-md); color:var(--surface-body); }
   .ds-toast .ds-toast-close:hover{ background:rgba(255,255,255,.18); }
   .ds-toast .ds-toast-close:active{ background:rgba(255,255,255,.28); }
   /* The year-delete Undo (a Tiny button) sits before the X; the DS Toast has no slot for it. */
@@ -558,13 +633,13 @@
        Tiny h32 p8 in Body/Medium/Medium (14/500/18). Chevron 12. Gap 8, radius/sm.
        Empty: border/default, text/secondary. Filled: border/selected-item, text/primary. Active (open or focused):
        border/focus. Disable: surface/secondary, text/muted. The default here is Small. */
-    display:flex; align-items:center; justify-content:space-between; gap:var(--space-xs);
-    width:100%; height:40px; padding:0 var(--space-xs); box-sizing:border-box;
+    display:flex; align-items:center; justify-content:space-between; gap:var(--layout-xs);
+    width:100%; height:40px; padding:0 var(--layout-xs); box-sizing:border-box;
     background:transparent; border:1px solid var(--border-default); border-radius:var(--radius-sm);
     font-family:inherit; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); text-align:left; color:var(--text-primary); cursor:pointer;
     transition:border-color .12s ease, box-shadow .12s ease;
   }
-  .ds-dd--md .ds-dd-trigger{ height:48px; padding:0 var(--space-md); }
+  .ds-dd--md .ds-dd-trigger{ height:48px; padding:0 var(--layout-md); }
   .ds-dd--tiny .ds-dd-trigger{ height:32px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .ds-dd-label{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .ds-dd-trigger svg{ flex-shrink:0; color:var(--action-primary); transition:transform .12s ease; }
@@ -579,24 +654,24 @@
   .ds-dd-menu{
     position:fixed; z-index:80; box-sizing:border-box; width:max(242px, var(--dd-w, 0px)); max-width:calc(100vw - 16px);
     overflow-y:auto; overscroll-behavior:contain;
-    background:var(--surface-primary); border:1px solid var(--border-secondary); border-radius:var(--radius-md); padding:var(--space-md);
+    background:var(--surface-primary); border:1px solid var(--border-secondary); border-radius:var(--radius-md); padding:var(--layout-md);
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
-    display:flex; flex-direction:column; gap:var(--space-xs);
+    display:flex; flex-direction:column; gap:var(--layout-xs);
   }
   /* Dropdown-list (182:6851) and dropdown-item (183:6858), Sept 27: group label Heading/Medium (16 Medium, 16, 0) in
      text/primary; items 36 high, padding 8, radius/sm, gap 8, Body/Large/Medium (16 Medium, 20, -2%) in text/secondary
      with a 12px icon in surface/tertiary. Hover (and the keyboard's active row): surface/accent-light, text/primary,
      icon action/primary. Group: label and items 8 apart, items 4 apart; Simple: items touch. */
-  .ds-dd-block{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ds-dd-block{ display:flex; flex-direction:column; gap:var(--layout-xs); }
   .ds-dd-group{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
-  .ds-dd-items{ display:flex; flex-direction:column; gap:var(--space-tn); }
+  .ds-dd-items{ display:flex; flex-direction:column; gap:var(--layout-tn); }
   .ds-dd-menu:not(.is-group) .ds-dd-items{ gap:0; }
   .ds-dd-item{
-    padding:var(--space-xs); border-radius:var(--radius-sm); cursor:pointer; box-sizing:border-box;
+    padding:var(--layout-xs); border-radius:var(--radius-sm); cursor:pointer; box-sizing:border-box;
     font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     transition:background-color .12s ease, color .12s ease;
   }
-  .ds-dd-item.has-icon{ display:flex; align-items:center; gap:var(--space-xs); }
+  .ds-dd-item.has-icon{ display:flex; align-items:center; gap:var(--layout-xs); }
   .ds-dd-item.has-icon svg{ flex-shrink:0; color:var(--surface-tertiary); transition:color .12s ease; }
   .ds-dd-item:hover, .ds-dd-item.is-active{ background:var(--surface-accent-light); color:var(--text-primary); }
   .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:focus-visible svg{ color:var(--action-primary); }
@@ -609,9 +684,9 @@
      fade + scale-in rather than the old push-down panel. ---- */
   .year-add-pill{
     position:absolute; top:0; left:0; z-index:10;
-    display:flex; align-items:center; gap:var(--space-md); height:40px;
+    display:flex; align-items:center; gap:var(--layout-md); height:40px;
     background:var(--surface-primary); border:1px solid var(--border-default); border-radius:var(--radius-full); overflow:hidden;
-    padding-right:var(--space-tn); box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
+    padding-right:var(--layout-tn); box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
     opacity:0; transform:scale(.96); transform-origin:left center; pointer-events:none;
     transition:opacity .18s ease, transform .18s ease;
   }
@@ -623,10 +698,10 @@
   }
   /* Round button, Tertiary, State=Active (Felipe, Sept 24: Active, not the DS component's Press). */
   .year-add-pill .round-btn:hover, .year-add-pill .round-btn:active{ background:var(--action-secondary-active); }
-  .year-add-pill-inputs{ display:flex; align-items:center; gap:var(--space-xs); }
+  .year-add-pill-inputs{ display:flex; align-items:center; gap:var(--layout-xs); }
   .year-add-pill-field{
     position:relative; display:flex; align-items:center; height:32px; width:80px;
-    border:1px solid var(--border-card); border-radius:var(--radius-sm); padding:0 var(--space-xs);
+    border:1px solid var(--border-card); border-radius:var(--radius-sm); padding:0 var(--layout-xs);
     background:var(--surface); transition:border-color .12s ease, box-shadow .12s ease;
   }
   .year-add-pill-field:focus-within{ border-color:var(--border-focus); }
@@ -636,20 +711,19 @@
   }
   /* Nav tabs - Add year (DS 79:1242, Sept 26): two Tiny dropdowns, 96 wide, 8 apart; Small button (32). */
   .year-add-pill-currency, .year-add-pill-year{ width:96px; }
-  .year-add-pill .btn-pill{ height:32px; padding:0 var(--space-md); }
   .year-add-pill-field input::placeholder{ color:var(--text-secondary); opacity:1; }
-  .year-add-pill .add-status{ position:absolute; top:calc(100% + var(--space-tn)); left:0; white-space:nowrap; }
+  .year-add-pill .add-status{ position:absolute; top:calc(100% + var(--layout-tn)); left:0; white-space:nowrap; }
 
   /* ---- Month nav: pills, indented under the year tabs (Tags nav / Month selector).
      Indent corrected to space-xl (40px) — confirmed literal value from node 2:2's
      "Tags nav" node (pl-space-xl), not space-2xl (48px) as a prior pass inferred
      from "round button + gap should line up under the tab labels." That inference
      was a coincidence, not what Figma actually specifies. ---- */
-  .months{ display:flex; gap:var(--space-xs); flex-wrap:wrap; padding-left:var(--space-tags-indent); }  /* round button 40 + tabs gap 16 */
+  .months{ display:flex; gap:var(--layout-xs); flex-wrap:wrap; padding-left:var(--layout-tags-indent); }  /* round button 40 + tabs gap 16 */
   .month-btn{
     /* Month selector (DS node 4:171): 12px SemiBold, line height auto, tracking 0 (the Sept 22 pull dropped the +2%).
        The pill stays 20px high; Hover and Press use action/recessed-hover and -press. */
-    font-family:inherit; font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; height:20px; display:inline-flex; align-items:center; padding:0 var(--space-xs); border-radius:var(--radius-full); border:none;
+    font-family:inherit; font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; height:20px; display:inline-flex; align-items:center; padding:0 var(--layout-xs); border-radius:var(--radius-full); border:none;
     background:var(--surface-2); color:var(--ink-2); cursor:pointer;
     transition: background-color .12s ease, color .12s ease;
   }
@@ -664,7 +738,7 @@
   .month-btn.estimated[aria-pressed="true"]{ background:var(--accent); color:var(--text-white); border-style:solid; border-color:var(--accent); }
 
   .estimate-pill{
-    display:inline-flex; align-items:center; gap:4px; margin-top:var(--space-xs);
+    display:inline-flex; align-items:center; gap:4px; margin-top:var(--layout-xs);
     font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); text-transform:uppercase; padding:2px 8px; border-radius:var(--radius-full); background:var(--surface-2); color:var(--ink-2);
   }
   .estimate-pill[hidden]{ display:none; }
@@ -677,38 +751,38 @@
      Previously Expense allocation sat in Row2 and ticker-strip/Row2/hero-chart
      were full-page-width siblings of Row1 — corrected here. ---- */
   /* Cards sit 24 apart (Ongatu 317:6754, Sept 26); the KPI boxes and the Expense cards keep 16. */
-  .row1{ display:grid; grid-template-columns:400px 1fr; gap:var(--space-lg); margin-bottom:var(--space-lg); }
+  .row1{ display:grid; grid-template-columns:400px 1fr; gap:var(--layout-lg); margin-bottom:var(--layout-lg); }
   /* Cards, KPI boxes and Expense cards have no border (Sept 26). */
-  .card{ background:var(--surface); border:none; border-radius:var(--radius-card); padding:var(--space-lg); }
-  .hero-left{ display:flex; flex-direction:column; gap:var(--space-lg); }
+  .card{ background:var(--surface); border:none; border-radius:var(--radius-card); padding:var(--layout-lg); }
+  .hero-left{ display:flex; flex-direction:column; gap:var(--layout-lg); }
   /* Hugs its own content, like every other card in this column — the
      get_design_context pull for node 2:2 showed this node as flex-[1_0_0]
      (Figma's fill-container shorthand), but that read the container's
      numbers, not the designer's intent; corrected per direct feedback. */
   .hero-left .alloc-card{ flex:0 0 auto; }
-  .hero-right{ display:flex; flex-direction:column; gap:var(--space-lg); min-width:0; }
+  .hero-right{ display:flex; flex-direction:column; gap:var(--layout-lg); min-width:0; }
   .balance-card .label{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--ink); text-transform:uppercase; }
-  .balance-card .value{ font-family:var(--font-mono); font-size:var(--type-value-xl-size); font-weight:var(--type-value-xl-weight); line-height:var(--type-value-xl-lh); letter-spacing:var(--type-value-xl-ls); margin-top:var(--space-xs); font-variant-numeric:tabular-nums; }
+  .balance-card .value{ font-family:var(--font-mono); font-size:var(--type-value-xl-size); font-weight:var(--type-value-xl-weight); line-height:var(--type-value-xl-lh); letter-spacing:var(--type-value-xl-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .pill-delta{
-    display:block; font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); margin-top:var(--space-xs);
+    display:block; font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); margin-top:var(--layout-xs);
     font-variant-numeric:tabular-nums;
   }
-  .mini-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--space-md); }
+  .mini-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--layout-md); }
   /* Savings/Investments (3rd tile, Net YTD's old slot) now spans both
      columns per Figma's redesigned mini-grid -- Income/Expenses stay
      side-by-side above it. */
   .mini-grid .mini-kpi:nth-child(3){ grid-column:1 / -1; }
   /* KPI card (28:68) and Expense card (130:3844), Sept 27: label, value and details stacked 8 apart. */
-  .mini-kpi{ background:var(--surface); border:none; border-radius:var(--radius-md); padding:var(--space-md); display:flex; flex-direction:column; gap:var(--space-xs); }
+  .mini-kpi{ background:var(--surface); border:none; border-radius:var(--radius-md); padding:var(--layout-md); display:flex; flex-direction:column; gap:var(--layout-xs); }
   .mini-kpi .value, .mini-kpi .detail{ margin-top:0 !important; }
-  .mini-kpi .label{ display:flex; align-items:center; gap:var(--space-xs); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mini-kpi .label{ display:flex; align-items:center; gap:var(--layout-xs); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mini-kpi .dot{ width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
   /* KPI card (DS 28:68): label 12px SemiBold, line height auto, tracking 0; the details line is mono 12 Medium -4% in text/secondary, 8px under the value. */
   .mini-kpi .label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); color:var(--ink); text-transform:uppercase; }
-  .mini-kpi .value{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); margin-top:var(--space-xs); font-variant-numeric:tabular-nums; }
-  .mini-kpi .detail{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-secondary); margin-top:var(--space-xs); font-variant-numeric:tabular-nums; }
+  .mini-kpi .value{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
+  .mini-kpi .detail{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-secondary); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   /* Money with the DS Euro icon: 12px glyph + 4px gap + the figure (Value component). */
-  .money{ display:inline-flex; align-items:center; justify-content:flex-end; gap:var(--space-tn); }
+  .money{ display:inline-flex; align-items:center; justify-content:flex-end; gap:var(--layout-tn); }
   .money-ic{ display:inline-flex; width:12px; height:12px; flex-shrink:0; color:var(--text-primary); }
   .money-ic svg{ display:block; }
   /* Larger Euro sizes used on phones (KPI value and breakdown rows 16, meters 20): the box follows the icon. */
@@ -720,10 +794,10 @@
   .hero-chart{ width:100%; margin-bottom:0; }
   .hero-chart .hc-top{ display:flex; justify-content:space-between; align-items:flex-start; }
   .hero-chart .hc-label{ font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); color:var(--ink); text-transform:uppercase; }
-  .hero-chart .hc-value{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); margin-top:var(--space-xs); font-variant-numeric:tabular-nums; }
+  .hero-chart .hc-value{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .hc-delta{ margin-left:8px; }
-  .legend{ display:flex; gap:var(--space-md); flex-wrap:wrap; margin-top:var(--space-md); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--legend-text); }
-  .legend span{ display:inline-flex; align-items:center; gap:var(--space-xs); font-weight:500; }
+  .legend{ display:flex; gap:var(--layout-md); flex-wrap:wrap; margin-top:var(--layout-md); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--legend-text); }
+  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:500; }
   .swatch{ width:9px; height:9px; border-radius:var(--radius-ty); display:inline-block; }
 
   /* Icons carry their DS size (10 / 12 / 20) as width/height attributes (Icon.jsx); CSS never resizes them. */
@@ -738,16 +812,16 @@
   #trend-chart{ display:block; width:100%; height:auto; }
   .tooltip-chart{
     position:absolute; pointer-events:none; background:var(--ink); color:var(--page);
-    font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); padding:var(--space-xs) var(--space-md); border-radius:var(--radius-sm); transform:translate(-50%,-118%);
+    font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); padding:var(--layout-xs) var(--layout-md); border-radius:var(--radius-sm); transform:translate(-50%,-118%);
     white-space:nowrap; opacity:0; transition:opacity .12s; z-index:5; font-variant-numeric:tabular-nums; box-shadow:0 6px 18px rgba(0,0,0,.18);
   }
 
   /* ---- Ticker strip — nested in .hero-right now, spacing comes from that
      column's own flex gap rather than its own margin-bottom ---- */
-  .ticker-strip{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--space-md); }
+  .ticker-strip{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--layout-md); }
   .ticker-item{
     background:var(--surface); border:none; border-radius:var(--radius-md);
-    padding:var(--space-md); display:flex; flex-direction:column; gap:var(--space-xs);
+    padding:var(--layout-md); display:flex; flex-direction:column; gap:var(--layout-xs);
   }
   .ticker-item .ti-val, .ticker-item .ti-delta{ margin-top:0 !important; }
   .ticker-item .ti-top{ display:flex; align-items:center; gap:8px; }
@@ -756,32 +830,32 @@
   /* Expense card: value is Medium mono 14 (-4%), the delta line sits 4px under it. */
   .ticker-item .ti-val{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); font-variant-numeric:tabular-nums; display:flex; }
   /* details row (DS 130:3844): 12px arrow icon + 8px + mono 12 Medium -4%, coloured by the direction. */
-  .ticker-item .ti-delta{ display:flex; align-items:center; gap:var(--space-xs); font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); font-variant-numeric:tabular-nums; margin-top:calc(var(--space-tn) - var(--space-xs)); }
+  .ticker-item .ti-delta{ display:flex; align-items:center; gap:var(--layout-xs); font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); font-variant-numeric:tabular-nums; margin-top:calc(var(--layout-tn) - var(--layout-xs)); }
   .ticker-item .ti-delta svg{ display:block; flex-shrink:0; }
   @media (max-width:1100px){ .ticker-strip{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 
   /* ---- Year over year: full-width section below Row 1, ported from the
      live index.html (it had no v2 equivalent until now) and restyled with
      this file's own card/chart tokens instead of copied CSS. ---- */
-  .yoy-heading{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); margin:var(--space-xl) 0 var(--space-tn); }
-  .yoy{ display:grid; grid-template-columns:1fr 1fr; gap:var(--space-lg); }
+  .yoy-heading{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); margin:var(--layout-xl) 0 var(--layout-tn); }
+  .yoy{ display:grid; grid-template-columns:1fr 1fr; gap:var(--layout-lg); }
   .card h2{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); text-transform:uppercase; color:var(--ink); }
-  .card .hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-2); margin-top:var(--space-tn); }
+  .card .hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-2); margin-top:var(--layout-tn); }
 
   /* Columns hug their label (min 48), 16 apart, bottoms aligned; bar height is 0.8px per percent, at least 6. */
-  .alloc-bars{ display:flex; align-items:flex-end; gap:var(--space-md); height:120px; margin-top:var(--space-xs); }
-  .alloc-col{ min-width:48px; display:flex; flex-direction:column; align-items:center; gap:var(--space-xs); height:100%; justify-content:flex-end; }
+  .alloc-bars{ display:flex; align-items:flex-end; gap:var(--layout-md); height:120px; margin-top:var(--layout-xs); }
+  .alloc-col{ min-width:48px; display:flex; flex-direction:column; align-items:center; gap:var(--layout-xs); height:100%; justify-content:flex-end; }
   .alloc-pct{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); }
   .alloc-bar{ width:48px; border-radius:var(--radius-sm); }
   .alloc-name{ font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); color:var(--label-muted); text-transform:uppercase; }
 
-  .insight-text{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-2); margin-top:var(--space-xs); }
+  .insight-text{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-2); margin-top:var(--layout-xs); }
   .insight-text b{ color:var(--ink); font-weight:500; }
-  .insight-tags{ display:flex; gap:var(--space-xs); flex-wrap:wrap; margin-top:var(--space-xs); padding-top:var(--space-xs); }
+  .insight-tags{ display:flex; gap:var(--layout-xs); flex-wrap:wrap; margin-top:var(--layout-xs); padding-top:var(--layout-xs); }
   /* Tags are the DS "Label" component (211:859): 20px high, 8px side padding, 4px radius, 12px SemiBold, line height auto,
      tracking 0. Types: Neutral (surface/secondary + text/secondary), Positive, Negative, Warning (surface/x + status/x). */
   .insight-tag, .hc-delta{
-    display:inline-flex; align-items:center; gap:var(--space-tn); height:20px; padding:0 var(--space-xs); box-sizing:border-box;
+    display:inline-flex; align-items:center; gap:var(--layout-tn); height:20px; padding:0 var(--layout-xs); box-sizing:border-box;
     font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; white-space:nowrap;
     border-radius:var(--radius-ty); background:var(--surface-secondary); color:var(--text-secondary);
   }
@@ -794,11 +868,11 @@
   /* ---- Breakdown / TRACKER — now lives in Row1 next to hero-left, single column
      (Controllers -> Graph -> List), not a separate full-width section with a
      two-column meters|items split. ---- */
-  .breakdown-card{ display:flex; flex-direction:column; gap:var(--space-lg); }
+  .breakdown-card{ display:flex; flex-direction:column; gap:var(--layout-lg); }
   /* Header (Cost-tracker 211:18753): title + "{Month} {year}" (14px Medium /15.2 -1%, text/secondary), 4 apart, and the Actions
      Round button (Medium, Tertiary) on the right. */
-  .bd-header{ display:flex; align-items:flex-start; gap:var(--space-tn); }
-  .bd-title{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:var(--space-tn); }
+  .bd-header{ display:flex; align-items:flex-start; gap:var(--layout-tn); }
+  .bd-title{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:var(--layout-tn); }
   .bd-header h2{ margin:0; }
   .bd-header .hint{ margin-top:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
   .bd-menu{ position:relative; flex-shrink:0; }
@@ -806,7 +880,7 @@
   .bd-menu .ds-menu{ top:48px; right:0; }
   .seg-tabs{ display:flex; gap:4px; flex-wrap:wrap; background:var(--surface-secondary); padding:4px; border-radius:var(--radius-sm); width:fit-content; }
   .seg-tabs button{
-    font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); padding:var(--space-xs); border-radius:var(--radius-sm); border:none;
+    font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); padding:var(--layout-xs); border-radius:var(--radius-sm); border:none;
     background:transparent; color:var(--ink-2); cursor:pointer; font-family:inherit; transition: background-color .12s ease, color .12s ease;
   }
   .seg-tabs button:hover{ background:var(--state-surface2-hover); color:var(--ink); }
@@ -815,10 +889,10 @@
   .seg-tabs button[aria-pressed="true"]:hover{ background:var(--state-ink-hover); }
   .seg-tabs button[aria-pressed="true"]:active{ background:var(--state-ink-press); }
 
-  .bd-content{ display:flex; flex-direction:column; gap:var(--space-lg); }
-  .meter-row{ margin-bottom:var(--space-xs); }
+  .bd-content{ display:flex; flex-direction:column; gap:var(--layout-lg); }
+  .meter-row{ margin-bottom:var(--layout-xs); }
   .meter-row:last-child{ margin-bottom:0; }
-  .meter-row .meter-top{ display:flex; justify-content:space-between; align-items:center; gap:var(--space-md); margin-bottom:4px; }
+  .meter-row .meter-top{ display:flex; justify-content:space-between; align-items:center; gap:var(--layout-md); margin-bottom:4px; }
   .meter-row .meter-name{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink); display:flex; align-items:center; }
   .meter-row .meter-amt{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); font-variant-numeric:tabular-nums; color:var(--ink); }
   /* Matches the DS file's Meter component: a single continuous rounded fill
@@ -840,11 +914,11 @@
   /* List of breackdown-rows, grouped into category Blocks (category-mode only;
      flat Income/Savings rows render as meters and skip this list, matching
      the one state the Figma file shows us). */
-  .bd-list{ display:flex; flex-direction:column; gap:var(--space-md); }
-  .bd-block{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .bd-list{ display:flex; flex-direction:column; gap:var(--layout-md); }
+  .bd-block{ display:flex; flex-direction:column; gap:var(--layout-xs); }
   .bd-block-title{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--ink); }
   .bd-list .ds-divider, .budget-list .ds-divider{ margin:0; }
-  .bd-row{ display:flex; justify-content:space-between; align-items:center; gap:var(--space-xs); height:24px; padding:0; }
+  .bd-row{ display:flex; justify-content:space-between; align-items:center; gap:var(--layout-xs); height:24px; padding:0; }
   .bd-row .bd-item-name{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink-2); }
   .bd-row .n{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--ink); }
 
@@ -858,7 +932,7 @@
      Pressed swap them. */
   .note-count{
     display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box;
-    min-width:14px; height:14px; padding:0 var(--space-tn); margin-left:var(--space-xs); border-radius:var(--radius-full);
+    min-width:14px; height:14px; padding:0 var(--layout-tn); margin-left:var(--layout-xs); border-radius:var(--radius-full);
     background:var(--action-primary); color:var(--on-primary);
     font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:10px; letter-spacing:var(--type-body-small-medium-ls); font-variant-numeric:tabular-nums;
     vertical-align:middle; cursor:pointer; transition: background-color .12s ease;
@@ -876,18 +950,18 @@
      8px gaps: 12px Dot | name + date (12px SemiBold +2%) | Euro amount + Micro round button (14px, 10px X). No shadow in the design. */
   #note-tip{
     position:fixed; pointer-events:none; z-index:50; box-sizing:border-box; width:max-content; min-width:280px; max-width:360px;
-    padding:var(--space-md) var(--space-xs) var(--space-md) var(--space-md);
+    padding:var(--layout-md) var(--layout-xs) var(--layout-md) var(--layout-md);
     background:var(--surface-dark); color:var(--text-white); border-radius:var(--radius-md);
     opacity:0; transition:opacity .1s;
   }
   #note-tip.visible{ opacity:1; pointer-events:auto; }
-  #note-tip .tip-item{ display:flex; align-items:center; gap:var(--space-xs); min-height:24px; }
+  #note-tip .tip-item{ display:flex; align-items:center; gap:var(--layout-xs); min-height:24px; }
   #note-tip .tip-dot{ position:relative; flex:none; width:12px; height:12px; }
   #note-tip .tip-dot::before{ content:''; position:absolute; left:4px; top:4px; width:4px; height:4px; border-radius:50%; background:var(--action-disable); }
-  #note-tip .tip-left{ flex:1 1 0; min-width:0; display:flex; align-items:center; gap:var(--space-xs); }
+  #note-tip .tip-left{ flex:1 1 0; min-width:0; display:flex; align-items:center; gap:var(--layout-xs); }
   #note-tip .tip-name{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-white); overflow-wrap:anywhere; }
   #note-tip .tip-date{ flex:none; font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); color:var(--text-secondary); white-space:nowrap; }
-  #note-tip .tip-right{ flex:none; display:flex; align-items:center; gap:var(--space-xs); }
+  #note-tip .tip-right{ flex:none; display:flex; align-items:center; gap:var(--layout-xs); }
   #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-white); white-space:nowrap; font-variant-numeric:tabular-nums; }
   #note-tip .tip-amount .money-ic{ color:var(--text-white); }
   #note-tip .tip-amount.is-estimate{ font-weight:400; opacity:.7; }
@@ -897,7 +971,7 @@
   #note-tip .tip-del:hover{ color:var(--text-white); background:rgba(255,255,255,.18); }
   #note-tip .tip-del:active{ color:var(--text-white); background:rgba(255,255,255,.28); }
   #note-tip .tip-item.sub .tip-name{ font-weight:400; }
-  #note-tip .tip-foot{ margin:var(--space-xs) var(--space-xs) 0 28px; padding-top:var(--space-xs); border-top:1px solid rgba(255,255,255,.16); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
+  #note-tip .tip-foot{ margin:var(--layout-xs) var(--layout-xs) 0 28px; padding-top:var(--layout-xs); border-top:1px solid rgba(255,255,255,.16); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
 
   /* ---- Add entry panel: right-side slide-over drawer, matching the Cost-tracker
      file's "Add entry panel - open" frame (border-left, drop shadow, fixed
@@ -908,15 +982,15 @@
   }
   .add-panel-backdrop.open{ opacity:1; pointer-events:auto; }
   .add-panel{
-    display:flex; flex-direction:column; gap:var(--space-lg);
+    display:flex; flex-direction:column; gap:var(--layout-lg);
     position:fixed; top:0; right:0; height:100vh; width:640px; max-width:92vw;
     background:var(--surface); border-left:1px solid var(--divider);
-    box-shadow:0 0 40px rgba(0,0,0,.16); padding:var(--space-lg) var(--space-xl);
+    box-shadow:0 0 40px rgba(0,0,0,.16); padding:var(--layout-lg) var(--layout-xl);
     transform:translateX(100%); transition:transform .2s cubic-bezier(.2,0,0,1), visibility 0s linear .2s; z-index:41; overflow-y:auto;
     visibility:hidden; /* closed: no shadow on the page edge, and nothing inside it can take focus */
   }
   .add-panel.open{ transform:translateX(0); visibility:visible; transition:transform .2s cubic-bezier(.2,0,0,1), visibility 0s; }
-  .add-panel-header{ display:flex; flex-direction:column; align-items:flex-end; gap:var(--space-tn); }
+  .add-panel-header{ display:flex; flex-direction:column; align-items:flex-end; gap:var(--layout-tn); }
   /* Round button (DS 52:629). Style: Tertiary (default: no fill), .secondary (border/default stroke), .primary (action/primary).
      Size: Medium 40 (default), .small 32, .tiny 24, .micro 14. States: Hover, Press, Active (.is-active / aria-expanded), Inactive (:disabled, 40%).
      Icon colour: Primary surface/primary, Secondary and Tertiary action/primary (Micro: surface/dark, the same value). */
@@ -942,21 +1016,21 @@
   .round-btn.micro svg{ }
   .add-panel-title{ font-size:var(--type-body-large-semibold-size); font-weight:var(--type-body-large-semibold-weight); line-height:var(--type-body-large-semibold-lh); letter-spacing:var(--type-body-large-semibold-ls); color:var(--ink); width:100%; }
   .add-panel-hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-muted); width:100%; }
-  .add-panel-content{ display:flex; flex-direction:column; gap:var(--space-md); }
-  .field-group{ display:flex; flex-direction:column; gap:var(--space-tn); }
+  .add-panel-content{ display:flex; flex-direction:column; gap:var(--layout-md); }
+  .field-group{ display:flex; flex-direction:column; gap:var(--layout-tn); }
   .field-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); color:var(--ink-2); text-transform:uppercase; }
   .seg-tabs[hidden]{ display:none; }
   .seg-tabs.sub{ height:32px; }
-  .seg-tabs.sub button{ height:24px; padding:0 var(--space-xs); }
+  .seg-tabs.sub button{ height:24px; padding:0 var(--layout-xs); }
   /* Tracker card's Controllers row (Figma node 61:5499): Segments +
      Sub-segments stacked on the left, contextual "+Add {type}" button
      pinned to the right, bottom-aligned with the tab stack. */
-  .bd-controllers{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-md); flex-wrap:wrap; }
-  .bd-tabs-stack{ display:flex; flex-direction:column; gap:var(--space-xs); }
-  .add-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:var(--space-md); }
-  .field label{ display:block; font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); text-transform:uppercase; color:var(--ink-muted); margin-bottom:var(--space-tn); }
+  .bd-controllers{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--layout-md); flex-wrap:wrap; }
+  .bd-tabs-stack{ display:flex; flex-direction:column; gap:var(--layout-xs); }
+  .add-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:var(--layout-md); }
+  .field label{ display:block; font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); text-transform:uppercase; color:var(--ink-muted); margin-bottom:var(--layout-tn); }
   .field input:not(.ds-input input){
-    width:100%; font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); font-family:inherit; padding:var(--space-xs) var(--space-md); border-radius:var(--radius-sm); border:1px solid var(--border-card);
+    width:100%; font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); font-family:inherit; padding:var(--layout-xs) var(--layout-md); border-radius:var(--radius-sm); border:1px solid var(--border-card);
     background:var(--surface); color:var(--ink);
     transition: border-color .12s ease, box-shadow .12s ease;
   }
@@ -964,9 +1038,9 @@
   .field input:focus-visible{ outline:none; border-color:var(--border-focus); }
   .field input:disabled{ opacity:var(--opacity-disabled); cursor:not-allowed; }
   .field-with-prefix{ position:relative; display:flex; align-items:center; }
-  .field-with-prefix .field-prefix{ position:absolute; left:var(--space-md); font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); color:var(--ink); pointer-events:none; }
+  .field-with-prefix .field-prefix{ position:absolute; left:var(--layout-md); font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); color:var(--ink); pointer-events:none; }
   .field-with-prefix input{ padding-left:28px; }
-  .add-actions{ display:flex; gap:var(--space-xs); align-items:center; }
+  .add-actions{ display:flex; gap:var(--layout-xs); align-items:center; }
   .add-status{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
   .add-status{ color:var(--text-secondary); }
   .add-status.err{ color:var(--critical); }
@@ -988,7 +1062,7 @@
      The Tracker's own rows deliberately keep the plain ink figure and no Actions
      button: they have no edit or action handler, and a link-coloured value there
      would promise an interaction that doesn't exist. ---- */
-  .bd-value{ display:inline-flex; align-items:center; justify-content:flex-end; gap:var(--space-tn); flex-shrink:0; }
+  .bd-value{ display:inline-flex; align-items:center; justify-content:flex-end; gap:var(--layout-tn); flex-shrink:0; }
   .bd-value .bd-euro{ width:12px; height:12px; display:block; color:var(--ink); flex-shrink:0; }
   .bd-amount{
     font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--accent); background:none; border:none; padding:0; height:20px; cursor:pointer;
@@ -1002,9 +1076,9 @@
   .bd-action:hover{ background:var(--state-surface2-hover); }
   .bd-action:active{ background:var(--state-surface2-press); }
   .bd-action svg{ display:block; }
-  .bd-row.is-editing{ padding-right:var(--space-lg); }
+  .bd-row.is-editing{ padding-right:var(--layout-lg); }
   .bd-input{
-    display:inline-flex; align-items:center; gap:var(--space-xs); height:24px; padding:0 var(--space-xs); flex-shrink:0;
+    display:inline-flex; align-items:center; gap:var(--layout-xs); height:24px; padding:0 var(--layout-xs); flex-shrink:0;
     border:1px solid var(--border-card); border-radius:var(--radius-sm); background:var(--surface);
     transition:border-color .12s ease, box-shadow .12s ease;
   }
@@ -1021,21 +1095,21 @@
      Cost-tracker nodes 140:57881 (upload, uploading), 142:58140 (upload, ready +
      manual), 142:58304 (review entries). ---- */
   .add-panel [hidden]{ display:none !important; }
-  #add-panel{ gap:var(--space-xl); box-shadow:0 0 64px rgba(22,21,15,.24); }
+  #add-panel{ gap:var(--layout-xl); box-shadow:0 0 64px rgba(22,21,15,.24); }
   .add-panel-header .round-btn svg{ }
   .add-panel-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
-  #add-panel .add-panel-hint{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--ink-2); margin-top:var(--space-tn); }
+  #add-panel .add-panel-hint{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--ink-2); margin-top:var(--layout-tn); }
   /* Year-budget panels use the 12px Medium sub line (Figma 96:5670). */
-  .budget-panel .add-panel-hint{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink-2); margin-top:var(--space-tn); }
-  .ap-main{ display:flex; flex-direction:column; gap:var(--space-lg); }
-  .ap-section{ display:flex; flex-direction:column; gap:var(--space-lg); }
+  .budget-panel .add-panel-hint{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink-2); margin-top:var(--layout-tn); }
+  .ap-main{ display:flex; flex-direction:column; gap:var(--layout-lg); }
+  .ap-section{ display:flex; flex-direction:column; gap:var(--layout-lg); }
   .ap-section-title{ margin:0; font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--ink); }
-  .ap-title-block{ display:flex; flex-direction:column; gap:var(--space-tn); }
+  .ap-title-block{ display:flex; flex-direction:column; gap:var(--layout-tn); }
   .ap-section-sub{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--ink-2); }
-  .ap-block{ display:flex; flex-direction:column; gap:var(--space-md); }
+  .ap-block{ display:flex; flex-direction:column; gap:var(--layout-md); }
 
   .dropzone{
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-md); padding:var(--space-lg); height:160px; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--layout-md); padding:var(--layout-lg); height:160px; box-sizing:border-box;
     background:var(--page); border:1px dashed var(--border-card); border-radius:var(--radius-sm); cursor:pointer;
     transition:border-color .12s ease, background-color .12s ease;
   }
@@ -1050,10 +1124,10 @@
   .dz-line .ds-action-link svg{ }
   /* Files reading (229:18563): 1px border/default box, padding 40/24, 16 gap: "Reading N files" (14 SemiBold) over the hint,
      then a 404px progress-bar. Header and "Enter manually" fade to opacity/background. */
-  .dz-reading{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-md); height:160px; box-sizing:border-box; padding:0 var(--space-lg); border:1px solid var(--border-default); border-radius:var(--radius-sm); }
-  .dz-progress-wrap{ display:flex; flex-direction:column; align-items:center; gap:var(--space-xs); width:404px; max-width:100%; }
+  .dz-reading{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--layout-md); height:160px; box-sizing:border-box; padding:0 var(--layout-lg); border:1px solid var(--border-default); border-radius:var(--radius-sm); }
+  .dz-progress-wrap{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-xs); width:404px; max-width:100%; }
   .dz-pct{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-primary); font-variant-numeric:tabular-nums; }
-  .dz-reading-info{ display:flex; flex-direction:column; align-items:center; gap:var(--space-tn); text-align:center; }
+  .dz-reading-info{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-tn); text-align:center; }
   .dz-reading-title{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--text-primary); }
   .dz-progress{ width:100%; }
   .add-panel .is-faded{ opacity:var(--opacity-background); transition:opacity .18s ease; }
@@ -1064,17 +1138,17 @@
   .field .date-dd input[type="date"]{ position:absolute; inset:0; width:100%; height:100%; padding:0; border:none; background:transparent; color:transparent; cursor:pointer; outline:none; }
   .date-dd input[type="date"]::-webkit-datetime-edit{ opacity:0; }
   .date-dd input[type="date"]::-webkit-calendar-picker-indicator{ position:absolute; inset:0; width:auto; height:auto; opacity:0; cursor:pointer; }
-  .date-dd-label{ position:absolute; left:var(--space-md); right:36px; top:50%; transform:translateY(-50%); pointer-events:none;
+  .date-dd-label{ position:absolute; left:var(--layout-md); right:36px; top:50%; transform:translateY(-50%); pointer-events:none;
     font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .date-dd .date-dd-chevron{ position:absolute; right:var(--space-md); top:50%; transform:translateY(-50%); width:12px; height:12px; color:var(--action-primary); pointer-events:none; }
-  .dz-text{ display:flex; flex-direction:column; align-items:center; gap:var(--space-tn); }
-  .dz-line{ display:flex; align-items:center; justify-content:center; gap:var(--space-tn); flex-wrap:wrap; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--ink); }
+  .date-dd .date-dd-chevron{ position:absolute; right:var(--layout-md); top:50%; transform:translateY(-50%); width:12px; height:12px; color:var(--action-primary); pointer-events:none; }
+  .dz-text{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-tn); }
+  .dz-line{ display:flex; align-items:center; justify-content:center; gap:var(--layout-tn); flex-wrap:wrap; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--ink); }
   .dz-line .ds-action-link{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); pointer-events:none; }
   .dropzone:hover .ds-action-link{ color:var(--link-hover); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
   .dz-hint{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--ink-2); text-align:center; }
 
-  .doc-list{ display:flex; flex-direction:column; gap:var(--space-md); }
-  .doc-item{ display:flex; align-items:flex-start; gap:var(--space-xs); min-height:32px; }
+  .doc-list{ display:flex; flex-direction:column; gap:var(--layout-md); }
+  .doc-item{ display:flex; align-items:flex-start; gap:var(--layout-xs); min-height:32px; }
   .doc-ic{ width:20px; height:20px; flex-shrink:0; color:var(--ink); }
   .doc-ic svg{ display:block; }
   .doc-info{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; justify-content:center; }
@@ -1083,27 +1157,27 @@
   .doc-meta.err{ color:var(--critical); }
   .doc-pct{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--accent); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
   /* Delete button (Cost-tracker 174:15198): Tiny tertiary round button, 24px, with the 12px X in status/fail; Hover/Press come from .round-btn. */
-  .round-btn.doc-remove{ width:24px; height:24px; color:var(--critical); }
+  .round-btn.doc-remove{ color:var(--critical); }
   #add-panel .round-btn.doc-remove svg{ }
 
-  .ap-manual .field-group{ gap:var(--space-xs); }
+  .ap-manual .field-group{ gap:var(--layout-xs); }
   /* Figma 174:15081: every gap in the form is 8, the Type block and the form are 24 apart, the buttons sit 40 below. */
-  #add-panel .add-grid{ gap:var(--space-xs); }
+  #add-panel .add-grid{ gap:var(--layout-xs); }
   .ap-manual .field-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; color:var(--text-secondary); }
-  .ap-manual .add-actions{ margin-top:calc(var(--space-xl) - var(--space-lg)); }
-  #doc-actions, #ap-review .add-actions{ gap:var(--space-tn); }
-  #add-panel .field-with-prefix .field-prefix{ left:var(--space-md); width:23px; height:24px; display:flex; align-items:center; justify-content:center; }
+  .ap-manual .add-actions{ margin-top:calc(var(--layout-xl) - var(--layout-lg)); }
+  #doc-actions, #ap-review .add-actions{ gap:var(--layout-tn); }
+  #add-panel .field-with-prefix .field-prefix{ left:var(--layout-md); width:23px; height:24px; display:flex; align-items:center; justify-content:center; }
   #add-panel .field-with-prefix .field-prefix svg{ display:block; color:var(--ink); }
   /* Labels sit 8 above their field in the panel (Cost-tracker 174:15081). "Month and year" is a 200px Dropdown. */
-  #add-panel .field label{ margin-bottom:var(--space-xs); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); }
+  #add-panel .field label{ margin-bottom:var(--layout-xs); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); }
   #add-panel .field-period .ds-dd, #add-panel .ap-period .ds-dd{ width:200px; max-width:100%; }
   #add-panel .add-grid .span-2{ grid-column:1 / -1; }
   .add-actions .add-status{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
 
-  .rv-table{ display:flex; flex-direction:column; gap:var(--space-xs); }
-  .rv-head, .rv-row{ display:flex; align-items:center; gap:var(--space-md); }
+  .rv-table{ display:flex; flex-direction:column; gap:var(--layout-xs); }
+  .rv-head, .rv-row{ display:flex; align-items:center; gap:var(--layout-md); }
   .rv-head{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--ink-muted); text-transform:uppercase; }
-  .rv-rows{ display:flex; flex-direction:column; gap:var(--space-tn); }
+  .rv-rows{ display:flex; flex-direction:column; gap:var(--layout-tn); }
   /* Rows hold Tiny inputs and dropdowns (32; the review screen 229:18167 draws them 32 high). */
   .rv-row{ height:32px; }
   .c-date{ width:40px; flex-shrink:0; }
@@ -1117,25 +1191,25 @@
   .rv-row:hover .rv-link:not(.bad), .rv-link:not(.bad):focus-visible{ color:var(--link-hover); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
   .rv-link.bad{ color:var(--critical); }
   /* A "?" chip marks a category the reader was not sure about (a word would squeeze the 120px Category column). Label chip recipe, square. */
-  .c-cat.has-guess{ display:flex; align-items:center; gap:var(--space-tn); }
+  .c-cat.has-guess{ display:flex; align-items:center; gap:var(--layout-tn); }
   .c-cat.has-guess .rv-link{ flex:1 1 auto; min-width:0; }
   /* Guess marker: the Question (filled) icon, 20px frame, surface/tertiary. */
   .rv-guess{ flex-shrink:0; display:inline-flex; width:20px; height:20px; color:var(--surface-tertiary); cursor:default; }
   .rv-guess svg{ display:block; }
   /* The review note about guesses starts with the same marker. */
-  #rv-status.has-guess{ display:inline-flex; align-items:center; gap:var(--space-tn); }
+  #rv-status.has-guess{ display:inline-flex; align-items:center; gap:var(--layout-tn); }
   .rv-row:hover .rv-link.bad{ text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
-  .rv-amt{ display:inline-flex; align-items:center; gap:var(--space-tn); background:none; border:none; padding:0; height:20px; cursor:pointer; color:var(--ink); font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); font-variant-numeric:tabular-nums; }
+  .rv-amt{ display:inline-flex; align-items:center; gap:var(--layout-tn); background:none; border:none; padding:0; height:20px; cursor:pointer; color:var(--ink); font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); font-variant-numeric:tabular-nums; }
   .rv-amt svg{ display:block; flex-shrink:0; }
   .rv-amt.bad{ color:var(--critical); }
   .rv-row:hover .rv-amt{ text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
   .rv-select .ds-dd.is-empty .ds-dd-trigger{ color:var(--critical); }
-  .rv-row .bd-input{ height:32px; gap:var(--space-tn); width:100%; }
+  .rv-row .bd-input{ height:32px; gap:var(--layout-tn); width:100%; }
   .rv-row .bd-input input{ width:100%; }
   .rv-rm{ opacity:0; color:var(--critical); transition:opacity .12s ease, background-color .12s ease; }
   .rv-row:hover .rv-rm, .rv-row.is-editing .rv-rm, .rv-rm:focus-visible{ opacity:1; }
   @media (hover:none){ .rv-rm{ opacity:1; } }
-  .rv-empty{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--ink-2); padding:var(--space-md) 0; }
+  .rv-empty{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--ink-2); padding:var(--layout-md) 0; }
   .rv-note{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--critical); }
 
   /* ---- Starting-budget panel (added Sept 16, 2026, v2.16): same
@@ -1143,7 +1217,7 @@
      content -- a section per type/group, items grouped under a category
      sub-heading for expenses (matching the group/category/item hierarchy
      used everywhere else in the app). ---- */
-  .budget-panel .add-panel-content{ gap:var(--space-md); }
+  .budget-panel .add-panel-content{ gap:var(--layout-md); }
   /* v2.17 (Sept 17, 2026): the starting-budget panel now matches Figma's
      "Year budget" wizard (nodes 106:7556 etc.) -- Type/Sub-type Segments
      filter which section is visible, each row's figure reads as an
@@ -1154,7 +1228,7 @@
      tabs never discards an edit made in another section -- Create year
      still saves every section's rows in one pass, same as before. */
   /* Figma "Entries": New-item link, then category groups split by dividers, 16 apart; a group's title sits 8 above its rows and rows touch. */
-  .budget-type-section{ display:flex; flex-direction:column; gap:var(--space-md); }
+  .budget-type-section{ display:flex; flex-direction:column; gap:var(--layout-md); }
   .budget-type-section[hidden]{ display:none; }
   .card[hidden]{ display:none !important; }
   .budget-add-link{ align-self:flex-start; }
@@ -1162,7 +1236,7 @@
   /* Sept 24 pull (232:5852): Entries = the "+ New …" Action link (right-aligned), then category Groups split by Dividers,
      16 apart. A Group: title (12px SemiBold /17 -1%, text/primary), 8 above its rows; rows (breackdown-row, 24 high) touch. */
   .budget-add-link{ align-self:flex-end; }
-  .budget-group{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .budget-group{ display:flex; flex-direction:column; gap:var(--layout-xs); }
   .budget-cat-title{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-primary); }
   .budget-items{ display:flex; flex-direction:column; }
   .budget-row .br-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -1172,20 +1246,20 @@
   /* "Add expense" pill (Figma 119:12764): 4/8/4/16 padding, 16 between the fields and the two round buttons,
      fields are Input/Dropdown Size=Small (32 high, 12px), confirm = Round button Tiny Primary, cancel = Tiny Secondary. */
   .budget-add-row{
-    display:flex; align-items:center; gap:var(--space-md); padding:var(--space-tn) var(--space-xs) var(--space-tn) var(--space-md);
+    display:flex; align-items:center; gap:var(--layout-md); padding:var(--layout-tn) var(--layout-xs) var(--layout-tn) var(--layout-md);
     border:1px solid var(--divider); border-radius:var(--radius-full); background:var(--surface);
   }
-  .budget-add-fields{ display:flex; align-items:center; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
+  .budget-add-fields{ display:flex; align-items:center; gap:var(--layout-xs); flex:1 1 auto; min-width:0; }
   .budget-add-label{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--ink); white-space:nowrap; }
   .budget-add-cat{ width:120px; flex:0 0 auto; }
   .budget-add-name{ flex:1 1 auto; min-width:0; }
   .budget-add-amt{ width:112px; flex:0 0 auto; }
-  .budget-add-actions{ display:flex; gap:var(--space-tn); flex-shrink:0; }
-  #budget-status.err{ display:block; margin-top:var(--space-xs); }
+  .budget-add-actions{ display:flex; gap:var(--layout-tn); flex-shrink:0; }
+  #budget-status.err{ display:block; margin-top:var(--layout-xs); }
   #budget-panel-hint{ line-height:1.5; }
   .budget-empty{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-muted); }
 
-  footer.note{ margin-top:var(--space-xl); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-muted); border-top:1px solid var(--border); padding-top:var(--space-lg); }
+  footer.note{ margin-top:var(--layout-xl); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-muted); border-top:1px solid var(--border); padding-top:var(--layout-lg); }
   footer.note code{ background:var(--surface-2); padding:1px 5px; border-radius:var(--radius-ty); }
 
   @media (max-width:960px){
@@ -1197,7 +1271,7 @@
      Sept 24 pull of the Okara Design System: components new in the file.
      ================================================================ */
   /* KPI card, Show indicator: 12px arrow + 8px + the details. */
-  .mini-kpi .detail{ display:flex; align-items:center; gap:var(--space-xs); }
+  .mini-kpi .detail{ display:flex; align-items:center; gap:var(--layout-xs); }
   .mini-kpi .detail svg{ flex-shrink:0; color:var(--surface-tertiary); }
 
   /* avatar (221:1044), Style=Text: 40px surface/accent circle, 14px SemiBold /15.2 -1% white initial. */
@@ -1208,17 +1282,17 @@
     font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
 
   /* User nav (230:618): actions (8px top padding, bell) 16px left of the user. */
-  .ds-user-nav{ display:flex; align-items:flex-start; gap:var(--space-md); }
-  .ds-user-nav-actions{ display:flex; gap:var(--space-xs); padding-top:var(--space-xs); }
+  .ds-user-nav{ display:flex; align-items:flex-start; gap:var(--layout-md); }
+  .ds-user-nav-actions{ display:flex; gap:var(--layout-xs); padding-top:var(--layout-xs); }
 
   /* user (221:1048, Sept 27). Default: 76 wide, 4/0/4/4 padding round an Info row (8px left padding, chevron 12 + 8 + avatar).
      Hover: the Info row fills action/secondary-hover. Active: a surface/primary card, 240 wide, padding 4/4/8/4, gap 4,
      radius 16/24/16/16, shadow 0 0 8 ink@8%: Info row (chevron, first name in text/accent, avatar) over the menu. */
   /* The user takes 76px closed and 240px open; the width moves with the card, so the bell slides instead of jumping. */
   .ds-user{ position:relative; width:76px; height:48px; transition:width .2s cubic-bezier(.2,0,0,1); }
-  .ds-user-trigger{ display:flex; width:76px; box-sizing:border-box; padding:var(--space-tn) 0 var(--space-tn) var(--space-tn); border:none; background:none; cursor:pointer; border-radius:var(--radius-full); font-family:inherit; }
+  .ds-user-trigger{ display:flex; width:76px; box-sizing:border-box; padding:var(--layout-tn) 0 var(--layout-tn) var(--layout-tn); border:none; background:none; cursor:pointer; border-radius:var(--radius-full); font-family:inherit; }
   .ds-user-info{
-    display:flex; align-items:center; gap:var(--space-xs); padding:0 0 0 var(--space-xs); border-radius:var(--radius-full);
+    display:flex; align-items:center; gap:var(--layout-xs); padding:0 0 0 var(--layout-xs); border-radius:var(--radius-full);
     border:none; background:none; font-family:inherit; cursor:pointer; color:var(--surface-dark); transition:background-color .12s ease;
   }
   .ds-user-info svg{ flex-shrink:0; }
@@ -1232,7 +1306,7 @@
   @media (prefers-reduced-motion: reduce){ .ds-user{ transition:none; } }
   .ds-user-card{
     position:absolute; top:0; right:0; z-index:65; width:240px; box-sizing:border-box;
-    display:flex; flex-direction:column; gap:var(--space-tn); padding:var(--space-tn) var(--space-tn) var(--space-xs) var(--space-tn);
+    display:flex; flex-direction:column; gap:var(--layout-tn); padding:var(--layout-tn) var(--layout-tn) var(--layout-xs) var(--layout-tn);
     background:var(--surface-primary); border-radius:16px 24px 16px 16px; border:1px solid var(--border-secondary);
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
   }
@@ -1251,9 +1325,9 @@
   @media (prefers-reduced-motion: reduce){ .ds-user-card, .ds-user-card *{ animation:none !important; } }
   .ds-user-name{ flex:1 1 auto; min-width:0; text-align:left; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-accent); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   /* Menu: 202 wide, right-aligned in the card, 4px right padding, items 4 apart. */
-  .ds-menu-items{ padding-right:var(--space-tn); }
+  .ds-menu-items{ padding-right:var(--layout-tn); }
   .ds-user-card .ds-menu-items{ width:202px; box-sizing:border-box; align-self:flex-end; }
-  .ds-menu-items .ds-dd-items{ gap:var(--space-tn); }
+  .ds-menu-items .ds-dd-items{ gap:var(--layout-tn); }
   /* A standalone action menu (Dropdown-list, Type=Simple) anchored under the button that opened it. */
   .ds-menu{ position:absolute; z-index:65; width:auto; min-width:0; }
   .ds-menu .ds-dd-item{ min-width:163px; }
@@ -1267,38 +1341,38 @@
   .ds-notif .round-btn svg{ }
   .ds-notif-panel{
     position:absolute; top:40px; right:0; z-index:65; width:320px; max-width:calc(100vw - 32px); box-sizing:border-box;
-    display:flex; flex-direction:column; gap:var(--space-tn); padding:var(--space-xs);
+    display:flex; flex-direction:column; gap:var(--layout-tn); padding:var(--layout-xs);
     background:var(--surface-primary); border-radius:16px 24px 16px 16px; border:1px solid var(--border-secondary);
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
     max-height:min(480px, calc(100vh - 120px)); overflow-y:auto;
   }
   /* notification-item (228:469, Sept 27): padding 16, gap 4, radius/sm; text Body/Medium/Medium, 16 from the action.
      Hover fills surface/accent-light. */
-  .ds-notif-item{ display:flex; flex-direction:column; gap:var(--space-tn); padding:var(--space-md); border-radius:var(--radius-sm); transition:background-color .12s ease; }
+  .ds-notif-item{ display:flex; flex-direction:column; gap:var(--layout-tn); padding:var(--layout-md); border-radius:var(--radius-sm); transition:background-color .12s ease; }
   .ds-notif-item:hover{ background:var(--surface-accent-light); }
-  .ds-notif-item:hover .ds-notif-content{ gap:var(--space-xs); } /* Hover: text and action 8 apart (Default 16), as in Figma */
-  .ds-notif-when{ display:flex; align-items:center; gap:var(--space-tn); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-accent); }
+  .ds-notif-item:hover .ds-notif-content{ gap:var(--layout-xs); } /* Hover: text and action 8 apart (Default 16), as in Figma */
+  .ds-notif-when{ display:flex; align-items:center; gap:var(--layout-tn); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-accent); }
   .ds-notif-dot{ position:relative; width:10px; height:10px; flex-shrink:0; }
   .ds-notif-dot::before{ content:''; position:absolute; left:3.33px; top:3.33px; width:3.33px; height:3.33px; border-radius:50%; background:var(--surface-accent); }
-  .ds-notif-content{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-md); }
+  .ds-notif-content{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--layout-md); }
   .ds-notif-text{ flex:1 1 auto; min-width:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-primary); overflow-wrap:anywhere; }
   .ds-notif-content .btn-pill{ flex-shrink:0; }
   /* Notification State=Mobile (407:905): a full page over the app, surface/primary. Bar 64 high, padding 24/8, gap 8;
      then 16 down, the items 12 apart with 16px sides and a border/secondary divider between them. */
   .ds-notif-page{
     position:fixed; inset:0; z-index:90; overflow-y:auto; overscroll-behavior:contain;
-    display:flex; flex-direction:column; gap:var(--space-md); background:var(--surface-primary);
-    padding-bottom:calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+    display:flex; flex-direction:column; gap:var(--layout-md); background:var(--surface-primary);
+    padding-bottom:calc(var(--layout-md) + env(safe-area-inset-bottom, 0px));
   }
   .ds-notif-page-nav{
     position:sticky; top:0; z-index:1; flex-shrink:0; box-sizing:border-box; height:64px;
-    display:flex; align-items:center; gap:var(--space-xs); padding:var(--space-lg) var(--space-xs); background:var(--surface-primary);
+    display:flex; align-items:center; gap:var(--layout-xs); padding:var(--layout-lg) var(--layout-xs); background:var(--surface-primary);
   }
   .ds-notif-page-title{
     flex:1 1 auto; min-width:0; margin:0; color:var(--text-primary);
     font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls);
   }
-  .ds-notif-page-list{ display:flex; flex-direction:column; gap:var(--space-sm); padding:0 var(--space-md); }
+  .ds-notif-page-list{ display:flex; flex-direction:column; gap:var(--layout-sm); padding:0 var(--layout-md); }
   .ds-notif-page-list .ds-divider{ width:100%; }
 
   /* progress-bar (238:676): 8px surface/secondary track; the fill is a left-to-right gradient data/green-light → data/green (both Primitives, bound in Figma Sept 28). */
@@ -1312,23 +1386,23 @@
      The backdrop and the fade are the side panels' (ink @32%, 200ms); the design has no overlay of its own. */
   .ds-modal{
     width:540px; max-width:calc(100vw - 32px); box-sizing:border-box; margin:auto; border:none; color:var(--text-primary);
-    padding:var(--space-md) var(--space-md) var(--space-lg); border-radius:var(--radius-md); background:var(--surface-primary);
+    padding:var(--layout-md) var(--layout-md) var(--layout-lg); border-radius:var(--radius-md); background:var(--surface-primary);
     box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);
-    flex-direction:column; gap:var(--space-xl);
+    flex-direction:column; gap:var(--layout-xl);
   }
   .ds-modal[open]{ display:flex; animation:ds-modal-in .2s cubic-bezier(.2,0,0,1); }
   .ds-modal::backdrop{ background:rgba(22,21,15,.32); animation:ds-fade-in .2s cubic-bezier(.2,0,0,1); }
   @keyframes ds-modal-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
-  .ds-modal-header{ display:flex; justify-content:flex-end; align-items:center; gap:var(--space-xs); }
-  .ds-modal-content{ display:flex; flex-direction:column; align-items:center; gap:var(--space-sm); padding:0 var(--space-lg); text-align:center; }
-  .ds-modal-title-block{ display:flex; flex-direction:column; align-items:center; gap:var(--space-md); width:100%; }
-  .ds-modal-text{ display:flex; flex-direction:column; gap:var(--space-tn); width:100%; }
+  .ds-modal-header{ display:flex; justify-content:flex-end; align-items:center; gap:var(--layout-xs); }
+  .ds-modal-content{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-sm); padding:0 var(--layout-lg); text-align:center; }
+  .ds-modal-title-block{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-md); width:100%; }
+  .ds-modal-text{ display:flex; flex-direction:column; gap:var(--layout-tn); width:100%; }
   .ds-illustration{ display:block; flex-shrink:0; color:var(--surface-dark); }
   .ds-modal-title{ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
   .ds-modal-description{ margin:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
   /* Actions: padding 0 space/2xl. Two 240px buttons + 16 don't fit the 412px left inside that padding; Figma lets them
      overflow it evenly (they span the card as before), so they don't shrink here either. */
-  .ds-modal-actions{ display:flex; justify-content:center; align-items:center; gap:var(--space-md); padding:0 var(--space-2xl); }
+  .ds-modal-actions{ display:flex; justify-content:center; align-items:center; gap:var(--layout-md); padding:0 var(--layout-2xl); }
   .ds-modal-actions .btn-pill{ width:240px; min-width:0; flex:0 0 240px; justify-content:center; }
   @media (prefers-reduced-motion: reduce){ .ds-modal[open], .ds-modal::backdrop{ animation:none; } }
 
@@ -1343,11 +1417,11 @@
     position:sticky; top:0; z-index:30; display:flex; justify-content:space-between; align-items:flex-start;
     height:64px; background:var(--surface-body); box-sizing:border-box;
     /* body has 40px side padding: the bar runs edge to edge, and its contents line up with the 1238px page. */
-    margin:0 calc(-1 * var(--space-xl)); padding:var(--space-xs) max(var(--space-xl), calc((100% + 2 * var(--space-xl) - 1238px) / 2));
+    margin:0 calc(-1 * var(--layout-xl)); padding:var(--layout-xs) max(var(--layout-xl), calc((100% + 2 * var(--layout-xl) - 1238px) / 2));
   }
   .ds-app-header-logo{ display:block; border-radius:var(--radius-sm); }
   .ds-app-header-logo:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
-  .app-top-gap{ height:var(--space-xl); }
+  .app-top-gap{ height:var(--layout-xl); }
 
   /* ---- Toggle (298:637) ---- */
   .ds-toggle{
@@ -1365,7 +1439,7 @@
   .ds-toggle:disabled{ opacity:var(--opacity-disabled); cursor:not-allowed; }
 
   /* ---- Checkbox (Account page 272:24091) ---- */
-  .ds-check{ display:flex; align-items:center; gap:var(--space-xs); cursor:pointer; }
+  .ds-check{ display:flex; align-items:center; gap:var(--layout-xs); cursor:pointer; }
   .ds-check input{ position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
   .ds-check-box{
     width:18px; height:18px; flex-shrink:0; box-sizing:border-box; border-radius:var(--radius-ty); background:var(--surface-primary);
@@ -1380,7 +1454,7 @@
      Empty: border/default, text/secondary. Filled: border/selected-item, text/primary. Focus: border/focus.
      Disable: surface/secondary, border/default, text/muted. `placeholder` defaults to " " so an empty field reads as Empty. ---- */
   .ds-input{
-    display:flex; align-items:center; gap:var(--space-xs); height:48px; padding:0 var(--space-md); box-sizing:border-box;
+    display:flex; align-items:center; gap:var(--layout-xs); height:48px; padding:0 var(--layout-md); box-sizing:border-box;
     border:1px solid var(--border-default); border-radius:var(--radius-sm); background:var(--surface-primary);
     transition:border-color .12s ease;
   }
@@ -1396,8 +1470,8 @@
   .ds-input.is-disabled input{ color:var(--text-muted); cursor:not-allowed; }
   .ds-input.is-disabled input::placeholder{ color:var(--text-muted); }
   .ds-input svg{ color:var(--surface-tertiary); flex-shrink:0; }
-  .ds-input.small{ height:40px; padding:var(--space-xs); }
-  .ds-input.tiny{ height:32px; padding:0 var(--space-xs); }
+  .ds-input.small{ height:40px; padding:var(--layout-xs); }
+  .ds-input.tiny{ height:32px; padding:0 var(--layout-xs); }
   .ds-input.tiny input{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
 
   /* avatar, Style=Image and the 88px Account avatar (initial in Value/XL: Martian Mono Medium 36). */
@@ -1407,32 +1481,32 @@
 
   /* ---- Account page (Ongatu 250:3399) ---- */
   a.ds-action-link{ text-decoration:none; }
-  .acct-head{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-xs); }
+  .acct-head{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--layout-xs); }
   .acct-head .app-sub{ margin-top:0; }
-  .acct-content{ display:flex; justify-content:center; align-items:flex-start; gap:var(--space-3xl); margin-top:var(--space-2xl); }
+  .acct-content{ display:flex; justify-content:center; align-items:flex-start; gap:var(--layout-3xl); margin-top:var(--layout-2xl); }
   .acct-menu{ position:sticky; top:88px; flex-shrink:0; }
-  .acct-cards{ width:800px; min-width:0; display:flex; flex-direction:column; gap:var(--space-lg); }
+  .acct-cards{ width:800px; min-width:0; display:flex; flex-direction:column; gap:var(--layout-lg); }
   .acct-card{
-    display:flex; flex-direction:column; gap:var(--space-xl); padding:var(--space-lg) var(--space-xl) var(--space-xl);
+    display:flex; flex-direction:column; gap:var(--layout-xl); padding:var(--layout-lg) var(--layout-xl) var(--layout-xl);
     background:var(--surface-primary); border:none; border-radius:var(--radius-md); scroll-margin-top:88px; /* no border, like the dashboard cards (Sept 27) */
   }
-  .acct-card-head{ display:flex; flex-direction:column; gap:var(--space-tn); }
+  .acct-card-head{ display:flex; flex-direction:column; gap:var(--layout-tn); }
   .acct-card-head h2{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
   .acct-card-head p{ margin:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
-  .acct-card-body{ display:flex; flex-direction:column; gap:var(--space-lg); }
-  .acct-avatar-row{ display:flex; align-items:center; gap:var(--space-md); }
-  .acct-avatar-actions{ display:flex; align-items:center; gap:var(--space-xs); }
-  .acct-form{ display:flex; flex-direction:column; gap:var(--space-sm); }
-  .acct-row{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:var(--space-md); }
-  .acct-row .field label{ margin-bottom:var(--space-xs); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-secondary); }
-  .acct-actions{ display:flex; gap:var(--space-xs); }
-  .acct-option-group{ display:flex; flex-direction:column; gap:var(--space-lg); }
-  .acct-option{ display:flex; align-items:center; gap:var(--space-xs); }
-  .acct-meta{ flex:1; min-width:0; display:flex; flex-direction:column; gap:var(--space-xs); }
+  .acct-card-body{ display:flex; flex-direction:column; gap:var(--layout-lg); }
+  .acct-avatar-row{ display:flex; align-items:center; gap:var(--layout-md); }
+  .acct-avatar-actions{ display:flex; align-items:center; gap:var(--layout-xs); }
+  .acct-form{ display:flex; flex-direction:column; gap:var(--layout-sm); }
+  .acct-row{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:var(--layout-md); }
+  .acct-row .field label{ margin-bottom:var(--layout-xs); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-secondary); }
+  .acct-actions{ display:flex; gap:var(--layout-xs); }
+  .acct-option-group{ display:flex; flex-direction:column; gap:var(--layout-lg); }
+  .acct-option{ display:flex; align-items:center; gap:var(--layout-xs); }
+  .acct-meta{ flex:1; min-width:0; display:flex; flex-direction:column; gap:var(--layout-xs); }
   .acct-meta h3{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
   .acct-meta p{ margin:0; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-secondary); }
-  .acct-data{ gap:var(--space-lg); }
-  .acct-data-row{ display:flex; align-items:center; gap:var(--space-xl); padding:var(--space-md); border-radius:var(--radius-sm); }
+  .acct-data{ gap:var(--layout-lg); }
+  .acct-data-row{ display:flex; align-items:center; gap:var(--layout-xl); padding:var(--layout-md); border-radius:var(--radius-sm); }
   .acct-data-row .btn-pill{ flex-shrink:0; }
   .acct-error{ margin:0; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--status-fail); }
   .acct-note{ margin:0; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-secondary); }
@@ -1442,21 +1516,21 @@
   .round-btn.secondary.is-destructive{ border-color:var(--border-destructive); color:var(--action-destructive); }
   .round-btn.secondary.is-destructive:disabled{ opacity:var(--opacity-disabled); cursor:not-allowed; }
   @media (max-width:1100px){
-    .acct-content{ flex-direction:column; align-items:stretch; gap:var(--space-lg); }
+    .acct-content{ flex-direction:column; align-items:stretch; gap:var(--layout-lg); }
     .acct-menu{ position:static; width:auto; flex-direction:row; flex-wrap:wrap; }
     .acct-menu .ds-menu-item{ width:auto; }
     .acct-cards{ width:auto; }
   }
   @media (max-width:640px){
-    .acct-card{ padding:var(--space-lg) var(--space-md) var(--space-md); }
+    .acct-card{ padding:var(--layout-lg) var(--layout-md) var(--layout-md); }
     .acct-row{ grid-template-columns:1fr; }
-    .acct-data-row{ flex-direction:column; align-items:flex-start; gap:var(--space-md); padding:var(--space-md) 0; }
+    .acct-data-row{ flex-direction:column; align-items:flex-start; gap:var(--layout-md); padding:var(--layout-md) 0; }
   }
 
   /* ---- Side menu (304:553) and menu-item (304:528) ---- */
-  .ds-side-menu{ width:200px; display:flex; flex-direction:column; gap:var(--space-tn); }
+  .ds-side-menu{ width:200px; display:flex; flex-direction:column; gap:var(--layout-tn); }
   .ds-menu-item{
-    display:flex; align-items:center; gap:var(--space-xs); width:100%; height:40px; padding:var(--space-sm); box-sizing:border-box;
+    display:flex; align-items:center; gap:var(--layout-xs); width:100%; height:40px; padding:var(--layout-sm); box-sizing:border-box;
     border:none; border-radius:var(--radius-sm); background:transparent; cursor:pointer; text-decoration:none; text-align:left;
     font-family:inherit; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--text-secondary);
     transition:background-color .12s ease, color .12s ease;
@@ -1470,40 +1544,40 @@
 
   /* Entries tooltip header (146:5497): "Budget set" (Heading/Small, text/muted) and the item's budget (Value/Small,
      text/muted, Euro in action/disable), space-between; then a divider in border/tertiary; 16 above the entries. */
-  #note-tip .tip-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding-right:var(--space-xs); }
+  #note-tip .tip-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding-right:var(--layout-xs); }
   #note-tip .tip-head-label{ font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); color:var(--text-muted); }
   #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
   #note-tip .tip-head-amount .money-ic{ color:var(--action-disable); }
   #note-tip .tip-empty{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-muted); }
-  #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--border-tertiary); margin:var(--space-md) var(--space-xs) var(--space-md) 0; }
+  #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--border-tertiary); margin:var(--layout-md) var(--layout-xs) var(--layout-md) 0; }
   /* ---- Sign in (Ongatu 325:10734 and steps 335:7580, 335:7542, 335:7606, 342:7702, 342:7885) ----
      Page surface/body, 80 from the top; a 480 column, 40 between the header and the card. Header: logo Vertical
      (160 x 127), 8 above the tagline (Body/Medium/Medium, brand indigo). Card: surface/primary, 1px border/default,
      radius/md, padding 40, 24 between blocks. Title Heading/XL, centred. Fields: label Body/Small/SemiBold text/secondary,
      8 above the Input; 24 between fields and buttons (16 between the two Create-account fields). */
-  .login-page{ min-height:100vh; box-sizing:border-box; background:var(--surface-body); padding:80px var(--space-md); display:flex; justify-content:center; font-family:var(--font-sans); color:var(--text-primary); }
-  .login-content{ width:480px; max-width:100%; display:flex; flex-direction:column; align-items:center; gap:var(--space-xl); }
-  .login-header{ display:flex; flex-direction:column; align-items:center; gap:var(--space-xs); padding:0 var(--space-lg); }
+  .login-page{ min-height:100vh; box-sizing:border-box; background:var(--surface-body); padding:80px var(--layout-md); display:flex; justify-content:center; font-family:var(--font-sans); color:var(--text-primary); }
+  .login-content{ width:480px; max-width:100%; display:flex; flex-direction:column; align-items:center; gap:var(--layout-xl); }
+  .login-header{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-xs); padding:0 var(--layout-lg); }
   .login-header .ds-logo{ display:block; }
   .login-tagline{ margin:0; text-align:center; color:var(--primitive-brand-indigo); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
-  .login-card{ width:100%; box-sizing:border-box; background:var(--surface-primary); border:1px solid var(--border-default); border-radius:var(--radius-md); padding:var(--space-xl); display:flex; flex-direction:column; gap:var(--space-lg); }
-  .login-head{ display:flex; flex-direction:column; align-items:center; gap:var(--space-md); text-align:center; }
+  .login-card{ width:100%; box-sizing:border-box; background:var(--surface-primary); border:1px solid var(--border-default); border-radius:var(--radius-md); padding:var(--layout-xl); display:flex; flex-direction:column; gap:var(--layout-lg); }
+  .login-head{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-md); text-align:center; }
   .login-title{ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
   .login-sub{ margin:0; color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .login-sub strong{ font-weight:inherit; color:var(--text-primary); }
-  .login-user{ display:flex; flex-direction:column; align-items:center; gap:var(--space-xs); }
+  .login-user{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-xs); }
   .login-user-text p{ margin:0; }
   .login-hello{ color:var(--text-primary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
   .login-email{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); overflow-wrap:anywhere; }
-  .login-body, .login-form{ display:flex; flex-direction:column; gap:var(--space-lg); }
-  .login-form--tight{ gap:var(--space-md); }
-  .login-field{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-xs); }
+  .login-body, .login-form{ display:flex; flex-direction:column; gap:var(--layout-lg); }
+  .login-form--tight{ gap:var(--layout-md); }
+  .login-field{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--layout-xs); }
   .login-field .ds-input{ width:100%; }
   .login-label{ color:var(--text-secondary); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); }
-  .login-code{ display:flex; gap:var(--space-xs); width:100%; }
+  .login-code{ display:flex; gap:var(--layout-xs); width:100%; }
   .login-code .login-code-box{ flex:1 1 0; min-width:0; padding:0; }
   .login-code-box input{ width:100%; height:100%; text-align:center; font-variant-numeric:tabular-nums; }
-  .login-cta{ display:flex; gap:var(--space-xs); }
+  .login-cta{ display:flex; gap:var(--layout-xs); }
   .login-cta > *{ flex:1 1 0; min-width:0; justify-content:center; text-decoration:none; box-sizing:border-box; }
   .login-wide{ width:100%; justify-content:center; }
   /* Errors and "code sent" are not in the design: a Body/Small line under the field, status/fail for errors. */
@@ -1512,9 +1586,9 @@
   /* Phones (Ongatu 369:11424): 40 from the top, 16px sides, logo block and card 24 apart; the card has no border and
      40/16 padding. */
   @media (max-width:640px){
-    .login-page{ padding:var(--space-xl) var(--space-md); }
-    .login-content{ gap:var(--space-lg); }
-    .login-card{ border:none; padding:var(--space-xl) var(--space-md); }
+    .login-page{ padding:var(--layout-xl) var(--layout-md); }
+    .login-content{ gap:var(--layout-lg); }
+    .login-card{ border:none; padding:var(--layout-xl) var(--layout-md); }
   }
   #forgot-form, #resend-form{ display:none; }
 
@@ -1522,11 +1596,11 @@
   .ds-mnav{ display:none; }
   .ds-mnav-item{
     position:relative; isolation:isolate;
-    display:inline-flex; align-items:center; justify-content:center; gap:var(--space-xs); width:136px; height:56px; box-sizing:border-box;
-    padding:var(--space-xs) var(--space-lg); border-radius:var(--radius-lg); border:none; background:transparent; color:var(--text-primary);
+    display:inline-flex; align-items:center; justify-content:center; gap:var(--layout-xs); width:136px; height:56px; box-sizing:border-box;
+    padding:var(--layout-xs) var(--layout-lg); border-radius:var(--radius-lg); border:none; background:transparent; color:var(--text-primary);
     text-decoration:none; cursor:pointer; font-family:inherit; flex-shrink:0; transition:background-color .12s ease;
   }
-  .ds-mnav-item.is-selected{ padding:var(--space-xs) var(--space-md); gap:var(--space-tn); color:var(--text-accent); }
+  .ds-mnav-item.is-selected{ padding:var(--layout-xs) var(--layout-md); gap:var(--layout-tn); color:var(--text-accent); }
   .ds-mnav-pillbg{ position:absolute; inset:0; z-index:-1; border-radius:var(--radius-lg); background:var(--surface-accent-light); view-transition-name:mnav-pill; }
   .ds-mnav-item svg{ display:block; flex-shrink:0; }
   .ds-mnav-item:focus-visible, .ds-mnav-action .round-btn:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
@@ -1543,11 +1617,11 @@
      titles Heading/Medium; Balance card 12 between its lines; Label chips keep the case they are given. ---- */
   .month-btn{ height:24px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .insight-tag, .hc-delta{ height:24px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); text-transform:none; }
-  .seg-tabs{ gap:var(--space-xs); padding:var(--space-tn); }
-  .seg-tabs button{ height:40px; padding:var(--space-xs); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .seg-tabs{ gap:var(--layout-xs); padding:var(--layout-tn); }
+  .seg-tabs button{ height:40px; padding:var(--layout-xs); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
   .seg-tabs.sub{ height:40px; box-sizing:border-box; }
-  .seg-tabs.sub button{ height:32px; padding:0 var(--space-xs); }
-  .btn-pill{ height:48px; padding:0 var(--space-md); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .seg-tabs.sub button{ height:32px; padding:0 var(--layout-xs); }
+  .btn-pill{ height:48px; padding:0 var(--layout-md); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
   .btn-pill.small{ height:40px; }
   .mini-kpi .label, .ticker-item .ti-name{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .meter-row .meter-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
@@ -1555,8 +1629,8 @@
   .bd-row{ height:32px; }
   .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
   .bd-block{ gap:0; }
-  .bd-block-title{ margin-bottom:var(--space-xs); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
-  .balance-card .value, .balance-card .pill-delta{ margin-top:var(--space-sm); }
+  .bd-block-title{ margin-bottom:var(--layout-xs); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .balance-card .value, .balance-card .pill-delta{ margin-top:var(--layout-sm); }
   .hero-chart .hc-label{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   /* The 16px Euro sits right against the figure in KPI, Expense card and breakdown-row values; Meters keep a 4px gap (20px Euro). */
   .mini-kpi .value .money, .ticker-item .ti-val .money, .bd-row .n .money{ gap:0; }
@@ -1567,35 +1641,35 @@
      (the copy is upper case), 8 above their field; form rows and columns 16 apart. Date: border/default with a Calendar icon.
      Year budget: Group = Heading/Medium title + 24px secondary + Round button (8 apart), rows touch, 32px X in action/primary,
      16px Euro before a Value/Medium figure in link/default; groups 16 apart with Dividers; 40px buttons. ---- */
-  .add-panel, #add-panel{ padding:0 var(--space-xl) var(--space-xl); gap:var(--space-xl); box-shadow:0 0 64px rgba(22,21,15,.24); border-left-color:var(--border-card); }
-  .panel-nav{ display:flex; align-items:center; height:64px; flex-shrink:0; box-sizing:border-box; margin:0 calc(var(--space-md) - var(--space-xl)); padding:0 var(--space-md);
+  .add-panel, #add-panel{ padding:0 var(--layout-xl) var(--layout-xl); gap:var(--layout-xl); box-shadow:0 0 64px rgba(22,21,15,.24); border-left-color:var(--border-card); }
+  .panel-nav{ display:flex; align-items:center; height:64px; flex-shrink:0; box-sizing:border-box; margin:0 calc(var(--layout-md) - var(--layout-xl)); padding:0 var(--layout-md);
     position:sticky; top:0; z-index:2; background:var(--surface-primary); }
   .panel-close .panel-close-back{ display:none; }
-  .add-panel-header{ display:flex; flex-direction:column; align-items:stretch; gap:var(--space-md); }
+  .add-panel-header{ display:flex; flex-direction:column; align-items:stretch; gap:var(--layout-md); }
   .add-panel-title{ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
   #add-panel .add-panel-hint, .budget-panel .add-panel-hint, #budget-panel-hint{ margin:0; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
-  .ap-main{ gap:var(--space-xl); }
-  .ap-section{ gap:var(--space-lg); }
-  .dropzone{ background:var(--surface-body); border-color:var(--border-default); padding:var(--space-xl) var(--space-lg); }
+  .ap-main{ gap:var(--layout-xl); }
+  .ap-section{ gap:var(--layout-lg); }
+  .dropzone{ background:var(--surface-body); border-color:var(--border-default); padding:var(--layout-xl) var(--layout-lg); }
   .dz-line, .dz-line .ds-action-link, .dz-hint{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .dz-line{ color:var(--text-primary); }
   .dz-hint{ color:var(--text-secondary); }
   .add-panel .field-label, .ap-manual .field-label, #add-panel .field label{ margin-bottom:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); text-transform:uppercase; color:var(--text-secondary); }
-  #add-panel .field label{ margin-bottom:var(--space-xs); }
-  .add-panel .field-group{ gap:var(--space-xs); }
-  #add-panel .add-grid{ gap:var(--space-md); }
+  #add-panel .field label{ margin-bottom:var(--layout-xs); }
+  .add-panel .field-group{ gap:var(--layout-xs); }
+  #add-panel .add-grid{ gap:var(--layout-md); }
   .ap-manual .add-actions{ margin-top:0; }
   .date-dd{ border-color:var(--border-default); }
   .date-dd:hover{ border-color:var(--state-border-hover); }
   .date-dd-label{ color:var(--text-secondary); }
   .date-dd .date-dd-chevron{ width:16px; height:16px; color:var(--text-primary); }
-  .budget-panel .add-panel-content{ gap:var(--space-xl); }
-  .budget-type-section{ gap:var(--space-md); }
-  .budget-group{ gap:var(--space-xs); }
-  .budget-group-head{ display:flex; align-items:center; gap:var(--space-xs); }
+  .budget-panel .add-panel-content{ gap:var(--layout-xl); }
+  .budget-type-section{ gap:var(--layout-md); }
+  .budget-group{ gap:var(--layout-xs); }
+  .budget-group-head{ display:flex; align-items:center; gap:var(--layout-xs); }
   .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
   .round-btn.budget-group-add{ border-color:var(--border-dark); }
-  .budget-row.bd-row{ height:32px; gap:var(--space-tn); }
+  .budget-row.bd-row{ height:32px; gap:var(--layout-tn); }
   .budget-row .br-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
   .budget-row .bd-value{ gap:0; }
   .budget-row .bd-value .bd-euro{ width:16px; height:16px; }
@@ -1604,15 +1678,12 @@
   /* Account (Ongatu 250:3399, Sept 28): Side menu 312 wide in Body/Large/Medium, 48 before the 800px cards (1160 in all,
      centred); "Add image" = Button Tiny Secondary at 32 (12 sides, Body/Medium/Medium, border/dark); the Trash Round button
      is Small Tertiary with the icon in action/destructive. */
-  .acct-content{ gap:var(--space-2xl); }
+  .acct-content{ gap:var(--layout-2xl); }
   .acct-menu.ds-side-menu{ width:312px; }
-  @media (max-width:1100px){ .acct-content{ gap:var(--space-lg); } .acct-menu.ds-side-menu{ width:auto; } }
+  @media (max-width:1100px){ .acct-content{ gap:var(--layout-lg); } .acct-menu.ds-side-menu{ width:auto; } }
   .ds-menu-item{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
-  #avatar-upload.btn-pill.tiny{ height:32px; padding:0 var(--space-sm); border-color:var(--border-dark); color:var(--text-primary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   #avatar-delete.is-destructive{ color:var(--action-destructive); }
   #avatar-delete:disabled{ opacity:var(--opacity-disabled); cursor:not-allowed; background:transparent; }
-  /* Nav tabs - Add year (Ongatu 265:18832): the button is 32 high, 12 side padding, a 12px Plus 4 before "Add year" in Body/Medium/Medium. */
-  .year-add-pill .btn-pill.tiny{ height:32px; padding:0 var(--space-sm); gap:var(--space-tn); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
 
   /* ---- Phones: Ongatu 342:7993 (top of the page) and 369:12607 (scrolled). 16px sides; the header (logo 32 + bell)
      and the year/month nav stay at the top while the page scrolls; cards 24 apart in this order: Balance, KPIs, Tracker,
@@ -1620,39 +1691,38 @@
   @media (max-width:640px){
     body{ padding:0; }
     .app-top-gap{ display:none; }
-    .ds-app-header{ margin:0; padding:var(--space-md); height:64px; align-items:center; }
+    .ds-app-header{ margin:0; padding:var(--layout-md); height:64px; align-items:center; }
     .ds-app-header .ds-user{ display:none; }
     .ds-app-header .ds-user-nav-actions{ padding-top:0; }
-    .wrap{ padding:var(--space-md) var(--space-md) 144px; }
+    .wrap{ padding:var(--layout-md) var(--layout-md) 144px; }
     header.top{ margin-bottom:0; }
-    .app-title{ font-size:40px; line-height:48px; }
-    .app-sub{ margin-top:var(--space-xs); }
+    .app-title{ font-size:var(--type-display-title-size); line-height:var(--type-display-title-lh); }
+    .app-sub{ margin-top:var(--layout-xs); }
     /* Year and month nav: one scrolling row each, pinned under the header; the right edge fades out. */
-    .actions-wrap{ position:sticky; top:64px; z-index:20; background:var(--surface-body); margin:0 calc(-1 * var(--space-md)); padding:var(--space-md); }
+    .actions-wrap{ position:sticky; top:64px; z-index:20; background:var(--surface-body); margin:0 calc(-1 * var(--layout-md)); padding:var(--layout-md); }
     .actions-wrap::after{ content:''; position:absolute; top:0; right:0; bottom:0; width:55px; pointer-events:none; background:linear-gradient(90deg, transparent, var(--surface-body)); }
     .actions-row{ flex-wrap:nowrap; }
     .top-nav{ min-width:0; width:100%; }
-    .months{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin-right:calc(-1 * var(--space-md)); padding-right:var(--space-md); }
+    .months{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin-right:calc(-1 * var(--layout-md)); padding-right:var(--layout-md); }
     .months::-webkit-scrollbar, .year-tabs::-webkit-scrollbar{ display:none; }
     .year-tabs{ scrollbar-width:none; }
-    .row1{ display:flex; flex-direction:column; gap:var(--space-lg); margin-top:0; }
+    .row1{ display:flex; flex-direction:column; gap:var(--layout-lg); margin-top:0; }
     .hero-left, .hero-right{ display:contents; }
-    .balance-card{ order:1; padding:var(--space-lg); }
-    .mini-grid{ order:2; gap:12px var(--space-md); }
+    .balance-card{ order:1; padding:var(--layout-lg); }
+    .mini-grid{ order:2; gap:12px var(--layout-md); }
     .breakdown-card{ order:3; }
     .alloc-card{ order:4; }
     .hero-chart{ order:5; }
     .glance-card{ order:6; }
     .ticker-strip, .wrap > .yoy-heading, .wrap > .yoy-sub, .wrap > .yoy{ display:none; }
-    .card:not(.balance-card){ padding:var(--space-md); }
-    .balance-card .label{ font-size:14px; line-height:14px; color:var(--text-secondary); }
-    .balance-card .value{ font-size:32px; }
+    .card:not(.balance-card){ padding:var(--layout-md); }
+    .balance-card .label{ font-size:var(--type-heading-small-size); line-height:var(--type-heading-small-lh); color:var(--text-secondary); }
     #tracker-add-btn{ display:none; }
     .alloc-bars{ justify-content:center; }
     /* The Add entry panel has no phone design: it takes the whole width and keeps its fields inside it. */
-    .add-panel{ width:100%; max-width:100%; padding:var(--space-lg) var(--space-md); }
+    .add-panel{ width:100%; max-width:100%; padding:var(--layout-lg) var(--layout-md); }
     /* Screen=Mobile panels (229:18167, 415:16066): 16px sides, the modal-nav's close is a back arrow. */
-    .add-panel, #add-panel{ padding:0 var(--space-md) var(--space-xl); }
+    .add-panel, #add-panel{ padding:0 var(--layout-md) var(--layout-xl); }
     .panel-nav{ margin:0; padding:0; }
     .panel-close .panel-close-x{ display:none; }
     .panel-close .panel-close-back{ display:block; }
@@ -1662,15 +1732,15 @@
     .add-grid > *{ min-width:0; }
     .alloc-col{ min-width:36px; }
     .alloc-bar{ width:36px; }
-    .breakdown-card h2{ font-size:16px; line-height:16px; }
+    .breakdown-card h2{ font-size:var(--type-heading-medium-size); line-height:var(--type-heading-medium-lh); }
     .ds-mnav{
       display:flex; justify-content:center; position:fixed; left:0; right:0; bottom:0; z-index:35;
-      padding:var(--space-lg) var(--space-sm); background:linear-gradient(180deg, var(--surface-primary-transparent), var(--surface-primary));
+      padding:var(--layout-lg) var(--layout-sm); background:linear-gradient(180deg, var(--surface-primary-transparent), var(--surface-primary));
       pointer-events:none;
     }
     .ds-mnav-pill{
       position:relative; display:flex; align-items:center; justify-content:space-between; width:100%; box-sizing:border-box;
-      padding:var(--space-nav-padding-y) var(--space-xs); border-radius:var(--radius-full); view-transition-name:mnav; background:color-mix(in srgb, var(--surface-primary) 88%, transparent);
+      padding:var(--layout-nav-padding-y) var(--layout-xs); border-radius:var(--radius-full); view-transition-name:mnav; background:color-mix(in srgb, var(--surface-primary) 88%, transparent);
       box-shadow:0 3px 12px color-mix(in srgb, var(--text-primary) 12%, transparent); pointer-events:auto;
     }
     /* Touch targets: month chips (20px) and year tabs (32px) keep their drawn size but get a 44px-high hit area.
@@ -1702,43 +1772,149 @@
     .mini-kpi .value .money{ gap:0; }
     /* Tracker: tabs across the whole width, 40 high, Body/Large/Medium; sub-tabs share the width too. */
     .bd-controllers, .bd-tabs-stack{ width:100%; }
-    #breakdown-top-seg, #breakdown-group-seg{ width:100%; flex-wrap:nowrap; gap:var(--space-xs); box-sizing:border-box; }
+    #breakdown-top-seg, #breakdown-group-seg{ width:100%; flex-wrap:nowrap; gap:var(--layout-xs); box-sizing:border-box; }
     #breakdown-top-seg button, #breakdown-group-seg button{ flex:1 1 0; min-width:0; }
-    #breakdown-top-seg button{ height:40px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); }
+
     .meter-row .meter-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
     .meter-row .meter-amt, .bd-row .n{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); }
-    .meter-row .meter-amt .money{ gap:var(--space-tn); }
+    .meter-row .meter-amt .money{ gap:var(--layout-tn); }
     .bd-row .n .money{ gap:0; }
     .bd-row{ height:24px; }
-    .bd-block{ gap:var(--space-tn); }
-    .bd-block-title{ margin-bottom:var(--space-sm); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
-    .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+    .bd-block{ gap:var(--layout-tn); }
+    .bd-block-title{ margin-bottom:var(--layout-sm); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+    .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
     /* Expander (DS 475:743): the card stops at 555px; an 88px band fades to white over its bottom with "See all". */
     .breakdown-card{ position:relative; }
     .breakdown-card.is-collapsed{ max-height:555px; overflow:hidden; box-sizing:border-box; }
     .ds-expander{
       position:absolute; left:0; right:0; bottom:0; height:88px; box-sizing:border-box; display:flex; align-items:flex-end; justify-content:center;
-      padding:var(--space-xs) 0; background:linear-gradient(180deg, var(--surface-primary-transparent) 0%, var(--surface-primary) 53.365%);
+      padding:var(--layout-xs) 0; background:linear-gradient(180deg, var(--surface-primary-transparent) 0%, var(--surface-primary) 53.365%);
     }
-    .ds-expander .btn-pill{ height:40px; padding:0 var(--space-md); gap:var(--space-tn); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); }
-    .ds-expander.is-open{ position:static; height:auto; padding:var(--space-md) 0 0; background:none; }
+    .ds-expander.is-open{ position:static; height:auto; padding:var(--layout-md) 0 0; background:none; }
     .ds-expander.is-open svg{ transform:rotate(180deg); }
     /* Chart (Trend_Chart_Section 342:8068): label Heading/Small in text/secondary, Value/Large, 10px legend with 8px dots. */
     .hero-chart.is-compact .hc-label{ color:var(--text-secondary); }
-    .hero-chart.is-compact .hc-value{ margin-top:var(--space-tn); }
-    .hero-chart.is-compact .legend{ gap:var(--space-sm); font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); color:var(--text-secondary); }
-    .hero-chart.is-compact .legend span{ gap:var(--space-tn); }
+    .hero-chart.is-compact .hc-value{ margin-top:var(--layout-tn); }
+    .hero-chart.is-compact .legend{ gap:var(--layout-sm); font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); color:var(--text-secondary); }
+    .hero-chart.is-compact .legend span{ gap:var(--layout-tn); }
     .hero-chart.is-compact .legend .swatch{ width:8px; height:8px; border-radius:var(--radius-full); }
     /* Modal, Surface=Mobile (DS 443:1484; Ongatu 420:6020): a bottom sheet, full width, top corners radius/md. */
-    .ds-modal{ width:100%; max-width:100%; margin:auto 0 0; padding:0 0 var(--space-lg); border-radius:var(--radius-md) var(--radius-md) 0 0; gap:var(--space-lg); max-height:calc(100dvh - 48px); overflow:auto; }
+    .ds-modal{ width:100%; max-width:100%; margin:auto 0 0; padding:0 0 var(--layout-lg); border-radius:var(--radius-md) var(--radius-md) 0 0; gap:var(--layout-lg); max-height:calc(100dvh - 48px); overflow:auto; }
     .ds-modal[open]{ animation:ds-sheet-in .25s cubic-bezier(.2,0,0,1); }
-    .ds-modal-header{ padding:var(--space-xs); }
+    .ds-modal-header{ padding:var(--layout-xs); }
     .ds-modal-header .round-btn{ width:40px; height:40px; }
-    .ds-modal-content{ padding:0 var(--space-md); gap:var(--space-lg); }
-    .ds-modal-text{ gap:var(--space-xs); }
-    .ds-modal-description{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; letter-spacing:var(--type-body-large-medium-ls); }
-    .ds-modal-actions{ padding:0 var(--space-md); margin-top:var(--space-md); }
-    .ds-modal-actions .btn-pill{ flex:1 1 0; width:auto; height:48px; justify-content:center; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:22px; }
+    .ds-modal-content{ padding:0 var(--layout-md); gap:var(--layout-lg); }
+    .ds-modal-text{ gap:var(--layout-xs); }
+    .ds-modal-description{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    .ds-modal-actions{ padding:0 var(--layout-md); margin-top:var(--layout-md); }
+    .ds-modal-actions .btn-pill{ flex:1 1 0; width:auto; justify-content:center; }
     .ds-modal-actions .btn-pill.ghost{ border-color:transparent; }
   }
   @keyframes ds-sheet-in{ from{ transform:translateY(100%); } to{ transform:none; } }
+
+  /* ==========================================================================================================
+     Sept 29: responsive components. The Okara Surface collection now has a Mobile and a Desktop mode (Desktop is
+     denser); the tokens above switch at 640px. Every size below is written with the variable the DS component binds,
+     or a fixed number where the component is fixed, so each component follows the mode by itself. Components whose
+     height hugs their content have no fixed height here. Strokes sit inside in Figma, so a 1px border comes off the
+     padding. Read from DS Components 4:43 (Sept 29).
+     ========================================================================================================== */
+  /* Button 41:119 */
+  .btn-pill{ height:auto; min-height:0; gap:var(--space-tn); padding:calc(var(--space-sm) - 1px) calc(var(--space-md) - 1px);
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  /* Small: the DS binds its top and bottom padding to radius/sm (8 in both modes). */
+  .btn-pill.small{ height:auto; padding:calc(8px - 1px) calc(var(--space-md) - 1px); }
+  .btn-pill.tiny{ height:auto; padding:calc(var(--space-xs) - 1px) calc(var(--space-sm) - 1px);
+    font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .btn-pill.micro{ height:auto; padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px);
+    font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+  /* Round button 52:629: Medium hugs space/sm around 24, Small is a fixed 40, Tiny hugs space/xs around 16, Micro space/tn. */
+  /* The size counts the DS icon slot even when a screen draws a smaller icon (a 12px X in a Micro button). */
+  .round-btn{ width:auto; height:auto; padding:0; min-width:calc(2 * var(--space-sm) + 24px); min-height:calc(2 * var(--space-sm) + 24px); }
+  .round-btn.small{ width:40px; height:40px; min-width:0; min-height:0; }
+  .round-btn.tiny{ width:auto; height:auto; min-width:calc(2 * var(--space-xs) + 16px); min-height:calc(2 * var(--space-xs) + 16px); }
+  .round-btn.micro{ width:auto; height:auto; min-width:calc(2 * var(--space-tn) + 16px); min-height:calc(2 * var(--space-tn) + 16px); }
+  /* Action link 106:3611 */
+  .ds-action-link, .ds-action-link.medium{ padding:var(--space-tn) 0; gap:var(--space-tn);
+    font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  /* Nav tabs 59:850 and Tab 53:801: tabs 32 high, space/tn sides, Body/Large/Medium, space/md apart. */
+  .year-tabs{ gap:var(--space-md); }
+  .year-btn{ height:32px; min-width:48px; padding:0 var(--space-tn);
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  /* Segments 30:98 / Segment tab 4:166 (space/sm all round) and Sub-segments 69:900 / Sub-segment tab 69:903
+     (space/xs space/sm): space/tn padding, space/xs apart, radius/sm, Body/Large/Medium. */
+  .seg-tabs, .seg-tabs.sub{ height:auto; gap:var(--space-xs); padding:var(--space-tn); border-radius:var(--radius-sm); }
+  .seg-tabs button{ height:auto; padding:var(--space-sm);
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .seg-tabs.sub button{ height:auto; padding:var(--space-xs) var(--space-sm); }
+  /* Month selector 4:171: space/tn space/sm, Body/Medium/SemiBold, radius/full; the height hugs (24 / 18). */
+  .month-btn{ height:auto; padding:var(--space-tn) var(--space-sm);
+    font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+  /* menu-item 304:528 (fixed 40, space/sm, space/xs gap, 24px icon slot) and Side menu 304:553 (space/tn apart). */
+  .ds-side-menu{ gap:var(--space-tn); }
+  .ds-menu-item{ height:40px; padding:var(--space-sm); gap:var(--space-xs); }
+  /* Input 71:1093 / Dropdown 71:1096. Medium hugs space/sm space/md round the 24px icon slot (48 / 40), Small is a fixed
+     40 with space/xs, Tiny hugs space/xs round 16 (32 / 24). The slot counts even when no icon is drawn. */
+  .ds-input{ height:auto; min-height:calc(2 * var(--space-sm) + 24px); padding:0 calc(var(--space-md) - 1px); }
+  .ds-input.small{ height:40px; min-height:0; padding:0 calc(var(--space-xs) - 1px); }
+  .ds-input.tiny{ height:auto; min-height:calc(2 * var(--space-xs) + 16px); padding:0 calc(var(--space-xs) - 1px); }
+  .ds-dd-trigger{ height:40px; padding:0 calc(var(--space-xs) - 1px); gap:var(--space-xs); }
+  .ds-dd--md .ds-dd-trigger{ height:auto; min-height:calc(2 * var(--space-sm) + 24px); padding:0 calc(var(--space-md) - 1px); }
+  .ds-dd--tiny .ds-dd-trigger{ height:auto; min-height:calc(2 * var(--space-xs) + 16px); padding:0 calc(var(--space-xs) - 1px); }
+  /* The panel's Date field is drawn as a Medium Dropdown. */
+  .date-dd{ height:auto; min-height:calc(2 * var(--space-sm) + 24px); }
+  /* Dropdown-list 182:6851 and dropdown-item 183:6858 */
+  .ds-dd-menu{ padding:var(--space-md); gap:var(--space-xs); border-radius:var(--radius-md); }
+  .ds-dd-block{ gap:var(--space-xs); }
+  .ds-dd-items{ gap:var(--space-tn); }
+  .ds-dd-item{ padding:var(--space-xs); gap:var(--space-xs); }
+  /* KPI card 28:68 and Expense card 130:3844: space/md padding, space/xs gap, radius/md. */
+  .mini-kpi, .ticker-item{ padding:var(--space-md); gap:var(--space-xs); border-radius:var(--radius-md); }
+  /* Balance card 441:1057: space/lg padding, space/sm gap, radius/card. */
+  .balance-card{ padding:var(--space-lg); border-radius:var(--radius-card); }
+  .balance-card .value, .balance-card .pill-delta{ margin-top:var(--space-sm); }
+  /* Meter 25:37: name row space/md apart, space/tn above the 8px bar. */
+  .meter-row .meter-track{ margin-top:var(--space-tn); }
+  /* breackdown-row 124:3667: hugs the Tiny round button (32 / 24), space/tn apart. */
+  .bd-row{ height:auto; min-height:calc(2 * var(--space-xs) + 16px); gap:var(--space-tn); }
+  /* Label 211:859: fixed 24 high, space/xs sides, space/tn gap, radius/ty, Body/Medium/Medium. */
+  .insight-tag, .hc-delta{ height:24px; padding:0 var(--space-xs); gap:var(--space-tn); border-radius:var(--radius-ty);
+    font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  /* notification-item 228:469: space/md padding, space/xs gap, radius/sm; date and time Body/Medium/SemiBold. */
+  .ds-notif-item{ padding:var(--space-md); gap:var(--space-xs); border-radius:var(--radius-sm); }
+  .ds-notif-when{ gap:var(--space-tn); font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+  .ds-notif-content{ gap:var(--space-md); }
+  /* Notification 228:455: the bell is a Small Round button (40). */
+  .ds-notif{ width:40px; height:40px; }
+  .ds-notif-panel{ top:48px; }
+  /* Toast 304:659 */
+  .ds-toast{ gap:var(--space-md); padding:0 var(--space-md) 0 0; border-radius:var(--radius-sm); }
+  .ds-toast-msg{ padding:var(--space-md) 0; }
+  .ds-toast .ds-toast-close{ margin-top:var(--space-md); }
+  /* Modal 443:1484, Surface=Desktop: no side padding, space/lg below, sections space/lg apart; Top-nav space/xs round a
+     Small close; Content space/md sides, space/2xl gap; the text block space/lg sides, space/xl gap, text space/sm;
+     Actions space/3xl sides, space/md apart, buttons share the width. (Surface=Mobile is in the phone block below.) */
+  .ds-modal{ padding:0 0 var(--space-lg); gap:var(--space-lg); border-radius:var(--radius-md); }
+  .ds-modal-header{ padding:var(--space-xs); }
+  .ds-modal-body{ display:flex; flex-direction:column; gap:var(--space-2xl); padding:0 var(--space-md); }
+  .ds-modal-content{ gap:var(--space-xl); padding:0 var(--space-lg); }
+  .ds-modal-title-block{ gap:var(--space-xl); }
+  .ds-modal-text{ gap:var(--space-sm); }
+  .ds-modal-actions{ gap:var(--space-md); padding:0 var(--space-3xl); }
+  .ds-modal-actions .btn-pill{ width:auto; flex:1 1 0; }
+  /* User nav 230:618 and user 221:1048 */
+  .ds-user-nav{ gap:var(--space-md); }
+  .ds-user-nav-actions{ gap:var(--space-xs); padding-top:var(--space-xs); }
+  .ds-user-trigger{ padding:var(--space-tn) 0 var(--space-tn) var(--space-tn); }
+  .ds-user-info{ gap:var(--space-xs); padding-left:var(--space-xs); }
+  /* App header 285:600: 64 high, space/xs space/xl. */
+  @media (min-width:641px){ .ds-app-header{ padding:var(--space-xs) max(var(--space-xl), calc((100% - 1238px) / 2 - 16px)); } }
+  @media (max-width:640px){
+    /* Modal Surface=Mobile: space/lg below and between sections, Top-nav space/xs, Content space/md sides and space/xl
+       gaps, text space/xs, Actions space/md apart with no side padding. */
+    .ds-modal{ padding:0 0 var(--space-lg); gap:var(--space-lg); }
+    .ds-modal-body{ gap:var(--space-xl); padding:0 var(--space-md); }
+    .ds-modal-content{ gap:var(--space-xl); padding:0; }
+    .ds-modal-text{ gap:var(--space-xs); }
+    .ds-modal-actions{ gap:var(--space-md); padding:0; }
+  }

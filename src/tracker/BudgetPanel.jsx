@@ -126,7 +126,7 @@ const BlockFrag = ({ divider, children }) => <>{divider && <hr className="ds-div
 const GroupHeader = ({ title, onAdd }) => (
   <div className="budget-group-head">
     <div className="budget-cat-title">{title}</div>
-    <RoundButton icon={plus} size="tiny" variant="secondary" className="budget-group-add" label={`Add an item to ${title}`} onClick={onAdd} />
+    <RoundButton icon={plus} size="micro" iconSize={12} variant="secondary" className="budget-group-add" label={`Add an item to ${title}`} onClick={onAdd} />
   </div>
 );
 
@@ -148,7 +148,7 @@ function BudgetRow({ r, onValue, onRemove, onEditing }) {
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onEditing(r.key, false); } }} /></label>
         : <span className="bd-value"><Icon icon={euro} size={16} className="bd-euro" />
             <button type="button" className="bd-amount br-amount" aria-label={`Monthly budget for ${r.item}: ${r.value}. Edit`} onClick={() => onEditing(r.key, true)}>{r.value}</button></span>}
-      {!r.editing && <button type="button" className="round-btn small br-remove" aria-label={`Remove ${r.item}`} onClick={() => onRemove(r.key)}><Icon icon={x} size={12} /></button>}
+      {!r.editing && <button type="button" className="round-btn tiny br-remove" aria-label={`Remove ${r.item}`} onClick={() => onRemove(r.key)}><Icon icon={x} size={12} /></button>}
     </div>
   );
 }
@@ -176,8 +176,8 @@ function AddItemRow({ type, label, category, onAdd, onCancel }) {
         <Input size="tiny" className="budget-add-amt" icon={euro} type="text" inputMode="decimal" placeholder="0,00" aria-label="Amount" value={amt} onChange={(e) => setAmt(e.target.value)} />
       </div>
       <div className="budget-add-actions">
-        <button type="button" className="round-btn tiny primary" aria-label="Add item" onClick={ok}><Icon icon={checkmark} size={12} /></button>
-        <button type="button" className="round-btn tiny secondary" aria-label="Cancel" onClick={onCancel}><Icon icon={x} size={12} /></button>
+        <button type="button" className="round-btn micro primary" aria-label="Add item" onClick={ok}><Icon icon={checkmark} size={12} /></button>
+        <button type="button" className="round-btn micro secondary" aria-label="Cancel" onClick={onCancel}><Icon icon={x} size={12} /></button>
       </div>
     </div>
   );

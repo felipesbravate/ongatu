@@ -1,29 +1,25 @@
-// Okara Illustrations: writes src/ui/illustrations.js from the Figma Illustrations file
-// (ksgSp0pN0PrjODsWy1q1se, page "Illustrations").
-//   node scripts/sync-illustrations.mjs <combined-export.svg>
+// Okara Illustrations: writes src/ui/illustrations.js from the folder of SVG exports (one file per illustration,
+// exported from the Figma Illustrations file ksgSp0pN0PrjODsWy1q1se).
+//   node scripts/sync-illustrations.mjs [folder]          write (default folder: ./Illustrations)
+//   node scripts/sync-illustrations.mjs --check [folder]  exit 1 if src/ui/illustrations.js is out of date (tests)
 //
-// How the combined export is made (Figma blocks direct downloads from the build machines):
-//   1. In Figma, a temporary page holds one frame with a copy of every "Illustration/*" node laid out in a row,
-//      each copy renamed "i<figmaId with : as ->" and the frame set to export SVG with "Include id".
-//   2. That frame is exported as one SVG, and the temporary page is deleted.
-//   3. scripts/illustrations-manifest.json records each copy's box in that frame (x, y, w, h), the export's
-//      originY, and the original size when the copy was scaled.
-// Each drawing is moved to 0,0 (and scaled back when needed) so its viewBox is "0 0 <w> <h>" at the Figma size.
-// All drawings are one colour (#16150F = surface/dark in Figma); here they fill with currentColor.
-import { readFileSync, writeFileSync } from 'node:fs';
+// Each file is a Figma SVG export: <svg width height viewBox="0 0 w h">, filled paths in #16150F (surface/dark), and
+// sometimes a clipPath in <defs> (its white rect is a mask, not paint, so <defs> is skipped). Here the paths fill with
+// currentColor. Names: the file name in camelCase; Figma's repeated names come as "Heart", "Heart-1", "Heart-2"...
+// and become heart, heart2, heart3... (the numbering the app already uses).
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
-const svgPath = process.argv[2];
-if (!svgPath) { console.error('usage: node scripts/sync-illustrations.mjs <combined-export.svg>'); process.exit(1); }
-const svg = readFileSync(svgPath, 'utf8');
-const manifest = JSON.parse(readFileSync(new URL('./illustrations-manifest.json', import.meta.url), 'utf8'));
+const CHECK = process.argv.includes('--check');
+const dir = resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || new URL('../Illustrations', import.meta.url).pathname);
 
 const r2 = (v) => { const n = Math.round(v * 100) / 100; return Object.is(n, -0) ? 0 : n; };
 const num = /-?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/gi;
 
 // Figma exports absolute M, L, H, V, C and Z only. Anything else stops the sync rather than drawing it wrong.
-export function transformPath(d, dx, dy, s) {
+export function transformPath(d, dx = 0, dy = 0, s = 1) {
   const out = [];
-  for (const [, cmd, args] of d.matchAll(/([A-Za-z])([^A-Za-z]*)/g)) {
+  for (const [, cmd, args] of d.matchAll(/([MLHVCZSQTAmlhvcszqta])([^MLHVCZSQTAmlhvcszqta]*)/g)) {
     const n = (args.match(num) || []).map(Number);
     if (cmd === 'Z' || cmd === 'z') { out.push('Z'); continue; }
     if (cmd === 'H') { out.push('H' + n.map((v) => r2((v + dx) * s)).join(' ')); continue; }
@@ -34,51 +30,52 @@ export function transformPath(d, dx, dy, s) {
   return out.join('');
 }
 
-const camel = (name) => name.replace(/[^A-Za-z0-9]+(.)?/g, (_, c) => (c ? c.toUpperCase() : '')).replace(/^./, (c) => c.toLowerCase());
+export const camel = (name) => name.replace(/[^A-Za-z0-9]+(.)?/g, (_, c) => (c ? c.toUpperCase() : '')).replace(/^./, (c) => c.toLowerCase());
 
-// Everything inside <g id="gid"> ... its matching </g> (drawings can hold nested, untransformed groups).
-function groupBody(gid) {
-  const start = svg.indexOf(`<g id="${gid}"`);
-  if (start < 0) throw new Error(`missing ${gid} in export`);
-  const open = svg.indexOf('>', start) + 1;
-  const tag = /<g[\s>]|<\/g>/g; tag.lastIndex = open;
-  let depth = 1, t;
-  while ((t = tag.exec(svg))) {
-    depth += t[0] === '</g>' ? -1 : 1;
-    if (!depth) return svg.slice(open, t.index);
-  }
-  throw new Error(`unclosed ${gid}`);
-}
+// "Heart-3" -> { base: "Heart", n: 3 }; "Cloud Upload 2" stays a name of its own.
+const splitName = (file) => { const stem = file.replace(/\.svg$/i, ''); const m = stem.match(/^(.*)-(\d+)$/); return m ? { stem, base: m[1], n: Number(m[2]) } : { stem, base: stem, n: 0 }; };
 
-const seen = {};
+const files = readdirSync(dir).filter((f) => /\.svg$/i.test(f)).map(splitName)
+  .sort((a, b) => a.base.localeCompare(b.base, 'en') || a.n - b.n);
+if (!files.length) throw new Error(`no SVG files in ${dir}`);
+
 const entries = [];
-for (const [id, name, x, y, w, h, ow, oh] of manifest.rows) {
-  const gid = 'i' + id.replace(':', '-');
-  const body = groupBody(gid);
-  const s = ow ? ow / w : 1;
-  const width = ow || w, height = oh || h;
-  const paths = [...body.matchAll(/ d="([^"]*)"/g)].map((p) => transformPath(p[1], -x, -(y + manifest.originY), s));
-  if (!paths.length) throw new Error(`${gid} has no paths`);
-  const base = camel(name);
-  seen[base] = (seen[base] || 0) + 1;
-  const key = seen[base] === 1 ? base : base + seen[base];
-  entries.push({ key, name, id, width: r2(width), height: r2(height), paths });
+for (const f of files) {
+  const svg = readFileSync(join(dir, f.stem + '.svg'), 'utf8');
+  const head = svg.match(/<svg\b[^>]*>/)[0];
+  const width = r2(Number(head.match(/\bwidth="([\d.]+)"/)[1]));
+  const height = r2(Number(head.match(/\bheight="([\d.]+)"/)[1]));
+  const vb = head.match(/\bviewBox="([^"]+)"/)[1].split(/[\s,]+/).map(Number);
+  if (vb[0] || vb[1] || r2(vb[2]) !== width || r2(vb[3]) !== height) throw new Error(`${f.stem}: viewBox ${vb.join(' ')} is not 0 0 ${width} ${height}`);
+  const body = svg.replace(/<defs>[\s\S]*?<\/defs>/g, '');
+  const paths = [...body.matchAll(/<path\b[^>]*?\sd="([^"]*)"[^>]*>/g)].map((p) => {
+    const fill = (p[0].match(/\sfill="([^"]*)"/) || [])[1];
+    if (fill && !/^#16150f$/i.test(fill)) throw new Error(`${f.stem}: a path is filled with ${fill}, not surface/dark`);
+    return transformPath(p[1]);
+  });
+  if (!paths.length) throw new Error(`${f.stem} has no paths`);
+  if (/<(circle|ellipse|rect|polygon|line|polyline)\b/.test(body)) throw new Error(`${f.stem}: shapes other than paths are not supported`);
+  const key = f.n ? camel(f.base) + (f.n + 1) : camel(f.base);
+  entries.push({ key, file: f.stem + '.svg', width, height, paths });
 }
-
-const total = entries.reduce((n, e) => n + e.paths.length, 0);
-const expected = (svg.match(/<path /g) || []).length;
-if (total !== expected) throw new Error(`picked up ${total} of ${expected} paths`);
+const keys = new Set(entries.map((e) => e.key));
+if (keys.size !== entries.length) throw new Error('two files map to the same name');
 
 const lines = [
-  '// Okara Illustrations. Generated by scripts/sync-illustrations.mjs from the Figma Illustrations file',
-  '// (ksgSp0pN0PrjODsWy1q1se). Do not edit by hand.',
-  '// Each drawing: { name, figma, viewBox, width, height, paths }. One colour, drawn with currentColor (surface/dark).',
-  '// Names repeated in Figma (Heart, Star, ...) get a number in Figma order: heart, heart2, heart3...',
+  '// Okara Illustrations. Generated by scripts/sync-illustrations.mjs from the SVG exports in Illustrations/',
+  '// (Figma Illustrations file ksgSp0pN0PrjODsWy1q1se). Do not edit by hand.',
+  '// Each drawing: { name, file, viewBox, width, height, paths }. One colour, drawn with currentColor (surface/dark).',
+  '// Names repeated in Figma (Heart, Star, ...) are numbered as the files are: Heart, Heart-1, Heart-2 -> heart, heart2, heart3.',
   '',
 ];
 for (const e of entries) {
-  lines.push(`export const ${e.key} = ${JSON.stringify({ name: e.key, figma: `${e.name} (${e.id})`, viewBox: `0 0 ${e.width} ${e.height}`, width: e.width, height: e.height, paths: e.paths })};`);
+  lines.push(`export const ${e.key} = ${JSON.stringify({ name: e.key, file: e.file, viewBox: `0 0 ${e.width} ${e.height}`, width: e.width, height: e.height, paths: e.paths })};`);
 }
 lines.push('', `export const all = [${entries.map((e) => e.key).join(', ')}];`, '');
-writeFileSync(new URL('../src/ui/illustrations.js', import.meta.url), lines.join('\n'));
-console.log(`wrote ${entries.length} illustrations`);
+const outPath = new URL('../src/ui/illustrations.js', import.meta.url);
+if (CHECK) {
+  if (readFileSync(outPath, 'utf8') !== lines.join('\n')) { console.error('src/ui/illustrations.js is out of date: run node scripts/sync-illustrations.mjs'); process.exit(1); }
+  console.log('illustrations up to date'); process.exit(0);
+}
+writeFileSync(outPath, lines.join('\n'));
+console.log(`wrote ${entries.length} illustrations (${entries.reduce((n, e) => n + e.paths.length, 0)} paths)`);

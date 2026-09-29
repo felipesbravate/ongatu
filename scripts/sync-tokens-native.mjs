@@ -3,7 +3,7 @@
 //   node scripts/sync-tokens-native.mjs          write
 //   node scripts/sync-tokens-native.mjs --check  exit 1 if the file is out of date (used by the tests)
 // Colours are resolved to hex (React Native has no CSS variables). Names keep the Figma path in camelCase:
-// Color/surface/accent-light -> color.surfaceAccentLight, Spacing/space/tags-indent -> space.tagsIndent.
+// Color/surface/accent-light -> color.surfaceAccentLight, Surface/space/tags-indent -> space.tagsIndent (Mobile mode).
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const tokens = JSON.parse(readFileSync(new URL('../tests/figma-tokens.json', import.meta.url), 'utf8'));
@@ -23,8 +23,10 @@ export function build(t) {
   const color = {};
   for (const [k, v] of Object.entries(t.Color)) color[camel(k)] = v && v.alias ? prim[v.alias] : String(v).toLowerCase();
   const primitive = Object.fromEntries(Object.entries(prim).map(([k, v]) => [camel(k), v]));
-  const space = Object.fromEntries(Object.entries(t.Spacing).map(([k, v]) => [camel(strip(k, 'space')), v]));
-  const radius = Object.fromEntries(Object.entries(t.Radius).map(([k, v]) => [camel(strip(k, 'radius')), v]));
+  // The app is phones only: Surface in its Mobile mode (the web gets Desktop by default, Mobile under 640px).
+  const surf = Object.entries(t.Surface).map(([k, v]) => [k, v.Mobile]);
+  const space = Object.fromEntries(surf.filter(([k]) => k.startsWith('space/')).map(([k, v]) => [camel(strip(k, 'space')), v]));
+  const radius = Object.fromEntries(surf.filter(([k]) => k.startsWith('radius/')).map(([k, v]) => [camel(strip(k, 'radius')), v]));
   const opacity = Object.fromEntries(Object.entries(t.Opacity).map(([k, v]) => [camel(strip(k, 'opacity')), v > 1 ? v / 100 : Math.round(v * 100) / 100]));
   const text = {};
   for (const [k, s] of Object.entries(t.TextStyles || {})) {

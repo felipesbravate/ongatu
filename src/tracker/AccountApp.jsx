@@ -118,7 +118,7 @@ function ProfileCard({ me, profile, confirm, showToast }) {
           <div className="acct-avatar-actions">
             {/* 250:3399: "Add image" (Button Tiny Secondary, 32 high) and a 32px tertiary Round button with a 12px Trash. */}
             <Button size="tiny" variant="secondary" id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Add image</Button>
-            <button type="button" className="round-btn small is-destructive" id="avatar-delete" aria-label="Delete picture" disabled={!profile.image} onClick={askRemove}><Icon icon={trash} size={12} /></button>
+            <button type="button" className="round-btn tiny is-destructive" id="avatar-delete" aria-label="Delete picture" disabled={!profile.image} onClick={askRemove}><Icon icon={trash} size={12} /></button>
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden id="avatar-file" onChange={onFile} />
           </div>
         </div>

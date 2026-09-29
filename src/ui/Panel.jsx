@@ -7,7 +7,7 @@ export function PanelHeader({ title, titleId, hint, hintId, onClose, closeId, fa
   return (
     <>
       <div className="panel-nav">
-        <button type="button" className="round-btn small panel-close" id={closeId} aria-label="Close" onClick={onClose}>
+        <button type="button" className="round-btn tiny panel-close" id={closeId} aria-label="Close" onClick={onClose}>
           <Icon icon={x} size={20} className="panel-close-x" />
           <Icon icon={arrowStraightLeft} size={20} className="panel-close-back" />
         </button>

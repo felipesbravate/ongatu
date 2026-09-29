@@ -15,7 +15,7 @@ export function Illustration({ art, width = 64, className }) {
   );
 }
 
-// Modal (DS Components 273:632, Sept 25). 540 wide, surface/primary, radius/md, shadow 0 0 8 ink@8%, padding 16/16/24/16,
+// Modal (DS 443:1484, Sept 29: Header, then a body = Content + Actions; sizes in okara.css). Earlier notes (273:632, Sept 25): 540 wide, surface/primary, radius/md, shadow 0 0 8 ink@8%, padding 16/16/24/16,
 // 40 between Header (Round button Small Tertiary, X), Content (padding 0 24, gap space/sm 12: optional 64px illustration,
 // then Text = title Heading/Large + description Body/Medium/Medium, space/tn 4 apart, centred) and Actions (padding
 // 0 space/2xl 48, Secondary + Primary Medium buttons 240 wide, 16 apart).
@@ -35,20 +35,22 @@ export function Modal({ open, onClose, title, description, illustration, primary
     <dialog ref={ref} className="ds-modal" id={id} aria-labelledby={titleId} onCancel={(e) => { e.preventDefault(); onClose && onClose(); }}
       onClick={(e) => { if (e.target === ref.current && onClose) onClose(); }}>
       <div className="ds-modal-header"><RoundButton icon={x} size="small" label="Close" onClick={onClose} /></div>
-      <div className="ds-modal-content">
-        {illustration && <div className="ds-modal-title-block"><Illustration art={illustration} /></div>}
-        <div className="ds-modal-text">
-          <h2 className="ds-modal-title" id={titleId}>{title}</h2>
-          {description && <p className="ds-modal-description">{description}</p>}
+      <div className="ds-modal-body">
+        <div className="ds-modal-content">
+          {illustration && <div className="ds-modal-title-block"><Illustration art={illustration} /></div>}
+          <div className="ds-modal-text">
+            <h2 className="ds-modal-title" id={titleId}>{title}</h2>
+            {description && <p className="ds-modal-description">{description}</p>}
+          </div>
+          {children}
         </div>
-        {children}
+        {(primary || secondary) && (
+          <div className="ds-modal-actions">
+            {secondary && <Button variant="tertiary" onClick={secondary.onClick} disabled={secondary.disabled} id={secondary.id}>{secondary.label}</Button>}
+            {primary && <Button variant={primary.destructive ? 'destructive' : 'primary'} onClick={primary.onClick} disabled={primary.disabled} id={primary.id}>{primary.label}</Button>}
+          </div>
+        )}
       </div>
-      {(primary || secondary) && (
-        <div className="ds-modal-actions">
-          {secondary && <Button variant="tertiary" onClick={secondary.onClick} disabled={secondary.disabled} id={secondary.id}>{secondary.label}</Button>}
-          {primary && <Button variant={primary.destructive ? 'destructive' : 'primary'} onClick={primary.onClick} disabled={primary.disabled} id={primary.id}>{primary.label}</Button>}
-        </div>
-      )}
     </dialog>
   );
 }
