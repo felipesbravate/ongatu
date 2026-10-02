@@ -260,6 +260,8 @@ export default function OnboardingApp() {
   const [mode, setMode] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
+  // /welcome?preview=1: walk the whole flow on any account without saving anything (for testing the design).
+  const preview = typeof window !== 'undefined' && new URLSearchParams(location.search).get('preview') === '1';
   const doneRef = useRef(false);
   const setDone = (v) => { doneRef.current = v; };
 
@@ -271,7 +273,7 @@ export default function OnboardingApp() {
       setName(String(m.name || '').trim().split(/\s+/)[0] || '');
     }).catch(() => {});
     // An account that already has years (or finished this once) goes to its dashboard.
-    const offY = db.collection('years').onSnapshot((snap) => { if (snap.docs.length && !doneRef.current) leavePage('/'); });
+    const offY = db.collection('years').onSnapshot((snap) => { if (snap.docs.length && !doneRef.current && !preview) leavePage('/'); });
     const offS = db.collection('settings').onSnapshot((snap) => {
       const p = snap.docs.find((d) => d.id === 'profile'); if (p && p.data().firstName) setName(p.data().firstName);
     });
@@ -282,6 +284,7 @@ export default function OnboardingApp() {
   const current = step === 'tour' ? 1 : 2;
 
   const start = async (board, { year, month }) => {
+    if (preview) { setStep('welcome'); return; }
     setBusy(true); setError(null); setDone(true);
     try {
       const now = new Date().toISOString();
