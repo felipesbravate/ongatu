@@ -5,9 +5,16 @@
 // Size is set here, not in CSS, so an icon can only be one of the three DS sizes.
 import { iconFrame } from './iconFrame.js';
 
-export function Icon({ icon, size = 20, ...rest }) {
+// Oct 2: a size can also be one of the DS icon-size variables: 'xl' (24, 16 on desktop), 'lg' (20, 16 on desktop),
+// 'md' 16, 'sm' 12, 'tn' 10. xl and lg change with the Surface mode, so their svg carries .ico-xl / .ico-lg, the only
+// CSS allowed to size an icon; the drawing is the 24 / 20 one (the same 20px frame, scaled).
+export const ICON_SIZE = { xl: 24, lg: 20, md: 16, sm: 12, tn: 10 };
+export function Icon({ icon, size = 20, className, ...rest }) {
   if (!icon) return null;
-  const { px, drawing: ic, viewBox } = iconFrame(icon, size);
+  const token = typeof size === 'string' ? size : null;
+  const { px, drawing: ic, viewBox } = iconFrame(icon, token ? ICON_SIZE[token] : size);
+  if (token === 'xl' || token === 'lg') className = (className ? className + ' ' : '') + 'ico-' + token;
+  if (className) rest.className = className;
   // data-icon names the glyph, so tests and tools can tell which icon is drawn without comparing paths.
   const common = { viewBox, width: px, height: px, xmlns: 'http://www.w3.org/2000/svg', 'aria-hidden': 'true', 'data-icon': icon.name, 'data-size': px, ...rest };
   if (ic.type === 'dots') {

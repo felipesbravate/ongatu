@@ -61,12 +61,15 @@ test('every <Icon> in the app names its DS size, and CSS does not resize icons',
   const missing = [];
   for (const f of files) {
     const src = readFileSync(f, 'utf8');
-    for (const m of src.matchAll(/<Icon\b[^>]*>/g)) if (!/\bsize=\{/.test(m[0])) missing.push(f.split('/src/')[1] + ': ' + m[0]);
+    for (const m of src.matchAll(/<Icon\b[^>]*>/g)) if (!/\bsize=(\{|"(xl|lg|md|sm|tn)")/.test(m[0])) missing.push(f.split('/src/')[1] + ': ' + m[0]);
   }
   assert.deepEqual(missing, []);
   const css = readFileSync(new URL('../src/ui/okara.css', import.meta.url), 'utf8');
   const sized = [...css.matchAll(/([^{}]*svg)\s*\{([^}]*)\}/g)].filter((m) => !/svg text|trend/.test(m[1]) && /(^|;|\s)(width|height)\s*:/.test(m[2])).map((m) => m[1].trim());
   assert.deepEqual(sized, []);
+  // Oct 2: the only icon sizing in CSS is .ico-xl / .ico-lg, and it reads the Figma icon-size variables.
+  assert.match(css, /\.ico-xl\{ width:var\(--icon-size-xl\); height:var\(--icon-size-xl\); \}/);
+  assert.match(css, /\.ico-lg\{ width:var\(--icon-size-lg\); height:var\(--icon-size-lg\); \}/);
 });
 
 test('Icon draws the Figma frames: 20 = 0 0 20 20, 12/10 = 1 1 18 18, redrawn X/Euro/Dollar on their own frame', async () => {

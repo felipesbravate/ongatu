@@ -24,7 +24,7 @@ export const surfaceValue = (v) => v + 'px';
 // variables the style is bound to, so they follow the mode; letter spacing is a % in Figma, em here.
 export const textStyleVars = (name, t) => {
   const k = '--type-' + kebab(name);
-  return [[k + '-size', `var(${cssName('Surface', t.sizeVar)})`], [k + '-weight', String(t.weight)],
+  return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(t.weight)],
     [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : 'normal'], [k + '-ls', t.letterSpacing ? t.letterSpacing / 100 + 'em' : '0']];
 };
 export const fontStack = (name, family) => `"${family}", ${FONT_FALLBACK[name] || 'sans-serif'}`;

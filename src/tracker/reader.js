@@ -43,7 +43,14 @@ export function errCopy(e) {
     case 'rate_limited': return 'Usage limit reached. Try again later.';
     case 'session_expired': return 'Your session expired. Sign in again.';
     case 'image_rejected': return "Couldn't read this image.";
-    default: return "Couldn't read this file";
+    // Oct 2: every failure used to say "Couldn't read this file", which hid the reason (a preview deployment has no
+    // API key, a timeout, an answer that wasn't JSON). Each now says what happened.
+    case 'not_available': return "Reading isn't set up on this server";
+    case 'bad_output': return "Claude's answer couldn't be read. Try again";
+    case 'too_large': return 'File too large to read';
+    case 'network': return 'No connection. Try again';
+    case 'http_504': case 'http_502': return 'Reading took too long. Try again';
+    default: return "Couldn't read this file" + (e && e.code ? ` (${e.code})` : '');
   }
 }
 

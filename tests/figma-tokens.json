@@ -1,5 +1,5 @@
 {
- "_note": "Snapshot of the Okara Design System Variables (Figma file 7glNMA9d7iVJFf2CvyrzAb), read Sept 25, 2026 (Typography collection added the same day: DM Sans + Martian Mono). Values are hex or numbers; {\"alias\": name} points at a variable in Primitives. To update: re-read Figma, write this file, run `node scripts/sync-tokens.mjs` (rewrites the token block in src/ui/okara.css), then `npm test`. Sept 25: every SemiBold text style set to Medium (500) except Display/Title (page titles), which stays SemiBold. Sept 26: + neutral/stone-50, border/secondary (Divider, dropdown list, notification panel, user card), border/tertiary (divider in the Entries tooltip). Later Sept 26: + neutral/stone-500; text/muted and action/disable now stone-500; + border/selected-item (brand/indigo-light: the border of a filled Input or Dropdown). Sept 28: + space/nav-padding-y 6, space/control-gap 10, space/tags-indent 56, radius/card 20, data/green-light, neutral/surface-transparent, neutral/off-white-transparent, surface/primary-transparent, surface/body-transparent (native-app cleanup). Later Sept 28: text styles re-read (Headings 600 and tracking 0, Heading/Large 20/24, Value/Large 16). Sept 29: Spacing and Radius moved into a new Surface collection with two modes, Mobile and Desktop (Desktop smaller); text styles now bind their size and line height to Surface size/* and lh/* variables. Surface entries are {Mobile, Desktop}; text styles carry sizeVar/lhVar (lhVar null = auto) and the Mobile values.",
+ "_note": "Snapshot of the Okara Design System Variables (Figma file 7glNMA9d7iVJFf2CvyrzAb), read Sept 25, 2026 (Typography collection added the same day: DM Sans + Martian Mono). Values are hex or numbers; {\"alias\": name} points at a variable in Primitives. To update: re-read Figma, write this file, run `node scripts/sync-tokens.mjs` (rewrites the token block in src/ui/okara.css), then `npm test`. Sept 25: every SemiBold text style set to Medium (500) except Display/Title (page titles), which stays SemiBold. Sept 26: + neutral/stone-50, border/secondary (Divider, dropdown list, notification panel, user card), border/tertiary (divider in the Entries tooltip). Later Sept 26: + neutral/stone-500; text/muted and action/disable now stone-500; + border/selected-item (brand/indigo-light: the border of a filled Input or Dropdown). Sept 28: + space/nav-padding-y 6, space/control-gap 10, space/tags-indent 56, radius/card 20, data/green-light, neutral/surface-transparent, neutral/off-white-transparent, surface/primary-transparent, surface/body-transparent (native-app cleanup). Later Sept 28: text styles re-read (Headings 600 and tracking 0, Heading/Large 20/24, Value/Large 16). Sept 29: Spacing and Radius moved into a new Surface collection with two modes, Mobile and Desktop (Desktop smaller); text styles now bind their size and line height to Surface size/* and lh/* variables. Surface entries are {Mobile, Desktop}; text styles carry sizeVar/lhVar (lhVar null = auto) and the Mobile values. Oct 2: + border/warning, border/danger (raw hex), Surface icon-size/*; Headings L/M/S now Medium -2%; Body/Small/SemiBold 600; Label/Default/* and Label/Tiny/* replaced by Label/Large|Medium|Small|Tiny|Micro|Nano (Large and Nano have a fixed size: sizeVar null).",
  "Primitives": {
   "neutral/page": "#eef5f4",
   "neutral/surface": "#ffffff",
@@ -211,7 +211,9 @@
   },
   "surface/body-transparent": {
    "alias": "neutral/off-white-transparent"
-  }
+  },
+  "border/warning": "#debba0",
+  "border/danger": "#e58d90"
  },
  "Opacity": {
   "opacity/disabled": 0.4,
@@ -397,6 +399,26 @@
   "radius/card": {
    "Mobile": 20,
    "Desktop": 20
+  },
+  "icon-size/xl": {
+   "Mobile": 24,
+   "Desktop": 16
+  },
+  "icon-size/lg": {
+   "Mobile": 20,
+   "Desktop": 16
+  },
+  "icon-size/md": {
+   "Mobile": 16,
+   "Desktop": 16
+  },
+  "icon-size/sm": {
+   "Mobile": 12,
+   "Desktop": 12
+  },
+  "icon-size/tn": {
+   "Mobile": 10,
+   "Desktop": 10
   }
  },
  "TextStyles": {
@@ -456,28 +478,28 @@
   },
   "Heading/Large": {
    "family": "sans",
-   "weight": 600,
+   "weight": 500,
    "sizeVar": "size/heading-lg",
    "lhVar": "lh/heading-lg",
-   "letterSpacing": 0,
+   "letterSpacing": -2,
    "size": 20,
    "lineHeight": 24
   },
   "Heading/Medium": {
    "family": "sans",
-   "weight": 600,
+   "weight": 500,
    "sizeVar": "size/heading-md",
    "lhVar": "lh/heading-md",
-   "letterSpacing": 0,
+   "letterSpacing": -2,
    "size": 16,
    "lineHeight": 16
   },
   "Heading/Small": {
    "family": "sans",
-   "weight": 600,
+   "weight": 500,
    "sizeVar": "size/heading-sm",
    "lhVar": "lh/heading-sm",
-   "letterSpacing": 0,
+   "letterSpacing": -2,
    "size": 14,
    "lineHeight": 14
   },
@@ -546,57 +568,12 @@
   },
   "Body/Small/SemiBold": {
    "family": "sans",
-   "weight": 500,
+   "weight": 600,
    "sizeVar": "size/body-sm",
    "lhVar": "lh/body-sm",
    "letterSpacing": -2,
    "size": 12,
    "lineHeight": 14
-  },
-  "Label/Default/SemiBold": {
-   "family": "sans",
-   "weight": 600,
-   "sizeVar": "size/label-default",
-   "lhVar": "lh/label-default",
-   "letterSpacing": 2,
-   "size": 12,
-   "lineHeight": 12
-  },
-  "Label/Default/Medium": {
-   "family": "sans",
-   "weight": 500,
-   "sizeVar": "size/label-default",
-   "lhVar": "lh/label-default",
-   "letterSpacing": -2,
-   "size": 12,
-   "lineHeight": 12
-  },
-  "Label/Tiny/Regular": {
-   "family": "sans",
-   "weight": 500,
-   "sizeVar": "size/label-tiny",
-   "lhVar": "lh/label-tiny",
-   "letterSpacing": 0,
-   "size": 10,
-   "lineHeight": 10
-  },
-  "Label/Tiny/SemiBold": {
-   "family": "sans",
-   "weight": 500,
-   "sizeVar": "size/label-tiny",
-   "lhVar": "lh/label-tiny",
-   "letterSpacing": -2,
-   "size": 10,
-   "lineHeight": 10
-  },
-  "Label/Tiny/Medium": {
-   "family": "sans",
-   "weight": 500,
-   "sizeVar": "size/label-tiny",
-   "lhVar": "lh/label-tiny",
-   "letterSpacing": -2,
-   "size": 10,
-   "lineHeight": 10
   },
   "Badge/SemiBolt": {
    "family": "sans",
@@ -606,6 +583,60 @@
    "letterSpacing": -2,
    "size": 8,
    "lineHeight": 8
+  },
+  "Label/Large": {
+   "family": "sans",
+   "weight": 600,
+   "sizeVar": null,
+   "lhVar": "lh/body-lg-semibold",
+   "letterSpacing": -2,
+   "size": 18,
+   "lineHeight": 20
+  },
+  "Label/Medium": {
+   "family": "sans",
+   "weight": 500,
+   "sizeVar": "size/body-lg",
+   "lhVar": "lh/heading-lg",
+   "letterSpacing": -2,
+   "size": 16,
+   "lineHeight": 24
+  },
+  "Label/Small": {
+   "family": "sans",
+   "weight": 500,
+   "sizeVar": "size/body-lg",
+   "lhVar": "lh/body-lg-medium",
+   "letterSpacing": -2,
+   "size": 16,
+   "lineHeight": 20
+  },
+  "Label/Tiny": {
+   "family": "sans",
+   "weight": 500,
+   "sizeVar": "size/body-md",
+   "lhVar": "lh/body-md",
+   "letterSpacing": -2,
+   "size": 14,
+   "lineHeight": 16
+  },
+  "Label/Micro": {
+   "family": "sans",
+   "weight": 500,
+   "sizeVar": "size/body-sm",
+   "lhVar": "lh/body-md",
+   "letterSpacing": -2,
+   "size": 12,
+   "lineHeight": 16
+  },
+  "Label/Nano": {
+   "family": "sans",
+   "weight": 500,
+   "sizeVar": null,
+   "lhVar": "lh/body-sm",
+   "letterSpacing": -2,
+   "size": 10,
+   "lineHeight": 14
   }
  }
 }

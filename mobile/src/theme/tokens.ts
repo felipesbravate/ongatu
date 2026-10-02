@@ -105,7 +105,9 @@ export const color = {
   "statusFail": "#a12a2f",
   "statusWarning": "#7a5703",
   "surfacePrimaryTransparent": "#ffffff00",
-  "surfaceBodyTransparent": "#f9f9f700"
+  "surfaceBodyTransparent": "#f9f9f700",
+  "borderWarning": "#debba0",
+  "borderDanger": "#e58d90"
 } as const;
 
 export const space = {
@@ -166,19 +168,22 @@ export const text = {
     "lineHeight": 24
   },
   "HeadingLarge": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "DMSans_500Medium",
     "fontSize": 20,
-    "lineHeight": 24
+    "lineHeight": 24,
+    "letterSpacing": -0.4
   },
   "HeadingMedium": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "DMSans_500Medium",
     "fontSize": 16,
-    "lineHeight": 16
+    "lineHeight": 16,
+    "letterSpacing": -0.32
   },
   "HeadingSmall": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "DMSans_500Medium",
     "fontSize": 14,
-    "lineHeight": 14
+    "lineHeight": 14,
+    "letterSpacing": -0.28
   },
   "BodyLargeMedium": {
     "fontFamily": "DMSans_500Medium",
@@ -223,45 +228,52 @@ export const text = {
     "letterSpacing": -0.24
   },
   "BodySmallSemiBold": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_600SemiBold",
     "fontSize": 12,
     "lineHeight": 14,
     "letterSpacing": -0.24
-  },
-  "LabelDefaultSemiBold": {
-    "fontFamily": "DMSans_600SemiBold",
-    "fontSize": 12,
-    "lineHeight": 12,
-    "letterSpacing": 0.24
-  },
-  "LabelDefaultMedium": {
-    "fontFamily": "DMSans_500Medium",
-    "fontSize": 12,
-    "lineHeight": 12,
-    "letterSpacing": -0.24
-  },
-  "LabelTinyRegular": {
-    "fontFamily": "DMSans_500Medium",
-    "fontSize": 10,
-    "lineHeight": 10
-  },
-  "LabelTinySemiBold": {
-    "fontFamily": "DMSans_500Medium",
-    "fontSize": 10,
-    "lineHeight": 10,
-    "letterSpacing": -0.2
-  },
-  "LabelTinyMedium": {
-    "fontFamily": "DMSans_500Medium",
-    "fontSize": 10,
-    "lineHeight": 10,
-    "letterSpacing": -0.2
   },
   "BadgeSemiBolt": {
     "fontFamily": "DMSans_500Medium",
     "fontSize": 8,
     "lineHeight": 8,
     "letterSpacing": -0.16
+  },
+  "LabelLarge": {
+    "fontFamily": "DMSans_600SemiBold",
+    "fontSize": 18,
+    "lineHeight": 20,
+    "letterSpacing": -0.36
+  },
+  "LabelMedium": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 16,
+    "lineHeight": 24,
+    "letterSpacing": -0.32
+  },
+  "LabelSmall": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 16,
+    "lineHeight": 20,
+    "letterSpacing": -0.32
+  },
+  "LabelTiny": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 14,
+    "lineHeight": 16,
+    "letterSpacing": -0.28
+  },
+  "LabelMicro": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 12,
+    "lineHeight": 16,
+    "letterSpacing": -0.24
+  },
+  "LabelNano": {
+    "fontFamily": "DMSans_500Medium",
+    "fontSize": 10,
+    "lineHeight": 14,
+    "letterSpacing": -0.2
   }
 } as const;
 

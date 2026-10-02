@@ -26,7 +26,7 @@ test('every Figma variable is in :root with the same value (aliases as var() to 
     if (collection === 'TextStyles') {
       for (const [name, s] of Object.entries(vars)) {
         const k = '--type-' + kebab(name);
-        const want = { size: `var(${cssName('Surface', s.sizeVar)})`, weight: String(s.weight), lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
+        const want = { size: s.sizeVar ? `var(${cssName('Surface', s.sizeVar)})` : s.size + 'px', weight: String(s.weight), lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
         for (const [p, v] of Object.entries(want)) assert.equal(decl[`${k}-${p}`], v, `${k}-${p}: code has ${decl[`${k}-${p}`]}, Figma ${name} has ${v}`);
       }
       continue;
@@ -66,7 +66,8 @@ test('outside the token block, only Color variables and aliases are used (no Pri
   const body = css.slice(css.indexOf('/* @tokens:end */'))
     .replace(/\/\*[\s\S]*?\*\//g, '');         // comments may quote old values
   const prims = [...body.matchAll(/var\((--primitive-[\w-]+)\)/g)].map((m) => m[1])// Primitives a DS component binds directly (no Color variable for them): allocation labels, the Notification dot, the progress fill.
-    .filter((p) => !['--primitive-neutral-ink-muted', '--primitive-data-red-orange', '--primitive-data-green', '--primitive-data-green-light', '--primitive-brand-indigo', '--primitive-brand-mint', '--primitive-brand-mint-light'].includes(p));
+    .filter((p) => !['--primitive-neutral-ink-muted', '--primitive-data-red-orange', '--primitive-data-green', '--primitive-data-green-light', '--primitive-brand-indigo', '--primitive-brand-mint', '--primitive-brand-mint-light',
+      /* Oct 2: step and Pager tracks, chip-selector hover */ '--primitive-neutral-stone-325', '--primitive-status-green-pale'].includes(p));
   assert.deepEqual(prims, [], 'bind a Color variable instead of a Primitive');
   const colours = new Set(Object.values(figma.Primitives).map((v) => String(v).toLowerCase()));
   const hits = [...body.slice(body.indexOf('*{ box-sizing')).matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0].toLowerCase()).filter((h) => colours.has(h) && h !== '#ffffff');

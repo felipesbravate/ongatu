@@ -23,7 +23,7 @@ export function Illustration({ art, width = 64, className }) {
 // primary/secondary = { label, onClick, disabled, id }; primary.destructive paints it action/destructive (the
 // override on the Cost-tracker delete modal, 258:10267).
 // Opens as a native <dialog> (focus trap, Escape closes, page behind inert).
-export function Modal({ open, onClose, title, description, illustration, primary, secondary, id, children }) {
+export function Modal({ open, onClose, title, description, illustration, illustrationWidth = 64, primary, secondary, id, children }) {
   const ref = useRef(null);
   useEffect(() => {
     const d = ref.current; if (!d) return;
@@ -34,10 +34,10 @@ export function Modal({ open, onClose, title, description, illustration, primary
   return (
     <dialog ref={ref} className="ds-modal" id={id} aria-labelledby={titleId} onCancel={(e) => { e.preventDefault(); onClose && onClose(); }}
       onClick={(e) => { if (e.target === ref.current && onClose) onClose(); }}>
-      <div className="ds-modal-header"><RoundButton icon={x} size="small" label="Close" onClick={onClose} /></div>
+      <div className="ds-modal-header"><RoundButton icon={x} iconSize={24} label="Close" onClick={onClose} /></div>
       <div className="ds-modal-body">
         <div className="ds-modal-content">
-          {illustration && <div className="ds-modal-title-block"><Illustration art={illustration} /></div>}
+          {illustration && <div className="ds-modal-title-block"><Illustration art={illustration} width={illustrationWidth} /></div>}
           <div className="ds-modal-text">
             <h2 className="ds-modal-title" id={titleId}>{title}</h2>
             {description && <p className="ds-modal-description">{description}</p>}

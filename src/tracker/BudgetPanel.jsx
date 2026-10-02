@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { ActionLink, Button, FieldGroup, Input, PanelHeader, RoundButton, Segments } from '../ui/index.js';
+import { ActionLink, Button, Dropdown, PanelHeader, RoundButton, useDismiss } from '../ui/index.js';
+import { KINDS, TypeModal } from './TaxonomyModals.jsx';
 import { Icon } from '../ui/Icon.jsx';
-import { checkmark, euro, plus, x } from '../ui/icons.js';
+import { actions, euro, plus } from '../ui/icons.js';
 import { EXP_GROUPS, MONTH_ABBR, fmtNum, parseAmount } from './model.js';
 
-const TYPES = [{ value: 'income', label: 'Incomes' }, { value: 'investment', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }];
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const COMBOS = [{ type: 'income', group: null, label: 'Income' }, { type: 'investment', group: null, label: 'Save/Invest' }, ...EXP_GROUPS.map((g) => ({ type: 'expense', group: g, label: g }))];
 let seq = 0;
@@ -21,6 +21,8 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   const my = isMonth ? model.DATA[month.yearIdx] : null;
   const [topTab, setTopTab] = useState('expense');
   const [group, setGroup] = useState('Fixed');
+  const [groupFilter, setGroupFilter] = useState('');
+  const [typeModal, setTypeModal] = useState(false);
   const [sections, setSections] = useState([]);
   const [status, setStatus] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -28,7 +30,7 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   // Every section is built once per opening, so an edit in one survives switching tabs.
   useEffect(() => {
     if (!open) return;
-    setTopTab('expense'); setGroup('Fixed'); setStatus(null);
+    setTopTab('expense'); setGroup('Fixed'); setGroupFilter(''); setStatus(null);
     const sugg = isMonth ? monthSections(model.monthBudgetRows(my, month.monthIdx)) : model.buildBudgetSuggestions();
     setSections(COMBOS.map(({ type, group: g, label }) => {
       const sec = sugg.find((s) => s.type === type && (type !== 'expense' || s.group === g));
@@ -52,7 +54,7 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   const setEditing = (key, editing) => mapRows((rows) => rows.map((r) => (r.key === key ? { ...r, editing } : r)));
   const rowProps = { onValue: setValue, onRemove: removeRow, onEditing: setEditing };
   const addItem = (i, it) => patchSection(i, (x) => {
-    const r = { key: ++seq, type: x.type, group: x.group, ...it, computed: 0, isCustomized: false, value: fmtNum(it.amount) };
+    const r = { key: ++seq, type: x.type, group: x.group, ...it, computed: 0, isCustomized: false, value: fmtNum(it.amount || 0), added: true };
     if (x.type !== 'expense') return { ...x, adding: false, empty: false, pre: [...x.pre, r] };
     const bi = x.blocks.findIndex((b) => b.category === it.category);
     const blocks = bi >= 0 ? x.blocks.map((b, k) => (k === bi ? { ...b, rows: [...b.rows, r] } : b)) : [...x.blocks, { category: it.category, rows: [r] }];
@@ -75,14 +77,31 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
           ? <PanelHeader closeId="month-budget-close" titleId="month-budget-title" title={`${MONTH_ABBR[month.monthIdx]} ${my ? my.year : ''} / Editing budget`} hintId="month-budget-hint"
               hint="Need to make a change? Tweak your planned income and expenses to ensure your budget matches your goals for the month." onClose={onClose} />
           : <PanelHeader closeId="budget-close-btn" titleId="budget-panel-title" title={pending ? `${pending.label} / Starting budget` : 'Starting budget'} hintId="budget-panel-hint"
-              hint="Suggested from the trailing 12 months of real history. The same figure is used for every month of the new year. Adjust anything before creating it; an edit here also becomes the default suggestion for future years." onClose={onClose} />}
+              hint={`Your starting budget is based on your past 12 months and will be applied to every month in ${pending ? pending.label : 'the new year'}. Any adjustments you make here will automatically become your default for future years.`} onClose={onClose} />}
         <div className="add-panel-content">
-          <FieldGroup label="Type">
-            <Segments id={isMonth ? 'month-budget-type-seg' : 'budget-type-seg'} options={TYPES} value={topTab} onChange={setTopTab} />
-            <div id={isMonth ? 'month-budget-group-field' : 'budget-group-field'} hidden={topTab !== 'expense'}>
-              <Segments sub id={isMonth ? 'month-budget-group-seg' : 'budget-group-seg'} aria-label="Expense type" options={GROUP_TABS} value={group} onChange={setGroup} />
+          {/* 232:5853 (Oct 2): Category | Sub-category, Group (Optional), "+ Add type"; then the types by group. */}
+          <div className="add-grid budget-filters">
+            <div className={'fld' + (topTab === 'expense' ? '' : ' span-2')}>
+              <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-kind-trigger'}>Category</label>
+              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-kind'} size="md" emptyOption={false} value={topTab} onChange={(v) => { setTopTab(v); setGroupFilter(''); }} options={KINDS.map((k) => ({ value: k.value, label: k.label }))} />
             </div>
-          </FieldGroup>
+            <div className="fld" id={isMonth ? 'month-budget-group-field' : 'budget-group-field'} hidden={topTab !== 'expense'}>
+              <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-sub-trigger'}>Sub-category</label>
+              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-sub'} size="md" emptyOption={false} value={group} onChange={(v) => { setGroup(v); setGroupFilter(''); }} options={GROUP_TABS} />
+            </div>
+            {topTab === 'expense' && (
+              <div className="fld span-2">
+                <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-groupf-trigger'}>Group (Optional)</label>
+                <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-groupf'} size="md" placeholder="All groups" value={groupFilter} onChange={setGroupFilter}
+                  options={[{ value: '', label: 'All groups' }, ...((sections.find((x) => x.type === 'expense' && x.group === group) || { blocks: [] }).blocks.map((bk) => ({ value: bk.category, label: bk.category })))]} />
+              </div>
+            )}
+            <div className="span-2"><ActionLink size="medium" icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-type'} onClick={() => setTypeModal(true)}>Add type</ActionLink></div>
+          </div>
+          <TypeModal open={typeModal} kind={topTab} group={topTab === 'expense' ? group : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
+            groupsOf={() => (sections.find((x) => x.type === 'expense' && x.group === group) || { blocks: [] }).blocks.map((bk) => bk.category)}
+            onClose={() => setTypeModal(false)}
+            onSave={(t) => { const i = sections.findIndex((x) => x.type === topTab && (topTab !== 'expense' || x.group === group)); t.items.forEach((item) => addItem(i, { category: t.category, item, amount: 0 })); if (t.category) setGroupFilter(''); setTypeModal(false); }} />
           <div id={isMonth ? 'month-budget-sections' : 'budget-sections'} className="budget-sections">
             {sections.map((s, i) => (
               <div key={s.type + (s.group || '')} className="budget-type-section" data-type={s.type} data-group={s.group || ''}
@@ -91,20 +110,15 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
                     groups are 16 apart with a Divider between them. An empty section keeps the "+ New" link (the frames draw none). */}
                 {s.type !== 'expense' && !s.empty && (
                   <div className="budget-group">
-                    <GroupHeader title={s.label} onAdd={() => patchSection(i, (x) => ({ ...x, adding: '' }))} />
-                    {s.adding === '' && <AddItemRow type={s.type} label={s.label} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))} onAdd={(it) => addItem(i, it)} />}
+                    <GroupHeader title={s.label} />
                     <div className="budget-items">{[...s.pre, ...s.rows].map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                   </div>
                 )}
-                {s.empty && (s.adding !== false
-                  ? <AddItemRow type={s.type} label={s.label} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))} onAdd={(it) => addItem(i, it)} />
-                  : <ActionLink icon={plus} className="budget-add-link" onClick={() => patchSection(i, (x) => ({ ...x, adding: '' }))}><span>{s.type === 'expense' ? `New ${s.label.toLowerCase()} expense` : `New ${s.label}`}</span></ActionLink>)}
-                {s.empty && <div className="budget-empty">{isMonth ? 'Nothing planned here for this month — use "+ New" above to add an item.' : 'No historical data yet for this section — use "+ New" above to add an item, or create the year and add entries as they come in.'}</div>}
-                {s.blocks.map((b, bi) => (
+                {s.empty && <div className="budget-empty">{isMonth ? 'Nothing planned here for this month. Use "+ Add type" above to add one.' : 'No history for this yet. Use "+ Add type" above, or create the year and add entries as they come in.'}</div>}
+                {s.blocks.filter((b) => !groupFilter || b.category === groupFilter).map((b, bi) => (
                   <BlockFrag key={b.category} divider={bi > 0}>
                     <div className="budget-group">
-                      <GroupHeader title={b.category} onAdd={() => patchSection(i, (x) => ({ ...x, adding: b.category }))} />
-                      {s.adding === b.category && <AddItemRow type={s.type} label={b.category} category={b.category} onCancel={() => patchSection(i, (x) => ({ ...x, adding: false }))} onAdd={(it) => addItem(i, it)} />}
+                      <GroupHeader title={b.category} />
                       <div className="budget-items">{b.rows.map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                     </div>
                   </BlockFrag>
@@ -113,9 +127,9 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
             ))}
           </div>
         </div>
-        <div className="add-actions">
-          <Button size="small" id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save' : 'Create year'}</Button>
-          <Button size="small" variant="tertiary" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
+ <div className="add-actions">
+          <Button id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
+          <Button variant="tertiary" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
           <span className={'add-status' + (status && status.err ? ' err' : '')} id={isMonth ? 'month-budget-status' : 'budget-status'}>{status ? status.text : ''}</span>
         </div>
       </div>
@@ -123,12 +137,22 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   );
 }
 const BlockFrag = ({ divider, children }) => <>{divider && <hr className="ds-divider budget-divider" />}{children}</>;
-const GroupHeader = ({ title, onAdd }) => (
-  <div className="budget-group-head">
-    <div className="budget-cat-title">{title}</div>
-    <RoundButton icon={plus} size="micro" iconSize={12} variant="secondary" className="budget-group-add" label={`Add an item to ${title}`} onClick={onAdd} />
-  </div>
+const GroupHeader = ({ title }) => (
+  <div className="budget-group-head"><div className="budget-cat-title">{title}</div></div>
 );
+
+// The row's Action (232:5853): a Micro Tertiary round button with the Actions icon; its menu holds "Remove".
+function RowActions({ item, onRemove }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useDismiss(open, ref, () => setOpen(false));
+  return (
+    <span className="br-actions" ref={ref}>
+      <RoundButton icon={actions} size="micro" className="br-more" label={`Actions for ${item}`} aria-expanded={open} onClick={() => setOpen((o) => !o)} />
+      {open && <span className="ds-dd-menu br-menu" role="menu"><button type="button" role="menuitem" className="ds-dd-item br-remove" onClick={() => { setOpen(false); onRemove(); }}>Remove</button></span>}
+    </span>
+  );
+}
 
 // A budget row: breackdown-row (DS 124:3667), Entry off, Action on. Default: name, € and the figure as an Action link;
 // Editing (the figure clicked): an Input, Size=Tiny, and 24px right padding. The Action is a Tiny Tertiary Round button
@@ -148,7 +172,7 @@ function BudgetRow({ r, onValue, onRemove, onEditing }) {
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onEditing(r.key, false); } }} /></label>
         : <span className="bd-value"><Icon icon={euro} size={16} className="bd-euro" />
             <button type="button" className="bd-amount br-amount" aria-label={`Monthly budget for ${r.item}: ${r.value}. Edit`} onClick={() => onEditing(r.key, true)}>{r.value}</button></span>}
-      {!r.editing && <button type="button" className="round-btn tiny br-remove" aria-label={`Remove ${r.item}`} onClick={() => onRemove(r.key)}><Icon icon={x} size={12} /></button>}
+      {!r.editing && <RowActions item={r.item} onRemove={() => onRemove(r.key)} />}
     </div>
   );
 }
@@ -156,29 +180,4 @@ function BudgetRow({ r, onValue, onRemove, onEditing }) {
 // Month-budget rows grouped like buildBudgetSuggestions() returns them.
 function monthSections(rows) {
   return COMBOS.map(({ type, group }) => ({ type, group, items: rows.filter((r) => r.type === type && (type !== 'expense' || r.group === group)).map((r) => ({ ...r, suggested: r.amount, computed: r.amount })) }));
-}
-
-// Inline "+ New {label}" (the Add expense overlay 119:12764, as an inline row).
-function AddItemRow({ type, label, category, onAdd, onCancel }) {
-  const [cat, setCat] = useState(category || ''); const [name, setName] = useState(''); const [amt, setAmt] = useState('');
-  const nameRef = useRef(null);
-  const ok = () => {
-    const item = name.trim();
-    if (!item) { nameRef.current?.focus(); return; }
-    onAdd({ category: type === 'expense' ? (cat.trim() || 'Other') : null, item, amount: Math.round(parseAmount(amt) * 100) / 100 });
-  };
-  return (
-    <div className="budget-add-row">
-      <div className="budget-add-fields">
-        {category == null && <span className="budget-add-label">{label + (type === 'expense' ? ' expense' : '')}</span>}
-        {type === 'expense' && category == null && <Input size="tiny" className="budget-add-cat" type="text" placeholder="Category" aria-label="Category" value={cat} onChange={(e) => setCat(e.target.value)} />}
-        <Input size="tiny" className="budget-add-name" ref={nameRef} type="text" placeholder="Item name" aria-label="Item name" value={name} onChange={(e) => setName(e.target.value)} />
-        <Input size="tiny" className="budget-add-amt" icon={euro} type="text" inputMode="decimal" placeholder="0,00" aria-label="Amount" value={amt} onChange={(e) => setAmt(e.target.value)} />
-      </div>
-      <div className="budget-add-actions">
-        <button type="button" className="round-btn micro primary" aria-label="Add item" onClick={ok}><Icon icon={checkmark} size={12} /></button>
-        <button type="button" className="round-btn micro secondary" aria-label="Cancel" onClick={onCancel}><Icon icon={x} size={12} /></button>
-      </div>
-    </div>
-  );
 }

@@ -29,7 +29,7 @@ export function FieldGroup({ label, className, children }) {
 export function Input({ icon, size = 'medium', className, placeholder = ' ', ...rest }) {
   return (
     <span className={['ds-input', size !== 'medium' && size, rest.disabled && 'is-disabled', icon && 'has-icon', className].filter(Boolean).join(' ')}>
-      {icon && <Icon icon={icon} size={size === 'medium' ? 20 : 12} />}
+      {icon && <Icon icon={icon} size={size === 'tiny' ? 'md' : 'xl'} />}
       <input placeholder={placeholder} {...rest} />
     </span>
   );

@@ -92,7 +92,7 @@ export const server = createServer(async (req, res) => {
       return (await deps.accounts.checkPassword(cur, f.get('password') || '')) ? signedIn(cur) : go('/login?step=password&error=password');
     }
     if (path === '/pending') return send(res, 200, '<!doctype html><link rel="icon" href="data:,"><title>Pending</title><h1>Waiting for approval</h1><p>An administrator has to approve your account before you can use the tracker.</p>', { 'content-type': 'text/html' });
-    if (path === '/' || path === '/account') {
+    if (path === '/' || path === '/account' || path === '/welcome') {
       const access = await pageAccess(user, deps);
       if (access === 'login') return send(res, 303, '', { location: '/login' });
       if (access !== 'ok') return send(res, 303, '', { location: '/pending' });

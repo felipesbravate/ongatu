@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
-import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR } from './model.js';
+import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 import { Icon } from '../ui/Icon.jsx';
 
 const tok = (name) => (typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(name).trim());
@@ -12,7 +12,7 @@ export function HeroLeft({ model, y, monthIdx }) {
   const cur = y.currency;
   const c = model.computeMonth(y, monthIdx);
   const prev = monthIdx > 0 ? model.computeMonth(y, monthIdx - 1) : null;
-  const d = prev ? c.balance - prev.balance : 0;
+  // (the month-on-month balance change moved off the card on Oct 2: both layouts show "↑ details")
   const tiles = [
     // Ongatu 211:18753 (Sept 28): "Incomes", and a static "↑ details" line under Incomes and Expenses (no action, per Felipe).
     { label: 'Incomes', value: c.income, color: 'var(--kpi-income)', indicator: arrowStraightUp, detail: 'details' },
@@ -23,10 +23,7 @@ export function HeroLeft({ model, y, monthIdx }) {
   ];
   // Phones (Ongatu 342:7993, Sept 28): "Incomes", "Savings & Investments", and the rate as "↑ 8% rate of monthly Incomes".
   const mobile = useMobile();
-  if (mobile) {
-    tiles[2] = { ...tiles[2], label: 'Savings & Investments', indicator: c.income > 0 ? arrowStraightUp : null,
-      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly Incomes` : 'No income recorded' };
-  }
+  // Oct 2: phones (342:7993) show the same tiles and "↑ details" as desktop.
   // Expense allocation
   const total = Math.max(1, c.expenseTotal);
   // At a glance
@@ -37,15 +34,11 @@ export function HeroLeft({ model, y, monthIdx }) {
   return (
     <div className="hero-left">
       <div className="card balance-card">
-        <div className="label">Balance this month</div>
+        <div className="label" id="balance-label">{MONTH_NAMES[monthIdx]} balance</div>
         <div className="value" id="balance-value">{fmtMoney(c.balance, cur)}</div>
         {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
             phones (342:7993) keep the month change. */}
-        {mobile
-          ? <span className="pill-delta" id="balance-delta" style={prev ? { color: d >= 0 ? 'var(--good)' : 'var(--critical)' } : undefined}>
-              {prev ? `${d >= 0 ? '↑' : '↓'} ${fmtMoneyShort(Math.abs(d), cur)} vs last month` : ''}
-            </span>
-          : <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>}
+        <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
@@ -61,7 +54,7 @@ export function HeroLeft({ model, y, monthIdx }) {
               <div className="alloc-col" key={g}>
                 <div className="alloc-pct">{pct.toFixed(0)}%</div>
                 <div className="alloc-bar" style={{ height: `${Math.max(6, pct * 0.8).toFixed(1)}px`, background: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g] }} />
-                <div className="alloc-name">{mobile ? SHORT_GROUP[g] : g}</div>
+                <div className="alloc-name">{g}</div>
               </div>
             );
           })}
@@ -90,7 +83,6 @@ const TOP_TABS = [{ value: 'Income', label: 'Incomes' }, { value: 'Investments',
 // Phones (342:7993) shorten the tab and the allocation names.
 // Phones (Ongatu 342:7993, Sept 28): Incomes | Save/Invest | Expenses.
 const TOP_TABS_MOBILE = TOP_TABS;
-const SHORT_GROUP = { Fixed: 'Fixed', Variable: 'Var', Extra: 'Extra', Additional: 'Add' };
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');
 

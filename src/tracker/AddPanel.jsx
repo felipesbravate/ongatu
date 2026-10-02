@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
-import { ActionLink, Button, Divider, Dropdown, Field, FieldGroup, Input, PanelHeader, ProgressBar, RoundButton, Segments } from '../ui/index.js';
+import { ActionLink, Button, Divider, Dropdown, Field, Input, PanelHeader, ProgressBar, RoundButton } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { calendar, chevronDown, documentIcon, euro, image, questionFilled, upload, x } from '../ui/icons.js';
+import { calendar, chevronDown, documentIcon, euro, image, plus, questionFilled, upload, x } from '../ui/icons.js';
+import { KINDS, TypeModal } from './TaxonomyModals.jsx';
 import { sample } from './api.js';
 import { DocReader, docIconName, docMeta } from './reader.js';
 import { EXP_GROUPS, TYPE_OPTS, fmtDateEU, fmtNum, parseAmount, periodKeyOfDate, periodLabel, periodMismatch, todayISO, typeKeyOf, yearLabelOfDate } from './model.js';
 
-const ENTRY_TYPES = [{ value: 'income', label: 'Incomes' }, { value: 'investment', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }];
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const simpleOpts = (values) => values.map((v) => ({ value: v, label: v }));
 
@@ -43,10 +43,17 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const TX = model.taxonomyForYear(yearLabel);
   const isExp = entryType === 'expense';
   const gc = TX.expenses[entryGroup] || {};
+  // Oct 2 (229:18166): Group (Optional) is the taxonomy category, Type the item. With no group picked, Type lists
+  // every type of the sub-category and picking one fills its group.
+  const groupNames = Object.keys(gc).sort();
   const catVal = isExp && gc[cat] ? cat : '';
-  const pool = isExp ? (catVal ? gc[catVal].slice().sort() : []) : (((entryType === 'income' ? TX.incomes : TX.investments) || []).slice().sort());
-  // A category with a single sub-category selects it for you (174:15087).
-  const itemVal = pool.includes(item) ? item : (isExp && pool.length === 1 ? pool[0] : '');
+  const typeOwner = (it) => groupNames.find((g) => gc[g].includes(it)) || '';
+  const pool = isExp
+    ? (catVal ? gc[catVal].slice().sort() : [...new Set(groupNames.flatMap((g) => gc[g]))].sort())
+    : (((entryType === 'income' ? TX.incomes : TX.investments) || []).slice().sort());
+  const itemVal = pool.includes(item) ? item : (isExp && catVal && pool.length === 1 ? pool[0] : '');
+  const itemCat = isExp ? (catVal || typeOwner(itemVal)) : '';
+  const [typeModal, setTypeModal] = useState(false);
   const typeHas = (v) => (v === 'expense' ? EXP_GROUPS.some((g) => Object.keys(TX.expenses[g] || {}).length) : ((v === 'income' ? TX.incomes : TX.investments) || []).length > 0);
   const bounds = model.entryDateBounds();
 
@@ -65,7 +72,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateVal]);
 
-  const manualReady = !!desc.trim() && !!itemVal && (!isExp || !!catVal) && parseAmount(amount) > 0;
+  const manualReady = !!desc.trim() && !!itemVal && (!isExp || !!itemCat) && parseAmount(amount) > 0;
   const resetManual = () => {
     setDesc(''); setAmount(''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
     setStatus(null); setCat(''); setItem('');
@@ -78,13 +85,12 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     const amt = Math.round(parseAmount(amount) * 100) / 100;
     const date = (dateRef.current && dateRef.current.value) || todayISO();
     if (!description) return err('Add a description.');
-    if (isExp && !catVal) return err('Pick a category.');
-    if (!itemVal) return err('Pick a sub-category.');
+    if (!itemVal) return err('Pick a type.');
     if (periodMismatch(date, periodKey)) return err(`The date of the entry (${fmtDateEU(date)}) doesn't match the month and year selected (${periodLabel(periodKey)}). Change the date or the month.`);
     if (!(amt > 0)) return err('Enter an amount greater than 0.');
     setBusy(true);
     try {
-      await save.entries(periodKey, [{ type: entryType, group: isExp ? entryGroup : null, category: isExp ? catVal : null, item: itemVal, description, amount: amt, date }]);
+      await save.entries(periodKey, [{ type: entryType, group: isExp ? entryGroup : null, category: isExp ? itemCat : null, item: itemVal, description, amount: amt, date }]);
       resetManual();
     } catch (e) {
       err('Could not save: ' + (e && e.message ? e.message : 'unknown error'));
@@ -175,7 +181,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
                 onDrop={(e) => { e.preventDefault(); setOver(false); setDocStatus(null); reader.add(e.dataTransfer && e.dataTransfer.files); }}>
                 <div className="dz-text">
-                  <div className="dz-line"><span className="ds-action-link medium"><Icon icon={upload} size={12} />Click to upload</span><span>or drag and drop your file here</span></div>
+                  <div className="dz-line"><span className="ds-action-link medium"><Icon icon={upload} size={20} />Click to upload</span><span>or drag and drop your file here</span></div>
                   <div className="dz-hint" id="dz-hint">{reader.ready && reader.imgCaps() ? 'JPG, PNG, PDF or CSV. Add as many as you like.' : 'PDF or CSV. Add as many as you like.'}</div>
                 </div>
               </div>
@@ -210,44 +216,61 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
 
           <section className={'ap-section ap-manual' + (showReading ? ' is-faded' : '')} id="ap-manual">
             <h3 className="ap-section-title">Enter manually</h3>
-            <FieldGroup label="Type" className="ap-type">
-              <Segments id="entry-type-seg" value={entryType} onChange={(v) => { setEntryType(v); setCat(''); setItem(''); }}
-                options={ENTRY_TYPES.map((o) => ({ ...o, hidden: !typeHas(o.value) && o.value !== entryType }))} />
-              <div id="entry-group-field" hidden={!isExp}>
-                <Segments sub id="entry-group-seg" aria-label="Expense type" value={entryGroup} onChange={setEntryGroup}
-                  options={GROUP_TABS.map((o) => ({ ...o, hidden: !Object.keys(TX.expenses[o.value] || {}).length && o.value !== entryGroup }))} />
-              </div>
-            </FieldGroup>
             <div className="add-grid">
-              <Field className="span-2 field-period" label="Month and year" htmlFor="entry-period-trigger">
+              <div className="fld span-2 field-period">
+                <label className="fld-label" htmlFor="entry-period-trigger">Track in</label>
                 <Dropdown id="entry-period" size="md" emptyOption={false} value={periodKey} options={model.periodOptions()} onChange={(v) => { setPeriod(v); setPeriodTouched(true); }} />
-              </Field>
-              <Field className="span-2" label="Description" htmlFor="entry-desc">
+              </div>
+              <div className={'fld' + (isExp ? '' : ' span-2')}>
+                <label className="fld-label" htmlFor="entry-kind-trigger">Category</label>
+                <Dropdown id="entry-kind" size="md" emptyOption={false} value={entryType} onChange={(v) => { setEntryType(v); setCat(''); setItem(''); }}
+                  options={KINDS.filter((k) => typeHas(k.value) || k.value === entryType).map((k) => ({ value: k.value, label: k.label }))} />
+              </div>
+              <div className="fld" id="entry-group-field" hidden={!isExp}>
+                <label className="fld-label" htmlFor="entry-sub-trigger">Sub-category</label>
+                <Dropdown id="entry-sub" size="md" emptyOption={false} value={entryGroup} onChange={(v) => { setEntryGroup(v); setCat(''); setItem(''); }}
+                  options={GROUP_TABS.filter((o) => Object.keys(TX.expenses[o.value] || {}).length || o.value === entryGroup)} />
+              </div>
+              <div className="fld span-2">
+                <label className="fld-label" htmlFor="entry-desc">Description</label>
                 <Input id="entry-desc" placeholder="e.g., Grocery store" autoComplete="off" value={desc} onChange={(e) => setDesc(e.target.value)} />
-              </Field>
-              <Field id="entry-category-field" label="Category" htmlFor="entry-cat-trigger" hidden={!isExp}>
-                <Dropdown id="entry-cat" size="md" value={catVal} options={isExp ? simpleOpts(Object.keys(gc).sort()) : []} onChange={(v) => setCat(v)} />
-              </Field>
-              <Field id="entry-item-field" className={isExp ? undefined : 'span-2'} label="Sub-category" htmlFor="entry-item-trigger">
-                <Dropdown id="entry-item" size="md" value={itemVal} options={simpleOpts(pool)} disabled={isExp && !catVal} onChange={(v) => setItem(v)} />
-              </Field>
-              <Field label="Amount" htmlFor="entry-amount">
-                <Input id="entry-amount" icon={euro} type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} onChange={(e) => setAmount(e.target.value)}
+              </div>
+              <div className="fld" id="entry-category-field" hidden={!isExp}>
+                <label className="fld-label" htmlFor="entry-cat-trigger">Group (Optional)</label>
+                <Dropdown id="entry-cat" size="md" placeholder="Select a group" value={catVal || itemCat} options={isExp ? simpleOpts(groupNames) : []} onChange={(v) => { setCat(v); if (!(gc[v] || []).includes(itemVal)) setItem(''); }} />
+              </div>
+              <div className={'fld' + (isExp ? '' : ' span-2')} id="entry-item-field">
+                <label className="fld-label" htmlFor="entry-item-trigger">Type</label>
+                <Dropdown id="entry-item" size="md" placeholder="Select a type" value={itemVal} options={simpleOpts(pool)} onChange={(v) => setItem(v)} />
+              </div>
+              <div className="fld">
+                <label className="fld-label" htmlFor="entry-amount">Amount</label>
+                <Input id="entry-amount" icon={euro} size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
                   onBlur={(e) => { if (e.target.value.trim()) setAmount(fmtNum(parseAmount(e.target.value))); }} />
-              </Field>
-              <Field label="Date" htmlFor="entry-date">
-                {/* Drawn as the field 229:19280 uses for Date: dd/mm/yyyy and a Calendar icon; the native picker opens on click. */}
+              </div>
+              <div className="fld">
+                <label className="fld-label" htmlFor="entry-date">Date</label>
+                {/* 229:18166: a Medium Dropdown with a Calendar icon before dd/mm/yyyy; the native picker opens on click. */}
                 <div className="date-dd">
+                  <Icon icon={calendar} size="xl" className="date-dd-cal" />
                   <input ref={dateRef} id="entry-date" type="date" defaultValue={todayISO()} min={bounds.min} max={bounds.max}
                     onClick={(e) => { try { e.currentTarget.showPicker(); } catch { /* older browsers open it themselves */ } }} />
                   <span className="date-dd-label" aria-hidden="true">{fmtDateEU(dateVal) || 'dd/mm/yyyy'}</span>
-                  <Icon icon={calendar} size={16} className="date-dd-chevron" />
+                  <Icon icon={chevronDown} size={12} className="date-dd-chevron" />
                 </div>
-              </Field>
+              </div>
+              <div className="span-2">
+                <ActionLink size="medium" icon={plus} id="entry-add-type" onClick={() => setTypeModal(true)}>Add type</ActionLink>
+              </div>
             </div>
+            <TypeModal open={typeModal} kind={entryType} group={isExp ? entryGroup : undefined} groupsOf={() => groupNames} onClose={() => setTypeModal(false)} id="entry-type-modal"
+              onSave={async (t) => {
+                try { await save.addTypes(yearLabel, { type: entryType, ...t }); setTypeModal(false); if (isExp) setCat(t.category); setItem(t.items[0]); }
+                catch (e) { setStatus({ err: true, text: 'Could not add the type: ' + (e && e.message ? e.message : 'unknown error') }); setTypeModal(false); }
+              }} />
             <div className="add-actions">
               {/* 229:19280: one Submit, at 40% until the form has what an entry needs (no Cancel in the Sept 28 frames). */}
-              <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Submit</Button>
+              <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Save entry</Button>
               <span className={'add-status' + (status && status.err ? ' err' : '')} id="entry-status" role="status">{status ? status.text : ''}</span>
             </div>
           </section>

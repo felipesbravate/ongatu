@@ -147,8 +147,8 @@ async def s_month_hover(pg): await pg.locator('.month-btn').nth(3).hover(); awai
 async def s_btn_hover(pg): await pg.locator('#tracker-add-btn').hover(); await settle(pg)
 
 async def s_panel(pg): await open_panel(pg); await settle(pg)
-async def s_panel_income(pg): await open_panel(pg); await pg.click('#entry-type-seg button[data-v=income]'); await settle(pg)
-async def s_panel_invest(pg): await open_panel(pg); await pg.click('#entry-type-seg button[data-v=investment]'); await settle(pg)
+async def s_panel_income(pg): await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await settle(pg)
+async def s_panel_invest(pg): await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Savings and investments")'); await settle(pg)
 async def s_panel_filled(pg):
     await open_panel(pg)
     for sid, v in (('entry-cat', 'Habitation'), ('entry-item', 'Electricity')):
@@ -169,7 +169,7 @@ async def s_review_bad_date(pg):
     await s_review(pg); await pg.click('#rv-period-trigger')
     await pg.click('.ds-dd-menu .ds-dd-block:has(.ds-dd-group:text-is("2026")) .ds-dd-item:text-is("August")'); await settle(pg)
 async def s_toast(pg):
-    await open_panel(pg); await pg.click('#entry-type-seg button[data-v=income]'); await pg.wait_for_timeout(100)
+    await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await pg.wait_for_timeout(100)
     opts = await pg.evaluate("[...document.querySelectorAll('#entry-item option')].map(o => o.value).filter(Boolean)")
     await pg.evaluate("v => { const s = document.getElementById('entry-item'); s.value = v; s.dispatchEvent(new Event('change', {bubbles:true})); }", opts[0])
     await pg.fill('#entry-desc', 'Side project'); await pg.fill('#entry-amount', '250'); await pg.click('#entry-submit')
@@ -179,8 +179,10 @@ async def budget(pg):
     await pg.click('#year-add-toggle'); await pg.evaluate("() => { const s = document.getElementById('year-add-year'); s.value = '2027'; s.dispatchEvent(new Event('change', {bubbles:true})); }"); await pg.click('#year-add-submit')
     await pg.wait_for_selector('#budget-panel.open, #budget-panel[aria-hidden="false"], #budget-panel:not([hidden])', timeout=5000); await settle(pg)
 async def s_budget(pg): await budget(pg)
-async def s_budget_income(pg): await budget(pg); await pg.click('#budget-type-seg button[data-v=income]'); await settle(pg)
-async def s_budget_variable(pg): await budget(pg); await pg.click('#budget-group-seg button[data-v=Variable]'); await settle(pg)
+async def s_budget_income(pg):
+    await budget(pg); await pg.click('#budget-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await settle(pg)
+async def s_budget_variable(pg):
+    await budget(pg); await pg.click('#budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Variable")'); await settle(pg)
 async def s_budget_hover(pg):
     await budget(pg); await pg.locator('#budget-sections .budget-type-section:not([hidden]) .br-amount').first.hover(); await settle(pg)
 async def s_budget_edit(pg):
@@ -230,8 +232,17 @@ async def main():
             srv = await start_server()   # fresh data for every viewport, so a state that writes can't leak
             try:
                 seed_ctx = await b.new_context(); await seed_ctx.add_init_script(FROZEN); await route_fonts(seed_ctx)
-                pg = await seed_ctx.new_page(); await pg.goto(BASE + '/login'); await pg.fill('input[name=email]', 'admin@example.com'); await pg.click('button')
-                await pg.wait_for_selector('#user-nav'); await seed(seed_ctx)
+                pg = await seed_ctx.new_page(); await pg.goto(BASE + '/login'); await pg.fill('#login-email', 'admin@example.com')
+                async with pg.expect_navigation(): await pg.click('#email-submit')
+                if 'step=new' in pg.url:
+                    await pg.fill('#full-name', 'Felipe')
+                    async with pg.expect_navigation(): await pg.click('#signup-submit')
+                if 'step=code' in pg.url:
+                    await pg.fill('#code-0', '12345678')
+                    async with pg.expect_navigation(): await pg.click('#code-submit')
+                # Oct 2: a new account starts at /welcome (onboarding); mark it onboarded so the dashboard opens.
+                await pg.wait_for_url('**/welcome'); await seed_ctx.request.put(f'{BASE}/api/db/settings/onboarding', headers=HDR, data={'done': True})
+                await pg.goto(BASE + '/'); await pg.wait_for_selector('#user-nav'); await seed(seed_ctx)
                 storage = await seed_ctx.storage_state(); await seed_ctx.close()
                 os.makedirs(os.path.join(OUT, vp), exist_ok=True)
                 for name, kind, fn in STATES:

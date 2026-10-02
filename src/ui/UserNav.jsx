@@ -127,7 +127,7 @@ export function Notification({ open, onToggle, onClose, unread, children }) {
       {open && mobile && createPortal(
         <div className="ds-notif-page" id="notif-panel" role="dialog" aria-modal="true" aria-labelledby="notif-page-title" ref={pageRef}>
           <div className="ds-notif-page-nav">
-            <RoundButton icon={arrowStraightLeft} size="tiny" iconSize={20} id="notif-back" label="Back" onClick={onClose} />
+            <RoundButton icon={arrowStraightLeft} size="tiny" iconSize="md" id="notif-back" label="Back" onClick={onClose} />
             <h2 className="ds-notif-page-title" id="notif-page-title">Notifications</h2>
           </div>
           <div className="ds-notif-page-list">
