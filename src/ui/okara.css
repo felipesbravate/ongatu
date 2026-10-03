@@ -2474,7 +2474,7 @@
   /* Dropdown-list group title Label/Large. */
   .ds-dd-group{ font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); color:var(--text-primary); }
   #add-panel .field-period .ds-dd{ width:242px; max-width:100%; }
-  .month-btn{ text-transform:uppercase; }
+  .month-btn{ text-transform:none; }
   /* Phones (342:7993, Oct 2): Tracker Heading/Large with the month in Body/Large/Medium; group blocks Heading/Medium. */
   @media (max-width:640px){
     .bd-title h2{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
@@ -2761,3 +2761,35 @@
   .ds-dd-item.has-icon svg{ color:var(--text-secondary); }
   .ds-dd-item:hover, .ds-dd-item.is-active, button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); }
   .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:hover svg, button.ds-dd-item:focus-visible svg{ color:var(--text-primary); }
+
+  /* Oct 3: Nav tabs 59:850 (Small Secondary Round add button, space/md to the tabs), Expander 475:743 (pad xs 0,
+     white 0 → 100% at 53%, Small Tertiary "See all" with a trailing 16px chevron), list-selector 623:2690 (title and
+     description Body/Small/Medium; Selected: description text/accent-light, space/xs above the Tiny link). */
+  .year-add-btn{ width:auto; height:auto; flex-shrink:0; }
+  .ds-expander{ padding:var(--space-xs) 0; }
+  .ds-list-sel-title{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-primary); }
+  .ds-list-sel-desc{ color:var(--text-secondary); }
+  .ds-list-sel.is-selected .ds-list-sel-body{ gap:var(--space-xs); }
+  .ds-list-sel.is-selected .ds-list-sel-desc{ color:var(--text-accent-light); margin-top:calc(var(--space-tn) - var(--space-xs)); }
+
+  /* Panel - Year budget 232:5852 (Oct 3). Income / Save-Invest: the Category field (214 on desktop) with "+ Add
+     sub-category" (Small link) and an Info tooltip beside it, tn apart; the types without a group title, "+ Add type"
+     md under them. Expenses: Category | Sub-category lg apart, labels xs above, Group (Optional), "+ Add type"; groups
+     lg apart with a Divider, title md above the rows (Heading/Large; Heading/Medium and lg on phones). */
+  .budget-filters .budget-kind-only{ grid-column:auto; }
+  .budget-sub-cta{ display:flex; align-items:center; gap:var(--space-tn); align-self:end; min-height:calc(2 * var(--space-sm) + 24px); }
+  .budget-type-section{ gap:var(--space-md); }
+  .budget-sections{ display:flex; flex-direction:column; gap:var(--space-lg); }
+  .budget-group{ gap:var(--space-md); }
+  @media (max-width:640px){
+    .budget-group, .budget-type-section{ gap:var(--space-lg); }
+    .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  }
+  /* Year budget rows (232:5852): the € is part of the link (link/default, link/hover on hover). */
+  .budget-row .bd-value .bd-euro{ color:var(--link-default); }
+  .budget-row .bd-value:hover .bd-euro{ color:var(--link-hover); }
+  /* Panel close (232:5852): Medium (48) on desktop, Small (36, pad xs) on phones. */
+  @media (max-width:640px){ .panel-close{ padding:calc(var(--space-xs) - 1px); } }
+  /* Month selector labels (Oct 3): "Jan" in the desktop frames (211:18753, 2:2), "JAN" in the phone frames (342:7993). */
+  @media (max-width:640px){ .month-btn{ text-transform:uppercase; } }
+  .login-resend.is-small .login-note{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }

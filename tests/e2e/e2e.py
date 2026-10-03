@@ -251,7 +251,7 @@ async def main():
             check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', d['tokens'] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
             check('money figures carry the Euro icon', d['euro'], d)
             mb = await pg.evaluate("() => { const b = document.querySelector('.month-btn:not(.estimated)'), c = getComputedStyle(b); return [c.fontSize, c.fontWeight, c.lineHeight, c.letterSpacing, c.height, c.paddingLeft, c.textTransform]; }")
-            check('month selector (4:171, Oct 2, Desktop): Label/Small 14/400/16 -2%, 20 high (space/tn round the text), space/sm sides, JAN..DEC', mb == ['14px', '400', '16px', '-0.28px', '20px', '8px', 'uppercase'], mb)
+            check('month selector (4:171, Oct 2, Desktop): Label/Small 14/400/16 -2%, 20 high (space/tn round the text), space/sm sides, Jan..Dec as in the Oct 3 desktop frames', mb == ['14px', '400', '16px', '-0.28px', '20px', '8px', 'none'], mb)
 
             # 2c. the Sept 22 DS pull and the dashboard changes (Cost-tracker 2:2, 52:3443, 171:13746)
             n = await pg.evaluate("""() => { const cs = e => getComputedStyle(e), q = s => document.querySelector(s), all = s => [...document.querySelectorAll(s)];

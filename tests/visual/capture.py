@@ -168,6 +168,10 @@ async def s_review_edit(pg):
 async def s_review_bad_date(pg):
     await s_review(pg); await pg.click('#rv-period-trigger')
     await pg.click('.ds-dd-menu .ds-dd-block:has(.ds-dd-group:text-is("2026")) .ds-dd-item:text-is("August")'); await settle(pg)
+async def s_account(pg):
+    await pg.goto(BASE + '/account'); await pg.wait_for_selector('.acct-card'); await pg.wait_for_timeout(600)
+    await pg.add_style_tag(content=CALM); await pg.evaluate('document.fonts.ready')
+
 async def s_toast(pg):
     await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await pg.wait_for_timeout(100)
     opts = await pg.evaluate("[...document.querySelectorAll('#entry-item option')].map(o => o.value).filter(Boolean)")
@@ -213,6 +217,7 @@ STATES = [
     ('40-user-menu', 'view', s_user_menu), ('41-notifications', 'view', s_notif), ('42-tracker-menu', 'view', s_tracker_menu),
     ('43-month-budget', 'view', s_month_budget),
     ('44-year-delete-modal', 'view', s_year_delete_modal),
+    ('45-account', 'page', s_account),
     ('39-toast', 'view', s_toast),  # writes an entry: keep last
 ]
 

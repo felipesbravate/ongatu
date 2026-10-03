@@ -168,7 +168,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       </div>
       {mobile && tall && (
         <div className={'ds-expander' + (expanded ? ' is-open' : '')}>
-          <Button variant="tertiary" size="small" icon={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
+          <Button variant="tertiary" size="small" trailing={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
             {expanded ? 'See less' : 'See all'}
           </Button>
         </div>

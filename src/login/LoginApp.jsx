@@ -76,13 +76,14 @@ function CodeBoxes() {
 }
 
 // "Re-send code in 0:42": the link waits a minute after a code is sent, then works.
-function Resend({ form, sent }) {
+// 430:5508 (sign in): Medium link, Body/Large/Medium notes; 568:5234 (new account): Small link, Body/Medium/Medium.
+function Resend({ form, sent, small }) {
   const [left, setLeft] = useState(60);
   useEffect(() => { setLeft(60); const t = setInterval(() => setLeft((n) => (n > 0 ? n - 1 : 0)), 1000); return () => clearInterval(t); }, [sent]);
   return (
-    <div className="login-resend">
+    <div className={'login-resend' + (small ? ' is-small' : '')}>
       <span className="login-resend-row">
-        <ActionLink id="resend-code" type="submit" form={form} disabled={left > 0}>Re-send code</ActionLink>
+        <ActionLink id="resend-code" size={small ? undefined : 'medium'} type="submit" form={form} disabled={left > 0}>Re-send code</ActionLink>
         {left > 0 && <span className="login-note" id="resend-wait">in {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')}</span>}
       </span>
       <span className="login-note">Can&apos;t find it? Check spam or promotions.</span>
@@ -153,7 +154,7 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
           </div>
           <div className="login-cta-col">
             <Button type="submit" id="code-submit" className="login-wide">{isNew ? 'Continue' : 'Sign in'}</Button>
-            <Resend form="resend-form" sent={sent} />
+            <Resend form="resend-form" sent={sent} small={isNew} />
           </div>
         </form>
         <form method="post" action="/auth/login" id="resend-form"><input type="hidden" name="email" value={email} /><input type="hidden" name="send_code" value="1" /><input type="hidden" name="from" value={isNew ? 'new' : ''} /></form>

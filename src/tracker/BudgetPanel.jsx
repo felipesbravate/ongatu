@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { ActionLink, Button, Dropdown, PanelHeader, RoundButton, useDismiss } from '../ui/index.js';
-import { KINDS, TypeModal } from './TaxonomyModals.jsx';
+import { ActionLink, Button, Dropdown, InfoTooltip, PanelHeader, RoundButton, useDismiss, useMobile } from '../ui/index.js';
+import { KINDS, SubCategoryModal, TypeModal } from './TaxonomyModals.jsx';
 import { Icon } from '../ui/Icon.jsx';
 import { actions, euro, plus } from '../ui/icons.js';
 import { EXP_GROUPS, MONTH_ABBR, fmtNum, parseAmount } from './model.js';
@@ -23,6 +23,8 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
   const [group, setGroup] = useState('Fixed');
   const [groupFilter, setGroupFilter] = useState('');
   const [typeModal, setTypeModal] = useState(false);
+  const [subModal, setSubModal] = useState(false);
+  const mobile = useMobile();
   const [sections, setSections] = useState([]);
   const [status, setStatus] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -81,7 +83,7 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
         <div className="add-panel-content">
           {/* 232:5853 (Oct 2): Category | Sub-category, Group (Optional), "+ Add type"; then the types by group. */}
           <div className="add-grid budget-filters">
-            <div className={'fld' + (topTab === 'expense' ? '' : ' span-2')}>
+            <div className={'fld' + (topTab === 'expense' ? '' : ' budget-kind-only')}>
               <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-kind-trigger'}>Category</label>
               <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-kind'} size="md" emptyOption={false} value={topTab} onChange={(v) => { setTopTab(v); setGroupFilter(''); }} options={KINDS.map((k) => ({ value: k.value, label: k.label }))} />
             </div>
@@ -96,8 +98,17 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
                   options={[{ value: '', label: 'All groups' }, ...((sections.find((x) => x.type === 'expense' && x.group === group) || { blocks: [] }).blocks.map((bk) => ({ value: bk.category, label: bk.category })))]} />
               </div>
             )}
-            <div className="span-2"><ActionLink size="medium" icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-type'} onClick={() => setTypeModal(true)}>Add type</ActionLink></div>
+            {/* 232:5852 (Oct 3): Income and Save/Invest show "+ Add sub-category" and an Info tooltip beside the Category;
+                their "+ Add type" moves under the list. Expenses keep it under the Group field (Small on desktop, Medium on phones). */}
+            {topTab !== 'expense' && (
+              <div className="budget-sub-cta">
+                <ActionLink icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-sub'} onClick={() => setSubModal(true)}>Add sub-category</ActionLink>
+                <InfoTooltip text="Sub-categories split a category into groups you track separately." />
+              </div>
+            )}
+            {topTab === 'expense' && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-type'} onClick={() => setTypeModal(true)}>Add type</ActionLink></div>}
           </div>
+          <SubCategoryModal open={subModal} kind={topTab} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={() => setSubModal(false)} />
           <TypeModal open={typeModal} kind={topTab} group={topTab === 'expense' ? group : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
             groupsOf={() => (sections.find((x) => x.type === 'expense' && x.group === group) || { blocks: [] }).blocks.map((bk) => bk.category)}
             onClose={() => setTypeModal(false)}
@@ -110,10 +121,10 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
                     groups are 16 apart with a Divider between them. An empty section keeps the "+ New" link (the frames draw none). */}
                 {s.type !== 'expense' && !s.empty && (
                   <div className="budget-group">
-                    <GroupHeader title={s.label} />
                     <div className="budget-items">{[...s.pre, ...s.rows].map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                   </div>
                 )}
+                {s.type !== 'expense' && <div><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-type' + (s.type === 'income' ? '' : '-' + s.type)} onClick={() => setTypeModal(true)}>Add type</ActionLink></div>}
                 {s.empty && <div className="budget-empty">{isMonth ? 'Nothing planned here for this month. Use "+ Add type" above to add one.' : 'No history for this yet. Use "+ Add type" above, or create the year and add entries as they come in.'}</div>}
                 {s.blocks.filter((b) => !groupFilter || b.category === groupFilter).map((b, bi) => (
                   <BlockFrag key={b.category} divider={bi > 0}>
@@ -128,7 +139,7 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
           </div>
         </div>
  <div className="add-actions">
-          <Button id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
+          <Button id={isMonth ? 'month-budget-save' : 'budget-create-btn'} icon={plus} disabled={busy} onClick={create}>{isMonth ? 'Save' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
           <Button variant="tertiary" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
           <span className={'add-status' + (status && status.err ? ' err' : '')} id={isMonth ? 'month-budget-status' : 'budget-status'}>{status ? status.text : ''}</span>
         </div>
