@@ -2884,3 +2884,75 @@
     .bd-row .bd-item-name{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
     .bd-row .n, .bd-row .bd-amount, .bd-row .br-input{ font-size:12px; }
   }
+
+  /* ================================================================
+     Add entry panel 229:18167 (Oct 3, measured)
+     ================================================================ */
+  /* Desktop: modal-nav 64 with the Medium close 16 from the top, 12 from the edge; content 40 from the sides, the
+     header straight under the nav; sections (header, upload, divider, manual) space/2xl apart. "Enter manually" Heading/XL,
+     space/xl over the form; Track in space/2xl over the fields; fields space/lg apart in rows, space/md across; labels
+     space/sm over their control (Category / Sub-category space/xs); Save entry space/2xl under the form. */
+  @media (min-width:641px){
+    #add-panel{ padding:0 40px 40px; gap:0; }
+    #add-panel .panel-nav{ margin:0 -40px; padding:16px 12px 0; align-items:flex-start; }
+    #add-panel .add-panel-header{ margin-bottom:var(--space-2xl); }
+    #add-panel .ap-main{ gap:var(--space-2xl); }
+    #add-panel .ap-manual .ap-section-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+    #add-panel .ap-manual{ gap:var(--space-xl); }
+    #add-panel .add-grid{ row-gap:var(--space-lg); column-gap:var(--space-md); }
+    #add-panel .add-grid .field-period{ margin-bottom:calc(var(--space-2xl) - var(--space-lg)); }
+    #add-panel .add-grid .fld{ gap:var(--space-sm); }
+    #add-panel .ap-manual .add-actions{ margin-top:calc(var(--space-2xl) - var(--space-xl)); }
+    .ap-cancel-phone{ display:none; }
+  }
+  /* Phones: close (Small, back arrow) 8 from the edge; title block 16 under the nav; upload box items touch; "Enter
+     manually" Heading/Large, space/md over the form; Track in full width and space/xl over the fields; Category and
+     Sub-category stacked full width; the rest in pairs space/md apart; labels space/xs over their control; Save entry
+     and a Tertiary Cancel space/md apart. */
+  @media (max-width:640px){
+    #add-panel .panel-nav{ margin:0 calc(8px - var(--space-md)); }
+    #add-panel{ gap:0; }
+    #add-panel .add-panel-header{ margin:var(--space-md) 0 var(--space-lg); }
+    #add-panel .ap-manual .ap-section-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+    #add-panel .ap-manual{ gap:var(--space-md); }
+    #add-panel .add-grid{ row-gap:var(--space-md); column-gap:var(--space-md); }
+    #add-panel .add-grid .field-period{ margin-bottom:calc(var(--space-xl) - var(--space-md)); }
+    #add-panel .field-period .ds-dd{ width:100%; }
+    #add-panel #entry-group-field, #add-panel .add-grid > .fld:has(#entry-kind-trigger){ grid-column:1 / -1; }
+    #add-panel .add-grid .fld{ gap:var(--space-xs); }
+    #add-panel .dropzone{ gap:0; }
+    #add-panel .ap-manual .add-actions{ gap:var(--space-md); }
+  }
+  #add-panel [hidden]{ display:none !important; }
+  @media (min-width:641px){ #add-panel .add-grid > .fld:has(#entry-kind-trigger), #add-panel #entry-group-field{ gap:var(--space-xs); } }
+  @media (max-width:640px){ #add-panel .add-grid .field-period .ds-dd, #add-panel .add-grid .field-period{ width:100%; max-width:100%; } }
+
+  /* Panel - Year budget 232:5852 (Oct 3, measured). Desktop: Medium close 16 from the top, 12 from the edge; content 24
+     from the sides, header straight under the nav; header, selectors, entries and the buttons space/2xl apart; selectors
+     space/md apart (Category | Sub-category space/lg across, labels space/xs over their control); buttons space/lg apart.
+     Phones: labels space/xs, Category | Sub-category 8 across, entries and buttons space/lg. */
+  .budget-panel [hidden]{ display:none !important; }
+  @media (min-width:641px){
+    .budget-panel{ padding:0 var(--space-xl) var(--space-xl); gap:0; }
+    .budget-panel .panel-nav{ margin:0 calc(-1 * var(--space-xl)); padding:16px 12px 0; align-items:flex-start; }
+    .budget-panel .add-panel-header{ margin-bottom:var(--space-2xl); }
+    .budget-panel .add-panel-content{ gap:var(--space-2xl); }
+    .budget-panel .budget-filters{ margin-bottom:0; row-gap:var(--space-md); column-gap:var(--space-lg); }
+    .budget-panel .budget-filters .fld{ gap:var(--space-xs); }
+    .budget-panel .add-actions{ margin-top:var(--space-2xl); gap:var(--space-lg); }
+  }
+  @media (max-width:640px){
+    .budget-panel .budget-filters{ column-gap:8px; }
+    .budget-panel .budget-filters .fld{ gap:var(--space-xs); }
+    .budget-panel .add-actions{ gap:var(--space-lg); }
+  }
+  /* Files loading / review (229:18167): remove = Tiny Tertiary round (surface/dark 12px X); "Add files" (Small Primary,
+     +) and Cancel (Small Tertiary) space/sm apart (tn on phones). Review: "Track in" label Label/Small text/secondary over
+     a 200 Small dropdown, no header row, rows space/lg apart, "Save entries" and Cancel space/lg apart. */
+  #add-panel .round-btn.doc-remove{ color:var(--surface-dark); }
+  #doc-actions{ gap:var(--space-sm); }
+  @media (max-width:640px){ #doc-actions{ gap:var(--space-tn); } }
+  #ap-review .ap-period > label{ text-transform:none; color:var(--text-secondary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  #ap-review .ap-period{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  #ap-review .rv-head{ display:none; }
+  #ap-review .add-actions{ gap:var(--space-lg); }

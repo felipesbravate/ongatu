@@ -335,8 +335,8 @@ async def main():
             di = await pg.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), it = document.querySelector('.doc-item'), b = it.querySelector('.doc-remove'), sv = b.querySelector('svg');
                 return { icon: (it.querySelector('.doc-ic svg').dataset.icon === 'document' || (!!window.ICON_LIB && it.querySelector('.doc-ic path').getAttribute('d') === window.ICON_LIB.document.d)), ic: [r(it.querySelector('.doc-ic svg')).width, r(it.querySelector('.doc-ic svg')).height],
                          btn: [r(b).width, r(b).height], svg: [r(sv).width, r(sv).height], vb: sv.getAttribute('viewBox'), color: cs(b).color, radius: cs(b).borderRadius, meta: it.querySelector('.doc-meta').textContent }; }""")
-            check('file list: a CSV shows the Document icon (20px); delete = Micro round button (24, Mobile tokens) with the 12px X in status/fail',
-                  di['icon'] and di['ic'] == [20, 20] and di['btn'] == [24, 24] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(161, 42, 47)' and di['radius'] == '999px' and di['meta'].endswith('Ready'), di)
+            check('file list: a CSV shows the Document icon (20px); delete = Tiny Tertiary round button (32) with the 12px X in surface/dark (229:18167, Oct 3)',
+                  di['icon'] and di['ic'] == [20, 20] and di['btn'] == [32, 32] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(22, 21, 15)' and di['radius'] == '999px' and di['meta'].endswith('Ready'), di)
             await pg.click('#doc-add'); await pg.wait_for_selector('#ap-review:not([hidden])', timeout=8000)
             check('CSV: review shows a row from the AI reply', await pg.locator('.rv-row').count() == 1)
             # best-guess category: a reply without "sure" is marked, the status line says so, and Submit is not blocked
@@ -359,7 +359,7 @@ async def main():
             check('review: a "sure" category has no Guess chip', await pg.locator('#rv-rows .rv-row').count() == 1 and await pg.locator('#rv-rows .rv-guess').count() == 0)
             # "Month and year" (174:15607): starts on the month of the entry's date; an earlier month is refused, a later one is fine
             rp = await pg.evaluate("""() => { const t = document.getElementById('rv-period-trigger'), r = t.getBoundingClientRect(), l = document.querySelector('label[for="rv-period-trigger"]'); return { label: t.textContent.trim(), w: r.width, h: r.height, cap: l ? l.textContent : null }; }""")
-            check('review: Month and year is a 200px Medium dropdown (48: Mobile tokens since Oct 3), on the month of the entry (Sep 2026)', rp['label'] == 'September 2026' and rp['w'] == 200 and rp['h'] == 48 and (rp['cap'] or '').lower() == 'month and year', rp)
+            check('review: Track in is a 200px Small dropdown (36, 229:18167 Files review), on the month of the entry (Sep 2026)', rp['label'] == 'September 2026' and rp['w'] == 200 and rp['h'] == 36 and (rp['cap'] or '').lower() == 'track in', rp)
             await dd_pick(pg, 'rv-period', 'August', '2026')
             rs = await pg.inner_text('#rv-status')
             check('review: an entry dated after the month selected is refused (date in red, message, Submit off)',
@@ -439,8 +439,8 @@ async def main():
                 return { label: [cs.fontSize, cs.fontWeight, cs.color, lab.textContent], itemLabel: document.querySelector('label[for="entry-item-trigger"]').textContent,
                          stack: p.top < k.top && k.top < d.top && d.top < i.top && i.top < a.top, sameRow: a.top === dt.top, gap: [k.top - p.bottom, d.top - k.bottom, i.top - d.bottom, a.top - i.bottom],
                          save: document.getElementById('entry-submit').textContent, addType: !!document.getElementById('entry-add-type') }; }""")
-            check('Figma 229:18166 (Desktop): Track in, Category, Description, Type, Amount | Date, space/md (12) apart, labels Label/Small text/secondary, "+ Add type", Save entry',
-                  lay['label'][:3] == ['14px', '400', 'rgb(116, 113, 103)'] and lay['label'][3] == 'Category' and lay['itemLabel'] == 'Type' and lay['stack'] and lay['sameRow'] and lay['gap'] == [12, 12, 12, 12] and lay['save'] == 'Save entry' and lay['addType'], lay)
+            check('Figma 229:18167 (Desktop, Oct 3): Track in space/2xl over the fields, rows space/lg apart, labels Label/Small text/secondary, "+ Add type", Save entry',
+                  lay['label'][:3] == ['14px', '400', 'rgb(116, 113, 103)'] and lay['label'][3] == 'Category' and lay['itemLabel'] == 'Type' and lay['stack'] and lay['sameRow'] and lay['gap'] == [40, 16, 16, 16] and lay['save'] == 'Save entry' and lay['addType'], lay)
             await set_date('2029-09-13')
             check('Add to follows the date until it is picked by hand', await dd_text(pg, 'entry-period') == 'September 2029', await dd_text(pg, 'entry-period'))
             await dd_pick(pg, 'entry-period', 'August', '2029'); await fill_entry('Too early')

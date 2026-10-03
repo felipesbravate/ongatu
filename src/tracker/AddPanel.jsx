@@ -136,7 +136,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const closeReview = () => { setReview(null); reader.clear(); setDocStatus(null); };
 
   const enabled = reader.ready && !!reader.sampleFn;
-  const reviewFiles = review ? new Set(review.rows.map((r) => r.fileId)).size : 0;
+  // (Oct 3: the review title no longer counts entries and files.)
   // Files reading (Cost-tracker 229:18563): the drop area becomes a progress box; the rest of the panel fades.
   const readingDocs = reader.docs.filter((d) => ['reading', 'done', 'empty'].includes(d.status) || (d.status === 'error' && d.wasRead));
   const elapsed = readStart ? Date.now() - readStart : 0;
@@ -155,8 +155,8 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
       <div className={'add-panel-backdrop' + (open ? ' open' : '')} id="add-panel-backdrop" onClick={onClose} />
       <div ref={panelRef} className={'add-panel' + (open ? ' open' : '')} id="add-panel" role="dialog" aria-modal="true" aria-labelledby="add-panel-title">
         <PanelHeader closeId="entry-close-btn" titleId="add-panel-title" onClose={onClose} faded={showReading}
-            title={review ? `Review ${review.rows.length} ${review.rows.length === 1 ? 'entry' : 'entries'} from ${reviewFiles} ${reviewFiles === 1 ? 'file' : 'files'}` : 'Add an entry'}
-          hint={review ? "Check your entries. Change anything that's wrong, or remove what doesn't belong." : 'Upload receipts or statements or enter the information by hand.'} />
+            title={review ? 'Review imported entries' : 'Add an entry'}
+          hint={review ? "Edit details, adjust categories, or remove entries you don't want to track." : 'Upload receipts or statements or enter the information by hand.'} />
 
         <div className="ap-main" id="ap-main" hidden={!!review}>
           <section className="ap-section" id="ap-upload">
@@ -199,14 +199,14 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                       <div className="doc-info"><div className="doc-name" title={d.name}>{d.name}</div><div className={'doc-meta' + (bad ? ' err' : '')}>{docMeta(d)}</div></div>
                       {d.status === 'preparing' ? <span className="doc-pct">{d.pct}%</span>
                         : d.status === 'reading' ? null
-                        : <RoundButton icon={x} size="micro" iconSize={12} className="doc-remove" label={'Remove ' + d.name} onClick={() => { setDocStatus(null); reader.remove(d.id); }} />}
+                        : <RoundButton icon={x} size="tiny" iconSize="sm" className="doc-remove" label={'Remove ' + d.name} onClick={() => { setDocStatus(null); reader.remove(d.id); }} />}
                     </div>
                   );
                 })}
               </div>
               <div className="add-actions" id="doc-actions" hidden={reader.docs.length === 0 || showReading}>
-                <Button id="doc-add" disabled={reader.analyzing || anyPrep || !anyReady} onClick={analyze}>Add files</Button>
-                <Button variant="tertiary" id="doc-cancel" onClick={() => { if (!reader.cancel()) setDocStatus(null); }}>Cancel</Button>
+                <Button id="doc-add" size="small" icon={plus} disabled={reader.analyzing || anyPrep || !anyReady} onClick={analyze}>Add files</Button>
+                <Button variant="tertiary" size="small" id="doc-cancel" onClick={() => { if (!reader.cancel()) setDocStatus(null); }}>Cancel</Button>
                 <span className={'add-status' + (docStatus && docStatus.err ? ' err' : '')} id="doc-status" role="status">{docStatus ? docStatus.text : ''}</span>
               </div>
             </div>
@@ -269,8 +269,9 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 catch (e) { setStatus({ err: true, text: 'Could not add the type: ' + (e && e.message ? e.message : 'unknown error') }); setTypeModal(false); }
               }} />
             <div className="add-actions">
-              {/* 229:19280: one Submit, at 40% until the form has what an entry needs (no Cancel in the Sept 28 frames). */}
+              {/* 229:18167: one Submit (40% until the form has what an entry needs); phones add a Tertiary Cancel. */}
               <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Save entry</Button>
+              <Button variant="tertiary" id="entry-cancel" className="ap-cancel-phone" onClick={onClose}>Cancel</Button>
               <span className={'add-status' + (status && status.err ? ' err' : '')} id="entry-status" role="status">{status ? status.text : ''}</span>
             </div>
           </section>
@@ -390,8 +391,8 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
 
   return (
     <div className="ap-section" id="ap-review">
-      <Field className="ap-period" id="rv-period-field" label="Month and year" htmlFor="rv-period-trigger" hidden={rows.length === 0}>
-        <Dropdown id="rv-period" size="md" emptyOption={false} value={period} options={model.periodOptions()}
+      <Field className="ap-period" id="rv-period-field" label="Track in" htmlFor="rv-period-trigger" hidden={rows.length === 0}>
+        <Dropdown id="rv-period" size="sm" emptyOption={false} value={period} options={model.periodOptions()}
           onChange={(v) => setReview((rv) => fitRows({ ...rv, period: v, editing: null, snap: null, status: null }, model))} />
       </Field>
       {rows.length === 0
@@ -414,7 +415,7 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
         </div>
       </div>
       <div className="add-actions">
-        <Button id="rv-submit" disabled={!rows.length || bad > 0 || submitting} onClick={submit}>{submitting ? 'Submitting…' : 'Submit'}</Button>
+        <Button id="rv-submit" disabled={!rows.length || bad > 0 || submitting} onClick={submit}>{submitting ? 'Saving…' : 'Save entries'}</Button>
         <Button variant="tertiary" id="rv-cancel" onClick={onCancel}>Cancel</Button>
         <span className={'add-status' + (st && st.err ? ' err' : '') + (st && st.guess ? ' has-guess' : '')} id="rv-status" role="status">{st && st.guess ? <span className="rv-guess" aria-hidden="true"><Icon icon={questionFilled} size={20} /></span> : null}{st ? st.text : ''}</span>
       </div>
