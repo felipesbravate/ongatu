@@ -13,7 +13,8 @@ import { chevronDown } from './icons.js';
 // The trigger gets id `${id}-trigger`: point the field's <label htmlFor> at it.
 // onChange(value) fires when the value changes; onChoose(value) fires on every pick, even the same value.
 // selectProps: extra attributes for the hidden select (e.g. data-f). emptyOption: keep a "no choice" option (the placeholder) in the hidden select; off for pickers that always have a value.
-export function Dropdown({ id, value, onChange, onChoose, options, placeholder = 'Select', size = 'sm', disabled, ariaLabel, className, emptyOption = true, selectProps }) {
+// `icon` = a leading icon in the trigger (Dropdown 71:1096 with Left icon: a guessed category shows Question / Outlined).
+export function Dropdown({ id, value, onChange, onChoose, options, placeholder = 'Select', size = 'sm', disabled, ariaLabel, className, emptyOption = true, selectProps, icon, iconSize }) {
   const blocks = toBlocks(options);
   const flat = blocks.flatMap((b) => b.opts);
   const chosen = flat.find((o) => String(o.value) === String(value ?? ''));
@@ -134,6 +135,7 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
       <button ref={triggerRef} type="button" className="ds-dd-trigger" id={id ? id + '-trigger' : undefined} aria-haspopup="listbox" aria-expanded={open ? 'true' : 'false'}
         aria-label={ariaLabel} title={chosen ? label : ''} disabled={disabled}
         onMouseDown={() => triggerRef.current && triggerRef.current.focus()} onClick={() => (open ? close() : openMenu())} onKeyDown={onKeyDown}>
+        {icon && <Icon icon={icon} size={iconSize || (size === 'tiny' ? 'md' : 'lg')} className="ds-dd-lead" />}
         <span className="ds-dd-label">{label}</span>
         <span style={{ display: 'inline-flex' }}><Icon icon={chevronDown} size={12} /></span>
       </button>

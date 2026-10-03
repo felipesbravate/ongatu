@@ -4,7 +4,7 @@ import { ActionLink, Button, Dropdown, InfoTooltip, Input, MenuList, PanelHeader
 import { KINDS, SubCategoryModal, TypeModal } from './TaxonomyModals.jsx';
 import { Icon } from '../ui/Icon.jsx';
 import { actions, edit, euro, plus, trash } from '../ui/icons.js';
-import { EXP_GROUPS, MONTH_ABBR, fmtNum, parseAmount } from './model.js';
+import { EXP_GROUPS, MONTH_NAMES, fmtNum, parseAmount } from './model.js';
 
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const COMBOS = [{ type: 'income', group: null, label: 'Income' }, { type: 'investment', group: null, label: 'Save/Invest' }, ...EXP_GROUPS.map((g) => ({ type: 'expense', group: g, label: g }))];
@@ -95,7 +95,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
       <div className={'add-panel-backdrop' + (open ? ' open' : '')} id="budget-panel-backdrop" onClick={onClose} />
       <div className={'add-panel budget-panel' + (open ? ' open' : '') + (topTab === 'expense' ? '' : ' is-default')} id={isMonth ? 'month-budget-panel' : 'budget-panel'} role="dialog" aria-modal="true" aria-labelledby={isMonth ? 'month-budget-title' : 'budget-panel-title'}>
         {isMonth
-          ? <PanelHeader closeId="month-budget-close" titleId="month-budget-title" title={month ? `${MONTH_ABBR[month.monthIdx]} ${my ? my.year : ''} / Editing budget` : 'Editing budget'} hintId="month-budget-hint"
+          ? <PanelHeader closeId="month-budget-close" titleId="month-budget-title" title={month ? `${MONTH_NAMES[month.monthIdx]} ${my ? my.year : ''} / Editing budget` : 'Editing budget'} hintId="month-budget-hint"
               hint="Need to make a change? Tweak your planned income and expenses to ensure your budget matches your goals for the month." onClose={onClose} />
           : <PanelHeader closeId="budget-close-btn" titleId="budget-panel-title" title={pending ? `${pending.label} / Starting budget` : 'Starting budget'} hintId="budget-panel-hint"
               hint={`Your starting budget is based on your past 12 months and will be applied to every month in ${pending ? pending.label : 'the new year'}. Any adjustments you make here will automatically become your default for future years.`} onClose={onClose} />}
@@ -166,7 +166,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
               Save over Cancel, full width, 8 apart. */}
           <span className={'add-status' + (status && status.err ? ' err' : '')} id={isMonth ? 'month-budget-status' : 'budget-status'}>{status ? status.text : ''}</span>
           <Button variant="tertiary" className="budget-cancel" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
-          <Button className="budget-save" id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
+          <Button className="budget-save" id={isMonth ? 'month-budget-save' : 'budget-create-btn'} disabled={busy} onClick={create}>{isMonth ? 'Save changes' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
         </div>
       </div>
     </>

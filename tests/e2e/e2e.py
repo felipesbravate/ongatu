@@ -160,6 +160,12 @@ async def main():
 
             # 2. manual entry persists across reload; storage holds ciphertext only
             await open_panel(pg)
+            ae = await pg.evaluate("""() => { const r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e), sub = document.getElementById('entry-submit'), m = document.getElementById('ap-manual'),
+                lk = document.querySelector('.dz-line .ds-action-link'), dl = document.querySelector('.date-dd-label'), cal = document.querySelector('.date-dd-cal');
+                return { right: Math.round(r(m).right - r(sub).right), link: [cs(lk).fontSize, cs(lk).lineHeight], date: [cs(dl).fontSize, cs(dl).lineHeight], cal: cal ? r(cal).width : 0,
+                         gap: Math.round(r(document.getElementById('entry-group-field')).left - r(document.getElementById('entry-kind-trigger')).right) }; }""")
+            check('Add entry (229:18166): Save entry on the right, "Click to upload" 14/16, date Label/Medium 16/24 after a 24px Calendar, Category | Sub-category 16 apart',
+                  ae['right'] == 0 and ae['link'] == ['14px', '16px'] and ae['date'] == ['16px', '24px'] and ae['cal'] == 24 and ae['gap'] == 16, ae)
             await pg.fill('#entry-desc', 'ZZTOP-PLAINTEXT-MARKER')
             await dd_pick(pg, 'entry-cat', 'Habitation')
             n_items = await pg.evaluate("document.querySelectorAll('#entry-item option[value]:not([value=\"\"])').length")
@@ -370,31 +376,34 @@ async def main():
             di = await pg.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), it = document.querySelector('.doc-item'), b = it.querySelector('.doc-remove'), sv = b.querySelector('svg');
                 return { icon: (it.querySelector('.doc-ic svg').dataset.icon === 'document' || (!!window.ICON_LIB && it.querySelector('.doc-ic path').getAttribute('d') === window.ICON_LIB.document.d)), ic: [r(it.querySelector('.doc-ic svg')).width, r(it.querySelector('.doc-ic svg')).height],
                          btn: [r(b).width, r(b).height], svg: [r(sv).width, r(sv).height], vb: sv.getAttribute('viewBox'), color: cs(b).color, radius: cs(b).borderRadius, meta: it.querySelector('.doc-meta').textContent }; }""")
-            check('file list: a CSV shows the Document icon (20px); delete = Tiny Tertiary round button (32) with the 12px X in surface/dark (229:18167, Oct 3)',
-                  di['icon'] and di['ic'] == [20, 20] and di['btn'] == [32, 32] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(22, 21, 15)' and di['radius'] == '999px' and di['meta'].endswith('Ready'), di)
+            check('file list (229:18169): a CSV shows the Document icon (16px on desktop); delete = Tiny Tertiary round button (32) with the 12px X in surface/dark; "1KB ⋅ Ready"',
+                  di['icon'] and di['ic'] == [16, 16] and di['btn'] == [32, 32] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(22, 21, 15)' and di['radius'] == '999px' and di['meta'].endswith(' ⋅ Ready'), di)
+            ad = await pg.evaluate("() => ({ cancel: !!document.getElementById('doc-cancel'), icon: !!document.querySelector('#doc-add svg'), gap: Math.round(document.getElementById('doc-actions').getBoundingClientRect().top - document.getElementById('doc-list').getBoundingClientRect().bottom) })")
+            check('files (229:18169): only "Add files" (no icon, no Cancel), 24 under the list', not ad['cancel'] and not ad['icon'] and ad['gap'] == 24, ad)
             await pg.click('#doc-add'); await pg.wait_for_selector('#ap-review:not([hidden])', timeout=8000)
             check('CSV: review shows a row from the AI reply', await pg.locator('.rv-row').count() == 1)
             # best-guess category: a reply without "sure" is marked, the status line says so, and Submit is not blocked
             check('reader prompt asks for certainty', '"certainty"' in state()['aiCalls'][-1]['prompt'])
-            check('review: an unsure category carries a Guess (?) chip', await pg.locator('#rv-rows .rv-guess').count() == 1 and await pg.get_attribute('#rv-rows .rv-guess', 'aria-label') == 'Guess')
-            check('review: the guess note starts with the Question icon', await pg.locator('#rv-status .rv-guess svg[data-icon=question-filled]').count() == 1)
+            check('review (229:18717): an unsure category starts its dropdown with Question / Outlined', await pg.locator('#rv-rows .c-cat .ds-dd-lead[data-icon=question-outlined]').count() == 1)
+            check('review: the guess note starts with the Question icon', await pg.locator('#rv-status .rv-guess svg[data-icon=question-outlined]').count() == 1)
             check('review: status counts the guess and Submit stays enabled', (await pg.inner_text('#rv-status')).startswith('1 category is a guess') and not await pg.is_disabled('#rv-submit'), await pg.inner_text('#rv-status'))
-            g = await pg.evaluate("""() => { const c = document.querySelector('#rv-rows .rv-guess'), l = document.querySelector('#rv-rows .c-cat .ds-dd'), svg = c.querySelector('svg');
-                return { icon: svg && svg.dataset.icon, color: getComputedStyle(c).color, w: c.getBoundingClientRect().width, within: c.getBoundingClientRect().right <= c.closest('.c-cat').getBoundingClientRect().right + 0.5 && l.getBoundingClientRect().right <= c.getBoundingClientRect().left }; }""")
-            check('Guess marker is the Question (filled) icon, 20px, surface/tertiary, beside the category without overlap', g['icon'] == 'question-filled' and g['color'] == 'rgb(116, 113, 103)' and g['w'] == 20 and g['within'], g)
+            g = await pg.evaluate("""() => { const r = e => e.getBoundingClientRect(), row = document.querySelector('#rv-rows .rv-row'), lead = row.querySelector('.c-cat .ds-dd-lead'), v = row.querySelector('.rv-value');
+                return { w: r(lead).width, rm: !!row.querySelector('.rv-rm'), value: v && v.textContent, input: !!row.querySelector('.c-amt input'), widths: ['.c-desc', '.c-type', '.c-cat'].map((s) => r(row.querySelector(s)).width), date: getComputedStyle(row.querySelector('.c-date')).color }; }""")
+            check('review row (229:18717): 16px guess icon in the dropdown, controls 140 wide, the amount as a value (no input), no remove button, date text/secondary',
+                  g['w'] == 16 and not g['rm'] and not g['input'] and (g['value'] or '').strip() == '23,40' and g['widths'] == [140, 140, 140] and g['date'] == 'rgb(116, 113, 103)', g)
             # Oct 3 (229:18167): rows are always open, the Category dropdown is right there
             await pg.click('#rv-rows .rv-row .c-cat .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
             await pg.click('.ds-dd-menu .ds-dd-item:text-is("Groceries")'); await pg.wait_for_timeout(150)  # the proposed one: confirming it is enough
             await pg.click('#add-panel-title'); await pg.wait_for_timeout(150)
-            check('review: choosing a category (even the proposed one) removes the Guess chip and the note', await pg.locator('#rv-rows .rv-guess').count() == 0 and (await pg.inner_text('#rv-status')).strip() == '', [await pg.locator('#rv-rows .rv-guess').count(), await pg.inner_text('#rv-status'), await pg.inner_text('#rv-rows')])
+            check('review: choosing a category (even the proposed one) removes the Guess chip and the note', await pg.locator('#rv-rows .ds-dd-lead').count() == 0 and (await pg.inner_text('#rv-status')).strip() == '', [await pg.locator('#rv-rows .ds-dd-lead').count(), await pg.inner_text('#rv-status'), await pg.inner_text('#rv-rows')])
             # a reply that says "sure" is not marked
             await pg.click('#rv-cancel'); await open_panel(pg)
             await pg.set_input_files('#file-input', [os.path.join(FIX, 'certain.csv')]); await pg.wait_for_timeout(300)
             await pg.click('#doc-add'); await pg.wait_for_selector('#ap-review:not([hidden])', timeout=8000)
-            check('review: a "sure" category has no Guess chip', await pg.locator('#rv-rows .rv-row').count() == 1 and await pg.locator('#rv-rows .rv-guess').count() == 0)
+            check('review: a "sure" category has no Guess icon', await pg.locator('#rv-rows .rv-row').count() == 1 and await pg.locator('#rv-rows .ds-dd-lead').count() == 0)
             # "Month and year" (174:15607): starts on the month of the entry's date; an earlier month is refused, a later one is fine
             rp = await pg.evaluate("""() => { const t = document.getElementById('rv-period-trigger'), r = t.getBoundingClientRect(), l = document.querySelector('label[for="rv-period-trigger"]'); return { label: t.textContent.trim(), w: r.width, h: r.height, cap: l ? l.textContent : null }; }""")
-            check('review: Track in is a 200px Small dropdown (36, 229:18167 Files review), on the month of the entry (Sep 2026)', rp['label'] == 'September 2026' and rp['w'] == 200 and rp['h'] == 36 and (rp['cap'] or '').lower() == 'track in', rp)
+            check('review: Track in is a 200px Medium dropdown (48, 229:18717), on the month of the entry (Sep 2026)', rp['label'] == 'September 2026' and rp['w'] == 200 and rp['h'] == 48 and (rp['cap'] or '').lower() == 'track in', rp)
             await dd_pick(pg, 'rv-period', 'August', '2026')
             rs = await pg.inner_text('#rv-status')
             check('review: an entry dated after the month selected is refused (date in red, message, Submit off)',
@@ -501,7 +510,7 @@ async def main():
             check('photo: image sent to the reader', state()['aiCalls'][-1]['images'] == 1, state()['aiCalls'][-1])
             # review table: Type and Category are the same dropdown, and the row stays open while the menu is used
             # Oct 3 (229:18167): every row is open: description input, Type and Category dropdowns, amount
-            check('review: rows are open (input + two dropdowns + amount)', await pg.locator('#rv-rows .rv-row [data-f=desc]').count() == 1 and await pg.locator('#rv-rows .rv-row .ds-dd').count() == 2 and await pg.locator('#rv-rows .rv-row [data-f=amount]').count() == 1)
+            check('review (229:18717): rows are open (input + two dropdowns), the amount shown as a value', await pg.locator('#rv-rows .rv-row [data-f=desc]').count() == 1 and await pg.locator('#rv-rows .rv-row .ds-dd').count() == 2 and await pg.locator('#rv-rows .rv-row .rv-value').count() == 1)
             await pg.click('#rv-rows .rv-row .c-cat .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
             check('review: Category trigger takes focus', await pg.evaluate("document.activeElement && document.activeElement.classList.contains('ds-dd-trigger')"))
             await pg.click('.ds-dd-menu .ds-dd-item >> nth=0'); await pg.wait_for_timeout(200)

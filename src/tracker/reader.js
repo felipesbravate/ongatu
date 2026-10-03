@@ -26,12 +26,12 @@ function loadPdfJs() {
 
 export function docMeta(d) {
   const sz = fmtSize(d.size);
-  if (d.status === 'preparing') return `${sz} · Preparing`;
-  if (d.status === 'ready') return `${sz} · Ready${d.note ? ' · ' + d.note : ''}`;
-  if (d.status === 'reading') return `${sz} · Reading`;
-  if (d.status === 'done') return `${sz} · ${d.rows.length} ${d.rows.length === 1 ? 'entry' : 'entries'} found`;
-  if (d.status === 'empty') return `${sz} · No entries found`;
-  return `${sz} · ${d.note || "Couldn't read this file"}`;
+  if (d.status === 'preparing') return `${sz} ⋅ Preparing`;
+  if (d.status === 'ready') return `${sz} ⋅ Ready${d.note ? ' ⋅ ' + d.note : ''}`;
+  if (d.status === 'reading') return `${sz} ⋅ Reading`;
+  if (d.status === 'done') return `${sz} ⋅ ${d.rows.length} ${d.rows.length === 1 ? 'entry' : 'entries'} found`;
+  if (d.status === 'empty') return `${sz} ⋅ No entries found`;
+  return `${sz} ⋅ ${d.note || "Couldn't read this file"}`;
 }
 // The file's own icon (174:15198): Image for photos and screenshots, Document for PDFs and text files.
 export const docIconName = (d) => ((/^image\//.test((d.file && d.file.type) || '') || /\.(jpe?g|png|gif|webp|heic|heif|avif|bmp)$/i.test(d.name)) ? 'image' : 'document');

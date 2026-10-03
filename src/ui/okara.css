@@ -3166,3 +3166,129 @@
   @media (min-width:641px){ .ds-modal-body{ gap:var(--space-3xl); } }
   @media (max-width:640px){ .ds-modal-header .round-btn{ width:48px; height:48px; } }
   #note-tip{ padding:16px 8px 16px 16px; }
+
+  /* ================================================================
+     Oct 3, clinical pass: Add entry 229:18166 / 229:18169 / 229:18563 / 229:18717 (desktop) and 369:13388 / 415:13796 /
+     415:14088 / 415:14256 (phones); Year budget 656:9776 / 656:10116 / 415:16066. Values as rendered in those frames.
+     ================================================================ */
+  /* Upload box: "Click to upload" 14/16 link/default (desktop: Medium link, 20px icon, 2 apart, 2 above and below; phones:
+     Small link, 16px icon, 4 apart, 4 above and below), "or drag and drop your file here" 14/16 SemiBold text/primary,
+     the hint 12/14 text/secondary centred. Desktop: line and hint 2 apart; phones: touching. */
+  #add-panel .dz-line{ flex-wrap:nowrap; gap:2px; font-size:14px; line-height:16px; font-weight:600; letter-spacing:-0.28px; color:var(--text-primary); }
+  #add-panel .dz-line .ds-action-link{ padding:2px 0; gap:2px; font-size:14px; line-height:16px; font-weight:400; letter-spacing:-0.28px; color:var(--link-default); }
+  #add-panel .dz-text{ gap:2px; }
+  #add-panel .dz-hint{ font-size:12px; line-height:14px; font-weight:400; letter-spacing:-0.24px; color:var(--text-secondary); }
+  @media (max-width:640px){
+    #add-panel .dz-line{ gap:4px; }
+    #add-panel .dz-line .ds-action-link{ padding:4px 0; gap:4px; }
+    #add-panel .dz-text{ gap:0; }
+  }
+  /* Files (229:18169 / 415:13796): the box, the list 16 under it, "Add files" 24 under the list. Items: icon 16 (20 on
+     phones), 4 apart (8), the name Body/Medium/SemiBold and "5MB ⋅ Ready" Body/Small/Medium text/secondary; 12 apart (16). */
+  #add-panel .ap-block{ gap:16px; }
+  #add-panel #doc-actions{ margin-top:8px; gap:8px; }
+  #add-panel .doc-list{ gap:12px; }
+  #add-panel .doc-item{ gap:4px; }
+  #add-panel .doc-ic{ width:auto; height:auto; color:var(--surface-dark); }
+  #add-panel .doc-meta{ color:var(--text-secondary); }
+  #add-panel #doc-add{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); }
+  @media (max-width:640px){
+    #add-panel .doc-list{ gap:16px; }
+    #add-panel .doc-item{ gap:8px; }
+  }
+  /* Reading (229:18563 / 415:14088): a bordered box (border/default, radius 8, no fill), padding 16 (24); the Upload
+     illustration (35x37) 12 over "Reading 3 files" (Heading/Medium; phones Body/Medium/SemiBold) and "It may take a few
+     seconds." 4 apart (touching on phones); the 8px bar (404 wide; full width on phones) and its % 2 (4) under it; the
+     two blocks 16 apart. Phones: "Upload documents" 24 over the box. */
+  #add-panel .dz-reading{ height:auto; padding:16px; gap:16px; border:1px solid var(--border-default); border-radius:8px; background:none; }
+  #add-panel .dz-reading-info{ gap:12px; }
+  #add-panel .dz-reading-art{ color:var(--surface-dark); }
+  #add-panel .dz-reading-text{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
+  #add-panel .dz-reading-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
+  #add-panel .dz-progress-wrap{ width:404px; gap:2px; }
+  #add-panel .dz-pct{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-primary); }
+  @media (max-width:640px){
+    #add-panel #ap-upload:has(.dz-reading){ gap:24px; }
+    #add-panel .dz-reading{ padding:24px; }
+    #add-panel .dz-reading-text{ gap:0; }
+    #add-panel .dz-reading-title{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+    #add-panel .dz-progress-wrap{ width:100%; gap:4px; }
+  }
+  /* Manual form (229:18166): Category | Sub-category 16 apart (272 each), the other pairs 12 apart; "+ Add type" 12 under
+     the fields; "Save entry" on the right (phones: full width, 40 under the form). Inputs write 14px on desktop (Body/Large/
+     Medium; the amount Value/Large 14 with a 16px €), 16px on phones (20px €). Date: Label/Medium 16/24 text/primary after a
+     24px Calendar (phones: no leading icon, a 12px Calendar in place of the chevron). */
+  @media (min-width:641px){
+    #add-panel .add-grid > .fld:not(.span-2):has(#entry-kind-trigger){ margin-right:2px; }
+    #add-panel #entry-group-field{ margin-left:2px; }
+    #add-panel .add-grid > .span-2:has(#entry-add-type){ display:flex; margin-top:-4px; }
+    #add-panel .ap-manual .add-actions{ justify-content:flex-end; }
+    #add-panel .ds-input input, .budget-panel .ds-input input{ font-size:14px; letter-spacing:-0.28px; }
+    #add-panel .ds-input.is-value input{ font-size:14px; letter-spacing:0; }
+  }
+  @media (max-width:640px){
+    #add-panel .add-grid > .span-2:has(#entry-add-type){ display:flex; }
+    #add-panel .ap-manual .add-actions{ margin-top:24px; }
+    #add-panel .ds-input.is-value input{ font-size:16px; letter-spacing:0; }
+  }
+  #add-panel .date-dd-label{ font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); color:var(--text-primary); }
+  #add-panel .date-dd.is-phone .date-dd-chevron{ color:var(--action-primary); }
+
+  /* Files review, desktop (229:18717): the panel is 608 wide with 24 sides; header, Track in (Medium 200) and the rows 24
+     apart; rows 16 apart, the buttons 40 under them. Row: date (Label/Small, text/secondary, 42) | Input Tn 140 | Dropdown
+     Tiny 140 | Dropdown Tiny 140 | 16px € + Value/Large 14 text/primary on the right; 8 apart. */
+  #add-panel .ds-dd-lead{ flex-shrink:0; color:var(--surface-dark); }
+  #ap-review .is-guess .ds-dd-trigger{ border-color:var(--border-selected-item); }
+  #ap-review .rv-value{ display:flex; align-items:center; justify-content:flex-end; gap:0; font-family:var(--font-mono); font-size:var(--type-value-large-size); line-height:normal; font-weight:400; color:var(--text-primary); white-space:nowrap; }
+  #ap-review .rv-value svg{ color:var(--text-primary); }
+  #ap-review .c-date{ color:var(--text-secondary); }
+  #ap-review .add-status{ display:flex; align-items:center; gap:4px; flex:1 1 auto; min-width:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
+  #ap-review .add-status.err{ color:var(--status-fail); }
+  #ap-review .add-status .rv-guess{ display:inline-flex; width:auto; height:auto; color:var(--surface-dark); background:none; }
+  @media (min-width:641px){
+    #add-panel.is-review{ width:608px; padding:0 24px 24px; }
+    #add-panel.is-review .panel-nav{ margin:0 -24px; }
+    #add-panel.is-review .add-panel-header{ margin-bottom:24px; }
+    #ap-review{ gap:24px; }
+    #ap-review .ap-period .ds-dd{ width:200px; }
+    #ap-review .rv-rows{ gap:16px; }
+    #ap-review .rv-row{ display:flex; align-items:center; gap:8px; }
+    #ap-review .c-fields{ display:contents; }
+    #ap-review .c-date{ width:42px; flex:0 0 42px; font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+    #ap-review .c-desc, #ap-review .c-type, #ap-review .c-cat{ width:140px; flex:0 0 140px; }
+    #ap-review .c-amt{ flex:1 1 auto; width:auto; min-width:0; }
+    #ap-review .rv-value{ font-size:14px; }
+    #ap-review .rv-actions{ margin-top:16px; gap:8px; justify-content:flex-end; }
+  }
+  /* Files review, phones (415:14256): title "Add an entry"; "Track in" (Body/Large/Medium) beside a 206 Medium dropdown;
+     header, Track in, the rows and the buttons 40 apart. Row: date (pt 8) | the three controls stacked 8 apart | value
+     (pt 8, 16px € + Value/Large 16), 16 apart; rows 24 apart with a Divider. Then the guess note (20px icon, Body/Large/
+     Medium), Save entries and Cancel, full width, 16 apart. */
+  @media (max-width:640px){
+    #add-panel.is-review .add-panel-header{ margin-bottom:40px; }
+    #ap-review{ gap:40px; }
+    #ap-review .rv-rows{ gap:24px; }
+    #ap-review .rv-row{ display:flex; align-items:flex-start; gap:16px; grid-template-areas:none; }
+    #ap-review .rv-row .c-date{ width:auto; flex:none; padding-top:8px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    #ap-review .c-fields{ display:flex; flex-direction:column; gap:8px; flex:1 1 auto; min-width:0; }
+    #ap-review .c-fields > div{ width:100%; }
+    #ap-review .rv-row .c-amt{ flex:none; width:auto; padding-top:8px; }
+    #ap-review .rv-value{ font-size:16px; }
+    #ap-review .rv-actions{ flex-direction:column; align-items:stretch; gap:16px; margin-top:0; }
+    #ap-review .rv-actions #rv-submit{ order:2; width:100%; }
+    #ap-review .rv-actions #rv-cancel{ order:3; width:100%; }
+    #ap-review .add-status{ order:1; align-items:flex-start; gap:8px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  }
+  #ap-review .add-status:empty{ display:none; }
+
+  /* Year budget menus (415:16066): "Change group name" text/primary, "Delete group" action/destructive. */
+  .group-menu .ds-dd-item{ color:var(--text-primary); }
+  .group-menu .group-delete{ color:var(--action-destructive); }
+  #entry-status:empty{ display:none; }
+  #add-panel .dz-line > *{ flex-shrink:0; white-space:nowrap; }
+  @media (min-width:641px){ #add-panel #ap-review .rv-actions{ margin-top:16px; } }
+  @media (max-width:640px){ #add-panel #ap-review .rv-actions{ margin-top:0; } }
+  #ap-review .rv-value span{ letter-spacing:0; }
+  @media (max-width:640px){ #ap-review .ap-period > label{ color:var(--text-secondary); } }
+  #add-panel .dz-reading-title{ min-height:16px; display:flex; align-items:center; justify-content:center; }
+  #doc-status:empty{ display:none; }

@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
-import { ActionLink, Button, Divider, Dropdown, Field, Input, PanelHeader, ProgressBar, RoundButton } from '../ui/index.js';
+import { ActionLink, Button, Divider, Dropdown, Field, Illustration, Input, PanelHeader, ProgressBar, RoundButton, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { calendar, chevronDown, documentIcon, euro, image, plus, questionFilled, upload, x } from '../ui/icons.js';
+import { calendar, chevronDown, documentIcon, euro, image, plus, questionOutlined, upload, x } from '../ui/icons.js';
 import { KINDS, TypeModal } from './TaxonomyModals.jsx';
 import { sample } from './api.js';
 import { DocReader, docIconName, docMeta } from './reader.js';
@@ -28,6 +28,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const dateRef = useRef(null);
   const [dateVal, setDateVal] = useState(todayISO());
   const panelRef = useRef(null);
+  const mobile = useMobile();
 
   // The date input is uncontrolled: code (and tests) may set .value and fire 'change', as on the legacy page.
   useEffect(() => {
@@ -153,10 +154,10 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   return (
     <>
       <div className={'add-panel-backdrop' + (open ? ' open' : '')} id="add-panel-backdrop" onClick={onClose} />
-      <div ref={panelRef} className={'add-panel' + (open ? ' open' : '')} id="add-panel" role="dialog" aria-modal="true" aria-labelledby="add-panel-title">
+      <div ref={panelRef} className={'add-panel' + (open ? ' open' : '') + (review ? ' is-review' : '')} id="add-panel" role="dialog" aria-modal="true" aria-labelledby="add-panel-title">
         <PanelHeader closeId="entry-close-btn" titleId="add-panel-title" onClose={onClose} faded={showReading}
-            title={review ? 'Review imported entries' : 'Add an entry'}
-          hint={review ? "Edit details, adjust categories, or remove entries you don't want to track." : 'Upload receipts or statements or enter the information by hand.'} />
+            title={review && !mobile ? 'Review imported entries' : 'Add an entry'}
+          hint={review ? (mobile ? "Check your entries. Change anything that's wrong, or remove what doesn't belong." : "Edit details, adjust categories, or remove entries you don't want to track.") : 'Upload receipts or statements or enter the information by hand.'} />
 
         <div className="ap-main" id="ap-main" hidden={!!review}>
           <section className="ap-section" id="ap-upload">
@@ -165,8 +166,11 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               {showReading && (
                 <div className="dz-reading" id="dz-reading" role="status">
                   <div className="dz-reading-info">
-                    <div className="dz-reading-title">{`Reading ${readingDocs.length} ${readingDocs.length === 1 ? 'file' : 'files'}`}</div>
-                    <div className="dz-hint">It may take a few seconds.</div>
+                    <Illustration art={illustrations.upload} width={35} className="dz-reading-art" />
+                    <div className="dz-reading-text">
+                      <div className="dz-reading-title">{`Reading ${readingDocs.length} ${readingDocs.length === 1 ? 'file' : 'files'}`}</div>
+                      <div className="dz-hint">It may take a few seconds.</div>
+                    </div>
                   </div>
                   <div className="dz-progress-wrap">
                     <ProgressBar value={Math.max(0.04, readProgress)} className="dz-progress" />
@@ -181,7 +185,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
                 onDrop={(e) => { e.preventDefault(); setOver(false); setDocStatus(null); reader.add(e.dataTransfer && e.dataTransfer.files); }}>
                 <div className="dz-text">
-                  <div className="dz-line"><span className="ds-action-link medium"><Icon icon={upload} size={20} />Click to upload</span><span>or drag and drop your file here</span></div>
+                  <div className="dz-line"><span className={'ds-action-link ' + (mobile ? 'small' : 'medium')}><Icon icon={upload} size={mobile ? 16 : 20} />Click to upload</span><span>or drag and drop your file here</span></div>
                   <div className="dz-hint" id="dz-hint">{reader.ready && reader.imgCaps() ? 'JPG, PNG, PDF or CSV. Add as many as you like.' : 'PDF or CSV. Add as many as you like.'}</div>
                 </div>
               </div>
@@ -195,7 +199,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                   const bad = d.status === 'error' || d.status === 'empty';
                   return (
                     <div className="doc-item" key={d.id}>
-                      <span className="doc-ic"><Icon icon={docIconName(d) === 'image' ? image : documentIcon} size={20} /></span>
+                      <span className="doc-ic"><Icon icon={docIconName(d) === 'image' ? image : documentIcon} size={mobile ? 20 : 16} /></span>
                       <div className="doc-info"><div className="doc-name" title={d.name}>{d.name}</div><div className={'doc-meta' + (bad ? ' err' : '')}>{docMeta(d)}</div></div>
                       {d.status === 'preparing' ? <span className="doc-pct">{d.pct}%</span>
                         : d.status === 'reading' ? null
@@ -205,8 +209,8 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 })}
               </div>
               <div className="add-actions" id="doc-actions" hidden={reader.docs.length === 0 || showReading}>
-                <Button id="doc-add" size="small" icon={plus} disabled={reader.analyzing || anyPrep || !anyReady} onClick={analyze}>Add files</Button>
-                <Button variant="tertiary" size="small" id="doc-cancel" onClick={() => { if (!reader.cancel()) setDocStatus(null); }}>Cancel</Button>
+                {/* 229:18169 / 415:13796: only "Add files" (Small Primary, no icon); full width on phones. */}
+                <Button id="doc-add" size="small" disabled={reader.analyzing || anyPrep || !anyReady} onClick={analyze}>Add files</Button>
                 <span className={'add-status' + (docStatus && docStatus.err ? ' err' : '')} id="doc-status" role="status">{docStatus ? docStatus.text : ''}</span>
               </div>
             </div>
@@ -237,26 +241,27 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               </div>
               <div className="fld" id="entry-category-field" hidden={!isExp}>
                 <label className="fld-label" htmlFor="entry-cat-trigger">Group (Optional)</label>
-                <Dropdown id="entry-cat" size="md" placeholder="Select a group" value={catVal || itemCat} options={isExp ? simpleOpts(groupNames) : []} onChange={(v) => { setCat(v); if (!(gc[v] || []).includes(itemVal)) setItem(''); }} />
+                <Dropdown id="entry-cat" size="md" placeholder="Select" value={catVal || itemCat} options={isExp ? simpleOpts(groupNames) : []} onChange={(v) => { setCat(v); if (!(gc[v] || []).includes(itemVal)) setItem(''); }} />
               </div>
               <div className={'fld' + (isExp ? '' : ' span-2')} id="entry-item-field">
                 <label className="fld-label" htmlFor="entry-item-trigger">Type</label>
-                <Dropdown id="entry-item" size="md" placeholder="Select a type" value={itemVal} options={simpleOpts(pool)} onChange={(v) => setItem(v)} />
+                <Dropdown id="entry-item" size="md" placeholder="Select" value={itemVal} options={simpleOpts(pool)} onChange={(v) => setItem(v)} />
               </div>
               <div className="fld">
                 <label className="fld-label" htmlFor="entry-amount">Amount</label>
-                <Input id="entry-amount" icon={euro} iconSize="md" size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
+                <Input id="entry-amount" icon={euro} iconSize={mobile ? 'lg' : 'md'} size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
                   onBlur={(e) => { if (e.target.value.trim()) setAmount(fmtNum(parseAmount(e.target.value))); }} />
               </div>
               <div className="fld">
                 <label className="fld-label" htmlFor="entry-date">Date</label>
-                {/* 229:18166: a Medium Dropdown with a Calendar icon before dd/mm/yyyy; the native picker opens on click. */}
-                <div className="date-dd">
-                  <Icon icon={calendar} size="lg" className="date-dd-cal" />
+                {/* 229:18166: a Medium Dropdown with a 24px Calendar before dd/mm/yyyy and the chevron; phones (369:13388): no
+                    leading icon, a 12px Calendar where the chevron is. The native picker opens on click. */}
+                <div className={'date-dd' + (mobile ? ' is-phone' : '')}>
+                  {!mobile && <Icon icon={calendar} size="xl" className="date-dd-cal" />}
                   <input ref={dateRef} id="entry-date" type="date" defaultValue={todayISO()} min={bounds.min} max={bounds.max}
                     onClick={(e) => { try { e.currentTarget.showPicker(); } catch { /* older browsers open it themselves */ } }} />
                   <span className="date-dd-label" aria-hidden="true">{fmtDateEU(dateVal) || 'dd/mm/yyyy'}</span>
-                  <Icon icon={chevronDown} size={12} className="date-dd-chevron" />
+                  <Icon icon={mobile ? calendar : chevronDown} size={12} className="date-dd-chevron" />
                 </div>
               </div>
               <div className="span-2">
@@ -276,7 +281,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
           </section>
         </div>
 
-        <Review review={review} setReview={setReview} model={model} reader={reader} onCancel={closeReview} save={save} onDone={closeReview} />
+        <Review mobile={mobile} review={review} setReview={setReview} model={model} reader={reader} onCancel={closeReview} save={save} onDone={closeReview} />
       </div>
     </>
   );
@@ -310,7 +315,7 @@ function fitRows(rv, model) {
 }
 const shortDate = (iso) => { const d = new Date(iso + 'T00:00:00'); return isNaN(d) ? iso : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
 
-function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
+function Review({ review, setReview, model, reader, onCancel, save, onDone, mobile }) {
   const rowsRef = useRef(null);
   const focusReq = useRef(null);
   const [submitting, setSubmitting] = useState(false);
@@ -391,7 +396,7 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
   return (
     <div className="ap-section" id="ap-review">
       <Field className="ap-period" id="rv-period-field" label="Track in" htmlFor="rv-period-trigger" hidden={rows.length === 0}>
-        <Dropdown id="rv-period" size="sm" emptyOption={false} value={period} options={model.periodOptions()}
+        <Dropdown id="rv-period" size="md" emptyOption={false} value={period} options={model.periodOptions()}
           onChange={(v) => setReview((rv) => fitRows({ ...rv, period: v, editing: null, snap: null, status: null }, model))} />
       </Field>
       {rows.length === 0
@@ -411,45 +416,27 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
           }}
           onBlur={onFocusOut}>
           {/* 229:18167 / 415:14256 (Oct 3): every row is open: description input, Type and Category dropdowns, amount. */}
-          {rows.map((r, i) => <ReviewRow key={r.id} r={r} iss={issues[i]} editing period={period} yl={yl} model={model} patchRow={patchRow} />)}
+          {rows.map((r, i) => <ReviewRow key={r.id} r={r} iss={issues[i]} editing mobile={mobile} period={period} yl={yl} model={model} patchRow={patchRow} />)}
         </div>
       </div>
-      <div className="add-actions">
-        <Button id="rv-submit" disabled={!rows.length || bad > 0 || submitting} onClick={submit}>{submitting ? 'Saving…' : 'Save entries'}</Button>
+      {/* 229:18717: the guess note (16px Question / Outlined + Body/Medium/Medium) on the left, then Cancel and Save entries,
+          8 apart. 415:14256: the note (20px icon, Body/Large/Medium), then Save entries over Cancel, full width, 16 apart. */}
+      <div className="add-actions rv-actions">
+        <span className={'add-status' + (st && st.err ? ' err' : '') + (st && st.guess ? ' has-guess' : '')} id="rv-status" role="status">{st && st.guess ? <span className="rv-guess" aria-hidden="true"><Icon icon={questionOutlined} size={mobile ? 20 : 16} /></span> : null}{st ? st.text : ''}</span>
         <Button variant="tertiary" id="rv-cancel" onClick={onCancel}>Cancel</Button>
-        <span className={'add-status' + (st && st.err ? ' err' : '') + (st && st.guess ? ' has-guess' : '')} id="rv-status" role="status">{st && st.guess ? <span className="rv-guess" aria-hidden="true"><Icon icon={questionFilled} size={20} /></span> : null}{st ? st.text : ''}</span>
+        <Button id="rv-submit" disabled={!rows.length || bad > 0 || submitting} onClick={submit}>{submitting ? 'Saving…' : 'Save entries'}</Button>
       </div>
     </div>
   );
 }
 
-function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
+function ReviewRow({ r, iss, editing, mobile, period, yl, model, patchRow }) {
   const has = (k) => iss.includes(k);
   const typeKey = typeKeyOf(r.type, r.group);
   const typeLabel = (TYPE_OPTS.find((t) => t.key === typeKey) || TYPE_OPTS.find((t) => t.key === 'expense:Variable')).label;
   const catLabel = rowCatLabel(r);
   const dateTitle = has('date') ? `The date of this entry doesn't match the month and year selected (${periodLabel(period)}).` : r.date;
-  const rm = <div className="c-rm"><RoundButton icon={x} size="micro" iconSize={12} className="rv-rm" data-rm={r.id} label={'Remove ' + (r.description || 'entry')} /></div>;
   const date = <span className={'c-date rv-date' + (has('date') ? ' bad' : '')} title={dateTitle}>{shortDate(r.date)}</span>;
-  if (!editing) {
-    const link = (field, text, ph, bad) => <button type="button" className={'ds-action-link rv-link' + (bad ? ' bad' : '')} data-edit={r.id} data-focus={field} title={text || ph}>{text || ph}</button>;
-    return (
-      <div className="rv-row" data-id={r.id}>{date}
-        <div className="c-desc" title={'From ' + r.fileName}>{link('desc', r.description, 'Add description', has('desc'))}</div>
-        <div className="c-type">{link('type', typeLabel, '', false)}</div>
-        <div className={'c-cat' + (r.guess && catLabel ? ' has-guess' : '')}>
-          {link('cat', catLabel, 'Select', has('cat'))}
-          {r.guess && catLabel ? <span className="rv-guess" role="img" aria-label="Guess" title="Guess: the reader was not sure about this category. Check it, or pick another."><Icon icon={questionFilled} size={20} /></span> : null}
-        </div>
-        <div className="c-amt">
-          <button type="button" className={'rv-amt' + (has('amount') || has('flag') ? ' bad' : '')} data-edit={r.id} data-focus="amount" title={r.flag || ''}>
-            <Icon icon={euro} size={12} /><span>{fmtNum(r.amount)}</span>
-          </button>
-        </div>
-        {rm}
-      </div>
-    );
-  }
   // Type: Income and Savings/Investment first, then the expense sub-types in an "Expenses" group.
   const list = model.typeOptsForYear(yl, typeKey);
   const typeOptions = [...list.filter((t) => t.type !== 'expense').map((t) => ({ value: t.key, label: t.label, selectedLabel: t.label }))];
@@ -463,28 +450,36 @@ function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
     cats.forEach((o) => { if (!by.has(o.category)) by.set(o.category, []); by.get(o.category).push(o); });
     catOptions = [...by].map(([c, os]) => ({ group: c, options: os.map((o) => ({ value: o.label, label: o.item, selectedLabel: o.label })) }));
   } else catOptions = cats.map((o) => ({ value: o.label, label: o.item, selectedLabel: o.label }));
+  // 229:18717 (desktop): Sep 19 (Label/Small, text/secondary) | Input Tn 140 | Dropdown Tiny 140 | Dropdown Tiny 140 | the amount
+  // as a value (16px € + Value/Large), 8 apart; no remove. 415:14256 (phones): date | Input + two Dropdowns, Medium, stacked
+  // 8 apart | value, 16 apart. A guessed category shows Question / Outlined at the start of its dropdown (phones: both).
+  // An amount the reader could not read stays an input, so it can be fixed.
+  const guess = !!(r.guess && catLabel);
+  const amountOk = r.amount > 0 && !has('amount') && !has('flag');
   return (
     <div className="rv-row is-editing" data-id={r.id}>{date}
-      <div className={'c-desc' + (has('desc') ? ' bad' : '')} title={'From ' + r.fileName}><Input size="tiny" data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
-        onChange={(e) => patchRow(r.id, { description: e.target.value })} /></div>
-      <div className="c-type rv-select">
-        <Dropdown size="tiny" ariaLabel="Type" emptyOption={false} value={typeKey} options={typeOptions} selectProps={{ 'data-f': 'type' }}
-          onChange={(v) => {
-            const t = TYPE_OPTS.find((o) => o.key === v); if (!t) return;
-            const keep = model.catOptions(t.type, t.group, yl).find((o) => o.label === catLabel);
-            patchRow(r.id, { type: t.type, group: t.group, category: keep ? keep.category : null, item: keep ? keep.item : null });
-          }} />
+      <div className="c-fields">
+        <div className={'c-desc' + (has('desc') ? ' bad' : '')} title={'From ' + r.fileName}><Input size={mobile ? 'medium' : 'tiny'} data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
+          onChange={(e) => patchRow(r.id, { description: e.target.value })} /></div>
+        <div className="c-type rv-select">
+          <Dropdown size={mobile ? 'md' : 'tiny'} ariaLabel="Type" emptyOption={false} value={typeKey} options={typeOptions} selectProps={{ 'data-f': 'type' }} icon={guess && mobile ? questionOutlined : undefined}
+            onChange={(v) => {
+              const t = TYPE_OPTS.find((o) => o.key === v); if (!t) return;
+              const keep = model.catOptions(t.type, t.group, yl).find((o) => o.label === catLabel);
+              patchRow(r.id, { type: t.type, group: t.group, category: keep ? keep.category : null, item: keep ? keep.item : null });
+            }} />
+        </div>
+        <div className={'c-cat rv-select' + (has('cat') ? ' bad' : '') + (guess ? ' is-guess' : '')} title={guess ? 'Guess: the reader was not sure about this category. Check it, or pick another.' : undefined}>
+          <Dropdown size={mobile ? 'md' : 'tiny'} ariaLabel="Category" value={catLabel} options={catOptions} selectProps={{ 'data-f': 'cat' }} icon={guess ? questionOutlined : undefined}
+            onChange={(v) => { const o = cats.find((x) => x.label === v); patchRow(r.id, { category: o ? o.category : null, item: o ? o.item : null, guess: false }); }}
+            onChoose={() => patchRow(r.id, { guess: false })} />
+        </div>
       </div>
-      <div className={'c-cat rv-select' + (has('cat') ? ' bad' : '') + (r.guess && catLabel ? ' is-guess' : '')}>
-        <Dropdown size="tiny" ariaLabel="Category" value={catLabel} options={catOptions} selectProps={{ 'data-f': 'cat' }}
-          onChange={(v) => { const o = cats.find((x) => x.label === v); patchRow(r.id, { category: o ? o.category : null, item: o ? o.item : null, guess: false }); }}
-          onChoose={() => patchRow(r.id, { guess: false })} />
-        {r.guess && catLabel ? <span className="rv-guess" role="img" aria-label="Guess" title="Guess: the reader was not sure about this category. Check it, or pick another."><Icon icon={questionFilled} size={20} /></span> : null}
-      </div>
-      <div className={'c-amt' + (has('amount') || has('flag') ? ' bad' : '')} title={r.flag || ''}><label className="bd-input"><Icon icon={euro} size={12} />
-        <input data-f="amount" inputMode="decimal" aria-label="Amount" defaultValue={r.amount > 0 ? fmtNum(r.amount) : ''} placeholder="0,00" autoComplete="off"
-          onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /></label></div>
-      {rm}
+      {amountOk
+        ? <div className="c-amt rv-value"><Icon icon={euro} size={16} /><span>{fmtNum(r.amount)}</span></div>
+        : <div className="c-amt bad" title={r.flag || ''}><label className="bd-input"><Icon icon={euro} size={12} />
+            <input data-f="amount" inputMode="decimal" aria-label="Amount" defaultValue={r.amount > 0 ? fmtNum(r.amount) : ''} placeholder="0,00" autoComplete="off"
+              onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /></label></div>}
     </div>
   );
 }

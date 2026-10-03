@@ -27,7 +27,7 @@ CALM = "*,*::before,*::after{transition:none!important;animation:none!important;
 
 def font_css():
     faces = []
-    for fam, slug in (('Plus Jakarta Sans', 'plus-jakarta-sans'), ('JetBrains Mono', 'jetbrains-mono')):
+    for fam, slug in (('DM Sans', 'dm-sans'), ('Martian Mono', 'martian-mono'), ('Plus Jakarta Sans', 'plus-jakarta-sans'), ('JetBrains Mono', 'jetbrains-mono')):
         for w in (300, 400, 500, 600):
             for sub in ('latin-ext', 'latin'):
                 f = f'{slug}-{sub}-{w}-normal.woff2'
