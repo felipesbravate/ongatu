@@ -2706,3 +2706,23 @@
   .balance-card .value .money{ gap:var(--space-xs); justify-content:flex-start; }
   .balance-euro{ display:block; flex-shrink:0; color:var(--text-primary); }
   .seg-tabs[hidden], .seg-tabs.sub[hidden]{ display:none; }
+
+  /* Oct 3 (third pass, Okara 41:119 / 52:629 / 607:1368 re-read). */
+  /* Button: Tertiary Small, Tiny and Micro fill action/secondary-hover on hover and action/secondary-press on press
+     (Medium Tertiary stays bare). Micro pad tn xs, items 2 apart. Disabled Primary: Medium keeps action/primary-press,
+     Small / Tiny / Micro keep action/primary. */
+  .btn-pill.small.tertiary:hover, .btn-pill.tiny.tertiary:hover, .btn-pill.micro.tertiary:hover{ background:var(--action-secondary-hover); }
+  .btn-pill.small.tertiary:active, .btn-pill.tiny.tertiary:active, .btn-pill.micro.tertiary:active{ background:var(--action-secondary-press); }
+  .btn-pill.small.tertiary:disabled, .btn-pill.tiny.tertiary:disabled, .btn-pill.micro.tertiary:disabled{ background:transparent; }
+  .btn-pill.micro{ gap:2px; padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px); }
+  .btn-pill.small:disabled, .btn-pill.tiny:disabled, .btn-pill.micro:disabled,
+  .btn-pill.small:disabled:hover, .btn-pill.tiny:disabled:hover, .btn-pill.micro:disabled:hover{ background:var(--action-primary); }
+  .btn-pill.ghost:disabled, .btn-pill.ghost:disabled:hover{ background:transparent; }
+  .btn-pill.tertiary:disabled, .btn-pill.tertiary:disabled:hover{ background:transparent; }
+  .btn-pill.destructive:disabled, .btn-pill.destructive:disabled:hover{ background:var(--action-destructive); }
+  /* Round button: Medium and Small draw their icon in action/primary; Tiny, Micro and Nano in surface/dark. */
+  /* :where keeps this at one class, so screen rules that recolour an icon (toast close, delete buttons) still win. */
+  .round-btn:where(.tiny, .micro, .nano){ color:var(--surface-dark); }
+  .round-btn.primary{ color:var(--surface-primary); }
+  /* Action link: the hover / press bar sits right under a Medium link and space/tn under Small and Tiny. */
+  .ds-action-link.medium::after{ bottom:-2px; }
