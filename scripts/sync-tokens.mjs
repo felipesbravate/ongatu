@@ -22,9 +22,11 @@ export const surfaceValue = (v) => v + 'px';
 // Text styles (Figma local text styles) become four custom properties each:
 // Body/Small/Medium -> --type-body-small-medium-size / -weight / -lh / -ls. Size and line height point at the Surface
 // variables the style is bound to, so they follow the mode; letter spacing is a % in Figma, em here.
+// Felipe (Oct 3): Figma's "Medium" (500) renders as 400 in code, for every text style.
+export const codeWeight = (w) => (Number(w) === 500 ? 400 : Number(w));
 export const textStyleVars = (name, t) => {
   const k = '--type-' + kebab(name);
-  return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(t.weight)],
+  return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(codeWeight(t.weight))],
     [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : 'normal'], [k + '-ls', t.letterSpacing ? t.letterSpacing / 100 + 'em' : '0']];
 };
 export const fontStack = (name, family) => `"${family}", ${FONT_FALLBACK[name] || 'sans-serif'}`;

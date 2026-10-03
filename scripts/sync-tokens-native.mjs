@@ -31,7 +31,9 @@ export function build(t) {
   const text = {};
   for (const [k, s] of Object.entries(t.TextStyles || {})) {
     const fam = FONT[s.family] || FONT.sans;
-    const style = { fontFamily: fam[s.weight] || fam[500], fontSize: s.size };
+    // Felipe (Oct 3): Figma's "Medium" (500) is drawn in the Regular (400) cut, as on the web.
+    const w = Number(s.weight) === 500 ? 400 : s.weight;
+    const style = { fontFamily: fam[w] || fam[400], fontSize: s.size };
     if (s.lineHeight != null) style.lineHeight = s.lineHeight;
     if (s.letterSpacing) style.letterSpacing = Math.round(s.size * s.letterSpacing) / 100; // Figma % of font size -> points
     text[camel(k.replace(/\//g, '-'))] = style;

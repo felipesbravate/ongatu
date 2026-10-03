@@ -186,39 +186,39 @@
     --type-display-title-mobile-lh: var(--lh-display-title);
     --type-display-title-mobile-ls: 0;
     --type-value-xl-size: var(--size-value-xl);
-    --type-value-xl-weight: 500;
+    --type-value-xl-weight: 400;
     --type-value-xl-lh: normal;
     --type-value-xl-ls: 0;
     --type-value-large-size: var(--size-value-lg);
-    --type-value-large-weight: 500;
+    --type-value-large-weight: 400;
     --type-value-large-lh: normal;
     --type-value-large-ls: 0;
     --type-value-medium-size: var(--size-value-md);
-    --type-value-medium-weight: 500;
+    --type-value-medium-weight: 400;
     --type-value-medium-lh: normal;
     --type-value-medium-ls: -0.04em;
     --type-value-small-size: var(--size-value-sm);
-    --type-value-small-weight: 500;
+    --type-value-small-weight: 400;
     --type-value-small-lh: normal;
     --type-value-small-ls: -0.04em;
     --type-heading-xl-size: var(--size-heading-xl);
-    --type-heading-xl-weight: 500;
+    --type-heading-xl-weight: 400;
     --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
     --type-heading-large-size: var(--size-heading-lg);
-    --type-heading-large-weight: 500;
+    --type-heading-large-weight: 400;
     --type-heading-large-lh: var(--lh-heading-lg);
     --type-heading-large-ls: -0.02em;
     --type-heading-medium-size: var(--size-heading-md);
-    --type-heading-medium-weight: 500;
+    --type-heading-medium-weight: 400;
     --type-heading-medium-lh: var(--lh-heading-md);
     --type-heading-medium-ls: -0.02em;
     --type-heading-small-size: var(--size-heading-sm);
-    --type-heading-small-weight: 500;
+    --type-heading-small-weight: 400;
     --type-heading-small-lh: var(--lh-heading-sm);
     --type-heading-small-ls: -0.02em;
     --type-body-large-medium-size: var(--size-body-lg);
-    --type-body-large-medium-weight: 500;
+    --type-body-large-medium-weight: 400;
     --type-body-large-medium-lh: var(--lh-body-lg-medium);
     --type-body-large-medium-ls: -0.02em;
     --type-body-large-semibold-size: var(--size-body-lg);
@@ -230,7 +230,7 @@
     --type-body-medium-regular-lh: var(--lh-body-md);
     --type-body-medium-regular-ls: -0.02em;
     --type-body-medium-medium-size: var(--size-body-md);
-    --type-body-medium-medium-weight: 500;
+    --type-body-medium-medium-weight: 400;
     --type-body-medium-medium-lh: var(--lh-body-md);
     --type-body-medium-medium-ls: -0.02em;
     --type-body-medium-semibold-size: var(--size-body-md);
@@ -242,7 +242,7 @@
     --type-body-small-regular-lh: var(--lh-body-sm);
     --type-body-small-regular-ls: -0.02em;
     --type-body-small-medium-size: var(--size-body-sm);
-    --type-body-small-medium-weight: 500;
+    --type-body-small-medium-weight: 400;
     --type-body-small-medium-lh: var(--lh-body-sm);
     --type-body-small-medium-ls: -0.02em;
     --type-body-small-semibold-size: var(--size-body-sm);
@@ -250,31 +250,31 @@
     --type-body-small-semibold-lh: var(--lh-body-sm);
     --type-body-small-semibold-ls: -0.02em;
     --type-badge-semibolt-size: var(--size-badge);
-    --type-badge-semibolt-weight: 500;
+    --type-badge-semibolt-weight: 400;
     --type-badge-semibolt-lh: var(--lh-badge);
     --type-badge-semibolt-ls: -0.02em;
     --type-label-large-size: 18px;
-    --type-label-large-weight: 500;
+    --type-label-large-weight: 400;
     --type-label-large-lh: var(--lh-body-lg-semibold);
     --type-label-large-ls: -0.02em;
     --type-label-medium-size: var(--size-body-lg);
-    --type-label-medium-weight: 500;
+    --type-label-medium-weight: 400;
     --type-label-medium-lh: var(--lh-heading-lg);
     --type-label-medium-ls: -0.02em;
     --type-label-small-size: var(--size-body-lg);
-    --type-label-small-weight: 500;
+    --type-label-small-weight: 400;
     --type-label-small-lh: var(--lh-body-lg-medium);
     --type-label-small-ls: -0.02em;
     --type-label-tiny-size: var(--size-body-md);
-    --type-label-tiny-weight: 500;
+    --type-label-tiny-weight: 400;
     --type-label-tiny-lh: var(--lh-body-md);
     --type-label-tiny-ls: -0.02em;
     --type-label-micro-size: var(--size-body-sm);
-    --type-label-micro-weight: 500;
+    --type-label-micro-weight: 400;
     --type-label-micro-lh: var(--lh-body-md);
     --type-label-micro-ls: -0.02em;
     --type-label-nano-size: 10px;
-    --type-label-nano-weight: 500;
+    --type-label-nano-weight: 400;
     --type-label-nano-lh: var(--lh-body-sm);
     --type-label-nano-ls: -0.02em;
     /* @tokens:end */
@@ -506,7 +506,7 @@
     font-family:var(--font-sans); font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); padding:0 var(--layout-xl);
   }
   .wrap{ max-width:1238px; margin:0 auto; padding-block:var(--layout-xl) 72px; }
-  h1,h2,h3{ font-family:inherit; margin:0; font-weight:500; }
+  h1,h2,h3{ font-family:inherit; margin:0; font-weight:400; }
 
   /* ---- Header ---- */
   /* Header (Cost-tracker 211:18753 / 238:7184): "Hey, {first name}" (Display/Title, 32 SemiBold) and the line under it
@@ -689,7 +689,7 @@
   .year-del-btn svg{ display:block; }
   .year-confirm{
     display:flex; align-items:center; gap:6px; height:32px; padding:0 6px; white-space:nowrap;
-    font-size:11px; font-weight:500; color:var(--ink);
+    font-size:11px; font-weight:400; color:var(--ink);
   }
   /* Yes/Cancel are now real Button, Size=Tiny instances (.btn-pill.tiny /
      .btn-pill.tiny.ghost, already matching Figma exactly elsewhere in this
@@ -924,7 +924,7 @@
   .hero-chart .hc-value{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .hc-delta{ margin-left:8px; }
   .legend{ display:flex; gap:var(--layout-md); flex-wrap:wrap; margin-top:var(--layout-md); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--legend-text); }
-  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:500; }
+  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:400; }
   .swatch{ width:9px; height:9px; border-radius:var(--radius-ty); display:inline-block; }
 
   /* Icons carry their DS size (10 / 12 / 20) as width/height attributes (Icon.jsx); CSS never resizes them. */
@@ -977,7 +977,7 @@
   .alloc-name{ font-size:var(--type-label-micro-size); font-weight:600; line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); color:var(--label-muted); text-transform:uppercase; }
 
   .insight-text{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-2); margin-top:var(--layout-xs); }
-  .insight-text b{ color:var(--ink); font-weight:500; }
+  .insight-text b{ color:var(--ink); font-weight:400; }
   .insight-tags{ display:flex; gap:var(--layout-xs); flex-wrap:wrap; margin-top:var(--layout-xs); padding-top:var(--layout-xs); }
   /* Tags are the DS "Label" component (211:859): 20px high, 8px side padding, 4px radius, 12px SemiBold, line height auto,
      tracking 0. Types: Neutral (surface/secondary + text/secondary), Positive, Negative, Warning (surface/x + status/x). */
@@ -2613,7 +2613,7 @@
      action/secondary text. */
   .seg-tabs, .seg-tabs.sub{ display:flex; flex-wrap:nowrap; width:fit-content; height:auto; box-sizing:border-box; gap:var(--space-xs); padding:var(--space-tn); border-radius:var(--radius-sm); background:var(--surface-secondary); }
   .seg-tabs button, .seg-tabs.sub button{ height:auto; min-height:0; min-width:0; box-sizing:border-box; border:none; border-radius:var(--radius-sm); background:transparent; color:var(--text-secondary);
-    font-size:var(--size-body-md); font-weight:500; line-height:20px; letter-spacing:-0.02em; white-space:nowrap; }
+    font-size:var(--size-body-md); font-weight:400; line-height:20px; letter-spacing:-0.02em; white-space:nowrap; }
   .seg-tabs button{ padding:8px var(--space-xs); }
   .seg-tabs.sub button{ padding:var(--space-tn) var(--space-xs); }
   .seg-tabs button:hover{ background:var(--action-secondary-hover); color:var(--text-primary); }

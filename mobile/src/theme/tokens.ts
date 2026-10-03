@@ -152,48 +152,48 @@ export const text = {
     "lineHeight": 48
   },
   "ValueXL": {
-    "fontFamily": "MartianMono_500Medium",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 32
   },
   "ValueLarge": {
-    "fontFamily": "MartianMono_500Medium",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 16
   },
   "ValueMedium": {
-    "fontFamily": "MartianMono_500Medium",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 14,
     "letterSpacing": -0.56
   },
   "ValueSmall": {
-    "fontFamily": "MartianMono_500Medium",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 12,
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 24,
     "lineHeight": 24
   },
   "HeadingLarge": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 20,
     "lineHeight": 24,
     "letterSpacing": -0.4
   },
   "HeadingMedium": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 16,
     "lineHeight": 16,
     "letterSpacing": -0.32
   },
   "HeadingSmall": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 14,
     "lineHeight": 14,
     "letterSpacing": -0.28
   },
   "BodyLargeMedium": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 16,
     "lineHeight": 20,
     "letterSpacing": -0.32
@@ -211,7 +211,7 @@ export const text = {
     "letterSpacing": -0.28
   },
   "BodyMediumMedium": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 14,
     "lineHeight": 16,
     "letterSpacing": -0.28
@@ -229,7 +229,7 @@ export const text = {
     "letterSpacing": -0.24
   },
   "BodySmallMedium": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 12,
     "lineHeight": 14,
     "letterSpacing": -0.24
@@ -241,43 +241,43 @@ export const text = {
     "letterSpacing": -0.24
   },
   "BadgeSemiBolt": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 8,
     "lineHeight": 8,
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 18,
     "lineHeight": 20,
     "letterSpacing": -0.36
   },
   "LabelMedium": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 16,
     "lineHeight": 24,
     "letterSpacing": -0.32
   },
   "LabelSmall": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 16,
     "lineHeight": 20,
     "letterSpacing": -0.32
   },
   "LabelTiny": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 14,
     "lineHeight": 16,
     "letterSpacing": -0.28
   },
   "LabelMicro": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 12,
     "lineHeight": 16,
     "letterSpacing": -0.24
   },
   "LabelNano": {
-    "fontFamily": "DMSans_500Medium",
+    "fontFamily": "DMSans_400Regular",
     "fontSize": 10,
     "lineHeight": 14,
     "letterSpacing": -0.2
