@@ -2854,3 +2854,6 @@
   /* Expense allocation 211:18753: title, hint xs under it, the 120 bars frame xs under the header. */
   .alloc-card h2, .alloc-card .hint, .glance-card h2{ margin:0; }
   .alloc-card .alloc-bars{ margin-top:0; }
+  /* Tab 53:801 in the screens (211:18753, 342:7993): the year label is overridden to Label/Small (16/20), not the
+     component's Label/Large (18/20). Felipe, Oct 3: follow the screens. */
+  .year-btn{ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
