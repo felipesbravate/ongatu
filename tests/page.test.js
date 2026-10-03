@@ -46,3 +46,14 @@ test('month budget replaces the starting budget for its month', async () => {
   assert.deepEqual(m.monthBudgetRows(y, 2).map((r) => [r.item, r.amount]), [['Rent', 950]]);
   assert.ok(m.canAdjustMonthBudget(y, 0));
 });
+
+test('onboarding starter template follows the template doc and fits the data model', async () => {
+  const { STARTER_TEMPLATE, EXP_GROUPS } = await import('../src/tracker/model.js');
+  assert.equal(STARTER_TEMPLATE.incomes.length, 4);
+  assert.equal(STARTER_TEMPLATE.investments.length, 5);
+  assert.deepEqual(Object.keys(STARTER_TEMPLATE.expenses), ['Fixed', 'Variable']);
+  Object.keys(STARTER_TEMPLATE.expenses).forEach((g) => assert.ok(EXP_GROUPS.includes(g)));
+  const items = Object.values(STARTER_TEMPLATE.expenses).flatMap((cats) => Object.values(cats).flat());
+  assert.equal(new Set(items).size, items.length, 'type names are unique');
+  assert.ok(!/felipe|sbravate|barcelona/i.test(JSON.stringify(STARTER_TEMPLATE)));
+});

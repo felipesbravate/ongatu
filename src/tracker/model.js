@@ -24,6 +24,34 @@ export const CATS = {
   },
 };
 
+// Onboarding "Start from a template" (Felipe's Google Doc "Expense Categories & Subcategories", Oct 3, 2026).
+// Income and Savings & Investments are flat; expenses are Sub-category (Fixed / Variable) -> Group -> Type.
+// Only used to seed a new account's first year; CATS above stays the fallback for years without a taxonomy.
+export const STARTER_TEMPLATE = {
+  incomes: ['Primary salary / wages', 'Secondary income', 'Passive / investment income', 'Other income'],
+  investments: ['Emergency fund', 'Retirement / pension', 'Short-term savings', 'Long-term savings', 'General investments'],
+  expenses: {
+    Fixed: {
+      Housing: ['Rent / mortgage', 'HOA / condominium fees'],
+      Utilities: ['Internet', 'TV / cable', 'Mobile phone plan'],
+      Insurance: ['Health insurance', 'Auto insurance', 'Home / renters insurance', 'Life insurance', 'Pet insurance'],
+      'Debt repayment': ['Student loan', 'Auto loan', 'Personal loan'],
+      'Education & childcare': ['Tuition', 'Online courses', 'Daycare', 'School supplies'],
+      'Financial fees': ['Bank fees', 'Tax preparation', 'Professional services'],
+      Subscriptions: ['Gym membership', 'Software', 'Streaming services'],
+    },
+    Variable: {
+      'Food & dining': ['Groceries / supermarket', 'Dining out', 'Takeout / delivery'],
+      Transportation: ['Fuel / gas', 'Public transit', 'Rideshares & taxis', 'Vehicle maintenance & parking'],
+      'Household & living': ['Electricity, water & heating', 'Household supplies', 'Home maintenance & services'],
+      'Health & wellness': ['Medical / therapy', 'Pharmacy & medications', 'Sports & fitness'],
+      'Personal care & apparel': ['Haircuts & grooming', 'Clothing, shoes & accessories', 'Cosmetics & toiletries'],
+      'Entertainment & leisure': ['Events', 'Hobbies & recreation'],
+      Miscellaneous: ['Gifts & donations', 'Pet care', 'Unplanned expenses'],
+    },
+  },
+};
+
 // Type/sub-type as one pickable value (the review table's Type column). Order = the Type controller (52:3443).
 export const TYPE_OPTS = [
   { key: 'income', type: 'income', group: null, label: 'Income' },

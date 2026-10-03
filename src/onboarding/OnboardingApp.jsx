@@ -12,19 +12,20 @@ import { arrowStraightRight, euro, plus, x } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
 import { ListSelector, Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
 import { db, getMe, leavePage } from '../tracker/api.js';
-import { CATS, EXP_GROUPS, MONTH_NAMES, budgetDefaultDocId, fmtNum, parseAmount } from '../tracker/model.js';
+import { EXP_GROUPS, MONTH_NAMES, STARTER_TEMPLATE, budgetDefaultDocId, fmtNum, parseAmount } from '../tracker/model.js';
 import { CategoryModal, KINDS, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
 
 const STEPS = ['Account', 'Tour', 'Setup'];
 const nowYear = new Date().getFullYear();
 
-// The starter template: the generic taxonomy every new year falls back to (model.CATS).
+// The starter template (model.STARTER_TEMPLATE): only the sub-categories it fills (Fixed, Variable) are added.
 function templateBoard() {
   const types = [];
-  CATS.incomes.forEach((item) => types.push({ type: 'income', group: null, category: null, item, budget: 0 }));
-  CATS.investments.forEach((item) => types.push({ type: 'investment', group: null, category: null, item, budget: 0 }));
-  Object.entries(CATS.expenses).forEach(([group, cats]) => Object.entries(cats).forEach(([category, items]) => items.forEach((item) => types.push({ type: 'expense', group, category, item, budget: 0 }))));
-  return { kinds: ['income', 'investment', 'expense'], groups: EXP_GROUPS.slice(), types };
+  const T = STARTER_TEMPLATE;
+  T.incomes.forEach((item) => types.push({ type: 'income', group: null, category: null, item, budget: 0 }));
+  T.investments.forEach((item) => types.push({ type: 'investment', group: null, category: null, item, budget: 0 }));
+  Object.entries(T.expenses).forEach(([group, cats]) => Object.entries(cats).forEach(([category, items]) => items.forEach((item) => types.push({ type: 'expense', group, category, item, budget: 0 }))));
+  return { kinds: ['income', 'investment', 'expense'], groups: Object.keys(T.expenses), types };
 }
 const emptyBoard = () => ({ kinds: ['income'], groups: [], types: [] });
 
