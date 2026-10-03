@@ -3292,3 +3292,6 @@
   @media (max-width:640px){ #ap-review .ap-period > label{ color:var(--text-secondary); } }
   #add-panel .dz-reading-title{ min-height:16px; display:flex; align-items:center; justify-content:center; }
   #doc-status:empty{ display:none; }
+  /* Year budget, phones: a group's "+ Add type" sits 16 under its rows (the group's other parts stay 24 apart). */
+  @media (max-width:640px){ .budget-panel .budget-group > div:has(> .budget-group-add){ margin-top:-8px; } }
+  .ds-modal-form > .ds-action-link{ align-self:flex-start; }

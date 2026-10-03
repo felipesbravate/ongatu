@@ -153,7 +153,9 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
                       {b.rows.length
                         ? <div className="budget-items">{b.rows.map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                         : <div className="budget-items is-empty"><span className="budget-group-empty">No types added yet.</span></div>}
-                      {!mobile && <div><ActionLink icon={plus} className="budget-group-add" onClick={() => { setTypeCat(b.category); setTypeModal(true); }}>Add type</ActionLink></div>}
+                      {/* Each group's "+ Add type" (232:5853: Small on desktop). Phones (Felipe, Oct 3: the frames draw none): a Medium link
+                          16 under the rows, opening the same Add type modal as its Mobile variant (443:1485). */}
+                      <div><ActionLink size={mobile ? 'medium' : undefined} icon={plus} className="budget-group-add" onClick={() => { setTypeCat(b.category); setTypeModal(true); }}>Add type</ActionLink></div>
                     </div>
                   </BlockFrag>
                 ))}
