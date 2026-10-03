@@ -246,7 +246,7 @@ async def main():
             await mp.close()
             check('Segments sit on surface/secondary, tags are round Label chips (radius/full since Oct 2)', d['segBg'] == 'rgb(239, 238, 229)' and d['tag'] == ['999px', 'rgb(239, 238, 229)'], d)
             check('allocation bars are 48 wide, space/md apart (12 on desktop)', d['allocBar'] == '48px' and d['allocGap'] == '12px', d)
-            check('month row is indented space/tags-indent (48 on desktop)', d['monthsPad'] == '48px', d)
+            check('month row is indented 56 (211:18753: the chips start under the first year tab)', d['monthsPad'] == '56px', d)
             check('chart legend matches the lines: indigo, pink, lime', d['swatches'] == ['rgb(79, 70, 229)', 'rgb(227, 2, 159)', 'rgb(205, 217, 54)'], d)
             check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', d['tokens'] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
             check('money figures carry the Euro icon', d['euro'], d)

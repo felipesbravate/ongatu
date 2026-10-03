@@ -2793,3 +2793,64 @@
   /* Month selector labels (Oct 3): "Jan" in the desktop frames (211:18753, 2:2), "JAN" in the phone frames (342:7993). */
   @media (max-width:640px){ .month-btn{ text-transform:uppercase; } }
   .login-resend.is-small .login-note{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+
+  /* ================================================================
+     Home 211:18753 / 229:19777 (Oct 3, measured against the frame at 1318)
+     ================================================================ */
+  /* The body gutter, resolved at :root (Desktop 24 / Mobile 40) and inherited as a length, so the Product header (pinned
+     to the Mobile tokens) bleeds by the page's gutter, not its own. Header: full width, logo and user nav on the 1238
+     page edges (40 at 1318). */
+  :root{ --body-gutter: var(--layout-xl); }
+  @media (min-width:641px){
+    .ds-app-header{ margin:0 calc(-1 * var(--body-gutter)); padding:var(--space-xs) max(40px, calc((100% - 1238px) / 2)); }
+  }
+  /* Pager header: Title block 72 high (Display/Title, Body/Medium/Medium xs under it), space/lg to the Top nav; Top nav =
+     Nav tabs (36) + space/sm + month chips (20), chips space/sm apart from a 56 indent; space/2xl to the cards. */
+  @media (min-width:641px){
+    header.top{ min-height:72px; box-sizing:border-box; margin-bottom:var(--layout-lg); }
+    .actions-wrap{ margin-bottom:var(--layout-2xl); }
+    .top-nav{ gap:var(--space-sm); }
+    .months{ gap:var(--space-sm); padding-left:56px; }
+  }
+  /* Nav tabs - Add year 79:1242 sits over the Nav tabs with its close button on the "+": 5px left, 2px up. */
+  .year-add-pill{ top:-2px; left:-5px; }
+  /* Cards: Content 12 apart. Balance pad lg, md apart (radius card, € row 29). KPI / Expense: pad md lg, sm apart.
+     Expense allocation, At a glance, Tracker and chart: radius/lg (24), pad lg. */
+  .mini-kpi, .ticker-item{ padding:var(--space-md) var(--space-lg); gap:var(--space-sm); }
+  .balance-card .value{ line-height:29px; }
+  .alloc-card, .glance-card, .breakdown-card, .hero-chart{ border-radius:var(--radius-lg); padding:var(--space-lg); }
+  .alloc-card{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .glance-card{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .glance-card .insight-tags{ margin-top:0; padding-top:var(--space-xs); }
+  .insight-text{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  /* Tracker card: Header and Content space/xl apart; group titles Heading/Large; meters draw their name 16/20 and the
+     amount in Value/Medium 14 (the frame's Meter text, both modes); item amounts 14 too. */
+  .breakdown-card{ gap:var(--space-xl); }
+  .bd-block-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  @media (min-width:641px){
+    .meter-row .meter-name{ font-size:16px; line-height:20px; }
+    .meter-row .meter-amt, .bd-row .n{ font-size:14px; }
+  }
+  /* Tracker card internals (211:18753): title / month space/sm apart; tabs stack space/sm, the Add button centred on it;
+     meters (20 name row + 2 + 8 bar = 30) space/md apart; items list 24 under the meters; a group title space/md over
+     its rows, rows 2 apart; groups space/lg either side of the Divider. Balance € row 29 high. */
+  @media (min-width:641px){
+    .bd-title{ gap:var(--space-sm); }
+    .bd-tabs-stack{ gap:var(--space-sm); }
+    .bd-controllers{ align-items:center; }
+    #meters{ display:flex; flex-direction:column; gap:var(--space-md); }
+    #meters .meter-row{ margin:0; }
+    .meter-row .meter-top{ height:20px; align-items:center; }
+    .meter-row .meter-amt{ line-height:20px; }
+    .meter-row .meter-track{ margin-top:2px; }
+    #itemslist{ margin-top:8px; gap:var(--space-lg); }
+    .bd-block{ gap:2px; }
+    .bd-block-title{ margin-bottom:calc(var(--space-md) - 2px); }
+  }
+  .balance-card .value{ display:flex; align-items:center; height:29px; }
+  /* Tracker month under the title: Body/Large/Medium (14/16 desktop). KPI / Expense value rows 16 high (16px €). */
+  .bd-title .hint{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .mini-kpi .value, .ticker-item .ti-val{ display:flex; align-items:center; min-height:16px; line-height:16px; }
+  /* Expense allocation 211:18753: title, hint xs under it, the 120 bars frame xs under the header. */
+  .alloc-card h2, .alloc-card .hint, .glance-card h2{ margin:0; }
+  .alloc-card .alloc-bars{ margin-top:0; }

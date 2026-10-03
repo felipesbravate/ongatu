@@ -80,7 +80,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
             options={[{ value: 'EUR', label: 'EUR' }, { value: 'SEK', label: 'SEK' }]} />
         </div>
       </div>
-      <Button size="tiny" icon={plus} iconSize={12} id="year-add-submit" onClick={submit}>Add year</Button>
+      <Button size="tiny" id="year-add-submit" onClick={submit}>Add</Button>
       <span className={'add-status' + (status && status.err ? ' err' : '')} id="year-add-status">{status ? status.text : ''}</span>
     </div>
   );
