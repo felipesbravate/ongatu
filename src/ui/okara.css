@@ -71,8 +71,11 @@
     --action-primary-press: var(--primitive-neutral-charcoal-900);
     --action-secondary: var(--primitive-neutral-surface);
     --action-secondary-hover: var(--primitive-neutral-stone-100);
-    --action-secondary-press: var(--primitive-neutral-stone-150);
-    --action-secondary-active: var(--primitive-neutral-stone-325);
+    --action-secondary-press: var(--primitive-neutral-stone-300);
+    --action-secondary-active: var(--primitive-neutral-stone-100);
+    --action-tertiary-hover: var(--primitive-neutral-stone-50);
+    --action-tertiary-press: var(--primitive-neutral-stone-300);
+    --action-tertiary-active: var(--primitive-neutral-stone-100);
     --action-disable: var(--primitive-neutral-stone-500);
     --action-accent: var(--primitive-brand-indigo);
     --action-accent-hover: var(--primitive-brand-indigo-light);
@@ -2827,10 +2830,7 @@
      amount in Value/Medium 14 (the frame's Meter text, both modes); item amounts 14 too. */
   .breakdown-card{ gap:var(--space-xl); }
   .bd-block-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
-  @media (min-width:641px){
-    .meter-row .meter-name{ font-size:16px; line-height:20px; }
-    .meter-row .meter-amt, .bd-row .n{ font-size:14px; }
-  }
+
   /* Tracker card internals (211:18753): title / month space/sm apart; tabs stack space/sm, the Add button centred on it;
      meters (20 name row + 2 + 8 bar = 30) space/md apart; items list 24 under the meters; a group title space/md over
      its rows, rows 2 apart; groups space/lg either side of the Divider. Balance € row 29 high. */
@@ -2857,3 +2857,30 @@
   /* Tab 53:801 in the screens (211:18753, 342:7993): the year label is overridden to Label/Small (16/20), not the
      component's Label/Large (18/20). Felipe, Oct 3: follow the screens. */
   .year-btn{ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+
+  /* ================================================================
+     Oct 3 (late): Round button 52:629, Meter 25:37, breackdown-row 124:3667 (new Surface=Desktop variant)
+     ================================================================ */
+  /* Round button: Medium Tertiary uses the new action/tertiary-* fills (hover stone-50, press stone-300, active
+     stone-100); Small / Tiny / Micro / Nano Tertiary keep action/secondary-*. Primary Active = action/primary-hover. */
+  .round-btn:not(.small):not(.tiny):not(.micro):not(.nano):not(.primary):not(.secondary):hover{ background:var(--action-tertiary-hover); }
+  .round-btn:not(.small):not(.tiny):not(.micro):not(.nano):not(.primary):not(.secondary):active{ background:var(--action-tertiary-press); }
+  .round-btn:not(.small):not(.tiny):not(.micro):not(.nano):not(.primary):not(.secondary):is(.is-active, [aria-expanded="true"]){ background:var(--action-tertiary-active); }
+  .round-btn.primary:is(.is-active, [aria-expanded="true"]){ background:var(--action-primary-hover); }
+  /* Meter: name Body/Large/Medium and the amount (16px € + Value/Medium) md apart on a 20 row; the 8px bar tn under it. */
+  .meter-row .meter-top{ gap:var(--space-md); }
+  .meter-row .meter-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-primary); }
+  .meter-row .meter-amt{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); letter-spacing:var(--type-value-medium-ls); }
+  .meter-row .meter-amt .money{ gap:var(--space-tn); }
+  .meter-row .meter-track{ margin-top:var(--space-tn); }
+  /* breackdown-row, Surface=Mobile (phones): item Body/Large/Medium text/secondary; amount = Medium Action link (16px € +
+     Value/Medium 14, Mobile tokens). Surface=Desktop: item Body/Medium/Medium; amount = Small Action link (16px € +
+     Value/Small 12, Mobile tokens); Editing = Tiny input with a 12px € and Value/Small. Items xs apart, 24 high. */
+  .bd-row{ min-height:24px; gap:var(--space-xs); }
+  .bd-row .bd-item-name{ color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
+  .bd-row .n .money, .bd-row .bd-value{ gap:var(--space-tn); }
+  @media (min-width:641px){
+    .bd-row .bd-item-name{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+    .bd-row .n, .bd-row .bd-amount, .bd-row .br-input{ font-size:12px; }
+  }

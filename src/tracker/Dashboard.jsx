@@ -150,8 +150,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
-            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
-            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={20} />)}
+            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={16} />)
+            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={16} />)}
         </div>
         <div id="itemslist" className="bd-list">
           {!bd.flat && bd.rows.length > 0 && rows.map((r, i) => (
