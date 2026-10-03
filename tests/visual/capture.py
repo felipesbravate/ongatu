@@ -260,7 +260,7 @@ async def main():
                         manifest.append({'viewport': vp, 'state': name, 'kind': kind, 'errors': errs})
                         if errs: problems.append(f'{vp}/{name}: {errs}'); ok = False
                     except Exception as ex:
-                        problems.append(f'{vp}/{name}: {type(ex).__name__}: {str(ex).splitlines()[0]}'); ok = False
+                        problems.append(f'{vp}/{name}: {type(ex).__name__}: {str(ex).splitlines()[0]} | {" / ".join(l.strip() for l in str(ex).splitlines()[-3:])}'); ok = False
                     await ctx.close(); print(vp, name, 'ok' if ok else 'FAIL', flush=True)
             finally:
                 srv.terminate(); srv.wait()

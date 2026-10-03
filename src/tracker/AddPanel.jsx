@@ -245,7 +245,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               </div>
               <div className="fld">
                 <label className="fld-label" htmlFor="entry-amount">Amount</label>
-                <Input id="entry-amount" icon={euro} size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
+                <Input id="entry-amount" icon={euro} iconSize="md" size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
                   onBlur={(e) => { if (e.target.value.trim()) setAmount(fmtNum(parseAmount(e.target.value))); }} />
               </div>
               <div className="fld">

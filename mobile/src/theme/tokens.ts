@@ -48,7 +48,8 @@ export const primitive = {
   "neutralOffWhite": "#f9f9f7",
   "dataGreenLight": "#76c8a4",
   "neutralSurfaceTransparent": "#ffffff00",
-  "neutralOffWhiteTransparent": "#f9f9f700"
+  "neutralOffWhiteTransparent": "#f9f9f700",
+  "brandIndigoBright": "#c2bcff"
 } as const;
 
 export const color = {
@@ -107,7 +108,8 @@ export const color = {
   "surfacePrimaryTransparent": "#ffffff00",
   "surfaceBodyTransparent": "#f9f9f700",
   "borderWarning": "#debba0",
-  "borderDanger": "#e58d90"
+  "borderDanger": "#e58d90",
+  "surfaceMobileNav": "#ffffffe0"
 } as const;
 
 export const space = {
@@ -144,6 +146,11 @@ export const text = {
     "fontSize": 40,
     "lineHeight": 48
   },
+  "DisplayTitleMobile": {
+    "fontFamily": "DMSans_600SemiBold",
+    "fontSize": 32,
+    "lineHeight": 48
+  },
   "ValueXL": {
     "fontFamily": "MartianMono_500Medium",
     "fontSize": 32
@@ -163,7 +170,7 @@ export const text = {
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "DMSans_500Medium",
     "fontSize": 24,
     "lineHeight": 24
   },
@@ -240,7 +247,7 @@ export const text = {
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "DMSans_500Medium",
     "fontSize": 18,
     "lineHeight": 20,
     "letterSpacing": -0.36

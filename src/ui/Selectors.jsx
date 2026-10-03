@@ -60,7 +60,8 @@ export function ListSelector({ title, description, label, selected, action, onSe
   const body = (
     <div className="ds-list-sel-body">
       <div className="ds-list-sel-head"><span className="ds-list-sel-title">{title}</span>{label && <Tag size="small">{label}</Tag>}</div>
-      {selected && action ? action : description && <span className="ds-list-sel-desc">{description}</span>}
+      {description && <span className="ds-list-sel-desc">{description}</span>}
+      {selected && action}
     </div>
   );
   if (selected) return <div className={cx('ds-list-sel', 'is-selected', className)} aria-current="true" {...rest}>{body}</div>;

@@ -39,7 +39,9 @@ export function RoundButton({ icon, size = 'medium', iconSize, variant, active, 
 // With `href` it is a link (<a>), otherwise a button.
 export function ActionLink({ icon, trailing, size, className, children, type = 'button', href, ...rest }) {
   const cls = cx('ds-action-link', size && size !== 'small' && size, className);
-  const inner = <>{icon && <Icon icon={icon} size={12} />}{children}{trailing && <Icon icon={trailing} size={12} />}</>;
+  // Action link 607:1368 (Oct 3): Medium carries a 16px icon, Small and Tiny 12px.
+  const is = size === 'medium' ? 'md' : 'sm';
+  const inner = <>{icon && <Icon icon={icon} size={is} />}{children}{trailing && <Icon icon={trailing} size={is} />}</>;
   if (href) return <a href={href} className={cls} {...rest}>{inner}</a>;
   return <button type={type} className={cls} {...rest}>{inner}</button>;
 }

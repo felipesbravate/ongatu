@@ -22,12 +22,14 @@ export function useDismiss(open, ref, onClose, alsoRef) {
   }, [open, ref, onClose, alsoRef]);
 }
 
-// avatar (DS 221:1044): 40px circle. Style=Text: surface/accent with the initial; Style=Image: the picture, cropped
-// to the circle. `large` is the 88px avatar of the Account page (initial in Value/XL).
-export function Avatar({ name, image, large, className }) {
+// avatar (DS 221:1044, Oct 3): a circle in four sizes, 40 (default), 56, 80 and 112. Style=Text: surface/accent with
+// the initial (Heading/Small, Medium, Large, XL); Style=Image: the picture, cropped to the circle. `large` = 80.
+const AVATAR_SIZES = [40, 56, 80, 112];
+export function Avatar({ name, image, large, size, className }) {
   const initial = (name || '?').trim().charAt(0).toUpperCase() || '?';
+  const px = AVATAR_SIZES.includes(size) ? size : (large ? 80 : 40);
   return (
-    <span className={cx('ds-avatar', image && 'is-image', large && 'large', className)} aria-hidden="true">
+    <span className={cx('ds-avatar', 's' + px, image && 'is-image', large && 'large', className)} aria-hidden="true">
       {image ? <img src={image} alt="" /> : initial}
     </span>
   );
@@ -85,16 +87,19 @@ export function UserMenu({ name, image, open, onToggle, onClose, items }) {
   );
 }
 
-// notification-item (DS 228:469): date · time, the text with an optional Micro Secondary action, and — while the item
-// is unread — the "Mark as read" Action link under it (Ongatu 211:19682). `onMarkRead` omitted = read (no link).
+// notification-item (DS 228:469, Oct 3): a header row (date · time in Body/Medium/SemiBold, the optional Micro Secondary
+// action on the right, 16 apart), the text under it and — while the item is unread — the "Mark as read" link at the
+// bottom. `onMarkRead` omitted = read (no link).
 export function NotificationItem({ date, time, children, action, onMarkRead, id }) {
   return (
     <div className={'ds-notif-item' + (onMarkRead ? ' is-unread' : '')} id={id}>
       <div className="ds-notif-body">
-        <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
+        <div className="ds-notif-head">
+          <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
+          {action && <Button variant="secondary" size="micro" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
+        </div>
         <div className="ds-notif-content">
           <div className="ds-notif-text">{children}</div>
-          {action && <Button variant="secondary" size="micro" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
         </div>
       </div>
       {onMarkRead && <ActionLink className="ds-notif-mark" onClick={onMarkRead}>Mark as read</ActionLink>}

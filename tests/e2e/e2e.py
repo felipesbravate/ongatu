@@ -131,8 +131,8 @@ async def main():
             await pg.click('#year-add-toggle'); await pg.wait_for_timeout(300)
             ya = await pg.evaluate("""() => { const r = e => e.getBoundingClientRect(), p = document.getElementById('year-add-panel'), y = document.getElementById('year-add-year-trigger'), c = document.getElementById('year-add-currency-trigger'), b = document.getElementById('year-add-submit');
                 return { h: r(p).height, border: getComputedStyle(p).borderTopColor, dd: [r(y).width, r(y).height, r(c).width, r(c).height], gap: r(c).left - r(y).right, btn: r(b).height }; }""")
-            check('Add year (Oct 2, Desktop): the pill hugs its Small close (pad tn), border/default, two Tiny dropdowns 120 x 24, space/tn (2) apart, Tiny Add button (22)',
-                  ya['h'] == 28 and ya['border'] == 'rgb(203, 202, 197)' and ya['dd'] == [120, 24, 120, 24] and ya['gap'] == 2 and ya['btn'] == 22, ya)
+            check('Add year (Oct 3: always the Mobile tokens): the pill hugs its Small close, border/default, two Tiny dropdowns 120 x 32, space/tn (4) apart, Tiny Add button (32)',
+                  ya['h'] == 44 and ya['border'] == 'rgb(203, 202, 197)' and ya['dd'] == [120, 32, 120, 32] and ya['gap'] == 4 and ya['btn'] == 32, ya)
             await pg.click('#year-add-cancel'); await pg.wait_for_timeout(300)
             check('admin: current year auto-created', await pg.locator('.year-btn').count() >= 1)
 
@@ -179,7 +179,7 @@ async def main():
                 const tb = r(tip), bb = r(b);
                 return { badge: b && { h: r(b).height, pad: cs(b).padding, bg: cs(b).backgroundColor, font: [cs(b).fontSize, cs(b).fontWeight, cs(b).lineHeight, cs(b).letterSpacing], fam: cs(b).fontFamily.split(',')[0], ml: cs(b).marginLeft },
                          tip: { radius: cs(tip).borderRadius, pad: cs(tip).padding, bg: cs(tip).backgroundColor, shadow: cs(tip).boxShadow, w: tb.width },
-                         gapX: tb.left - bb.right, midDy: (tb.top + tb.height / 2) - (bb.top + bb.height / 2),
+                         gapX: tb.left - bb.right, kept: tb.bottom >= innerHeight - 24 || tb.top <= 24, midDy: (tb.top + tb.height / 2) - (bb.top + bb.height / 2),
                          item: { h: r(it).height, gap: cs(it).columnGap, rgap: cs(q(it, '.tip-right')).columnGap, dot: [r(dot).width, r(dot).height] },
                          name: [cs(name).fontSize, cs(name).fontWeight, cs(name).lineHeight, cs(name).color], date: date ? [cs(date).fontSize, cs(date).fontWeight, cs(date).color, cs(date).lineHeight, cs(date).letterSpacing] : null,
                          amt: [cs(amt).fontFamily.split(',')[0], cs(amt).fontSize, cs(amt).fontWeight, cs(amt).letterSpacing], euro: !!q(amt, '.money-ic svg'),
@@ -188,7 +188,7 @@ async def main():
                   t['badge'] and t['badge']['h'] == 14 and t['badge']['pad'] == '0px 2px' and t['badge']['ml'] == '4px' and t['badge']['bg'] == 'rgb(31, 30, 25)', t['badge'])
             check('counter text (146:5252, Oct 2): Body/Small/SemiBold (11 / 600 / 12 / -2% on desktop), not mono', t['badge']['font'] == ['11px', '600', '12px', '-0.22px'] and 'Mono' not in t['badge']['fam'], t['badge'])
             check('tooltip: dark surface, radius 16, padding space/md space/xs (12/4/12/12 on desktop), 280 wide at least, no shadow', t['tip']['bg'] == 'rgb(22, 21, 15)' and t['tip']['radius'] == '16px' and t['tip']['pad'] == '12px 4px 12px 12px' and t['tip']['w'] >= 280 and t['tip']['shadow'] == 'none', t['tip'])
-            check('tooltip opens beside the counter, 4px away, centred on it (or kept inside the window)', abs(t['gapX'] - 4) < 0.6 and abs(t['midDy']) < 9, [t['gapX'], t['midDy']])
+            check('tooltip opens beside the counter, 4px away, centred on it (or kept inside the window)', abs(t['gapX'] - 4) < 0.6 and (abs(t['midDy']) < 9 or t['kept']), [t['gapX'], t['midDy'], t['kept']])
             check('tooltip entry (144:4426): 24px row, space/xs gaps (4 on desktop, also between amount and remove), 12px dot', t['item']['h'] == 24 and t['item']['gap'] == '4px' and t['item']['rgap'] == '4px' and t['item']['dot'] == [12, 12], t['item'])
             check('tooltip entry text (144:4426, Oct 2): name Body/Large/SemiBold white, date Body/Large/Medium text/muted (14 on desktop)', t['name'] == ['14px', '600', '16px', 'rgb(255, 255, 255)'] and t['date'] is not None and t['date'] == ['14px', '500', 'rgb(150, 146, 132)', '16px', '-0.28px'], [t['name'], t['date']])
             check('tooltip amount: Euro icon + Value/Small (mono 11/500/-4% on desktop)', t['euro'] and 'Mono' in t['amt'][0] and t['amt'][1:] == ['11px', '500', '-0.44px'], t['amt'])
@@ -224,14 +224,14 @@ async def main():
                 return { header: [r('#app-header').height, Math.round(r('.ds-app-header-logo svg').width)], user: vis('.ds-user'), bell: vis('#notif-btn'), add: vis('#tracker-add-btn'), nav: vis('#mobile-nav'),
                          ticker: vis('.ticker-strip'), side: Math.round(r('.balance-card').left), title: getComputedStyle(q('.app-title')).fontSize, cards, scrollW: document.documentElement.scrollWidth,
                          pill: [Math.round(r('.ds-mnav-pill').width), Math.round(r('#mnav-home').height)], home: q('#mnav-home').getAttribute('aria-current'), seg: [...document.querySelectorAll('#breakdown-top-seg button')].map(b => b.textContent) }; }""")
-            check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 40px title; no sideways scroll',
-                  mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '40px' and mo['scrollW'] <= 390, mo)
+            check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 32px title (Display/Title-mobile, Oct 3); no sideways scroll',
+                  mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '32px' and mo['scrollW'] <= 390, mo)
             check('phone: Balance, KPIs, Tracker, Expense allocation, chart, At a glance, in that order; no Expense cards; Add is in the bottom nav',
                   mo['cards'] == sorted(mo['cards']) and not mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
             check('phone: bottom nav (378:673) full-width 366 pill (12px from the edges), 56 high items, Home selected', mo['pill'] == [366, 56] and mo['home'] == 'page', mo)
             await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
             st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
-            check('phone: header and year/month nav stay at the top when scrolled (369:12607)', st2 == [0, 64], st2)
+            check('phone: scrolled, the header turns Surface=App Small (48) and the year/month nav sticks under it (369:12607)', st2 == [0, 48], st2)
             await mp.click('#notif-btn'); await mp.wait_for_selector('.ds-notif-page')
             np_ = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e);
                 const pg = q('.ds-notif-page'), nav = q('.ds-notif-page-nav'), t = q('.ds-notif-page-title'), list = q('.ds-notif-page-list'), it = list.querySelector('.ds-notif-item');
@@ -280,8 +280,8 @@ async def main():
                   out[t] = { bg: c.backgroundColor, font: [m.fontSize, m.fontWeight, m.lineHeight, m.letterSpacing, m.color], gap: c.columnGap, h: r.height, w: r.width, r: c.borderRadius, padR: c.paddingRight, top: r.top, right: innerWidth - r.right, strip: [st.getBoundingClientRect().width, st.getBoundingClientRect().height, cs(st).backgroundColor], close: [el.children[2].getBoundingClientRect().width] };
                   el.remove(); }
                 return out; }""")
-            check('Toast (DS 304:659, Desktop): surface/dark, Body/Small/Medium (11/500/12) white, space/md gap and right padding (12), hugs a Micro close between space/md (44 high), 240 wide at least, radius 8',
-                  all(tv[k]['bg'] == 'rgb(22, 21, 15)' and tv[k]['font'] == ['11px', '500', '12px', '-0.22px', 'rgb(255, 255, 255)'] and tv[k]['gap'] == '12px' and tv[k]['h'] == 44 and tv[k]['w'] >= 240 and tv[k]['r'] == '8px' and tv[k]['padR'] == '12px' and tv[k]['close'] == [20] for k in tv), tv)
+            check('Toast (DS 304:659, Oct 3, Desktop): surface/dark, Body/Medium/Medium (12/500/14) white, space/md gap and right padding (12), hugs a Micro close (20) between space/md (44 high), 240 wide at least, radius 8',
+                  all(tv[k]['bg'] == 'rgb(22, 21, 15)' and tv[k]['font'] == ['12px', '500', '14px', '-0.24px', 'rgb(255, 255, 255)'] and tv[k]['gap'] == '12px' and tv[k]['h'] == 44 and tv[k]['w'] >= 240 and tv[k]['r'] == '8px' and tv[k]['padR'] == '12px' and tv[k]['close'] == [20] for k in tv), tv)
             check('Toast strip: 16px, full height; Positive brand/mint, Negative data/red, Neutral surface/tertiary',
                   all(tv[k]['strip'][:2] == [16, 44] for k in tv) and [tv[k]['strip'][2] for k in ('success', 'fail', 'neutral')] == ['rgb(19, 208, 117)', 'rgb(189, 0, 7)', 'rgb(116, 113, 103)'], tv)
             check('Toast sits top-right (Ongatu 238:7184): 24px from the right, 116 from the top', all(abs(tv[k]['top'] - 116) < 1 and abs(tv[k]['right'] - 24) < 1 for k in tv), tv)
@@ -295,10 +295,11 @@ async def main():
             # Small fixed 40 with space/xs; Tiny hugs space/xs round 16 (24). Body/Large/Medium 14/16, Tiny Body/Medium/Medium 12/14.
             # Oct 2: every size hugs its padding round the icon-size slot: Medium space/sm round xl (32 on desktop), Small and
             # Tiny space/xs round xl / md (24). Dropdowns write Label/Large (18/600/16 on desktop), inputs Body/Large/Medium, Tiny Label/Tiny.
-            check('Dropdown sizes (71:1096, Oct 2, Desktop): Medium 32 / 12, Small 24 / 4, Tiny 24 / 4',
-                  sz['dd-md'] == [32, '11px', '18px', '600', '16px'] and sz['dd-sm'] == [24, '3px', '18px', '600', '16px'] and sz['dd-tiny'] == [24, '3px', '12px', '500', '14px'], sz)
-            check('Input sizes (71:1093, Oct 2, Desktop): Medium 32 / 12, Small 24 / 4, Tiny 24 / 4',
-                  sz['in-medium'] == [32, '11px', '14px', '500', '16px'] and sz['in-small'] == [24, '3px', '14px', '500', '16px'] and sz['in-tiny'] == [24, '3px', '12px', '500', '14px'], sz)
+            # Oct 3: Input, Dropdown and dropdown-item always use the Mobile tokens; Medium and Small write Label/Medium (16/500/24), Tiny Label/Tiny.
+            check('Dropdown sizes (71:1096, Oct 3, Mobile tokens everywhere): Medium 48 / 16, Small 40 / 8, Tiny 32 / 8',
+                  sz['dd-md'] == [48, '15px', '16px', '500', '24px'] and sz['dd-sm'] == [40, '7px', '16px', '500', '24px'] and sz['dd-tiny'] == [32, '7px', '14px', '500', '16px'], sz)
+            check('Input sizes (71:1093, Oct 3, Mobile tokens everywhere): Medium 48 / 16, Small 40 / 8, Tiny 32 / 8',
+                  sz['in-medium'] == [48, '15px', '16px', '500', '24px'] and sz['in-small'] == [40, '7px', '16px', '500', '24px'] and sz['in-tiny'] == [32, '7px', '14px', '500', '16px'], sz)
             st = await pg.evaluate("""() => { const host = document.body, mk = (h) => { const w = document.createElement('div'); w.innerHTML = h; host.appendChild(w); return w; };
                 const e = mk('<span class="ds-input"><input placeholder="Label"></span>'), f = mk('<span class="ds-input"><input placeholder="Label" value="Felipe"></span>'),
                       de = mk('<div class="ds-dd ds-dd--md is-empty"><button class="ds-dd-trigger">Select</button></div>'), df = mk('<div class="ds-dd ds-dd--md"><button class="ds-dd-trigger">Rent</button></div>'),
@@ -358,7 +359,7 @@ async def main():
             check('review: a "sure" category has no Guess chip', await pg.locator('#rv-rows .rv-row').count() == 1 and await pg.locator('#rv-rows .rv-guess').count() == 0)
             # "Month and year" (174:15607): starts on the month of the entry's date; an earlier month is refused, a later one is fine
             rp = await pg.evaluate("""() => { const t = document.getElementById('rv-period-trigger'), r = t.getBoundingClientRect(), l = document.querySelector('label[for="rv-period-trigger"]'); return { label: t.textContent.trim(), w: r.width, h: r.height, cap: l ? l.textContent : null }; }""")
-            check('review: Month and year is a 200px Medium dropdown (32 on desktop since Oct 2), on the month of the entry (Sep 2026)', rp['label'] == 'September 2026' and rp['w'] == 200 and rp['h'] == 32 and (rp['cap'] or '').lower() == 'month and year', rp)
+            check('review: Month and year is a 200px Medium dropdown (48: Mobile tokens since Oct 3), on the month of the entry (Sep 2026)', rp['label'] == 'September 2026' and rp['w'] == 200 and rp['h'] == 48 and (rp['cap'] or '').lower() == 'month and year', rp)
             await dd_pick(pg, 'rv-period', 'August', '2026')
             rs = await pg.inner_text('#rv-status')
             check('review: an entry dated after the month selected is refused (date in red, message, Submit off)',
@@ -402,9 +403,9 @@ async def main():
                 const menu = document.querySelector('.ds-dd-menu'), g = menu.querySelector('.ds-dd-group'), its = [...menu.querySelectorAll('.ds-dd-block')[0].querySelectorAll('.ds-dd-item')], t = document.getElementById('entry-period-trigger');
                 return { pad: cs(menu).padding, gFont: [cs(g).fontSize, cs(g).fontWeight, cs(g).lineHeight], gX: r(g).left - r(menu).left - 1, itemH: r(its[0]).height, itemPad: cs(its[0]).padding, iFont: [cs(its[0]).fontSize, cs(its[0]).fontWeight, cs(its[0]).lineHeight],
                          itemGap: its.length > 1 ? r(its[1]).top - r(its[0]).bottom : 4, itemX: r(its[0]).left - r(menu).left - 1, tFont: [cs(t).fontSize, cs(t).lineHeight, cs(t).letterSpacing], tPad: cs(t).padding, tBg: cs(t).backgroundColor, tSel: cs(its[0]).fontWeight }; }""")
-            check('menu (Dropdown-list 182:6851, Oct 2, Desktop): padding space/md (12), group title Label/Large 18/600/16 flush, rows space/xs round Label/Small (24), space/tn apart',
-                  m['pad'] == '12px' and m['gFont'] == ['18px', '600', '16px'] and abs(m['gX'] - 12) < 0.6 and m['itemH'] == 24 and m['itemPad'] == '4px' and m['iFont'] == ['14px', '500', '16px'] and m['itemGap'] == 2 and abs(m['itemX'] - 12) < 0.6, m)
-            check('trigger in the panel (Oct 2): Label/Large 18/16 -2%, space/md sides (12, minus the border), no fill', m['tFont'] == ['18px', '16px', '-0.36px'] and m['tPad'] == '0px 11px' and m['tBg'] == 'rgba(0, 0, 0, 0)', m)
+            check('menu (Dropdown-list 182:6851, Oct 3, Mobile tokens): padding space/md (16), group title Label/Large 18/500/20 flush, rows space/xs round Label/Small (36), space/tn apart',
+                  m['pad'] == '16px' and m['gFont'] == ['18px', '500', '20px'] and abs(m['gX'] - 16) < 0.6 and m['itemH'] == 36 and m['itemPad'] == '8px' and m['iFont'] == ['16px', '500', '20px'] and m['itemGap'] == 4 and abs(m['itemX'] - 16) < 0.6, m)
+            check('trigger in the panel (Oct 3): Label/Medium 16/24 -2%, space/md sides (16, minus the border), no fill', m['tFont'] == ['16px', '24px', '-0.32px'] and m['tPad'] == '0px 15px' and m['tBg'] == 'rgba(0, 0, 0, 0)', m)
             await pg.keyboard.press('Escape'); await pg.wait_for_selector('.ds-dd-menu', state='detached')
             # keyboard: open with Enter, move, choose with Enter; Escape only closes the menu
             await pg.focus('#entry-item-trigger'); await pg.keyboard.press('Enter'); await pg.wait_for_selector('.ds-dd-menu')
@@ -532,10 +533,10 @@ async def main():
             item = pg.locator('#notif-panel .ds-notif-item', has_text='ann@example.com is waiting for your approval.')
             check('admin: the notification names the account waiting for approval', await item.count() == 1, await pg.inner_text('#notif-panel'))
             ni = await item.evaluate("e => { const cs = x => getComputedStyle(x), t = e.querySelector('.ds-notif-text'), c = e.querySelector('.ds-notif-content'); return [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight, cs(c).columnGap]; }")
-            check('notification-item (228:469, Desktop): text Body/Medium/Medium 12/500/14, space/md (12) from the action', ni == ['12px', '500', '14px', '12px'], ni)
+            check('notification-item (228:469, Oct 3, Mobile tokens): text Body/Medium/Medium 14/500/16', ni[:3] == ['14px', '500', '16px'], ni)
             await item.hover(); await pg.wait_for_timeout(150)
             nh = await item.evaluate("e => getComputedStyle(e.querySelector('.ds-notif-content')).columnGap")
-            check('notification-item Hover: text and action space/xs apart (4 on desktop)', nh == '4px', nh)
+            check('notification-item Hover: the layout does not move (Oct 3: the action sits in the header row)', nh == '16px', nh)
             await item.get_by_text('Approve', exact=True).click(); await pg.wait_for_timeout(400)
             check('approving from the notification clears it', await pg.locator('#user-nav .ds-notif-badge').count() == 0)
             await pg.keyboard.press('Escape')
@@ -650,7 +651,7 @@ async def main():
             ab = await ann.evaluate("() => [...document.querySelectorAll('.acct-card')].map(e => getComputedStyle(e).borderTopStyle)")
             check('Account page cards have no border', ab == ['none'] * 3, ab)
             av = await ann.evaluate("() => { const a = document.querySelector('#app-header .ds-avatar'), c = getComputedStyle(a); return [a.getBoundingClientRect().width, c.fontSize, c.fontWeight, c.lineHeight, c.letterSpacing, c.backgroundColor]; }")
-            check('avatar (221:1044): 40px, initial Body/Large/Medium (14/500/16 -2% on desktop), white on surface/accent', av == [40, '14px', '500', '16px', '-0.28px', 'rgb(79, 70, 229)'], av)
+            check('avatar (221:1044, Oct 3): 40px, initial Heading/Small (14/500/14 -2%, Mobile tokens), white on surface/accent', av == [40, '14px', '500', '14px', '-0.28px', 'rgb(79, 70, 229)'], av)
             await ann.click('#menu-data'); await ann.wait_for_timeout(900)
             sm = await ann.evaluate('''() => [...document.querySelectorAll('.acct-menu .ds-menu-item')].map(e => [e.getBoundingClientRect().height, e.classList.contains('is-selected')])''')
             check('Side menu: every item 40 high, clicking one selects it (no jump)', all(h == 40 for h, _ in sm) and [x for _, x in sm] == [False, False, True], sm)
@@ -663,7 +664,7 @@ async def main():
             um = await ann.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect();
                 const c = document.getElementById('user-menu'), n = c.querySelector('.ds-user-name'), m = c.querySelector('.ds-menu-items');
                 return { w: r(c).width, name: [cs(n).fontSize, cs(n).fontWeight, cs(n).lineHeight], menuW: r(m).width, menuR: Math.round(r(c).right - r(m).right), closed: Math.round(r(document.querySelector('.ds-user-trigger')).width) }; }""")
-            check('user (221:1048): card 240 wide, name Body/Large/Medium (14/500/16 on desktop), menu 202 wide, space/tn from the right, closed pill 76', um['w'] == 240 and um['name'] == ['14px', '500', '16px'] and um['menuW'] == 202 and um['menuR'] == 3 and um['closed'] == 76, um)
+            check('user (221:1048): card 240 wide, name Body/Large/Medium (16/500/20: the header uses the Mobile tokens), menu 202 wide, space/tn from the right, closed pill 76', um['w'] == 240 and um['name'] == ['16px', '500', '20px'] and um['menuW'] == 202 and um['menuR'] == 5 and um['closed'] == 76, um)
             check('the first name reaches the user menu', (await ann.inner_text('.ds-user-name')).strip() == 'Annabel', await ann.inner_text('.ds-user-name'))
             await ann.click('#menu-account'); await ann.wait_for_timeout(400)
             check('choosing an item keeps the user menu open (Account on the Account page does nothing)', await ann.locator('#user-menu').count() == 1 and ann.url.endswith('/account'))
