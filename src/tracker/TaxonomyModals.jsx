@@ -5,8 +5,8 @@
 // How the board maps onto the data: Category = income | investment | expense (the three the dashboard draws),
 // Sub-category = the expense group (Fixed, Variable, Additional, Extra), Group (Optional) = the taxonomy category
 // (Habitation, Bank...), Type = the item. A type saved without a group goes under "Other".
-import { useEffect, useId, useState } from 'react';
-import { ActionLink, Divider, Dropdown, Input, Modal, illustrations } from '../ui/index.js';
+import { useEffect, useId, useRef, useState } from 'react';
+import { ActionLink, Divider, Dropdown, Input, Modal, illustrations, useDismiss } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
 import { chevronDown, plus, remove } from '../ui/icons.js';
 import { InfoMessage, InfoTooltip } from '../ui/Selectors.jsx';
@@ -21,29 +21,65 @@ export const kindLabel = (k) => (KINDS.find((x) => x.value === k) || {}).label |
 export const UNGROUPED = 'Other';
 const norm = (s) => String(s || '').trim().toLowerCase();
 
+// Several values, one per row (661:6306 / 663:8893): one row = a full-width input, no remove. From the second row on, each
+// row has room for a Micro Tertiary round button with the 16px Remove icon in action/destructive, 12 after the input; the
+// first row keeps that room empty (it can be cleared, not removed). Rows 12 apart.
 function Rows({ values, setValues, placeholder, label, idPrefix }) {
   const set = (i, v) => setValues(values.map((x, j) => (j === i ? v : x)));
+  const many = values.length > 1;
   return (
-    <div className="fld-rows">
+    <div className={'fld-rows' + (many ? ' is-many' : '')}>
       {values.map((v, i) => (
         <div className="fld-row" key={i}>
           <Input id={`${idPrefix}-${i}`} aria-label={`${label} ${i + 1}`} placeholder={placeholder} value={v} maxLength={60} autoComplete="off" onChange={(e) => set(i, e.target.value)} />
-          <button type="button" className="round-btn micro fld-remove" aria-label={`Remove ${label.toLowerCase()} ${i + 1}`} disabled={values.length === 1}
-            onClick={() => setValues(values.filter((_, j) => j !== i))}><Icon icon={remove} size={12} /></button>
+          {many && (i > 0
+            ? <button type="button" className="round-btn micro fld-remove" aria-label={`Remove ${label.toLowerCase()} ${i + 1}`}
+                onClick={() => setValues(values.filter((_, j) => j !== i))}><Icon icon={remove} size={16} /></button>
+            : <span className="fld-remove-slot" aria-hidden="true" />)}
         </div>
       ))}
     </div>
   );
 }
 
-// A text field that suggests the existing values ("Select or type to create new...").
+// A text field that suggests the existing values ("Select or type to create new..."), with the Dropdown-list under it
+// (577:5997, Simple: the groups, full width; 573:6715, typing a new name: an Action list that hugs its rows and starts
+// with '+ Create "Bank"'). Arrow keys move, Enter picks, Escape closes.
 function Combo({ id, value, onChange, options, placeholder }) {
   const listId = useId();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(-1);
+  const ref = useRef(null);
+  useDismiss(open, ref, () => setOpen(false));
+  const q = String(value || '').trim();
+  const shown = q ? options.filter((o) => norm(o).includes(norm(q))) : options;
+  const create = !!q && !options.some((o) => norm(o) === norm(q));
+  const items = [...(create ? [{ create: true, label: q }] : []), ...shown.map((o) => ({ label: o }))];
+  const pick = (it) => { onChange(it.label); setOpen(false); setActive(-1); };
+  const onKey = (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setActive((a) => Math.min(items.length - 1, a + 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((a) => Math.max(0, a - 1)); }
+    else if (e.key === 'Enter' && open && items[active]) { e.preventDefault(); pick(items[active]); }
+    else if (e.key === 'Escape' && open) { e.preventDefault(); e.stopPropagation(); setOpen(false); }
+  };
   return (
-    <div className="fld-combo">
-      <Input id={id} list={listId} value={value} placeholder={placeholder} maxLength={60} autoComplete="off" onChange={(e) => onChange(e.target.value)} />
-      <datalist id={listId}>{options.map((o) => <option key={o} value={o} />)}</datalist>
-      <Icon icon={chevronDown} size={12} className="fld-combo-chev" />
+    <div className="fld-combo" ref={ref}>
+      <Input id={id} role="combobox" aria-expanded={open ? 'true' : 'false'} aria-controls={listId} aria-autocomplete="list" value={value} placeholder={placeholder} maxLength={60} autoComplete="off"
+        onFocus={() => setOpen(true)} onClick={() => setOpen(true)} onKeyDown={onKey} onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(0); }} />
+      <button type="button" className="fld-combo-chev" tabIndex={-1} aria-label="Show the groups" onMouseDown={(e) => { e.preventDefault(); setOpen((o) => !o); }}><Icon icon={chevronDown} size={12} /></button>
+      {open && items.length > 0 && (
+        <div className={'ds-dd-menu fld-combo-menu' + (create ? ' is-action' : '')} role="listbox" id={listId}>
+          <div className="ds-dd-items">
+            {items.map((it, i) => (
+              <div key={(it.create ? '+' : '') + it.label} role="option" aria-selected={norm(it.label) === norm(q) && !it.create ? 'true' : 'false'}
+                className={'ds-dd-item' + (i === active ? ' is-active' : '') + (it.create ? ' has-icon fld-combo-create' : '')}
+                onMouseDown={(e) => { e.preventDefault(); pick(it); }} onMouseEnter={() => setActive(i)}>
+                {it.create && <Icon icon={plus} size="md" />}<span>{it.create ? `Create "${it.label}"` : it.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -84,7 +120,7 @@ export function TypeModal({ open, kind, group: fixedGroup, category: fixedCat, g
         )}
         <div className="fld"><span className="fld-label">Type</span>
           <Rows values={items} setValues={setItems} label="Type" idPrefix={`${id}-item`} placeholder={isExp ? 'e.g., Electricity, Netflix, Uber' : noun === 'income' ? 'e.g., Salary, Freelance' : 'e.g., Stocks, Pension'} /></div>
-        <ActionLink size="medium" icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another type</ActionLink>
+        <ActionLink size="small" icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another type</ActionLink>
         {err && <InfoMessage message="danger" title={err} />}
       </div>
     </Modal>
@@ -123,7 +159,7 @@ export function CategoryModal({ open, existing = [], onClose, onSave, id = 'cate
         <div className="fld"><span className="fld-label">Sub-category</span>
           <Rows values={subs} setValues={setSubs} label="Sub-category" idPrefix={`${id}-sub`} placeholder="e.g., Fixed, Variable, Extra" /></div>
         <div className="fld-row">
-          <ActionLink size="medium" icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
+          <ActionLink size="small" icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
           <InfoTooltip text="Sub-categories split a category, like Fixed and Variable expenses." />
         </div>
         {warn && <InfoMessage message="warning" title={warn.title}>{warn.text}</InfoMessage>}
@@ -158,7 +194,7 @@ export function SubCategoryModal({ open, kind, existing = [], onClose, onSave, i
         <div className="fld"><span className="fld-label">Sub-category</span>
           <Rows values={subs} setValues={setSubs} label="Sub-category" idPrefix={`${id}-sub`} placeholder={kind === 'expense' ? 'e.g., Fixed, Variable, Extra' : 'e.g., Stocks, Shares, Funds'} /></div>
         <div className="fld-row">
-          <ActionLink size="medium" icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
+          <ActionLink size="small" icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
           <InfoTooltip text="Sub-categories split a category, like Fixed and Variable expenses." />
         </div>
         {warn && <InfoMessage message="warning" title={warn.title}>{warn.text}</InfoMessage>}

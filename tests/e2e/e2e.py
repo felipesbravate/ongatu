@@ -154,6 +154,18 @@ async def main():
             check('renaming a group keeps it in place under the new name', await pg.locator('.budget-group[data-category="Animals"]').count() == 1 and await pg.locator('.budget-group[data-category="Pets"]').count() == 0)
             await pg.locator('.budget-group[data-category="Animals"] .budget-group-more').click(); await pg.click('.group-menu .group-delete'); await pg.wait_for_timeout(150)
             check('deleting a group removes it', await pg.locator('.budget-group[data-category="Animals"]').count() == 0)
+            # Add type modal (661:6306 / 663:8893): one row = no remove; a second row shows the 16px red Remove; the Group field lists the groups in the custom Dropdown-list
+            await pg.fill('#budget-new-group', 'Tmp'); await pg.click('#budget-create-group'); await pg.wait_for_timeout(150)
+            await pg.locator('.budget-group[data-category="Tmp"] .budget-group-add').click(); await pg.wait_for_selector('#budget-type-modal[open]'); await pg.wait_for_timeout(200)
+            m1 = await pg.evaluate("() => ({ rm: document.querySelectorAll('#budget-type-modal .fld-remove').length, w: Math.round(document.querySelector('#budget-type-modal .fld-row .ds-input').getBoundingClientRect().width), fw: Math.round(document.querySelector('#budget-type-modal .fld-rows').getBoundingClientRect().width) })")
+            await pg.click('#budget-type-modal-more'); await pg.wait_for_timeout(100)
+            m2 = await pg.evaluate("() => { const b = document.querySelectorAll('#budget-type-modal .fld-row'), sv = b[1].querySelector('.fld-remove svg'); return { first: !!b[0].querySelector('.fld-remove'), slot: !!b[0].querySelector('.fld-remove-slot'), size: sv.getAttribute('width'), color: getComputedStyle(sv).color }; }")
+            check('Add type modal: one row is full width with no remove; the second row shows the 16px Remove in action/destructive, the first keeps its slot',
+                  m1['rm'] == 0 and m1['w'] == m1['fw'] and not m2['first'] and m2['slot'] and m2['size'] == '16' and m2['color'] == 'rgb(189, 0, 7)', [m1, m2])
+            await pg.fill('#budget-type-modal-group', 'Zoo'); await pg.wait_for_timeout(150)
+            cm = await pg.evaluate("() => [...document.querySelectorAll('#budget-type-modal .fld-combo-menu .ds-dd-item')].map(e => e.textContent)")
+            check('Group (Optional): a new name offers \'+ Create "Zoo"\' in the custom Dropdown-list (no native datalist)', cm[:1] == ['Create "Zoo"'] and await pg.locator('#budget-type-modal datalist').count() == 0, cm)
+            await pg.click('#budget-type-modal-cancel'); await pg.wait_for_timeout(250)
             await pg.click('#budget-cancel-btn'); await pg.wait_for_timeout(400)
             check('Cancel closes the Year budget without creating the year', await pg.locator('#budget-panel.open').count() == 0 and await pg.locator(f'.year-btn:text-is("{nxt}")').count() == 0)
             check('admin: current year auto-created', await pg.locator('.year-btn').count() >= 1)

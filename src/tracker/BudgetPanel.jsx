@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ActionLink, Button, Dropdown, InfoTooltip, Input, MenuList, PanelHeader, RoundButton, useDismiss, useMobile } from '../ui/index.js';
 import { KINDS, SubCategoryModal, TypeModal } from './TaxonomyModals.jsx';
 import { Icon } from '../ui/Icon.jsx';
-import { actions, edit, euro, plus, trash } from '../ui/icons.js';
+import { actions, edit, euro, plus, trash, x } from '../ui/icons.js';
 import { EXP_GROUPS, MONTH_NAMES, fmtNum, parseAmount } from './model.js';
 
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
@@ -57,7 +57,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const setValue = (key, value) => mapRows((rows) => rows.map((r) => (r.key === key ? { ...r, value } : r)));
   const removeRow = (key) => mapRows((rows) => rows.filter((r) => r.key !== key));
   const setEditing = (key, editing) => mapRows((rows) => rows.map((r) => (r.key === key ? { ...r, editing } : r)));
-  const rowProps = { onValue: setValue, onRemove: removeRow, onEditing: setEditing };
+  const rowProps = { onValue: setValue, onRemove: removeRow, onEditing: setEditing, mobile };
   const addItem = (i, it) => patchSection(i, (x) => {
     const r = { key: ++seq, type: x.type, group: x.group, ...it, computed: 0, isCustomized: false, value: fmtNum(it.amount || 0), added: true };
     if (x.type !== 'expense') return { ...x, adding: false, empty: false, pre: [...x.pre, r] };
@@ -149,13 +149,13 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
                 {s.blocks.map((b, bi) => (
                   <BlockFrag key={b.category} divider={bi > 0}>
                     <div className="budget-group" data-category={b.category}>
-                      <GroupHeader title={b.category} onRename={(to) => renameGroup(b.category, to)} onDelete={() => deleteGroup(b.category)} />
+                      <GroupHeader title={b.category} mobile={mobile} onAdd={() => { setTypeCat(b.category); setTypeModal(true); }} onRename={(to) => renameGroup(b.category, to)} onDelete={() => deleteGroup(b.category)} />
                       {b.rows.length
                         ? <div className="budget-items">{b.rows.map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                         : <div className="budget-items is-empty"><span className="budget-group-empty">No types added yet.</span></div>}
-                      {/* Each group's "+ Add type" (232:5853: Small on desktop). Phones (Felipe, Oct 3: the frames draw none): a Medium link
-                          16 under the rows, opening the same Add type modal as its Mobile variant (443:1485). */}
-                      <div><ActionLink size={mobile ? 'medium' : undefined} icon={plus} className="budget-group-add" onClick={() => { setTypeCat(b.category); setTypeModal(true); }}>Add type</ActionLink></div>
+                      {/* Each group's "+ Add type" (232:5853, desktop). Phones (415:16066 / 656:10116, Oct 3): the Micro Secondary
+                          "+" beside the group name instead; both open the Add type modal with the group picked. */}
+                      {!mobile && <div><ActionLink icon={plus} className="budget-group-add" onClick={() => { setTypeCat(b.category); setTypeModal(true); }}>Add type</ActionLink></div>}
                     </div>
                   </BlockFrag>
                 ))}
@@ -178,7 +178,7 @@ const BlockFrag = ({ divider, children }) => <>{divider && <hr className="ds-div
 // A group's header (232:5853): its name (Heading/Large; Heading/Medium on phones) and a Micro Tertiary round button with
 // the Actions icon, 8 apart; the menu (Dropdown-list, Drop-actions) holds "Change group name" and "Delete group".
 // Renaming turns the name into a Tiny input: Enter or leaving it saves, Escape keeps the old name.
-function GroupHeader({ title, onRename, onDelete }) {
+function GroupHeader({ title, onRename, onDelete, onAdd, mobile }) {
   const [open, setOpen] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const ref = useRef(null);
@@ -192,7 +192,8 @@ function GroupHeader({ title, onRename, onDelete }) {
         ? <label className="bd-input budget-group-rename"><input ref={input} type="text" defaultValue={title} aria-label={`New name for ${title}`}
             onBlur={(e) => done(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); done(null); } }} /></label>
-        : <div className="budget-cat-title">{title}</div>}
+        : <div className="budget-group-title"><div className="budget-cat-title">{title}</div>
+            {mobile && <RoundButton icon={plus} size="micro" variant="secondary" className="budget-group-plus" label={`Add a type to ${title}`} onClick={onAdd} />}</div>}
       <span className="br-actions" ref={ref}>
         <RoundButton icon={actions} size="micro" className="br-more budget-group-more" label={`Actions for ${title}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
         {open && <MenuList className="br-menu group-menu" items={[
@@ -220,7 +221,7 @@ function RowActions({ item, onRemove }) {
 // A budget row: breackdown-row (DS 124:3667), Entry off, Action on. Default: name, € and the figure as an Action link;
 // Editing (the figure clicked): an Input, Size=Tiny, and 24px right padding. The Action is a Tiny Tertiary Round button
 // with an X in action/destructive that removes the row.
-function BudgetRow({ r, onValue, onRemove, onEditing }) {
+function BudgetRow({ r, onValue, onRemove, onEditing, mobile }) {
   const input = useRef(null);
   useEffect(() => { if (r.editing && input.current) { input.current.focus(); input.current.select(); } }, [r.editing]);
   const done = (v) => { onValue(r.key, fmtNum(parseAmount(v))); onEditing(r.key, false); };
@@ -235,7 +236,10 @@ function BudgetRow({ r, onValue, onRemove, onEditing }) {
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onEditing(r.key, false); } }} /></label>
         : <span className="bd-value"><Icon icon={euro} size={16} className="bd-euro" />
             <button type="button" className="bd-amount br-amount" aria-label={`Monthly budget for ${r.item}: ${r.value}. Edit`} onClick={() => onEditing(r.key, true)}>{r.value}</button></span>}
-      {!r.editing && <RowActions item={r.item} onRemove={() => onRemove(r.key)} />}
+      {/* Phones (415:16066): a Micro Tertiary round button with a 12px X removes the row; desktop keeps the Actions menu. */}
+      {!r.editing && (mobile
+        ? <RoundButton icon={x} size="micro" className="br-more br-x" label={`Remove ${r.item}`} onClick={() => onRemove(r.key)} />
+        : <RowActions item={r.item} onRemove={() => onRemove(r.key)} />)}
     </div>
   );
 }
