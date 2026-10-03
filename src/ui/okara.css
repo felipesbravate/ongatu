@@ -2595,3 +2595,10 @@
 
   /* Balance card 441:1057 (Oct 3): the month label in Heading/Large, as in the main page frames. */
   .balance-card .label{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+
+  /* Oct 3 (Felipe): inputs and dropdowns write in 400, not the 500 of their Label / Value text styles. Covers the
+     field value and placeholder, the date field, the Amount field, the open list's rows and its group titles. */
+  .ds-input, .ds-input input, .ds-input input::placeholder, .ds-input.is-value input,
+  .ds-dd-trigger, .ds-dd-trigger .ds-dd-value, .date-dd-label,
+  .ds-input.tiny, .ds-input.tiny input, .ds-dd--tiny .ds-dd-trigger, .ds-dd--tiny .ds-dd-trigger .ds-dd-value,
+  .ds-dd-item, button.ds-dd-item, .ds-dd-group{ font-weight:400; }

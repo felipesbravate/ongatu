@@ -295,11 +295,11 @@ async def main():
             # Small fixed 40 with space/xs; Tiny hugs space/xs round 16 (24). Body/Large/Medium 14/16, Tiny Body/Medium/Medium 12/14.
             # Oct 2: every size hugs its padding round the icon-size slot: Medium space/sm round xl (32 on desktop), Small and
             # Tiny space/xs round xl / md (24). Dropdowns write Label/Large (18/600/16 on desktop), inputs Body/Large/Medium, Tiny Label/Tiny.
-            # Oct 3: Input, Dropdown and dropdown-item always use the Mobile tokens; Medium and Small write Label/Medium (16/500/24), Tiny Label/Tiny.
+            # Oct 3: Input, Dropdown and dropdown-item always use the Mobile tokens; Medium and Small write Label/Medium at 400 (16/400/24), Tiny Label/Tiny.
             check('Dropdown sizes (71:1096, Oct 3, Mobile tokens everywhere): Medium 48 / 16, Small 40 / 8, Tiny 32 / 8',
-                  sz['dd-md'] == [48, '15px', '16px', '500', '24px'] and sz['dd-sm'] == [40, '7px', '16px', '500', '24px'] and sz['dd-tiny'] == [32, '7px', '14px', '500', '16px'], sz)
+                  sz['dd-md'] == [48, '15px', '16px', '400', '24px'] and sz['dd-sm'] == [40, '7px', '16px', '400', '24px'] and sz['dd-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
             check('Input sizes (71:1093, Oct 3, Mobile tokens everywhere): Medium 48 / 16, Small 40 / 8, Tiny 32 / 8',
-                  sz['in-medium'] == [48, '15px', '16px', '500', '24px'] and sz['in-small'] == [40, '7px', '16px', '500', '24px'] and sz['in-tiny'] == [32, '7px', '14px', '500', '16px'], sz)
+                  sz['in-medium'] == [48, '15px', '16px', '400', '24px'] and sz['in-small'] == [40, '7px', '16px', '400', '24px'] and sz['in-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
             st = await pg.evaluate("""() => { const host = document.body, mk = (h) => { const w = document.createElement('div'); w.innerHTML = h; host.appendChild(w); return w; };
                 const e = mk('<span class="ds-input"><input placeholder="Label"></span>'), f = mk('<span class="ds-input"><input placeholder="Label" value="Felipe"></span>'),
                       de = mk('<div class="ds-dd ds-dd--md is-empty"><button class="ds-dd-trigger">Select</button></div>'), df = mk('<div class="ds-dd ds-dd--md"><button class="ds-dd-trigger">Rent</button></div>'),
@@ -404,7 +404,7 @@ async def main():
                 return { pad: cs(menu).padding, gFont: [cs(g).fontSize, cs(g).fontWeight, cs(g).lineHeight], gX: r(g).left - r(menu).left - 1, itemH: r(its[0]).height, itemPad: cs(its[0]).padding, iFont: [cs(its[0]).fontSize, cs(its[0]).fontWeight, cs(its[0]).lineHeight],
                          itemGap: its.length > 1 ? r(its[1]).top - r(its[0]).bottom : 4, itemX: r(its[0]).left - r(menu).left - 1, tFont: [cs(t).fontSize, cs(t).lineHeight, cs(t).letterSpacing], tPad: cs(t).padding, tBg: cs(t).backgroundColor, tSel: cs(its[0]).fontWeight }; }""")
             check('menu (Dropdown-list 182:6851, Oct 3, Mobile tokens): padding space/md (16), group title Label/Large 18/500/20 flush, rows space/xs round Label/Small (36), space/tn apart',
-                  m['pad'] == '16px' and m['gFont'] == ['18px', '500', '20px'] and abs(m['gX'] - 16) < 0.6 and m['itemH'] == 36 and m['itemPad'] == '8px' and m['iFont'] == ['16px', '500', '20px'] and m['itemGap'] == 4 and abs(m['itemX'] - 16) < 0.6, m)
+                  m['pad'] == '16px' and m['gFont'] == ['18px', '400', '20px'] and abs(m['gX'] - 16) < 0.6 and m['itemH'] == 36 and m['itemPad'] == '8px' and m['iFont'] == ['16px', '400', '20px'] and m['itemGap'] == 4 and abs(m['itemX'] - 16) < 0.6, m)
             check('trigger in the panel (Oct 3): Label/Medium 16/24 -2%, space/md sides (16, minus the border), no fill', m['tFont'] == ['16px', '24px', '-0.32px'] and m['tPad'] == '0px 15px' and m['tBg'] == 'rgba(0, 0, 0, 0)', m)
             await pg.keyboard.press('Escape'); await pg.wait_for_selector('.ds-dd-menu', state='detached')
             # keyboard: open with Enter, move, choose with Enter; Escape only closes the menu
