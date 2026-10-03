@@ -55,11 +55,17 @@ export function Meter({ name, amount, max, currency, color, state, counter, euro
 }
 
 // Breakdown row (DS 124:3667, Default): name (+ counter) and the right-aligned Value.
-export function BreakdownRow({ name, amount, currency, state, counter, euroSize }) {
+// `actions` = the row's Micro Tertiary round button with the Actions icon and its menu (124:3667, Oct 3: every variant).
+// `onAmount` makes the figure the row's Medium Action link (581:19517: link/default).
+export function BreakdownRow({ name, amount, currency, state, counter, euroSize, actions, onAmount, amountLabel }) {
+  const fig = <>{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} iconSize={euroSize} /></>;
   return (
     <div className={'bd-row' + (state === 'estimate' ? ' is-estimate' : state === 'removed' ? ' is-removed' : '')}>
       <span className="bd-item-name">{name}{counter}</span>
-      <span className="n">{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} iconSize={euroSize} /></span>
+      {onAmount
+        ? <button type="button" className="n bd-amount-link" aria-label={amountLabel} onClick={onAmount}>{fig}</button>
+        : <span className="n">{fig}</span>}
+      {actions}
     </div>
   );
 }

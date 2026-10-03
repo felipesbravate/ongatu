@@ -37,13 +37,16 @@ export function Avatar({ name, image, large, size, className }) {
 
 // Menu of actions (Dropdown-list 182:6851, Type=Simple, made of dropdown-items 183:6858 with an optional left icon).
 // items: [{ key, label, icon, onSelect, id }]. `bare` drops the list's own card (the user menu draws its own).
-export function MenuList({ items, bare, className, ...rest }) {
+// dropdown-item (DS 183:6858): a 16px icon 8 before the label. `description` = Dropdown-list/Actions (663:935): a
+// Body/Medium/Medium text/secondary line over the items, 8 apart.
+export function MenuList({ items, bare, className, description, ...rest }) {
   return (
-    <div className={cx(bare ? 'ds-menu-items' : 'ds-dd-menu ds-menu', className)} role="menu" {...rest}>
+    <div className={cx(bare ? 'ds-menu-items' : 'ds-dd-menu ds-menu', description && 'has-desc', className)} role="menu" {...rest}>
+      {description && <div className="ds-dd-desc">{description}</div>}
       <div className="ds-dd-items">
         {items.map((it) => (
-          <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon')} onClick={it.onSelect}>
-            {it.icon && <Icon icon={it.icon} size={12} />}<span>{it.label}</span>
+          <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon', it.className)} onClick={it.onSelect}>
+            {it.icon && <Icon icon={it.icon} size="md" />}<span>{it.label}</span>
           </button>
         ))}
       </div>

@@ -52,12 +52,12 @@ const cleanList = (vals) => { const out = []; vals.map((v) => v.trim()).filter(B
 
 // Type creation. kind fixes the category; for expenses `group` (the sub-category) may be fixed or picked here.
 // groupsOf(sub) lists the existing groups of a sub-category. onSave({ group, category, items }).
-export function TypeModal({ open, kind, group: fixedGroup, groups = EXP_GROUPS, groupsOf = () => [], onClose, onSave, id = 'type-modal' }) {
+export function TypeModal({ open, kind, group: fixedGroup, category: fixedCat, groups = EXP_GROUPS, groupsOf = () => [], onClose, onSave, id = 'type-modal' }) {
   const [sub, setSub] = useState(fixedGroup || groups[0]);
   const [cat, setCat] = useState('');
   const [items, setItems] = useState(['']);
   const [err, setErr] = useState('');
-  useEffect(() => { if (open) { setSub(fixedGroup || groups[0]); setCat(''); setItems(['']); setErr(''); } }, [open, fixedGroup]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (open) { setSub(fixedGroup || groups[0]); setCat(fixedCat || ''); setItems(['']); setErr(''); } }, [open, fixedGroup, fixedCat]); // eslint-disable-line react-hooks/exhaustive-deps
   const isExp = kind === 'expense';
   const noun = (KINDS.find((k) => k.value === kind) || {}).noun || '';
   const save = () => {

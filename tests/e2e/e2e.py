@@ -133,7 +133,29 @@ async def main():
                 return { h: r(p).height, border: getComputedStyle(p).borderTopColor, dd: [r(y).width, r(y).height, r(c).width, r(c).height], gap: r(c).left - r(y).right, btn: r(b).height }; }""")
             check('Add year (Oct 3: always the Mobile tokens): the pill hugs its Small close, border/default, two Tiny dropdowns 120 x 32, space/tn (4) apart, Tiny Add button (32)',
                   ya['h'] == 44 and ya['border'] == 'rgb(203, 202, 197)' and ya['dd'] == [120, 32, 120, 32] and ya['gap'] == 4 and ya['btn'] == 32, ya)
-            await pg.click('#year-add-cancel'); await pg.wait_for_timeout(300)
+            # Year budget (232:5851 / 232:5853, Oct 3): groups are created, renamed and deleted in the panel; Cancel discards it all
+            nxt = await pg.evaluate("() => { const s = document.getElementById('year-add-year'); const o = [...s.options].map(o => o.value).filter(Boolean); s.value = o[o.length - 1]; s.dispatchEvent(new Event('change', {bubbles:true})); return s.value; }")
+            await pg.click('#year-add-submit'); await pg.wait_for_selector('#budget-panel.open'); await pg.wait_for_timeout(400)
+            bp = await pg.evaluate("""() => { const r = e => e.getBoundingClientRect(), p = document.querySelector('#budget-panel.open'), pr = r(p);
+                return { close: Math.round(r(document.getElementById('budget-close-btn')).top - pr.top), title: Math.round(r(document.getElementById('budget-panel-title')).top - pr.top),
+                         save: [...document.querySelectorAll('#budget-panel.open > .add-actions .btn-pill')].map(b => b.textContent.trim()), saveIcon: !!document.querySelector('#budget-create-btn svg'),
+                         label: document.querySelector('label[for="budget-new-group"]').textContent }; }""")
+            check('Year budget (232:5853): close 8 from the top, title 24 under the 64 nav, Cancel then Save (no icon), "Create group (Optional)"',
+                  bp['close'] == 8 and bp['title'] == 88 and bp['save'] == ['Cancel', 'Save ' + nxt] and not bp['saveIcon'] and bp['label'] == 'Create group (Optional)', bp)
+            await pg.fill('#budget-new-group', 'Pets'); await pg.click('#budget-create-group'); await pg.wait_for_timeout(150)
+            grp = pg.locator('#budget-sections .budget-type-section:not([hidden]) .budget-group[data-category="Pets"]')
+            check('"Create new group" adds an empty group: "No types added yet." and its own "+ Add type"',
+                  await grp.count() == 1 and (await grp.locator('.budget-group-empty').text_content()) == 'No types added yet.' and await grp.locator('.budget-group-add').count() == 1)
+            await grp.locator('.budget-group-more').click(); await pg.wait_for_timeout(100)
+            gm = await pg.evaluate("() => [...document.querySelectorAll('.group-menu .ds-dd-item')].map(e => e.textContent)")
+            check('group menu (Drop-actions): "Change group name", "Delete group"', gm == ['Change group name', 'Delete group'], gm)
+            await pg.click('.group-menu .group-rename'); await pg.wait_for_timeout(100)
+            await pg.fill('.budget-group-rename input', 'Animals'); await pg.keyboard.press('Enter'); await pg.wait_for_timeout(150)
+            check('renaming a group keeps it in place under the new name', await pg.locator('.budget-group[data-category="Animals"]').count() == 1 and await pg.locator('.budget-group[data-category="Pets"]').count() == 0)
+            await pg.locator('.budget-group[data-category="Animals"] .budget-group-more').click(); await pg.click('.group-menu .group-delete'); await pg.wait_for_timeout(150)
+            check('deleting a group removes it', await pg.locator('.budget-group[data-category="Animals"]').count() == 0)
+            await pg.click('#budget-cancel-btn'); await pg.wait_for_timeout(400)
+            check('Cancel closes the Year budget without creating the year', await pg.locator('#budget-panel.open').count() == 0 and await pg.locator(f'.year-btn:text-is("{nxt}")').count() == 0)
             check('admin: current year auto-created', await pg.locator('.year-btn').count() >= 1)
 
             # 2. manual entry persists across reload; storage holds ciphertext only
@@ -184,16 +206,29 @@ async def main():
                          name: [cs(name).fontSize, cs(name).fontWeight, cs(name).lineHeight, cs(name).color], date: date ? [cs(date).fontSize, cs(date).fontWeight, cs(date).color, cs(date).lineHeight, cs(date).letterSpacing] : null,
                          amt: [cs(amt).fontFamily.split(',')[0], cs(amt).fontSize, cs(amt).fontWeight, cs(amt).letterSpacing], euro: !!q(amt, '.money-ic svg'),
                          del: del && { w: r(del).width, h: r(del).height, svg: [r(q(del, 'svg')).width, r(q(del, 'svg')).height], vb: q(del, 'svg').getAttribute('viewBox'), color: cs(del).color } }; }""")
-            check('counter (146:5252, Desktop): 14px pill, space/tn (2) sides, space/xs (4) from the name, action/press while its tooltip is open',
-                  t['badge'] and t['badge']['h'] == 14 and t['badge']['pad'] == '0px 2px' and t['badge']['ml'] == '4px' and t['badge']['bg'] == 'rgb(31, 30, 25)', t['badge'])
+            check('counter (146:5252, Desktop): 14px pill, 4 each side (Oct 3), space/xs (4) from the name, action/press while its tooltip is open',
+                  t['badge'] and t['badge']['h'] == 14 and t['badge']['pad'] == '0px 4px' and t['badge']['ml'] == '4px' and t['badge']['bg'] == 'rgb(31, 30, 25)', t['badge'])
             check('counter text (146:5252, Oct 2): Body/Small/SemiBold (11 / 600 / 12 / -2% on desktop), not mono', t['badge']['font'] == ['11px', '600', '12px', '-0.22px'] and 'Mono' not in t['badge']['fam'], t['badge'])
-            check('tooltip: dark surface, radius 16, padding space/md space/xs (12/4/12/12 on desktop), 280 wide at least, no shadow', t['tip']['bg'] == 'rgb(22, 21, 15)' and t['tip']['radius'] == '16px' and t['tip']['pad'] == '12px 4px 12px 12px' and t['tip']['w'] >= 280 and t['tip']['shadow'] == 'none', t['tip'])
+            check('tooltip (146:5252, Oct 3): dark surface, radius 16, padding 16/8/16/16, 320 wide, no shadow', t['tip']['bg'] == 'rgb(22, 21, 15)' and t['tip']['radius'] == '16px' and t['tip']['pad'] == '16px 8px 16px 16px' and t['tip']['w'] == 320 and t['tip']['shadow'] == 'none', t['tip'])
             check('tooltip opens beside the counter, 4px away, centred on it (or kept inside the window)', abs(t['gapX'] - 4) < 0.6 and (abs(t['midDy']) < 9 or t['kept']), [t['gapX'], t['midDy'], t['kept']])
-            check('tooltip entry (144:4426): 24px row, space/xs gaps (4 on desktop, also between amount and remove), 12px dot', t['item']['h'] == 24 and t['item']['gap'] == '4px' and t['item']['rgap'] == '4px' and t['item']['dot'] == [12, 12], t['item'])
+            check('tooltip entry (144:4426, Oct 3): 24px row, 8 apart (also between amount and remove), 12px dot', t['item']['h'] >= 24 and t['item']['gap'] == '8px' and t['item']['rgap'] == '8px' and t['item']['dot'] == [12, 12], t['item'])
             check('tooltip entry text (144:4426, Oct 2): name Body/Large/SemiBold white, date Body/Large/Medium text/muted (14 on desktop)', t['name'] == ['14px', '600', '16px', 'rgb(255, 255, 255)'] and t['date'] is not None and t['date'] == ['14px', '400', 'rgb(150, 146, 132)', '16px', '-0.28px'], [t['name'], t['date']])
-            check('tooltip amount: Euro icon + Value/Small (mono 11/400/-4% on desktop)', t['euro'] and 'Mono' in t['amt'][0] and t['amt'][1:] == ['11px', '400', '-0.44px'], t['amt'])
+            check('tooltip amount (144:4426, Oct 3): 16px Euro + Value/Medium (mono 12/400/-4% on desktop)', t['euro'] and 'Mono' in t['amt'][0] and t['amt'][1:] == ['12px', '400', '-0.48px'], t['amt'])
             check('tooltip remove: Micro round button (24, Mobile tokens since Oct 3) with the 12px X, action/disable', t['del'] and t['del']['w'] == 24 and t['del']['h'] == 24 and t['del']['svg'] == [12, 12] and t['del']['vb'] == '0 0 12 12' and t['del']['color'] == 'rgb(150, 146, 132)', t['del'])
             await pg.keyboard.press('Escape'); await pg.mouse.click(5, 5)
+            # Oct 3 (124:3667, 663:935): every Tracker row ends with a Micro Actions button; its menu names the row and offers "Add entry"
+            mrow = pg.locator('#itemslist .bd-row').first
+            mname = (await mrow.locator('.bd-item-name').evaluate("e => e.firstChild.textContent")).strip()
+            rb = await mrow.locator('.br-more').evaluate("e => { const r = e.getBoundingClientRect(); return [r.width, r.height, e.querySelector('svg').getAttribute('data-icon')]; }")
+            check('Tracker row (124:3667): Micro Tertiary round button (24) with the Actions icon', rb == [24, 24, 'actions'], rb)
+            await mrow.locator('.br-more').click(); await pg.wait_for_timeout(100)
+            menu = await pg.evaluate("""() => { const m = document.querySelector('#itemslist .row-menu'); if (!m) return null; const cs = getComputedStyle(m);
+                return { desc: m.querySelector('.ds-dd-desc').textContent, items: [...m.querySelectorAll('.ds-dd-item')].map(e => e.textContent), pad: cs.padding, gap: cs.rowGap, icon: m.querySelector('.ds-dd-item svg').getAttribute('data-size') }; }""")
+            check('row menu (Dropdown-list/Actions 663:935): the row name as description, "Add entry", 16px icons', menu and menu['desc'] == mname and menu['items'][0] == 'Add entry' and menu['icon'] == '16', menu)
+            await pg.locator('#itemslist .row-menu .row-add').click(); await pg.wait_for_timeout(400)
+            picked = await pg.evaluate("() => document.querySelector('#add-panel.open') && document.getElementById('entry-item-trigger') ? document.getElementById('entry-item-trigger').textContent.trim() : null")
+            check('"Add entry" opens the Add entry panel with that type picked', picked == mname, [picked, mname])
+            await pg.click('#entry-close-btn'); await pg.wait_for_timeout(400)
 
             # 2c. years list: newest first, and a duplicated year label appears once
             for y in ('2031', '2029', '2030', '2030'):
@@ -662,9 +697,9 @@ async def main():
             await ann.wait_for_timeout(300); await ann.click('#user-menu-btn'); await ann.wait_for_selector('.ds-user-name')
             await ann.wait_for_timeout(250)
             um = await ann.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect();
-                const c = document.getElementById('user-menu'), n = c.querySelector('.ds-user-name'), m = c.querySelector('.ds-menu-items');
+                const c = document.getElementById('user-menu'), n = c.querySelector('.ds-user-name'), m = c.querySelector('.ds-menu-items .ds-dd-items');
                 return { w: r(c).width, name: [cs(n).fontSize, cs(n).fontWeight, cs(n).lineHeight], menuW: r(m).width, menuR: Math.round(r(c).right - r(m).right), closed: Math.round(r(document.querySelector('.ds-user-trigger')).width) }; }""")
-            check('user (221:1048): card 240 wide, name Body/Large/Medium (16/400/20: the header uses the Mobile tokens), menu 202 wide, space/tn from the right, closed pill 76', um['w'] == 240 and um['name'] == ['16px', '400', '20px'] and um['menuW'] == 202 and um['menuR'] == 5 and um['closed'] == 76, um)
+            check('user (221:1059, Oct 3): card 240 wide, name Body/Large/Medium (16/400/20: the header uses the Mobile tokens), items 202 wide, 4 from the card padding on the right, closed pill 76', um['w'] == 240 and um['name'] == ['16px', '400', '20px'] and um['menuW'] == 202 and um['menuR'] == 9 and um['closed'] == 76, um)
             check('the first name reaches the user menu', (await ann.inner_text('.ds-user-name')).strip() == 'Annabel', await ann.inner_text('.ds-user-name'))
             await ann.click('#menu-account'); await ann.wait_for_timeout(400)
             check('choosing an item keeps the user menu open (Account on the Account page does nothing)', await ann.locator('#user-menu').count() == 1 and ann.url.endswith('/account'))

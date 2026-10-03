@@ -91,7 +91,7 @@ const TOP_TABS_MOBILE = TOP_TABS;
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');
 
-export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, onTab, onAdd, addOpen, tip, setTip, actions, onAdjustBudget }) {
+export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, onTab, onAdd, onAddItem, addOpen, tip, setTip, actions, onAdjustBudget }) {
   const cur = y.currency;
   const bd = model.buildBreakdown(y, monthIdx, breakdownType);
   const eligible = model.isFutureMonth(y, monthIdx);
@@ -114,6 +114,10 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         {total || (row.deleted ? '×' : (row.isEstimate ? '≈' : '•'))}
       </EntryCounter>
     );
+  };
+  const toggleTip = (row, anchor) => {
+    const key = `${row.yearLabel}|${row.mi}|${row.type}|${row.group}|${row.category}|${row.item}`;
+    setTip(tip && tip.key === key ? null : { key, row, cur, anchor });
   };
   const state = (r) => (r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined);
   // Phones (Tracker_Card_mobile 442:5153): the card stops at 555px with the Expander (DS 475:743) over its bottom;
@@ -159,7 +163,11 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
               <div className="bd-block">
                 <div className="bd-block-title">{r.category}</div>
                 {r.items.map((it) => (
-                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={16} />
+                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={16}
+                    amountLabel={`${it.item}: ${fmtMoney(it.amount, cur)}. ${counter(it) ? 'Show entries' : 'Add an entry'}`}
+                    onAmount={(ev) => { ev.stopPropagation(); if (counter(it)) toggleTip(it, ev.currentTarget); else if (onAddItem) onAddItem({ type: 'expense', group: breakdownType, cat: r.category, item: it.item }); }}
+                    actions={<RowMenu item={it.item} onAdd={onAddItem ? () => onAddItem({ type: 'expense', group: breakdownType, cat: r.category, item: it.item }) : null}
+                      onAdjustBudget={onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) ? onAdjustBudget : null} />} />
                 ))}
               </div>
             </FragmentDivider>
@@ -189,6 +197,26 @@ function TrackerMenu({ onAdjustBudget }) {
       <RoundButton icon={actionsIcon} size="small" id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
       {open && <MenuList id="tracker-menu" items={[{ key: 'budget', id: 'adjust-budget', label: "Adjust month's budget", icon: edit, onSelect: () => { setOpen(false); onAdjustBudget(); } }]} />}
     </div>
+  );
+}
+// A Tracker row's Actions (breackdown-row 124:3667): Micro Tertiary round button (Actions icon), Active while open; its
+// menu is a Dropdown-list/Actions (663:935): the item's name as the description, then "Add entry" (the Add entry panel
+// with this type picked) and, for months that can still be planned, "Adjust month's budget".
+function RowMenu({ item, onAdd, onAdjustBudget }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  useDismiss(open, ref, close);
+  const items = [
+    onAdd && { key: 'add', label: 'Add entry', icon: plus, className: 'row-add', onSelect: () => { setOpen(false); onAdd(); } },
+    onAdjustBudget && { key: 'budget', label: "Adjust month's budget", icon: edit, className: 'row-budget', onSelect: () => { setOpen(false); onAdjustBudget(); } },
+  ].filter(Boolean);
+  if (!items.length) return null;
+  return (
+    <span className="br-actions" ref={ref}>
+      <RoundButton icon={actionsIcon} size="micro" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }} />
+      {open && <MenuList className="br-menu row-menu" description={item} items={items} />}
+    </span>
   );
 }
 const FragmentDivider = ({ divider, children }) => <>{divider && <hr className="ds-divider" />}{children}</>;

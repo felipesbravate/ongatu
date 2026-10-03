@@ -359,14 +359,15 @@ export default function TrackerApp() {
         <AddPanel open={addPanel.open} preset={addPanel.preset} model={model} yearIdx={yearIdx} monthIdx={monthIdx}
           onClose={() => setAddPanel((p) => ({ ...p, open: false }))} save={save} />
         <BudgetPanel pending={pendingYear} model={model} onClose={() => setPendingYear(null)} onCreate={createYear} />
-        <BudgetPanel month={monthBudget} model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} />
+        <BudgetPanel month={monthBudget} forMonth model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} />
         <div className="row1">
           <HeroLeft model={model} y={y} monthIdx={monthIdx} />
           <div className="hero-right">
             <TrackerCard model={model} y={y} monthIdx={monthIdx} breakdownType={bd.type} breakdownGroup={bd.group} tip={tip} setTip={setTip} actions={tipActions}
               addOpen={addPanel.open} onAdjustBudget={() => setMonthBudget({ yearIdx, monthIdx })}
               onTab={(type, group) => setBd((b) => ({ type, group: group || b.group }))}
-              onAdd={() => setAddPanel({ open: true, preset: { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: bd.group } })} />
+              onAdd={() => setAddPanel({ open: true, preset: { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: bd.group } })}
+              onAddItem={(preset) => setAddPanel({ open: true, preset })} />
             <ExpenseStrip model={model} y={y} monthIdx={monthIdx} />
             <TrendChart model={model} y={y} monthIdx={monthIdx} onMonth={selectMonth} />
           </div>

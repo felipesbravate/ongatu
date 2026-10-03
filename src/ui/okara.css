@@ -2880,10 +2880,8 @@
   .bd-row .bd-item-name{ color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
   .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
   .bd-row .n .money, .bd-row .bd-value{ gap:var(--space-tn); }
-  @media (min-width:641px){
-    .bd-row .bd-item-name{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
-    .bd-row .n, .bd-row .bd-amount, .bd-row .br-input{ font-size:12px; }
-  }
+  /* Oct 3 (third pass): the newest screens (581:19517 Tracker, 232:5851 / 232:5853 Year budget) draw Surface=Mobile rows on
+     desktop too, so the Desktop sizes above are no longer applied. */
 
   /* ================================================================
      Add entry panel 229:18167 (Oct 3, measured)
@@ -3030,3 +3028,141 @@
   @media (max-width:640px){ #add-panel .ap-main{ gap:var(--space-lg); } }
   #ap-review .add-actions .btn-pill{ white-space:nowrap; flex-shrink:0; }
   @media (min-width:641px){ #ap-review .rv-table + .add-actions, #ap-review .add-actions{ margin-top:calc(var(--space-2xl) - var(--space-lg)); } }
+
+  /* ================================================================
+     Oct 3 (third pass): Account 250:3399, Year budget 232:5851 / 232:5853 / 415:16066, Modal 443:1484, Tracker
+     581:19517, breackdown-row 124:3667, Entry tooltip 146:5252, Tooltip entry item 144:4426, user 221:1059,
+     Dropdown-list/Actions 663:935.
+     ================================================================ */
+  /* Panels (229:18167, 232:5852), desktop: the 64px modal-nav centres the Medium close (8 from the top, 12 from the edge);
+     the content starts 24 under it (32 on the Year budget's Default variant: Income and Save/Invest). */
+  @media (min-width:641px){
+    #add-panel .panel-nav, .budget-panel .panel-nav{ padding:0 12px; align-items:center; }
+    #add-panel .add-panel-header, .budget-panel .add-panel-header{ margin-top:24px; }
+    .budget-panel.is-default .add-panel-header{ margin-top:32px; }
+  }
+
+  /* breackdown-row 124:3667: item, the amount and the Micro Tertiary Actions button xs apart, 24 high. */
+  .bd-row{ min-height:24px; gap:var(--space-xs); }
+  .bd-row .bd-item-name{ flex:1 1 auto; min-width:0; }
+  .bd-row .br-actions{ flex:none; }
+  .bd-row .br-more{ color:var(--surface-dark); }
+  /* Row / group menus: Dropdown-list (Drop-actions; Actions 663:935 with a description), right-aligned 4 under the button. */
+  .br-menu{ position:absolute; right:0; top:calc(100% + 4px); z-index:30; min-width:200px; width:max-content; display:flex; flex-direction:column; gap:var(--space-xs); }
+  .br-menu .ds-dd-items{ gap:var(--space-tn); }
+  .br-menu .br-remove, .br-menu .group-delete{ color:var(--action-destructive); }
+  .ds-dd-desc{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); white-space:nowrap; }
+
+  /* Tracker 581:19517 (desktop): month xs under "Tracker"; the segments and the Add button xl apart. */
+  @media (min-width:641px){
+    .bd-title{ gap:var(--space-xs); }
+    .bd-controllers{ gap:var(--space-xl); }
+  }
+
+  /* Entry tooltip 146:5252: the counter hugs its count, 14 high, 4 each side, Body/Small/SemiBold; Icon = a 22 pill with
+     a 12 Chart. The tooltip: 320 wide (280 with nothing under the header), padding 16/8/16/16; header ("Budget set" Body/
+     Medium/SemiBold and a 16px € + Value/Medium, both text/muted, 10 apart), a Divider 16 above and below, then the
+     entries (gap 0). Empty: "There's no entries yet." Body/Medium/Medium white. */
+  .note-count{ padding:0 4px; }
+  .note-count.is-icon{ width:22px; padding:0; }
+  #note-tip{ width:320px; min-width:0; max-width:calc(100vw - 16px); }
+  #note-tip.is-empty{ width:280px; }
+  #note-tip .tip-head{ gap:10px; padding-right:0; }
+  #note-tip .tip-head-label{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--text-muted); }
+  #note-tip .tip-head-amount{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); color:var(--text-muted); }
+  #note-tip .tip-head-amount .money{ gap:0; }
+  #note-tip .tip-head-amount .money-ic{ color:var(--text-muted); }
+  #note-tip .tip-head-divider{ margin:16px 0; }
+  #note-tip .tip-empty{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-white); }
+  /* Tooltip entry item 144:4426: 24 high, 8 apart; the amount = 16px € + Value/Medium, 4 apart. */
+  #note-tip .tip-item{ gap:8px; min-height:24px; }
+  #note-tip .tip-left, #note-tip .tip-right{ gap:8px; }
+  #note-tip .tip-amount{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); }
+  #note-tip .tip-amount .money{ gap:4px; }
+
+  /* user 221:1059 (Active): card padding 4/4/8/4, the name row and the menu 8 apart; the menu 24 in from the left (4 on
+     the right), items 202 wide, tn apart, each with a 16px icon, text/primary. */
+  .ds-user-card{ gap:var(--space-xs); }
+  .ds-user-card .ds-menu-items{ width:auto; align-self:stretch; padding:0 4px 0 24px; }
+  .ds-user-card .ds-dd-item{ color:var(--text-primary); }
+  .ds-user-card .ds-dd-item svg{ color:var(--surface-dark); }
+
+  /* Year budget 232:5851 / 232:5853 (desktop): labels 8 over their control; groups 16 apart with a Divider; a group =
+     header (24: Heading/Large name, Micro Actions button, 8 apart), its rows (24, no gap) and "+ Add type", 12 apart; an
+     empty group says "No types added yet." centred on 48. Cancel then Save, right-aligned, 16 apart. */
+  .budget-panel .budget-filters .fld{ gap:var(--space-sm); }
+  .budget-panel .budget-type-section{ gap:var(--space-lg); }
+  .budget-panel .budget-group{ gap:var(--space-md); }
+  .budget-panel .budget-group-head{ min-height:24px; gap:var(--space-sm); align-items:center; }
+  .budget-panel .budget-cat-title{ flex:1 1 auto; min-width:0; }
+  .budget-panel .budget-items{ gap:0; }
+  .budget-panel .budget-row{ min-height:24px; height:auto; }
+  .budget-panel .budget-items.is-empty{ min-height:48px; display:flex; align-items:center; justify-content:center; }
+  .budget-group-empty{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .budget-group-rename{ flex:1 1 auto; max-width:240px; }
+  .budget-panel .add-actions{ justify-content:flex-end; gap:var(--space-lg); }
+  .budget-panel .add-actions .add-status{ margin-right:auto; }
+  .budget-panel .add-actions .add-status:empty{ display:none; }
+  /* Phones (415:16066): selectors md apart (Category | Sub-category xs across, labels xs over the control); groups lg
+     apart, a group's header (Heading/Medium) lg over its rows, rows tn apart; Save over Cancel, full width, xs apart. */
+  @media (max-width:640px){
+    .budget-panel .budget-filters{ row-gap:var(--space-md); column-gap:var(--space-xs); }
+    .budget-panel .budget-filters .fld{ gap:var(--space-xs); }
+    .budget-panel .budget-type-section{ gap:var(--space-lg); }
+    .budget-panel .budget-group{ gap:var(--space-lg); }
+    .budget-panel .budget-group-head{ gap:var(--space-tn); }
+    .budget-panel .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+    .budget-panel .budget-items{ gap:var(--space-tn); }
+    .budget-panel .add-actions{ flex-direction:column; align-items:stretch; gap:var(--space-xs); }
+    .budget-panel .add-actions .budget-save{ order:1; }
+    .budget-panel .add-actions .budget-cancel{ order:2; }
+    .budget-panel .add-actions .add-status{ order:3; margin:0; }
+    .budget-panel .add-actions .btn-pill{ width:100%; justify-content:center; }
+  }
+
+  /* Account 250:3399: the side menu (246, items tn apart) and the cards (800) space/3xl apart, centred; "Personal
+     information" Heading/XL over Body/Large/Medium, sm apart (the other cards keep Heading/Large + Body/Medium/Medium, tn);
+     the e-mail field 352 wide; the Security options 720 wide; Small destructive button md each side. */
+  @media (min-width:641px){
+    .acct-content{ justify-content:center; gap:var(--space-3xl); }
+    .acct-menu{ width:246px; flex:0 0 246px; gap:4px; }
+    #profile .acct-card-head{ gap:var(--space-sm); }
+    #profile .acct-card-head h2{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+    #profile .acct-card-head p{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    #profile .acct-form .acct-row:has(#email){ display:flex; gap:var(--space-lg); }
+    #profile .acct-form .acct-row:has(#email) .field{ width:352px; flex:0 0 352px; }
+    #security .acct-option{ max-width:720px; }
+  }
+  .acct-card .btn-pill.destructive.small{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); }
+
+  /* Modal 443:1484: Desktop — the two buttons share the row (FILL), 12 apart; Mobile — they hug their label, centred,
+     16 apart; the title Heading/Large. */
+  .ds-modal-actions .btn-pill, .ds-modal-actions .btn-pill:only-child{ flex:1 1 0; width:auto; min-width:0; }
+  @media (max-width:640px){
+    .ds-modal-actions{ justify-content:center; }
+    .ds-modal-actions .btn-pill, .ds-modal-actions .btn-pill:only-child{ flex:0 0 auto; width:auto; }
+    .ds-modal-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  }
+  /* The amount is a Medium Action link (pinned Mobile): 16px € and the figure 4 apart. Link-only wrappers hug the link. */
+  .bd-row .n .money, .bd-row .bd-value{ gap:4px; }
+  .budget-panel .budget-row{ gap:var(--space-xs); }
+  .budget-panel .budget-filters > .span-2:has(> .ds-action-link), .budget-panel .budget-group > div:has(> .budget-group-add),
+  .budget-panel .budget-type-section > div:has(> .ds-action-link){ display:flex; }
+  /* Tracker rows (581:19517): the figure is a Medium Action link (link/default; hover underlined). */
+  .bd-row .bd-amount-link{ display:inline-flex; align-items:center; flex:none; padding:0; border:0; background:none; cursor:pointer; color:var(--link-default); font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
+  .bd-row .bd-amount-link .money-ic{ color:currentColor; }
+  .bd-row .bd-amount-link:hover{ color:var(--link-hover); text-decoration:underline; text-underline-offset:3px; }
+  .bd-row .bd-amount-link:focus-visible{ outline:2px solid var(--border-focus, var(--link-default)); outline-offset:2px; border-radius:4px; }
+  @media (max-width:640px){ .budget-panel{ padding-bottom:var(--space-lg); } }
+  /* Year budget, Default (Income / Save-Invest, 232:5851): the Category field 214 wide, then "+ Add sub-category" and its
+     Info tooltip 12 to the right, the link 38 under the label's top (centred on the dropdown), the Info 8 after it. */
+  @media (min-width:641px){
+    .budget-panel.is-default .budget-filters{ display:flex; align-items:flex-start; gap:var(--space-md); }
+    .budget-panel.is-default .budget-filters .budget-kind-only{ width:214px; flex:0 0 214px; }
+    .budget-panel.is-default .budget-sub-cta{ height:20px; margin-top:36px; align-items:center; gap:8px; }
+  }
+  /* Modal 443:1484: Content and Actions space/3xl apart on desktop (xl on phones); the close is a Medium round button (48)
+     on both, so the phone Top-nav is 80. */
+  @media (min-width:641px){ .ds-modal-body{ gap:var(--space-3xl); } }
+  @media (max-width:640px){ .ds-modal-header .round-btn{ width:48px; height:48px; } }
+  #note-tip{ padding:16px 8px 16px 16px; }

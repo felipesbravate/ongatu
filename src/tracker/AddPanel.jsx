@@ -57,11 +57,11 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const typeHas = (v) => (v === 'expense' ? EXP_GROUPS.some((g) => Object.keys(TX.expenses[g] || {}).length) : ((v === 'income' ? TX.incomes : TX.investments) || []).length > 0);
   const bounds = model.entryDateBounds();
 
-  // Opening the panel (from the Tracker's "+ Add ...") sets the type and starts a fresh form.
+  // Opening the panel (from the Tracker's "+ Add ..." or a row's "Add entry") sets the type (and the row's group and type) and starts a fresh form.
   useEffect(() => {
     if (!open) return;
     setEntryType(preset.type); if (preset.group) setEntryGroup(preset.group);
-    setCat(''); setItem(''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
+    setCat(preset.cat || ''); setItem(preset.item || ''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preset]);
   // Until the person picks a month, "Add to" follows the date (when that month exists).
