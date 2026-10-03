@@ -8,7 +8,8 @@ const cx = (...c) => c.filter(Boolean).join(' ');
 // denser): Medium pad space/sm space/md, 24px icon, Body/Large/Medium; Small pad 8 space/md, 20px icon; Tiny pad
 // space/xs space/sm, 16px icon, Body/Medium/Medium; Micro pad space/tn space/xs, 16px icon, Body/Small/Medium.
 // Figma's Secondary is the `ghost` class in CSS.
-export const BUTTON_ICON = { medium: 'xl', small: 'lg', tiny: 'sm', micro: 'sm' };
+// Oct 3 (41:119): Medium 20px icon, Small 16, Tiny and Micro 12.
+export const BUTTON_ICON = { medium: 'lg', small: 'md', tiny: 'sm', micro: 'sm' };
 // Oct 2: `trailing` draws the DS "Right Icon" after the label (Add category +, Add Type +).
 export function Button({ variant = 'primary', size = 'medium', icon, trailing, iconSize, className, children, type = 'button', ...rest }) {
   const isz = iconSize || BUTTON_ICON[size] || 20;
@@ -25,7 +26,8 @@ export function Button({ variant = 'primary', size = 'medium', icon, trailing, i
 // Medium hugs space/sm around a 24px icon (48 on phones, 40 on desktop); Small is a fixed 40 with a 20px icon; Tiny hugs
 // space/xs around 16 (32 / 24); Micro hugs space/tn around 16 (24 / 20). `iconSize` overrides the icon where a screen
 // draws another one. `active` draws State=Active (a menu it opens is showing).
-export const ROUND_ICON = { medium: 'xl', small: 'lg', tiny: 'md', micro: 'md', nano: 'tn' };
+// Oct 3 (52:629): Medium 24, Small 20, Tiny 16, Micro 12, Nano 10.
+export const ROUND_ICON = { medium: 'xl', small: 'lg', tiny: 'md', micro: 'sm', nano: 'tn' };
 export function RoundButton({ icon, size = 'medium', iconSize, variant, active, className, label, type = 'button', ...rest }) {
   return (
     <button type={type} className={cx('round-btn', variant && variant !== 'tertiary' && variant, size !== 'medium' && size, active && 'is-active', className)} aria-label={label} {...rest}>
@@ -39,8 +41,8 @@ export function RoundButton({ icon, size = 'medium', iconSize, variant, active, 
 // With `href` it is a link (<a>), otherwise a button.
 export function ActionLink({ icon, trailing, size, className, children, type = 'button', href, ...rest }) {
   const cls = cx('ds-action-link', size && size !== 'small' && size, className);
-  // Action link 607:1368 (Oct 3): Medium carries a 16px icon, Small and Tiny 12px.
-  const is = size === 'medium' ? 'md' : 'sm';
+  // Action link 607:1368 (Oct 3): Medium and Small carry a 16px icon, Tiny 12px.
+  const is = size === 'tiny' ? 'sm' : 'md';
   const inner = <>{icon && <Icon icon={icon} size={is} />}{children}{trailing && <Icon icon={trailing} size={is} />}</>;
   if (href) return <a href={href} className={cls} {...rest}>{inner}</a>;
   return <button type={type} className={cls} {...rest}>{inner}</button>;

@@ -75,6 +75,7 @@ export const PINNED_MOBILE = [
   '.ds-notif', '.ds-notif-panel', '.ds-notif-page', '.ds-notif-item', // Notification 228:455, notification-item 228:469
   '.ds-app-header',                              // Product header 728:1445, App header 285:600
   '.ds-avatar',                                  // avatar 221:1044
+  '.btn-pill', '.round-btn', '.ds-action-link',  // Button 41:119, Round button 52:629, Action link 607:1368 (Oct 3)
 ];
 const rootCss = css.slice(0, css.indexOf('/* @tokens-mobile:start */'));
 const decls = new Map();

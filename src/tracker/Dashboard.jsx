@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
-import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
+import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 import { Icon } from '../ui/Icon.jsx';
 
@@ -35,7 +35,12 @@ export function HeroLeft({ model, y, monthIdx }) {
     <div className="hero-left">
       <div className="card balance-card">
         <div className="label" id="balance-label">{MONTH_NAMES[monthIdx]} balance</div>
-        <div className="value" id="balance-value">{fmtMoney(c.balance, cur)}</div>
+        <div className="value" id="balance-value">
+          {/* Balance card 441:1057: the € is a 20 x 27 shape beside Value/XL, space/xs apart (other currencies: text). */}
+          {cur === 'EUR'
+            ? <span className="money">{c.balance < 0 ? '-' : ''}<svg className="balance-euro" viewBox="4.5 2.5 11 15" width="20" height="27" aria-hidden="true"><path d={euro.d} fill="currentColor" /></svg><span>{fmtFigure(c.balance)}</span></span>
+            : fmtMoney(c.balance, cur)}
+        </div>
         {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
             phones (342:7993) keep the month change. */}
         <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>

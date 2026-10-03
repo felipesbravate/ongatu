@@ -22,7 +22,7 @@ export function TooltipEntryItem({ name, date, amount, currency, estimate, prefi
         {extra}
         {onRemove && (
           <button type="button" className="round-btn micro tip-del" title={removeTitle} onClick={(e) => { e.stopPropagation(); onRemove(); }}>
-            <Icon icon={x} size={16} />
+            <Icon icon={x} size="sm" />
           </button>
         )}
       </span>

@@ -192,7 +192,7 @@ async def main():
             check('tooltip entry (144:4426): 24px row, space/xs gaps (4 on desktop, also between amount and remove), 12px dot', t['item']['h'] == 24 and t['item']['gap'] == '4px' and t['item']['rgap'] == '4px' and t['item']['dot'] == [12, 12], t['item'])
             check('tooltip entry text (144:4426, Oct 2): name Body/Large/SemiBold white, date Body/Large/Medium text/muted (14 on desktop)', t['name'] == ['14px', '600', '16px', 'rgb(255, 255, 255)'] and t['date'] is not None and t['date'] == ['14px', '500', 'rgb(150, 146, 132)', '16px', '-0.28px'], [t['name'], t['date']])
             check('tooltip amount: Euro icon + Value/Small (mono 11/500/-4% on desktop)', t['euro'] and 'Mono' in t['amt'][0] and t['amt'][1:] == ['11px', '500', '-0.44px'], t['amt'])
-            check('tooltip remove: Micro round button (20 on desktop) with the 16px X, action/disable', t['del'] and t['del']['w'] == 20 and t['del']['h'] == 20 and t['del']['svg'] == [16, 16] and t['del']['vb'] == '0 0 20 20' and t['del']['color'] == 'rgb(150, 146, 132)', t['del'])
+            check('tooltip remove: Micro round button (24, Mobile tokens since Oct 3) with the 12px X, action/disable', t['del'] and t['del']['w'] == 24 and t['del']['h'] == 24 and t['del']['svg'] == [12, 12] and t['del']['vb'] == '0 0 12 12' and t['del']['color'] == 'rgb(150, 146, 132)', t['del'])
             await pg.keyboard.press('Escape'); await pg.mouse.click(5, 5)
 
             # 2c. years list: newest first, and a duplicated year label appears once
@@ -280,10 +280,10 @@ async def main():
                   out[t] = { bg: c.backgroundColor, font: [m.fontSize, m.fontWeight, m.lineHeight, m.letterSpacing, m.color], gap: c.columnGap, h: r.height, w: r.width, r: c.borderRadius, padR: c.paddingRight, top: r.top, right: innerWidth - r.right, strip: [st.getBoundingClientRect().width, st.getBoundingClientRect().height, cs(st).backgroundColor], close: [el.children[2].getBoundingClientRect().width] };
                   el.remove(); }
                 return out; }""")
-            check('Toast (DS 304:659, Oct 3, Desktop): surface/dark, Body/Medium/Medium (12/500/14) white, space/md gap and right padding (12), hugs a Micro close (20) between space/md (44 high), 240 wide at least, radius 8',
-                  all(tv[k]['bg'] == 'rgb(22, 21, 15)' and tv[k]['font'] == ['12px', '500', '14px', '-0.24px', 'rgb(255, 255, 255)'] and tv[k]['gap'] == '12px' and tv[k]['h'] == 44 and tv[k]['w'] >= 240 and tv[k]['r'] == '8px' and tv[k]['padR'] == '12px' and tv[k]['close'] == [20] for k in tv), tv)
+            check('Toast (DS 304:659, Oct 3, Desktop): surface/dark, Body/Medium/Medium (12/500/14) white, space/md gap and right padding (12), hugs a Micro close (24, Mobile tokens) between space/md (56 high, as in Figma), 240 wide at least, radius 8',
+                  all(tv[k]['bg'] == 'rgb(22, 21, 15)' and tv[k]['font'] == ['12px', '500', '14px', '-0.24px', 'rgb(255, 255, 255)'] and tv[k]['gap'] == '12px' and tv[k]['h'] == 56 and tv[k]['w'] >= 240 and tv[k]['r'] == '8px' and tv[k]['padR'] == '12px' and tv[k]['close'] == [24] for k in tv), tv)
             check('Toast strip: 16px, full height; Positive brand/mint, Negative data/red, Neutral surface/tertiary',
-                  all(tv[k]['strip'][:2] == [16, 44] for k in tv) and [tv[k]['strip'][2] for k in ('success', 'fail', 'neutral')] == ['rgb(19, 208, 117)', 'rgb(189, 0, 7)', 'rgb(116, 113, 103)'], tv)
+                  all(tv[k]['strip'][:2] == [16, 56] for k in tv) and [tv[k]['strip'][2] for k in ('success', 'fail', 'neutral')] == ['rgb(19, 208, 117)', 'rgb(189, 0, 7)', 'rgb(116, 113, 103)'], tv)
             check('Toast sits top-right (Ongatu 238:7184): 24px from the right, 116 from the top', all(abs(tv[k]['top'] - 116) < 1 and abs(tv[k]['right'] - 24) < 1 for k in tv), tv)
             sz = await pg.evaluate("""() => { const out = {}; const host = document.body;
                 for (const z of ['md', 'sm', 'tiny']) { const w = document.createElement('div'); w.className = 'ds-dd ds-dd--' + z; w.innerHTML = '<button class="ds-dd-trigger"><span class="ds-dd-label">A</span></button>'; host.appendChild(w);
@@ -335,8 +335,8 @@ async def main():
             di = await pg.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), it = document.querySelector('.doc-item'), b = it.querySelector('.doc-remove'), sv = b.querySelector('svg');
                 return { icon: (it.querySelector('.doc-ic svg').dataset.icon === 'document' || (!!window.ICON_LIB && it.querySelector('.doc-ic path').getAttribute('d') === window.ICON_LIB.document.d)), ic: [r(it.querySelector('.doc-ic svg')).width, r(it.querySelector('.doc-ic svg')).height],
                          btn: [r(b).width, r(b).height], svg: [r(sv).width, r(sv).height], vb: sv.getAttribute('viewBox'), color: cs(b).color, radius: cs(b).borderRadius, meta: it.querySelector('.doc-meta').textContent }; }""")
-            check('file list: a CSV shows the Document icon (20px); delete = Micro round button (20 on desktop) with the 12px X in status/fail',
-                  di['icon'] and di['ic'] == [20, 20] and di['btn'] == [20, 20] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(161, 42, 47)' and di['radius'] == '999px' and di['meta'].endswith('Ready'), di)
+            check('file list: a CSV shows the Document icon (20px); delete = Micro round button (24, Mobile tokens) with the 12px X in status/fail',
+                  di['icon'] and di['ic'] == [20, 20] and di['btn'] == [24, 24] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(161, 42, 47)' and di['radius'] == '999px' and di['meta'].endswith('Ready'), di)
             await pg.click('#doc-add'); await pg.wait_for_selector('#ap-review:not([hidden])', timeout=8000)
             check('CSV: review shows a row from the AI reply', await pg.locator('.rv-row').count() == 1)
             # best-guess category: a reply without "sure" is marked, the status line says so, and Submit is not blocked
