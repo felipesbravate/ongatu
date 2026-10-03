@@ -2956,3 +2956,77 @@
   #ap-review .ap-period{ display:flex; flex-direction:column; gap:var(--space-sm); }
   #ap-review .rv-head{ display:none; }
   #ap-review .add-actions{ gap:var(--space-lg); }
+
+  /* ================================================================
+     Panels, every variant (Oct 3, second pass): 229:18167 (Add entry: Default, Files loading / reading / review,
+     Desktop and Mobile) and 232:5852 (Year budget: Desktop Default / Sub-types, Mobile).
+     ================================================================ */
+  /* Review rows are always open (no click-to-edit): description input, Type and Category dropdowns, amount, remove.
+     Desktop: one line, items space/sm apart, Tiny controls (32), Type / Category 140, rows space/lg apart. A field that
+     needs attention gets border/destructive; a guessed category border/warning. */
+  #ap-review .rv-rows{ gap:var(--space-lg); }
+  #ap-review .rv-row{ height:auto; gap:var(--space-sm); }
+  #ap-review .c-type, #ap-review .c-cat{ width:140px; }
+  #ap-review .c-amt{ width:72px; }
+  #ap-review .c-date{ width:auto; min-width:44px; color:var(--text-primary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  #ap-review .c-date.bad{ color:var(--status-fail); }
+  #ap-review .bad .ds-input, #ap-review .bad .ds-dd-trigger, #ap-review .bad .bd-input{ border-color:var(--border-destructive); }
+  #ap-review .is-guess .ds-dd-trigger{ border-color:var(--border-warning); }
+  #ap-review .rv-rm{ opacity:1; }
+  /* Phones (415:14256): "Track in" (Body/Large/Medium) beside a 206 Medium dropdown; each row = date | the three
+     controls stacked space/xs apart (Medium, 48) | amount, space/md apart; rows space/lg apart with a Divider; the guess
+     note, then Save entries and Cancel full width, space/md apart. */
+  @media (max-width:640px){
+    #ap-review .ap-period{ flex-direction:row; align-items:center; gap:var(--space-xs); }
+    #ap-review .ap-period > label{ color:var(--text-primary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    #ap-review .ap-period .ds-dd{ width:206px; }
+    #ap-review .ap-period .ds-dd-trigger, #ap-review .rv-row .ds-dd-trigger, #ap-review .rv-row .ds-input{ min-height:48px; padding:0 15px; font-size:var(--type-label-medium-size); line-height:var(--type-label-medium-lh); }
+    #ap-review .rv-row{ display:grid; grid-template-columns:auto 1fr auto; grid-template-areas:"date desc amt" "date type amt" "date cat amt" "rm rm rm"; column-gap:var(--space-md); row-gap:var(--space-xs); align-items:start;
+      padding-bottom:var(--space-lg); border-bottom:1px solid var(--border-secondary); }
+    #ap-review .rv-row:last-child{ border-bottom:none; padding-bottom:0; }
+    #ap-review .rv-row .c-date{ grid-area:date; padding-top:8px; font-size:var(--type-body-large-medium-size); line-height:var(--type-body-large-medium-lh); }
+    #ap-review .rv-row .c-desc{ grid-area:desc; }
+    #ap-review .rv-row .c-type{ grid-area:type; width:auto; }
+    #ap-review .rv-row .c-cat{ grid-area:cat; width:auto; }
+    #ap-review .rv-row .c-amt{ grid-area:amt; width:auto; padding-top:8px; }
+    #ap-review .rv-row .c-amt .bd-input{ width:84px; }
+    #ap-review .rv-row .c-rm{ grid-area:rm; width:auto; display:flex; justify-content:flex-end; }
+    #ap-review .add-actions{ flex-direction:column; align-items:stretch; gap:var(--space-md); }
+    #ap-review .add-actions .add-status{ order:-1; }
+    #ap-review .add-actions .btn-pill{ width:100%; }
+  }
+  /* Add entry, phones (369:13388 / 415:13796 / 415:14088): Save entry and "Add files" full width; no Cancel next to
+     "Add files"; files 16 apart (20px icon, 8 to the text), the button 24 under the list; the reading box solid, pad 24. */
+  @media (max-width:640px){
+    #add-panel .ap-manual .add-actions{ flex-direction:column; align-items:stretch; }
+    #add-panel #entry-submit, #add-panel #doc-add{ width:100%; }
+    #add-panel #doc-cancel{ display:none; }
+    #add-panel .doc-list{ gap:var(--space-md); }
+    #add-panel .doc-item{ gap:var(--space-xs); }
+    #add-panel #doc-actions{ margin-top:calc(var(--space-lg) - var(--space-md)); }
+  }
+  /* Year budget, phones (415:16066): title / hint space/md apart; selectors 40 under the header, space/md apart
+     (Category | Sub-category 8 across, labels space/xs); entries 40 under them, a group title (Heading/Medium) space/lg
+     over its rows, groups space/lg either side of the Divider; Save and Cancel full width, space/xs apart, 40 under. */
+  @media (max-width:640px){
+    .budget-panel{ gap:0; }
+    .budget-panel .add-panel-header{ margin:var(--space-md) 0 0; gap:var(--space-md); }
+    .budget-panel .add-panel-content{ margin-top:40px; gap:40px; }
+    .budget-panel .budget-filters{ margin-bottom:0; row-gap:var(--space-md); }
+    .budget-panel .budget-group{ gap:var(--space-lg); }
+    .budget-panel .budget-sections, .budget-panel .budget-type-section{ gap:var(--space-lg); }
+    .budget-panel .add-actions{ flex-direction:column; align-items:stretch; gap:var(--space-xs); margin-top:40px; }
+    .budget-panel .add-actions .btn-pill{ width:100%; }
+  }
+  #ap-review .c-cat{ display:flex; align-items:center; gap:var(--space-tn); }
+  #ap-review .c-cat .ds-dd{ flex:1 1 auto; min-width:0; }
+  #ap-review .c-cat .rv-guess{ flex-shrink:0; }
+  .doc-list:empty{ display:none; }
+  @media (max-width:640px){
+    #add-panel .add-panel-header{ margin-bottom:40px; }
+    #add-panel #ap-upload{ gap:var(--space-md); }
+    .budget-panel .panel-nav{ margin:0 calc(8px - var(--space-md)); }
+  }
+  @media (max-width:640px){ #add-panel .ap-main{ gap:var(--space-lg); } }
+  #ap-review .add-actions .btn-pill{ white-space:nowrap; flex-shrink:0; }
+  @media (min-width:641px){ #ap-review .rv-table + .add-actions, #ap-review .add-actions{ margin-top:calc(var(--space-2xl) - var(--space-lg)); } }

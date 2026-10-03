@@ -139,7 +139,7 @@ export function BudgetPanel({ pending, month, model, onClose, onCreate, onSave }
           </div>
         </div>
  <div className="add-actions">
-          <Button id={isMonth ? 'month-budget-save' : 'budget-create-btn'} icon={plus} disabled={busy} onClick={create}>{isMonth ? 'Save' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
+          <Button id={isMonth ? 'month-budget-save' : 'budget-create-btn'} icon={mobile ? undefined : plus} disabled={busy} onClick={create}>{isMonth ? 'Save' : `Save ${pending ? pending.label : ''}`.trim()}</Button>
           <Button variant="tertiary" id={isMonth ? 'month-budget-cancel' : 'budget-cancel-btn'} onClick={onClose}>Cancel</Button>
           <span className={'add-status' + (status && status.err ? ' err' : '')} id={isMonth ? 'month-budget-status' : 'budget-status'}>{status ? status.text : ''}</span>
         </div>

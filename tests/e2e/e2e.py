@@ -344,13 +344,13 @@ async def main():
             check('review: an unsure category carries a Guess (?) chip', await pg.locator('#rv-rows .rv-guess').count() == 1 and await pg.get_attribute('#rv-rows .rv-guess', 'aria-label') == 'Guess')
             check('review: the guess note starts with the Question icon', await pg.locator('#rv-status .rv-guess svg[data-icon=question-filled]').count() == 1)
             check('review: status counts the guess and Submit stays enabled', (await pg.inner_text('#rv-status')).startswith('1 category is a guess') and not await pg.is_disabled('#rv-submit'), await pg.inner_text('#rv-status'))
-            g = await pg.evaluate("""() => { const c = document.querySelector('#rv-rows .rv-guess'), l = document.querySelector('#rv-rows .c-cat .rv-link'), svg = c.querySelector('svg');
+            g = await pg.evaluate("""() => { const c = document.querySelector('#rv-rows .rv-guess'), l = document.querySelector('#rv-rows .c-cat .ds-dd'), svg = c.querySelector('svg');
                 return { icon: svg && svg.dataset.icon, color: getComputedStyle(c).color, w: c.getBoundingClientRect().width, within: c.getBoundingClientRect().right <= c.closest('.c-cat').getBoundingClientRect().right + 0.5 && l.getBoundingClientRect().right <= c.getBoundingClientRect().left }; }""")
             check('Guess marker is the Question (filled) icon, 20px, surface/tertiary, beside the category without overlap', g['icon'] == 'question-filled' and g['color'] == 'rgb(116, 113, 103)' and g['w'] == 20 and g['within'], g)
-            await pg.click('#rv-rows .rv-row .c-cat .rv-link'); await pg.wait_for_selector('#rv-rows .rv-row.is-editing')
-            await pg.keyboard.press('Enter'); await pg.wait_for_selector('.ds-dd-menu')
+            # Oct 3 (229:18167): rows are always open, the Category dropdown is right there
+            await pg.click('#rv-rows .rv-row .c-cat .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
             await pg.click('.ds-dd-menu .ds-dd-item:text-is("Groceries")'); await pg.wait_for_timeout(150)  # the proposed one: confirming it is enough
-            await pg.click('#add-panel-title'); await pg.wait_for_selector('#rv-rows .rv-row.is-editing', state='detached')
+            await pg.click('#add-panel-title'); await pg.wait_for_timeout(150)
             check('review: choosing a category (even the proposed one) removes the Guess chip and the note', await pg.locator('#rv-rows .rv-guess').count() == 0 and (await pg.inner_text('#rv-status')).strip() == '', [await pg.locator('#rv-rows .rv-guess').count(), await pg.inner_text('#rv-status'), await pg.inner_text('#rv-rows')])
             # a reply that says "sure" is not marked
             await pg.click('#rv-cancel'); await open_panel(pg)
@@ -465,16 +465,16 @@ async def main():
             await pg.click('#doc-add'); await pg.wait_for_selector('#ap-review:not([hidden])', timeout=8000)
             check('photo: image sent to the reader', state()['aiCalls'][-1]['images'] == 1, state()['aiCalls'][-1])
             # review table: Type and Category are the same dropdown, and the row stays open while the menu is used
-            await pg.click('#rv-rows .rv-row .c-cat .rv-link'); await pg.wait_for_selector('#rv-rows .rv-row.is-editing')
-            check('review: Category trigger takes focus on edit', await pg.evaluate("document.activeElement && document.activeElement.classList.contains('ds-dd-trigger')"))
-            await pg.keyboard.press('Enter'); await pg.wait_for_selector('.ds-dd-menu')
-            check('review: row stays in edit mode while the menu is open', await pg.locator('#rv-rows .rv-row.is-editing').count() == 1)
+            # Oct 3 (229:18167): every row is open: description input, Type and Category dropdowns, amount
+            check('review: rows are open (input + two dropdowns + amount)', await pg.locator('#rv-rows .rv-row [data-f=desc]').count() == 1 and await pg.locator('#rv-rows .rv-row .ds-dd').count() == 2 and await pg.locator('#rv-rows .rv-row [data-f=amount]').count() == 1)
+            await pg.click('#rv-rows .rv-row .c-cat .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
+            check('review: Category trigger takes focus', await pg.evaluate("document.activeElement && document.activeElement.classList.contains('ds-dd-trigger')"))
             await pg.click('.ds-dd-menu .ds-dd-item >> nth=0'); await pg.wait_for_timeout(200)
-            check('review: picking sets the row category and keeps editing', await pg.eval_on_selector('#rv-rows [data-f=cat]', 'e => e.value') != '' and await pg.locator('#rv-rows .rv-row.is-editing').count() == 1)
-            await pg.click('#rv-rows .rv-row.is-editing [data-f=type] + .ds-dd-trigger, #rv-rows .rv-row.is-editing .c-type .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
+            check('review: picking sets the row category', await pg.eval_on_selector('#rv-rows [data-f=cat]', 'e => e.value') != '')
+            await pg.click('#rv-rows .rv-row .c-type .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
             check('review: Type menu is grouped', (await pg.locator('.ds-dd-menu .ds-dd-group').first.inner_text()) == 'Expenses')
             await pg.keyboard.press('Escape'); await pg.wait_for_selector('.ds-dd-menu', state='detached')
-            check('review: Escape closed the menu, row still editing', await pg.locator('#rv-rows .rv-row.is-editing').count() == 1)
+            check('review: Escape closed the menu, the row stays open', await pg.locator('#rv-rows .rv-row [data-f=desc]').count() == 1)
             cur = await pg.evaluate('String(new Date().getFullYear())')
             pr = state()['aiCalls'][-1]['prompt']
             check('reader is shown the current year categories, not the generic starter list', f'exist in {cur})' in pr and 'Supermarket' in pr and 'Restaurants' not in pr and 'Taxi' not in pr, pr[-600:])

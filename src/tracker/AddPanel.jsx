@@ -269,9 +269,8 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 catch (e) { setStatus({ err: true, text: 'Could not add the type: ' + (e && e.message ? e.message : 'unknown error') }); setTypeModal(false); }
               }} />
             <div className="add-actions">
-              {/* 229:18167: one Submit (40% until the form has what an entry needs); phones add a Tertiary Cancel. */}
+              {/* 229:18167 / 369:13388: one Submit (40% until the form has what an entry needs), full width on phones. */}
               <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Save entry</Button>
-              <Button variant="tertiary" id="entry-cancel" className="ap-cancel-phone" onClick={onClose}>Cancel</Button>
               <span className={'add-status' + (status && status.err ? ' err' : '')} id="entry-status" role="status">{status ? status.text : ''}</span>
             </div>
           </section>
@@ -411,7 +410,8 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
             else if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); cancelEdit(); }
           }}
           onBlur={onFocusOut}>
-          {rows.map((r, i) => <ReviewRow key={r.id} r={r} iss={issues[i]} editing={review.editing === r.id} period={period} yl={yl} model={model} patchRow={patchRow} />)}
+          {/* 229:18167 / 415:14256 (Oct 3): every row is open: description input, Type and Category dropdowns, amount. */}
+          {rows.map((r, i) => <ReviewRow key={r.id} r={r} iss={issues[i]} editing period={period} yl={yl} model={model} patchRow={patchRow} />)}
         </div>
       </div>
       <div className="add-actions">
@@ -465,7 +465,7 @@ function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
   } else catOptions = cats.map((o) => ({ value: o.label, label: o.item, selectedLabel: o.label }));
   return (
     <div className="rv-row is-editing" data-id={r.id}>{date}
-      <div className="c-desc"><Input size="tiny" data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
+      <div className={'c-desc' + (has('desc') ? ' bad' : '')} title={'From ' + r.fileName}><Input size="tiny" data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
         onChange={(e) => patchRow(r.id, { description: e.target.value })} /></div>
       <div className="c-type rv-select">
         <Dropdown size="tiny" ariaLabel="Type" emptyOption={false} value={typeKey} options={typeOptions} selectProps={{ 'data-f': 'type' }}
@@ -475,12 +475,13 @@ function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
             patchRow(r.id, { type: t.type, group: t.group, category: keep ? keep.category : null, item: keep ? keep.item : null });
           }} />
       </div>
-      <div className="c-cat rv-select">
+      <div className={'c-cat rv-select' + (has('cat') ? ' bad' : '') + (r.guess && catLabel ? ' is-guess' : '')}>
         <Dropdown size="tiny" ariaLabel="Category" value={catLabel} options={catOptions} selectProps={{ 'data-f': 'cat' }}
           onChange={(v) => { const o = cats.find((x) => x.label === v); patchRow(r.id, { category: o ? o.category : null, item: o ? o.item : null, guess: false }); }}
           onChoose={() => patchRow(r.id, { guess: false })} />
+        {r.guess && catLabel ? <span className="rv-guess" role="img" aria-label="Guess" title="Guess: the reader was not sure about this category. Check it, or pick another."><Icon icon={questionFilled} size={20} /></span> : null}
       </div>
-      <div className="c-amt"><label className="bd-input"><Icon icon={euro} size={12} />
+      <div className={'c-amt' + (has('amount') || has('flag') ? ' bad' : '')} title={r.flag || ''}><label className="bd-input"><Icon icon={euro} size={12} />
         <input data-f="amount" inputMode="decimal" aria-label="Amount" defaultValue={r.amount > 0 ? fmtNum(r.amount) : ''} placeholder="0,00" autoComplete="off"
           onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /></label></div>
       {rm}
