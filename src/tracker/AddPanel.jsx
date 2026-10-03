@@ -252,7 +252,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 <label className="fld-label" htmlFor="entry-date">Date</label>
                 {/* 229:18166: a Medium Dropdown with a Calendar icon before dd/mm/yyyy; the native picker opens on click. */}
                 <div className="date-dd">
-                  <Icon icon={calendar} size="xl" className="date-dd-cal" />
+                  <Icon icon={calendar} size="lg" className="date-dd-cal" />
                   <input ref={dateRef} id="entry-date" type="date" defaultValue={todayISO()} min={bounds.min} max={bounds.max}
                     onClick={(e) => { try { e.currentTarget.showPicker(); } catch { /* older browsers open it themselves */ } }} />
                   <span className="date-dd-label" aria-hidden="true">{fmtDateEU(dateVal) || 'dd/mm/yyyy'}</span>

@@ -1789,7 +1789,7 @@
   .date-dd{ border-color:var(--border-default); }
   .date-dd:hover{ border-color:var(--state-border-hover); }
   .date-dd-label{ color:var(--text-secondary); }
-  .date-dd .date-dd-chevron{ width:16px; height:16px; color:var(--text-primary); }
+  .date-dd .date-dd-chevron{ width:12px; height:12px; color:var(--action-primary); }
   .budget-panel .add-panel-content{ gap:var(--layout-xl); }
   .budget-type-section{ gap:var(--layout-md); }
   .budget-group{ gap:var(--layout-xs); }
@@ -2726,3 +2726,38 @@
   .round-btn.primary{ color:var(--surface-primary); }
   /* Action link: the hover / press bar sits right under a Medium link and space/tn under Small and Tiny. */
   .ds-action-link.medium::after{ bottom:-2px; }
+
+  /* ================================================================
+     Oct 3: Input 71:1093, Dropdown 71:1096, Dropdown-list 182:6851 (re-read). Weight 400 (Figma Medium = 400).
+     ================================================================ */
+  /* Input / Dropdown: radius/sm, 1px border, items space/xs apart. Medium pad sm md (48: 24px text line), Label/Medium,
+     20px icon. Small pad xs (36: around the 20px icon), Label/Small, 20px icon. Tiny pad xs (32), Label/Tiny, 16px icon.
+     Chevron 12 in action/primary (Disable action/disable). Empty border/default + text/secondary; Filled
+     border/selected-item + text/primary; Focus / Active border/focus; Disable surface/secondary + text/muted. */
+  .ds-input, .ds-dd-trigger{ height:auto; box-sizing:border-box; gap:var(--space-xs); border-radius:var(--radius-sm); }
+  .ds-input:not(.small):not(.tiny), .ds-dd--md .ds-dd-trigger, .date-dd{ min-height:calc(2 * var(--space-sm) + 24px); padding:0 calc(var(--space-md) - 1px);
+    font-size:var(--type-label-medium-size); font-weight:400; line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+  .ds-input.small, .ds-dd--sm .ds-dd-trigger{ min-height:calc(2 * var(--space-xs) + var(--icon-size-lg)); padding:0 calc(var(--space-xs) - 1px);
+    font-size:var(--type-label-small-size); font-weight:400; line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-input.tiny, .ds-dd--tiny .ds-dd-trigger{ min-height:calc(2 * var(--space-xs) + var(--icon-size-md)); padding:0 calc(var(--space-xs) - 1px);
+    font-size:var(--type-label-tiny-size); font-weight:400; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-input input, .ds-dd-trigger .ds-dd-label{ font:inherit; letter-spacing:inherit; }
+  .ds-input svg{ color:var(--surface-dark); }
+  .ds-dd-trigger svg{ color:var(--action-primary); flex-shrink:0; }
+  .ds-dd-trigger:disabled svg, .ds-dd.is-disabled .ds-dd-trigger svg{ color:var(--action-disable); }
+
+  /* Dropdown-list: surface/primary, border/secondary, radius/md, pad space/md, Floating (0 0 8 ink 8%). Group: title
+     Label/Medium text/primary, space/xs above its items, items space/tn apart, a Divider between groups, blocks
+     space/xs apart. Simple: items touch. dropdown-item: pad space/xs, radius/sm, Label/Small, text/secondary with a
+     text/secondary icon; Hover surface/accent-light + text/primary (icon too). Action: Body/Medium/Medium
+     text/secondary over a Tiny Tertiary button. */
+  .ds-dd-menu{ padding:var(--space-md); gap:var(--space-xs); border:1px solid var(--border-secondary); border-radius:var(--radius-md); background:var(--surface-primary); box-shadow:0 0 8px #16150f14; }
+  .ds-dd-block{ gap:var(--space-xs); }
+  .ds-dd-group{ color:var(--text-primary); font-size:var(--type-label-medium-size); font-weight:400; line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+  .ds-dd-items{ gap:var(--space-tn); }
+  .ds-dd-menu:not(.is-group) .ds-dd-items{ gap:0; }
+  .ds-dd-item, button.ds-dd-item{ padding:var(--space-xs); gap:var(--space-xs); border-radius:var(--radius-sm); color:var(--text-secondary);
+    font-size:var(--type-label-small-size); font-weight:400; line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-dd-item.has-icon svg{ color:var(--text-secondary); }
+  .ds-dd-item:hover, .ds-dd-item.is-active, button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); }
+  .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:hover svg, button.ds-dd-item:focus-visible svg{ color:var(--text-primary); }

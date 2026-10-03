@@ -26,11 +26,11 @@ export function FieldGroup({ label, className, children }) {
 // border/focus; Disable fills surface/secondary with text/muted. `icon` = an optional icon before the text (20px at
 // Medium, 12px smaller). The placeholder defaults to " " so an empty field without one still reads as Empty.
 // `ref` (React 19: a plain prop) reaches the <input>.
-// iconSize overrides the icon (the Amount field draws its € at 16, like the Value text beside it).
+// Oct 3 (71:1093): the leading icon is 20px at Medium and Small, 16px at Tiny. iconSize overrides it (the Amount field draws its € at 16, like the Value text beside it).
 export function Input({ icon, iconSize, size = 'medium', className, placeholder = ' ', ...rest }) {
   return (
     <span className={['ds-input', size !== 'medium' && size, rest.disabled && 'is-disabled', icon && 'has-icon', className].filter(Boolean).join(' ')}>
-      {icon && <Icon icon={icon} size={iconSize || (size === 'tiny' ? 'md' : 'xl')} />}
+      {icon && <Icon icon={icon} size={iconSize || (size === 'tiny' ? 'md' : 'lg')} />}
       <input placeholder={placeholder} {...rest} />
     </span>
   );
