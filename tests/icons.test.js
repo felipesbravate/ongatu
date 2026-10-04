@@ -61,7 +61,7 @@ test('every <Icon> in the app names its DS size, and CSS does not resize icons',
   const missing = [];
   for (const f of files) {
     const src = readFileSync(f, 'utf8');
-    for (const m of src.matchAll(/<Icon\b[^>]*>/g)) if (!/\bsize=(\{|"(xl|lg|md|sm|tn)")/.test(m[0])) missing.push(f.split('/src/')[1] + ': ' + m[0]);
+    for (const m of src.matchAll(/<Icon\b[^>]*>/g)) if (!/\bsize=(\{|"(2xl|xl|lg|md|sm|tn)")/.test(m[0])) missing.push(f.split('/src/')[1] + ': ' + m[0]);
   }
   assert.deepEqual(missing, []);
   const css = readFileSync(new URL('../src/ui/okara.css', import.meta.url), 'utf8');
@@ -70,6 +70,14 @@ test('every <Icon> in the app names its DS size, and CSS does not resize icons',
   // Oct 2: the only icon sizing in CSS is .ico-xl / .ico-lg, and it reads the Figma icon-size variables.
   assert.match(css, /\.ico-xl\{ width:var\(--icon-size-xl\); height:var\(--icon-size-xl\); \}/);
   assert.match(css, /\.ico-lg\{ width:var\(--icon-size-lg\); height:var\(--icon-size-lg\); \}/);
+  assert.match(css, /\.ico-2xl\{ width:var\(--icon-size-2xl\); height:var\(--icon-size-2xl\); \}/);
+});
+
+// Oct 4: Euro Size=32px (793:1079) has its own drawing on a 32 frame; icon-size/2xl is 32 on Mobile, 24 on Desktop.
+test('Euro 32px draws its own 32 frame', async () => {
+  const { iconFrame } = await import('../src/ui/iconFrame.js');
+  const f = iconFrame(icons.euro, 32);
+  assert.equal(f.px, 32); assert.equal(f.viewBox, '0 0 32 32'); assert.match(f.drawing.d, /^M17\.2383 28C/);
 });
 
 test('Icon draws the Figma frames: 20 = 0 0 20 20, 12/10 = 1 1 18 18, redrawn X/Euro/Dollar on their own frame', async () => {

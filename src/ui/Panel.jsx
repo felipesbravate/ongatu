@@ -8,7 +8,7 @@ export function PanelHeader({ title, titleId, hint, hintId, onClose, closeId, fa
     <>
       <div className="panel-nav">
         <button type="button" className="round-btn panel-close" id={closeId} aria-label="Close" onClick={onClose}>
-          <Icon icon={x} size="xl" className="panel-close-x" />
+          <Icon icon={x} size="md" className="panel-close-x" />
           <Icon icon={arrowStraightLeft} size="lg" className="panel-close-back" />
         </button>
       </div>

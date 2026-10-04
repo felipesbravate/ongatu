@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Notification, NotificationItem, UserMenu, UserNav, fmtMoney } from '../ui/index.js';
-import { settings as settingsIcon, signOut as signOutIcon, user as userIcon } from '../ui/icons.js';
+import { signOut as signOutIcon } from '../ui/icons.js';
 import { listUsers, setUserStatus, signOut } from './api.js';
 import { useSeenAlerts } from './alerts.js';
 
@@ -47,8 +47,8 @@ export function AccountNav({ me, profile, alerts = [], onOpenAlert }) {
   };
   const name = (profile && profile.name) || firstNameOf(me.email);
   const items = [
-    { key: 'account', id: 'menu-account', label: 'Account', icon: userIcon, onSelect: () => { if (location.pathname !== '/account') location.href = '/account'; } },
-    ...(me.isAdmin ? [{ key: 'admin', id: 'menu-admin', label: 'Admin', icon: settingsIcon, onSelect: () => setDialog('admin') }] : []),
+    { key: 'account', id: 'menu-account', label: 'Account', onSelect: () => { if (location.pathname !== '/account') location.href = '/account'; } },
+    ...(me.isAdmin ? [{ key: 'admin', id: 'menu-admin', label: 'Admin', onSelect: () => setDialog('admin') }] : []),
     { key: 'signout', id: 'menu-signout', label: 'Sign out', icon: signOutIcon, onSelect: () => signOut().then(() => { location.href = '/login'; }) },
   ];
   return (

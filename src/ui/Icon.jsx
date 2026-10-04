@@ -8,12 +8,13 @@ import { iconFrame } from './iconFrame.js';
 // Oct 2: a size can also be one of the DS icon-size variables: 'xl' (24, 16 on desktop), 'lg' (20, 16 on desktop),
 // 'md' 16, 'sm' 12, 'tn' 10. xl and lg change with the Surface mode, so their svg carries .ico-xl / .ico-lg, the only
 // CSS allowed to size an icon; the drawing is the 24 / 20 one (the same 20px frame, scaled).
-export const ICON_SIZE = { xl: 24, lg: 20, md: 16, sm: 12, tn: 10 };
+// Oct 4: '2xl' (32, 24 on desktop): the Euro in the Balance card (441:1057).
+export const ICON_SIZE = { '2xl': 32, xl: 24, lg: 20, md: 16, sm: 12, tn: 10 };
 export function Icon({ icon, size = 20, className, ...rest }) {
   if (!icon) return null;
   const token = typeof size === 'string' ? size : null;
   const { px, drawing: ic, viewBox } = iconFrame(icon, token ? ICON_SIZE[token] : size);
-  if (token === 'xl' || token === 'lg') className = (className ? className + ' ' : '') + 'ico-' + token;
+  if (token === '2xl' || token === 'xl' || token === 'lg') className = (className ? className + ' ' : '') + 'ico-' + token;
   if (className) rest.className = className;
   // data-icon names the glyph, so tests and tools can tell which icon is drawn without comparing paths.
   const common = { viewBox, width: px, height: px, xmlns: 'http://www.w3.org/2000/svg', 'aria-hidden': 'true', 'data-icon': icon.name, 'data-size': px, ...rest };

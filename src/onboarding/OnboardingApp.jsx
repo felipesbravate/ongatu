@@ -12,20 +12,19 @@ import { arrowStraightRight, euro, plus, x } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
 import { ListSelector, Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
 import { db, getMe, leavePage } from '../tracker/api.js';
-import { EXP_GROUPS, MONTH_NAMES, STARTER_TEMPLATE, budgetDefaultDocId, fmtNum, parseAmount } from '../tracker/model.js';
+import { CATS, EXP_GROUPS, MONTH_NAMES, budgetDefaultDocId, fmtNum, parseAmount } from '../tracker/model.js';
 import { CategoryModal, KINDS, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
 
 const STEPS = ['Account', 'Tour', 'Setup'];
 const nowYear = new Date().getFullYear();
 
-// The starter template (model.STARTER_TEMPLATE): only the sub-categories it fills (Fixed, Variable) are added.
+// The starter template: the generic taxonomy every new year falls back to (model.CATS).
 function templateBoard() {
   const types = [];
-  const T = STARTER_TEMPLATE;
-  T.incomes.forEach((item) => types.push({ type: 'income', group: null, category: null, item, budget: 0 }));
-  T.investments.forEach((item) => types.push({ type: 'investment', group: null, category: null, item, budget: 0 }));
-  Object.entries(T.expenses).forEach(([group, cats]) => Object.entries(cats).forEach(([category, items]) => items.forEach((item) => types.push({ type: 'expense', group, category, item, budget: 0 }))));
-  return { kinds: ['income', 'investment', 'expense'], groups: Object.keys(T.expenses), types };
+  CATS.incomes.forEach((item) => types.push({ type: 'income', group: null, category: null, item, budget: 0 }));
+  CATS.investments.forEach((item) => types.push({ type: 'investment', group: null, category: null, item, budget: 0 }));
+  Object.entries(CATS.expenses).forEach(([group, cats]) => Object.entries(cats).forEach(([category, items]) => items.forEach((item) => types.push({ type: 'expense', group, category, item, budget: 0 }))));
+  return { kinds: ['income', 'investment', 'expense'], groups: EXP_GROUPS.slice(), types };
 }
 const emptyBoard = () => ({ kinds: ['income'], groups: [], types: [] });
 
@@ -97,7 +96,7 @@ function Tour({ card, setCard, onDone }) {
         </div>
         <Pager count={TOUR.length} current={card} onGo={setCard} />
       </div>
-      <Button id="ob-next" className="ob-wide" onClick={() => (card < TOUR.length - 1 ? setCard(card + 1) : onDone())}>{card < TOUR.length - 1 ? 'Next' : 'Go to setup'}</Button>
+      <Button id="ob-next" className={card < TOUR.length - 1 ? 'ob-full' : 'ob-wide'} onClick={() => (card < TOUR.length - 1 ? setCard(card + 1) : onDone())}>{card < TOUR.length - 1 ? 'Next' : 'Go to setup'}</Button>
     </section>
   );
 }
@@ -139,7 +138,7 @@ function BudgetCell({ t, onBudget }) {
   }
   return (
     <button type="button" className="ds-action-link ob-budget" aria-label={`Monthly budget for ${t.item}: ${fmtNum(t.budget)}. Edit`} onClick={() => setEditing(true)}>
-      <Icon icon={euro} size={12} /><span className="ob-budget-val">{fmtNum(t.budget)}</span>
+      <Icon icon={euro} size={16} /><span className="ob-budget-val">{fmtNum(t.budget)}</span>
     </button>
   );
 }
@@ -207,7 +206,7 @@ function Setup({ mode, onStart, busy, error }) {
                   </div>
                 ))
               : selTypes.length > 0 && <div className="ob-types">{selTypes.map((t) => <TypeRow key={t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />)}</div>}
-            <Button variant="secondary" size="small" trailing={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add Type</Button>
+            {selTypes.length > 0 ? <div><ActionLink icon={plus} id="ob-add-type" onClick={() => setModal('type')}>Add type</ActionLink></div> : <Button variant="secondary" size="small" trailing={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add Type</Button>}
           </div>
         </div>
         <div className="ob-col ob-col-summary">

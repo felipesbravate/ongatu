@@ -38,7 +38,7 @@ function Rows({ values, setValues, placeholder, label, idPrefix }) {
       {values.map((v, i) => (
         <div className="fld-row" key={i}>
           <Input id={`${idPrefix}-${i}`} aria-label={`${label} ${i + 1}`} placeholder={placeholder} value={v} maxLength={60} autoComplete="off" onChange={(e) => set(i, e.target.value)} />
-          {!mobile ? rm(i) : many && (i > 0 ? rm(i) : <span className="fld-remove-slot" aria-hidden="true" />)}
+          {!mobile ? (many && rm(i)) : many && (i > 0 ? rm(i) : <span className="fld-remove-slot" aria-hidden="true" />)}
         </div>
       ))}
     </div>
@@ -124,7 +124,7 @@ export function TypeModal({ open, kind, group: fixedGroup, category: fixedCat, g
         )}
         <div className="fld"><span className="fld-label">Type</span>
           <Rows values={items} setValues={setItems} label="Type" idPrefix={`${id}-item`} placeholder={isExp ? 'e.g., Electricity, Netflix, Uber' : noun === 'income' ? 'e.g., Salary, Freelance' : 'e.g., Stocks, Pension'} /></div>
-        <ActionLink size={mobile ? 'small' : 'medium'} icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another type</ActionLink>
+        <ActionLink icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another type</ActionLink>
         {err && <InfoMessage message="danger" title={err} />}
       </div>
     </Modal>
@@ -164,7 +164,7 @@ export function CategoryModal({ open, existing = [], onClose, onSave, id = 'cate
         <div className="fld"><span className="fld-label">Sub-category</span>
           <Rows values={subs} setValues={setSubs} label="Sub-category" idPrefix={`${id}-sub`} placeholder="e.g., Fixed, Variable, Extra" /></div>
         <div className="fld-row">
-          <ActionLink size={mobile ? 'small' : 'medium'} icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
+          <ActionLink icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
           <InfoTooltip text="Sub-categories split a category, like Fixed and Variable expenses." />
         </div>
         {warn && <InfoMessage message="warning" title={warn.title}>{warn.text}</InfoMessage>}
@@ -200,7 +200,7 @@ export function SubCategoryModal({ open, kind, existing = [], onClose, onSave, i
         <div className="fld"><span className="fld-label">Sub-category</span>
           <Rows values={subs} setValues={setSubs} label="Sub-category" idPrefix={`${id}-sub`} placeholder={kind === 'expense' ? 'e.g., Fixed, Variable, Extra' : 'e.g., Stocks, Shares, Funds'} /></div>
         <div className="fld-row">
-          <ActionLink size={mobile ? 'small' : 'medium'} icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
+          <ActionLink icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
           <InfoTooltip text="Sub-categories split a category, like Fixed and Variable expenses." />
         </div>
         {warn && <InfoMessage message="warning" title={warn.title}>{warn.text}</InfoMessage>}

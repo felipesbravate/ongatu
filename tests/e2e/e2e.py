@@ -160,8 +160,8 @@ async def main():
             m1 = await pg.evaluate("() => { const b = document.querySelectorAll('#budget-type-modal .fld-remove'); return { rm: b.length, off: b.length === 1 && b[0].disabled }; }")
             await pg.click('#budget-type-modal-more'); await pg.wait_for_timeout(100)
             m2 = await pg.evaluate("() => { const b = [...document.querySelectorAll('#budget-type-modal .fld-remove')], sv = b[0].querySelector('svg'); return { n: b.length, on: b.every((x) => !x.disabled), size: sv.getAttribute('width'), color: getComputedStyle(sv).color, link: getComputedStyle(document.getElementById('budget-type-modal-more')).fontSize }; }")
-            check('Add type modal, desktop (577:6679): every row has the 16px Remove in action/destructive (off with one row), "Add another type" Medium',
-                  m1['rm'] == 1 and m1['off'] and m2['n'] == 2 and m2['on'] and m2['size'] == '16' and m2['color'] == 'rgb(189, 0, 7)' and m2['link'] == '16px', [m1, m2])
+            check('Add type modal, desktop (577:6584 / 577:6612, audit D8-D9): one row has no Remove; with two, every row has the 16px Remove in action/destructive; "Add another type" Small',
+                  m1['rm'] == 0 and m2['n'] == 2 and m2['on'] and m2['size'] == '16' and m2['color'] == 'rgb(189, 0, 7)' and m2['link'] == '14px', [m1, m2])
             await pg.fill('#budget-type-modal-group', 'Zoo'); await pg.wait_for_timeout(150)
             cm = await pg.evaluate("() => [...document.querySelectorAll('#budget-type-modal .fld-combo-menu .ds-dd-item')].map(e => e.textContent)")
             check('Group (Optional): a new name offers \'+ Create "Zoo"\' in the custom Dropdown-list (no native datalist)', cm[:1] == ['Create "Zoo"'] and await pg.locator('#budget-type-modal datalist').count() == 0, cm)
@@ -285,13 +285,21 @@ async def main():
             await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
             st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
             check('phone: scrolled, the header turns Surface=App Small (48) and the year/month nav sticks under it (369:12607)', st2 == [0, 48], st2)
+            await mp.evaluate("window.scrollTo(0, 0)"); await mp.wait_for_timeout(150)
+            ms = await mp.evaluate("""() => { const m = document.getElementById('months'), s = m.querySelector('.month-btn[aria-pressed="true"]'), mr = m.getBoundingClientRect(), sr = s.getBoundingClientRect(),
+                  pad = parseFloat(getComputedStyle(m).paddingLeft), max = m.scrollWidth - m.clientWidth, yb = document.querySelector('.year-btn');
+                return { over: m.classList.contains('is-overflow'), scroll: Math.round(m.scrollLeft), want: Math.round(Math.min(s.offsetLeft - pad, max)), visible: sr.left >= mr.left + pad - 1 && sr.right <= mr.right + 1,
+                         endRoom: m.style.paddingRight, atEnd: !m.classList.contains('more-right'), labels: [...m.querySelectorAll('.month-btn')].map((b) => b.innerText),
+                         year: [getComputedStyle(yb).fontSize, getComputedStyle(yb).lineHeight] }; }""")
+            check('phone (699:11387 / 699:11765): the month row scrolls and opens on the selected month, as far left as it goes (no space after Dec), labels Jan, Feb, Mar…; year tabs Label/Large 18/20',
+                  ms['over'] and abs(ms['scroll'] - ms['want']) <= 1 and ms['visible'] and ms['endRoom'] == '' and ms['labels'][:3] == ['Jan', 'Feb', 'Mar'] and ms['year'] == ['18px', '20px'], ms)
             await mp.click('#notif-btn'); await mp.wait_for_selector('.ds-notif-page')
             np_ = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e);
                 const pg = q('.ds-notif-page'), nav = q('.ds-notif-page-nav'), t = q('.ds-notif-page-title'), list = q('.ds-notif-page-list'), it = list.querySelector('.ds-notif-item');
                 return { page: [Math.round(r(pg).width), Math.round(r(pg).height), cs(pg).backgroundColor], nav: [r(nav).height, cs(nav).paddingLeft, Math.round(r(q('#notif-back')).width)],
                          title: [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight], list: [cs(list).rowGap, cs(list).paddingLeft, Math.round(r(list).top - r(nav).bottom)], itemX: it ? Math.round(r(it).left) : null }; }""")
-            check('phone: the bell opens the Notifications page (407:905): full screen, 64 bar, back 32, Heading/Large 20/400/20, items 12 apart at 16',
-                  np_['page'][:2] == [390, 844] and np_['page'][2] == 'rgb(255, 255, 255)' and np_['nav'] == [64, '8px', 32] and np_['title'] == ['20px', '400', '24px'] and np_['list'] == ['12px', '16px', 16] and np_['itemX'] == 16, np_)
+            check('phone: the bell opens the Notifications page (407:905): full screen, 64 bar, back 36 (audit D4), Heading/Large 20/400/24, items 12 apart at 16',
+                  np_['page'][:2] == [390, 844] and np_['page'][2] == 'rgb(255, 255, 255)' and np_['nav'] == [64, '8px', 36] and np_['title'] == ['20px', '400', '24px'] and np_['list'] == ['12px', '16px', 16] and np_['itemX'] == 16, np_)
             await mp.click('#notif-back'); await mp.wait_for_timeout(200)
             check('phone: the back arrow closes the Notifications page', await mp.locator('.ds-notif-page').count() == 0)
             await mp.click('#mnav-add'); await mp.wait_for_timeout(500)
@@ -299,7 +307,8 @@ async def main():
             await mp.close()
             check('Segments sit on surface/secondary, tags are round Label chips (radius/full since Oct 2)', d['segBg'] == 'rgb(239, 238, 229)' and d['tag'] == ['999px', 'rgb(239, 238, 229)'], d)
             check('allocation bars are 48 wide, space/md apart (12 on desktop)', d['allocBar'] == '48px' and d['allocGap'] == '12px', d)
-            check('month row is indented 56 (211:18753: the chips start under the first year tab)', d['monthsPad'] == '56px', d)
+            al = await pg.evaluate("() => { const m = document.getElementById('months'), sl = m.scrollLeft; m.scrollLeft = 0; const r = [Math.round(document.querySelector('.year-btn').getBoundingClientRect().left), Math.round(m.querySelector('.month-btn').getBoundingClientRect().left)]; m.scrollLeft = sl; return r; }")
+            check('the first month starts exactly under the first year tab (Oct 4)', al[0] == al[1], [d['monthsPad'], al])
             check('chart legend matches the lines: indigo, pink, lime', d['swatches'] == ['rgb(79, 70, 229)', 'rgb(227, 2, 159)', 'rgb(205, 217, 54)'], d)
             check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', d['tokens'] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
             check('money figures carry the Euro icon', d['euro'], d)
@@ -351,8 +360,8 @@ async def main():
             # Oct 3: Input, Dropdown and dropdown-item always use the Mobile tokens; Medium and Small write Label/Medium at 400 (16/400/24), Tiny Label/Tiny.
             check('Dropdown sizes (71:1096, Oct 3, Mobile tokens everywhere): Medium 48 / 16 Label/Medium, Small 36 / 8 Label/Small, Tiny 32 / 8 Label/Tiny (Oct 3 re-read)',
                   sz['dd-md'] == [48, '15px', '16px', '400', '24px'] and sz['dd-sm'] == [36, '7px', '16px', '400', '20px'] and sz['dd-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
-            check('Input sizes (71:1093, Oct 3, Mobile tokens everywhere): Medium 48 / 16 Label/Medium, Small 36 / 8 Label/Small, Tiny 32 / 8 Label/Tiny (Oct 3 re-read)',
-                  sz['in-medium'] == [48, '15px', '16px', '400', '24px'] and sz['in-small'] == [36, '7px', '16px', '400', '20px'] and sz['in-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
+            check('Input sizes (audit D1-D2: desktop screens draw Medium at radius 6, 12px sides, Body/Large 14/18; Small and Tiny unchanged)',
+                  sz['in-medium'] == [48, '11px', '14px', '400', '18px'] and sz['in-small'] == [36, '7px', '16px', '400', '20px'] and sz['in-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
             st = await pg.evaluate("""() => { const host = document.body, mk = (h) => { const w = document.createElement('div'); w.innerHTML = h; host.appendChild(w); return w; };
                 const e = mk('<span class="ds-input"><input placeholder="Label"></span>'), f = mk('<span class="ds-input"><input placeholder="Label" value="Felipe"></span>'),
                       de = mk('<div class="ds-dd ds-dd--md is-empty"><button class="ds-dd-trigger">Select</button></div>'), df = mk('<div class="ds-dd ds-dd--md"><button class="ds-dd-trigger">Rent</button></div>'),

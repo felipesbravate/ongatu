@@ -11,7 +11,7 @@ export function MobileNavItem({ type = 'section', icon, image, label, selected, 
   if (type === 'action') {
     return (
       <span className="ds-mnav-action">
-        <button type="button" className="round-btn primary" id={id} aria-label={label} onClick={onClick}><Icon icon={plus} size={20} /></button>
+        <button type="button" className="round-btn primary" id={id} aria-label={label} onClick={onClick}><Icon icon={plus} size={24} /></button>
       </span>
     );
   }

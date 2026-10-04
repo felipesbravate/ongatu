@@ -72,12 +72,13 @@ export const PINNED_MOBILE = [
   '.seg-tabs',                                   // Segment tab 4:166, Segments 30:98, Sub-segment tab 69:903, Sub-segments 69:900
   '.year-add-pill',                              // Add year 79:1242
   '.year-tabs', '.year-btn',                     // Nav tabs 59:850, Tab 53:801
-  '.ds-input',                                   // Input 71:1093
   '.ds-dd', '.ds-dd-menu', '.ds-dd-item', '.date-dd', // Dropdown 71:1096 (the date field is one), dropdown-item 183:6858 (the menu is portaled)
   '.ds-notif', '.ds-notif-panel', '.ds-notif-page', '.ds-notif-item', // Notification 228:455, notification-item 228:469
   '.ds-app-header',                              // Product header 728:1445, App header 285:600
   '.ds-avatar',                                  // avatar 221:1044
   '.btn-pill', '.round-btn', '.ds-action-link',  // Button 41:119, Round button 52:629, Action link 607:1368 (Oct 3)
+  '.ds-input.small', '.ds-input.tiny',           // Small and Tiny inputs stay Mobile (review rows 229:18717 draw Input Tn at 32 / Label/Tiny)
+  '.ds-side-menu', '.ds-steps', '.ds-list-sel', '.meter-row', // Oct 4 audit: Side menu, Step progress, list-selector, Meter render Mobile in the Ongatu frames; Input does not
 ];
 const rootCss = css.slice(0, css.indexOf('/* @tokens-mobile:start */'));
 const decls = new Map();

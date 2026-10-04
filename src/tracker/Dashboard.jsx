@@ -38,7 +38,7 @@ export function HeroLeft({ model, y, monthIdx }) {
         <div className="value" id="balance-value">
           {/* Balance card 441:1057: the € is a 20 x 27 shape beside Value/XL, space/xs apart (other currencies: text). */}
           {cur === 'EUR'
-            ? <span className="money">{c.balance < 0 ? '-' : ''}<svg className="balance-euro" viewBox="4.5 2.5 11 15" width="20" height="27" aria-hidden="true"><path d={euro.d} fill="currentColor" /></svg><span>{fmtFigure(c.balance)}</span></span>
+            ? <span className="money">{c.balance < 0 ? '-' : ''}<Icon icon={euro} size="2xl" className="balance-euro" /><span>{fmtFigure(c.balance)}</span></span>
             : fmtMoney(c.balance, cur)}
         </div>
         {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
@@ -140,7 +140,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
           <h2>Tracker</h2>
           <div className="hint" id="cat-hint">{`${y.months[monthIdx]} ${y.year}${eligible ? ' · projected' : ''}`}</div>
         </div>
-        {onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) && <TrackerMenu onAdjustBudget={onAdjustBudget} />}
+        {onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) && <TrackerMenu onAdjustBudget={onAdjustBudget} monthName={MONTH_NAMES[monthIdx]} />}
       </div>
       <div className="bd-content">
         <div className="bd-controllers">
@@ -154,8 +154,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
-            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={16} />)
-            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={16} />)}
+            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
+            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={20} />)}
         </div>
         <div id="itemslist" className="bd-list">
           {!bd.flat && bd.rows.length > 0 && rows.map((r, i) => (
@@ -187,7 +187,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
 }
 // The Tracker's Actions (Round button, Medium, Tertiary; Active while open) and its menu (Dropdown-list, Simple),
 // right-aligned 8px under the button (Cost-tracker 2:2).
-function TrackerMenu({ onAdjustBudget }) {
+function TrackerMenu({ onAdjustBudget, monthName }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const close = useCallback(() => setOpen(false), []);
@@ -195,7 +195,7 @@ function TrackerMenu({ onAdjustBudget }) {
   return (
     <div className="bd-menu" ref={ref}>
       <RoundButton icon={actionsIcon} size="small" id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
-      {open && <MenuList id="tracker-menu" items={[{ key: 'budget', id: 'adjust-budget', label: "Adjust month's budget", icon: edit, onSelect: () => { setOpen(false); onAdjustBudget(); } }]} />}
+      {open && <MenuList id="tracker-menu" items={[{ key: 'budget', id: 'adjust-budget', label: monthName ? `Edit ${monthName}'s budget` : "Edit this month's budget", icon: edit, onSelect: () => { setOpen(false); onAdjustBudget(); } }]} />}
     </div>
   );
 }
@@ -214,7 +214,7 @@ function RowMenu({ item, onAdd, onAdjustBudget }) {
   if (!items.length) return null;
   return (
     <span className="br-actions" ref={ref}>
-      <RoundButton icon={actionsIcon} size="micro" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }} />
+      <RoundButton icon={actionsIcon} size="micro" iconSize="md" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }} />
       {open && <MenuList className="br-menu row-menu" description={item} items={items} />}
     </span>
   );

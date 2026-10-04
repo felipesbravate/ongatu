@@ -212,7 +212,7 @@ function RowActions({ item, onRemove }) {
   useDismiss(open, ref, () => setOpen(false));
   return (
     <span className="br-actions" ref={ref}>
-      <RoundButton icon={actions} size="micro" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
+      <RoundButton icon={actions} size="micro" iconSize="md" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
       {open && <MenuList className="br-menu" items={[{ key: 'remove', label: 'Remove', icon: trash, className: 'br-remove', onSelect: () => { setOpen(false); onRemove(); } }]} />}
     </span>
   );

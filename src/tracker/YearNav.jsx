@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Button, Dropdown, MonthSelector, RoundButton, YearAddButton } from '../ui/index.js';
 import { plus, x } from '../ui/icons.js';
 import { Icon } from '../ui/Icon.jsx';
@@ -14,14 +14,43 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
   const y = DATA[yearIdx];
   const [adding, setAdding] = useState(false);
   useEffect(() => { if (onAddingChange) onAddingChange(adding); }, [adding, onAddingChange]);
+  // Year and month rows on narrow screens (699:11387 / 699:11765, Oct 4): each row scrolls sideways. The month row opens
+  // with the selected month as far left as it can go (the start of the row, or the row's end for late months: no empty
+  // space after December). A row fades on the right while more of it is hidden there, and the month row fades on the left.
+  const monthsRef = useRef(null);
+  const yearsRef = useRef(null);
+  const placed = useRef(null);
+  useLayoutEffect(() => {
+    const el = monthsRef.current, yr = yearsRef.current; if (!el) return;
+    const edges = (r) => { if (!r) return; const max = r.scrollWidth - r.clientWidth;
+      r.classList.toggle('is-overflow', max > 1); r.classList.toggle('more-right', r.scrollLeft < max - 1); };
+    const place = (smoothIfHidden) => {
+      const btn = el.querySelector('.month-btn[aria-pressed="true"]');
+      if (!btn) return;
+      const pad = parseFloat(getComputedStyle(el).paddingLeft) || 0;
+      const target = Math.max(0, Math.min(btn.offsetLeft - pad, el.scrollWidth - el.clientWidth));
+      if (!smoothIfHidden) el.scrollLeft = target;
+      else if (btn.offsetLeft < el.scrollLeft + pad || btn.offsetLeft + btn.offsetWidth > el.scrollLeft + el.clientWidth) el.scrollTo({ left: target, behavior: 'smooth' });
+    };
+    if (placed.current !== yearIdx) {
+      place(false); placed.current = yearIdx;
+      // Web fonts can widen the chips after this first pass: place it again once they are in.
+      if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => { place(false); edges(el); edges(yr); });
+    } else place(true);
+    edges(el); edges(yr);
+    const onEl = () => edges(el), onYr = () => edges(yr), onResize = () => { edges(el); edges(yr); };
+    el.addEventListener('scroll', onEl, { passive: true }); if (yr) yr.addEventListener('scroll', onYr, { passive: true });
+    window.addEventListener('resize', onResize);
+    return () => { el.removeEventListener('scroll', onEl); if (yr) yr.removeEventListener('scroll', onYr); window.removeEventListener('resize', onResize); };
+  }, [yearIdx, monthIdx]);
 
   return (
     <div className="actions-wrap">
       <div className={'actions-row' + (adding ? ' dimmed' : '')}>
         <div className="top-nav">
           <div className="years">
-            <YearAddButton id="year-add-toggle" onClick={() => setAdding((a) => !a)} />
-            <div className="year-tabs" id="years" role="tablist" aria-label="Year">
+            <YearAddButton id="year-add-toggle" aria-expanded={adding ? 'true' : 'false'} onClick={() => setAdding((a) => !a)} />
+            <div className="year-tabs" id="years" ref={yearsRef} role="tablist" aria-label="Year">
               {DATA.map((_, i) => i).reverse().map((i) => {
                 const yr = DATA[i];
                 return (
@@ -37,7 +66,7 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
               })}
             </div>
           </div>
-          <div className="months" id="months" role="tablist" aria-label="Month">
+          <div className="months" id="months" ref={monthsRef} role="tablist" aria-label="Month">
             {y.months.map((m, i) => {
               const future = model.isFutureMonth(y, i);
               const has = !future && model.monthHasData(y, i);

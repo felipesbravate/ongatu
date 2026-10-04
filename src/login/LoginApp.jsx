@@ -83,7 +83,7 @@ function Resend({ form, sent, small }) {
   return (
     <div className={'login-resend' + (small ? ' is-small' : '')}>
       <span className="login-resend-row">
-        <ActionLink id="resend-code" size={small ? undefined : 'medium'} type="submit" form={form} disabled={left > 0}>Re-send code</ActionLink>
+        <ActionLink id="resend-code" type="submit" form={form} disabled={left > 0}>Re-send code</ActionLink>
         {left > 0 && <span className="login-note" id="resend-wait">in {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')}</span>}
       </span>
       <span className="login-note">Can&apos;t find it? Check spam or promotions.</span>
