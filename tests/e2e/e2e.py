@@ -302,6 +302,22 @@ async def main():
                   np_['page'][:2] == [390, 844] and np_['page'][2] == 'rgb(255, 255, 255)' and np_['nav'] == [64, '8px', 36] and np_['title'] == ['20px', '400', '24px'] and np_['list'] == ['12px', '16px', 16] and np_['itemX'] == 16, np_)
             await mp.click('#notif-back'); await mp.wait_for_timeout(200)
             check('phone: the back arrow closes the Notifications page', await mp.locator('.ds-notif-page').count() == 0)
+            # Mobile Create year (703:17437 -> 703:16128, Oct 4)
+            await mp.click('#year-add-toggle'); await mp.wait_for_selector('#year-modal[open]'); await mp.wait_for_timeout(300)
+            yrm = await mp.evaluate("""() => { const m = document.getElementById('year-modal'), il = m.querySelector('.ds-illustration');
+                return { art: il && il.dataset.illustration, w: il && Math.round(il.getBoundingClientRect().width), title: m.querySelector('.ds-modal-title').textContent,
+                         labels: [...m.querySelectorAll('.fld-label')].map(l => l.textContent), year: document.getElementById('year-modal-year-trigger').textContent.trim(),
+                         cur: document.getElementById('year-modal-currency-trigger').textContent.trim(), pill: document.getElementById('year-add-panel').classList.contains('open') }; }""")
+            check('phone: the year + opens "Set up a new year" (Calendar 97 wide, Year + Currency, next free year picked, €), not the pill',
+                  yrm['art'] == 'calendar' and yrm['w'] == 97 and yrm['title'] == 'Set up a new year' and yrm['labels'] == ['Year', 'Currency'] and yrm['year'].isdigit() and yrm['cur'] == '€' and not yrm['pill'], yrm)
+            await mp.click('#year-modal-next'); await mp.wait_for_selector('#budget-panel.open'); await mp.wait_for_timeout(500)
+            yp = await mp.evaluate("""() => ({ modal: !!document.querySelector('#year-modal[open]'), title: document.getElementById('budget-panel-title').textContent,
+                hint: document.getElementById('budget-panel-hint').textContent, x: Math.round(document.getElementById('budget-panel').getBoundingClientRect().left),
+                group: (document.querySelector('label[for="budget-new-group"]') || {}).textContent, link: (document.getElementById('budget-create-group') || {}).textContent })""")
+            check('phone: Next closes the modal and slides in the Year budget panel with the 703:16128 copy',
+                  not yp['modal'] and yp['title'].endswith('/ Starting budget') and yp['hint'].startswith('This baseline budget uses your past 12 months') and yp['x'] == 0
+                  and (yp['group'] is None or (yp['group'] == 'Group name (Optional)' and yp['link'].strip() == 'Add group')), yp)
+            await mp.click('#budget-close-btn'); await mp.wait_for_timeout(400)
             await mp.click('#mnav-add'); await mp.wait_for_timeout(500)
             check('phone: the bottom nav + opens Add an entry', await mp.locator('#add-panel.open').count() == 1)
             await mp.close()
@@ -309,6 +325,11 @@ async def main():
             check('allocation bars are 48 wide, space/md apart (12 on desktop)', d['allocBar'] == '48px' and d['allocGap'] == '12px', d)
             al = await pg.evaluate("() => { const m = document.getElementById('months'), sl = m.scrollLeft; m.scrollLeft = 0; const r = [Math.round(document.querySelector('.year-btn').getBoundingClientRect().left), Math.round(m.querySelector('.month-btn').getBoundingClientRect().left)]; m.scrollLeft = sl; return r; }")
             check('the first month starts exactly under the first year tab (Oct 4)', al[0] == al[1], [d['monthsPad'], al])
+            if await pg.locator('#tracker-menu-btn').count():
+                await pg.click('#tracker-menu-btn'); await pg.wait_for_selector('#tracker-menu')
+                da = await pg.evaluate("() => { const m = document.getElementById('tracker-menu'), i = m.querySelector('.ds-dd-item'), c = getComputedStyle(m), ci = getComputedStyle(i); return [Math.round(m.getBoundingClientRect().width), c.paddingTop, c.borderTopLeftRadius, Math.round(i.getBoundingClientRect().height), ci.fontSize, ci.lineHeight]; }")
+                check('desktop action menus are a drop-action (801:1400): 200 wide, padding 12, radius 16, 32-high items in Label/Tiny 14/16', da == [200, '12px', '16px', 32, '14px', '16px'], da)
+                await pg.click('#tracker-menu-btn'); await pg.wait_for_selector('#tracker-menu', state='detached'); await pg.wait_for_selector('.month-btn')
             check('chart legend matches the lines: indigo, pink, lime', d['swatches'] == ['rgb(79, 70, 229)', 'rgb(227, 2, 159)', 'rgb(205, 217, 54)'], d)
             check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', d['tokens'] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
             check('money figures carry the Euro icon', d['euro'], d)

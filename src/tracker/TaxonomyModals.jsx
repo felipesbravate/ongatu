@@ -71,7 +71,7 @@ function Combo({ id, value, onChange, options, placeholder }) {
         onFocus={() => setOpen(true)} onClick={() => setOpen(true)} onKeyDown={onKey} onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(0); }} />
       <button type="button" className="fld-combo-chev" tabIndex={-1} aria-label="Show the groups" onMouseDown={(e) => { e.preventDefault(); setOpen((o) => !o); }}><Icon icon={chevronDown} size={12} /></button>
       {open && items.length > 0 && (
-        <div className={'ds-dd-menu fld-combo-menu' + (create ? ' is-action' : '')} role="listbox" id={listId}>
+        <div className={'ds-dd-menu fld-combo-menu' + (create ? ' is-action ds-drop-action' : '')} role="listbox" id={listId}>
           <div className="ds-dd-items">
             {items.map((it, i) => (
               <div key={(it.create ? '+' : '') + it.label} role="option" aria-selected={norm(it.label) === norm(q) && !it.create ? 'true' : 'false'}

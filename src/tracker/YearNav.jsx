@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Button, Dropdown, MonthSelector, RoundButton, YearAddButton } from '../ui/index.js';
+import { Button, Dropdown, InfoMessage, Modal, MonthSelector, RoundButton, YearAddButton, illustrations, useMobile } from '../ui/index.js';
 import { plus, x } from '../ui/icons.js';
 import { Icon } from '../ui/Icon.jsx';
 import { currentYearLabel } from './model.js';
@@ -13,6 +13,9 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
   const { DATA } = model;
   const y = DATA[yearIdx];
   const [adding, setAdding] = useState(false);
+  // Phones (703:17437, Oct 4): the + opens the "Set up a new year" modal instead of the pill; Next opens the Year budget panel.
+  const mobile = useMobile();
+  const [yearModal, setYearModal] = useState(false);
   useEffect(() => { if (onAddingChange) onAddingChange(adding); }, [adding, onAddingChange]);
   // Year and month rows on narrow screens (699:11387 / 699:11765, Oct 4): each row scrolls sideways. The month row opens
   // with the selected month as far left as it can go (the start of the row, or the row's end for late months: no empty
@@ -49,7 +52,7 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
       <div className={'actions-row' + (adding ? ' dimmed' : '')}>
         <div className="top-nav">
           <div className="years">
-            <YearAddButton id="year-add-toggle" aria-expanded={adding ? 'true' : 'false'} onClick={() => setAdding((a) => !a)} />
+            <YearAddButton id="year-add-toggle" aria-expanded={adding ? 'true' : 'false'} onClick={() => (mobile ? setYearModal(true) : setAdding((a) => !a))} />
             <div className="year-tabs" id="years" ref={yearsRef} role="tablist" aria-label="Year">
               {DATA.map((_, i) => i).reverse().map((i) => {
                 const yr = DATA[i];
@@ -77,7 +80,43 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
       </div>
       <AddYearPill open={adding} onClose={() => setAdding(false)} model={model} canSave={canSave}
         onSubmit={(label, currency) => { setAdding(false); onAddYear(label, currency); }} />
+      <AddYearModal open={yearModal} onClose={() => setYearModal(false)} model={model} canSave={canSave}
+        onSubmit={(label, currency) => { setYearModal(false); onAddYear(label, currency); }} />
     </div>
+  );
+}
+
+// The years that can be added: this year and the next ten, minus the ones that exist.
+const addableYears = (model) => {
+  const now = parseInt(currentYearLabel(), 10);
+  return Array.from({ length: 11 }, (_, k) => String(now + k)).filter((l) => !model.DATA.some((y) => y.year === l)).map((l) => ({ value: l, label: l }));
+};
+const yearError = (model, l, canSave) => (!l ? 'Pick a year.' : model.DATA.some((y) => y.year === l) ? 'That year already exists.'
+  : !canSave ? "Not connected — can't save a new year right now." : null);
+
+// Mobile Create year (703:17437, Oct 4): Modal with the Calendar illustration (97 wide), "Set up a new year", the Year and
+// Currency dropdowns (Medium), then Cancel (Tertiary) and Next (Primary). Next only validates; the Year budget panel
+// (703:16128) slides in from the right and creates the year.
+function AddYearModal({ open, onClose, onSubmit, model, canSave }) {
+  const options = addableYears(model);
+  const [label, setLabel] = useState('');
+  const [currency, setCurrency] = useState('EUR');
+  const [err, setErr] = useState(null);
+  useEffect(() => { if (open) { setLabel(options.length ? options[0].value : ''); setCurrency('EUR'); setErr(null); } }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  const next = () => { const l = label.trim(); const e = yearError(model, l, canSave); if (e) return setErr(e); onSubmit(l, currency); };
+  return (
+    <Modal open={open} onClose={onClose} id="year-modal" illustration={illustrations.calendar} illustrationWidth={97} title="Set up a new year"
+      description="Select the year and base currency for your upcoming budget."
+      secondary={{ label: 'Cancel', onClick: onClose, id: 'year-modal-cancel' }} primary={{ label: 'Next', onClick: next, id: 'year-modal-next' }}>
+      <div className="ds-modal-form">
+        <div className="fld"><label className="fld-label" htmlFor="year-modal-year-trigger">Year</label>
+          <Dropdown id="year-modal-year" size="md" emptyOption={false} placeholder="Year" value={label} onChange={setLabel} options={options} /></div>
+        <div className="fld"><label className="fld-label" htmlFor="year-modal-currency-trigger">Currency</label>
+          <Dropdown id="year-modal-currency" size="md" emptyOption={false} value={currency} onChange={setCurrency}
+            options={[{ value: 'EUR', label: '€' }, { value: 'SEK', label: 'kr' }]} /></div>
+        {err && <InfoMessage message="danger" title={err} />}
+      </div>
+    </Modal>
   );
 }
 
@@ -86,15 +125,11 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
   const [label, setLabel] = useState('');
   const [currency, setCurrency] = useState('EUR');
   const [status, setStatus] = useState(canSave ? null : { err: true, text: "This view can't save a new year (no database access)." });
-  // The years that can be added: this year and the next ten, minus the ones that exist.
-  const now = parseInt(currentYearLabel(), 10);
-  const yearOptions = Array.from({ length: 11 }, (_, k) => String(now + k)).filter((l) => !model.DATA.some((y) => y.year === l)).map((l) => ({ value: l, label: l }));
+  const yearOptions = addableYears(model);
   useEffect(() => { if (open) { setLabel(''); setStatus(null); } }, [open]);
   const submit = () => {
     const l = label.trim();
-    if (!l) return setStatus({ err: true, text: 'Pick a year.' });
-    if (model.DATA.some((y) => y.year === l)) return setStatus({ err: true, text: 'That year already exists.' });
-    if (!canSave) return setStatus({ err: true, text: "Not connected — can't save a new year right now." });
+    const e = yearError(model, l, canSave); if (e) return setStatus({ err: true, text: e });
     onSubmit(l, currency);
   };
   return (

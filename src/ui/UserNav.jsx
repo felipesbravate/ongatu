@@ -39,13 +39,16 @@ export function Avatar({ name, image, large, size, className }) {
 // items: [{ key, label, icon, onSelect, id }]. `bare` drops the list's own card (the user menu draws its own).
 // dropdown-item (DS 183:6858): a 16px icon 8 before the label. `description` = Dropdown-list/Actions (663:935): a
 // Body/Medium/Medium text/secondary line over the items, 8 apart.
+// Non-bare lists are a drop-action (DS 801:1398 Mobile / 801:1400 Desktop, Oct 4): 200 wide, radius/md, surface/primary,
+// border/secondary, shadow 0 0 8 ink@8%; items 36 high on phones (padding 16, Label/Small) and 32 on desktop (padding
+// 12, Label/Tiny). `destructive: true` paints an item action/destructive.
 export function MenuList({ items, bare, className, description, ...rest }) {
   return (
-    <div className={cx(bare ? 'ds-menu-items' : 'ds-dd-menu ds-menu', description && 'has-desc', className)} role="menu" {...rest}>
+    <div className={cx(bare ? 'ds-menu-items' : 'ds-dd-menu ds-menu ds-drop-action', description && 'has-desc', className)} role="menu" {...rest}>
       {description && <div className="ds-dd-desc">{description}</div>}
       <div className="ds-dd-items">
         {items.map((it) => (
-          <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon', it.className)} onClick={it.onSelect}>
+          <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon', it.destructive && 'is-destructive', it.className)} onClick={it.onSelect}>
             {it.icon && <Icon icon={it.icon} size="md" />}<span>{it.label}</span>
           </button>
         ))}

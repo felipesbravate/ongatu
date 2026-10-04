@@ -98,7 +98,8 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
           ? <PanelHeader closeId="month-budget-close" titleId="month-budget-title" title={month ? `${MONTH_NAMES[month.monthIdx]} ${my ? my.year : ''} / Editing budget` : 'Editing budget'} hintId="month-budget-hint"
               hint="Need to make a change? Tweak your planned income and expenses to ensure your budget matches your goals for the month." onClose={onClose} />
           : <PanelHeader closeId="budget-close-btn" titleId="budget-panel-title" title={pending ? `${pending.label} / Starting budget` : 'Starting budget'} hintId="budget-panel-hint"
-              hint={`Your starting budget is based on your past 12 months and will be applied to every month in ${pending ? pending.label : 'the new year'}. Any adjustments you make here will automatically become your default for future years.`} onClose={onClose} />}
+              hint={mobile ? `This baseline budget uses your past 12 months of data and applies to all of ${pending ? pending.label : 'the new year'}`
+                : `Your starting budget is based on your past 12 months and will be applied to every month in ${pending ? pending.label : 'the new year'}. Any adjustments you make here will automatically become your default for future years.`} onClose={onClose} />}
         <div className="add-panel-content">
           {/* 232:5853 (Oct 2): Category | Sub-category, Group (Optional), "+ Add type"; then the types by group. */}
           <div className="add-grid budget-filters">
@@ -110,10 +111,11 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
               <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-sub-trigger'}>Sub-category</label>
               <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-sub'} size="md" emptyOption={false} value={group} onChange={(v) => { setGroup(v); setNewGroup(''); }} options={GROUP_TABS} />
             </div>
+            {/* Phones (703:16128, Oct 4): "Group name (Optional)", "+ Add group", "Rename group" and a shorter hint. */}
             {/* 232:5853 (Oct 3): "Create group (Optional)" input, then "+ Create new group" (Small; Medium on phones). */}
             {topTab === 'expense' && (
               <div className="fld span-2">
-                <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-new-group'}>Create group (Optional)</label>
+                <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-new-group'}>{mobile ? 'Group name (Optional)' : 'Create group (Optional)'}</label>
                 <Input id={(isMonth ? 'month-budget' : 'budget') + '-new-group'} ref={newGroupRef} value={newGroup} placeholder="e.g., Utilities, Transportation, Health"
                   onChange={(e) => setNewGroup(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); createGroup(); } }} />
               </div>
@@ -126,7 +128,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
                 <InfoTooltip text="Sub-categories split a category into groups you track separately." />
               </div>
             )}
-            {topTab === 'expense' && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-create-group'} onClick={createGroup}>Create new group</ActionLink></div>}
+            {topTab === 'expense' && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-create-group'} onClick={createGroup}>{mobile ? 'Add group' : 'Create new group'}</ActionLink></div>}
           </div>
           <SubCategoryModal open={subModal} kind={topTab} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={() => setSubModal(false)} />
           <TypeModal open={typeModal} kind={topTab} group={topTab === 'expense' ? group : undefined} category={topTab === 'expense' ? typeCat : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
@@ -197,8 +199,8 @@ function GroupHeader({ title, onRename, onDelete, onAdd, mobile }) {
       <span className="br-actions" ref={ref}>
         <RoundButton icon={actions} size="micro" className="br-more budget-group-more" label={`Actions for ${title}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
         {open && <MenuList className="br-menu group-menu" items={[
-          { key: 'rename', label: 'Change group name', icon: edit, className: 'group-rename', onSelect: () => { setOpen(false); setRenaming(true); } },
-          { key: 'delete', label: 'Delete group', icon: trash, className: 'group-delete', onSelect: () => { setOpen(false); onDelete(); } },
+          { key: 'rename', label: mobile ? 'Rename group' : 'Change group name', icon: edit, className: 'group-rename', onSelect: () => { setOpen(false); setRenaming(true); } },
+          { key: 'delete', label: 'Delete group', icon: trash, className: 'group-delete', destructive: true, onSelect: () => { setOpen(false); onDelete(); } },
         ]} />}
       </span>
     </div>
@@ -213,7 +215,7 @@ function RowActions({ item, onRemove }) {
   return (
     <span className="br-actions" ref={ref}>
       <RoundButton icon={actions} size="micro" iconSize="md" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
-      {open && <MenuList className="br-menu" items={[{ key: 'remove', label: 'Remove', icon: trash, className: 'br-remove', onSelect: () => { setOpen(false); onRemove(); } }]} />}
+      {open && <MenuList className="br-menu" items={[{ key: 'remove', label: 'Remove', icon: trash, className: 'br-remove', destructive: true, onSelect: () => { setOpen(false); onRemove(); } }]} />}
     </span>
   );
 }

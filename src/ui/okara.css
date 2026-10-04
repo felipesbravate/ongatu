@@ -3403,3 +3403,20 @@
     /* Nav tabs Surface=Mobile (59:850): year tabs in Label/Large 18/20. Desktop (795:1228) keeps Label/Small 16/20. */
     .year-btn:not(#z){ font-size:var(--type-label-large-size); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
   }
+
+/* Oct 4: drop-action (DS 801:1398 Mobile / 801:1400 Desktop). Action menus (MenuList) and a dropdown list that offers an
+   action (the group combo's 'Create "X"'). 200 wide, vertical, radius/md, surface/primary, 1px border/secondary, shadow
+   0 0 8 ink@8%. Desktop: padding 12, items 32 high (padding 8, gap 8, radius 8, Label/Tiny 14/16). Phones: padding 16,
+   items 36 high (Label/Small 16/20). Items touch (gap 0). Icon 16 in surface/dark, text text/primary; hover/focus is
+   surface/accent-light with the icon in action/primary; a destructive item is action/destructive. */
+.ds-dd-menu.ds-drop-action:not(#z){ width:200px; min-width:200px; max-width:calc(100vw - 32px); padding:var(--space-sm); gap:var(--space-xs); border:1px solid var(--border-secondary); border-radius:var(--radius-md); background:var(--surface-primary); box-shadow:0 0 8px #16150f14; }
+.ds-drop-action:not(#z) .ds-dd-items{ gap:0; }
+.ds-drop-action:not(#z) .ds-dd-item{ min-width:0; min-height:32px; padding:var(--space-xs); gap:var(--space-xs); border-radius:var(--radius-sm); color:var(--text-primary); font-size:var(--type-label-tiny-size); line-height:var(--type-label-tiny-lh); font-weight:400; letter-spacing:var(--type-label-tiny-ls); }
+.ds-drop-action:not(#z) .ds-dd-item svg{ color:var(--surface-dark); }
+.ds-drop-action:not(#z) .ds-dd-item:hover, .ds-drop-action:not(#z) .ds-dd-item.is-active, .ds-drop-action:not(#z) .ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); outline:none; }
+.ds-drop-action:not(#z) .ds-dd-item:hover svg, .ds-drop-action:not(#z) .ds-dd-item.is-active svg, .ds-drop-action:not(#z) .ds-dd-item:focus-visible svg{ color:var(--action-primary); }
+.ds-drop-action:not(#z) .ds-dd-item.is-destructive, .ds-drop-action:not(#z) .ds-dd-item.is-destructive svg{ color:var(--action-destructive); }
+@media (max-width:640px){
+  .ds-dd-menu.ds-drop-action:not(#z){ padding:var(--space-md); }
+  .ds-drop-action:not(#z) .ds-dd-item{ min-height:36px; font-size:var(--type-label-small-size); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+}
