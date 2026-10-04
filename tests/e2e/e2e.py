@@ -638,6 +638,17 @@ async def main():
             await ann.wait_for_selector('#ob-next')
             check('a newly approved account starts at the onboarding (397:4392): tour card 1, steps Account done and Tour on going',
                   await ann.inner_text('.ob-card-title') == 'Every cent in one place' and await ann.locator('.ds-step.is-done').count() == 1 and 'Tour' in await ann.inner_text('.ds-step.is-current'))
+            # Set up your board (401:4464, Oct 4): list-selector sizes, Default has no delete, deleting asks first
+            await ann.click('#ob-skip'); await ann.click('#ob-template'); await ann.wait_for_selector('.ob-setup')
+            ls = await ann.evaluate("""() => [...document.querySelectorAll('.ds-list-sel')].map(e => { const b = e.getBoundingClientRect(); return [e.id, Math.round(b.width), Math.round(b.height), !!e.querySelector('.ds-list-sel-del'), getComputedStyle(e.querySelector('.ds-list-sel-title')).fontSize]; })""")
+            check('setup categories (list-selector 623:2690): 240 wide, 72 selected / 68 default, 14px titles; Income (Default) has no delete',
+                  ls == [['ob-cat-income', 240, 72, False, '14px'], ['ob-cat-investment', 240, 68, True, '14px'], ['ob-cat-expense', 240, 68, True, '14px']], ls)
+            await ann.hover('#ob-cat-investment'); await ann.click('#ob-cat-investment .ds-list-sel-del'); await ann.wait_for_selector('#confirm-modal[open]')
+            check('deleting a category asks first', 'delete Savings and investments?' in await ann.inner_text('#confirm-modal .ds-modal-title'))
+            await ann.click('#confirm-cancel'); await ann.wait_for_timeout(250)
+            check('Cancel keeps it', await ann.locator('#ob-cat-investment').count() == 1)
+            await ann.hover('#ob-cat-investment'); await ann.click('#ob-cat-investment .ds-list-sel-del'); await ann.click('#confirm-delete'); await ann.wait_for_timeout(300)
+            check('Delete removes it (and its types)', await ann.locator('#ob-cat-investment').count() == 0 and await ann.locator('#ob-cat-income').count() == 1)
             await skip_onboarding(ann); await ann.wait_for_selector('#user-nav'); await ann.wait_for_timeout(700)
             abody = await ann.inner_text('body')
             check('approved user sees an empty account (isolation)', '777,50' not in abody and '23,40' not in abody)
@@ -747,6 +758,12 @@ async def main():
             av = await ann.evaluate("() => { const a = document.querySelector('#app-header .ds-avatar'), c = getComputedStyle(a); return [a.getBoundingClientRect().width, c.fontSize, c.fontWeight, c.lineHeight, c.letterSpacing, c.backgroundColor]; }")
             check('avatar (221:1044, Oct 3): 40px, initial Heading/Small (14/400/14 -2%, Mobile tokens), white on surface/accent', av == [40, '14px', '400', '14px', '-0.28px', 'rgb(79, 70, 229)'], av)
             await ann.click('#menu-data'); await ann.wait_for_timeout(900)
+            al = await ann.evaluate("""() => { const r = s => document.querySelector(s).getBoundingClientRect(), b = r('#acct-back'), h = r('.acct-head h1'), c = r('.acct-content');
+                return { back: document.querySelector('#acct-back').textContent, arrow: Math.round(document.querySelector('#acct-back svg').getBoundingClientRect().width), titleGap: h.top - b.bottom, contentGap: c.top - r('.acct-head .app-sub').bottom,
+                         cards: ['#profile', '#security', '#data'].map(s => Math.round(r(s).height)), h2: [...document.querySelectorAll('.acct-card-head h2')].map(e => getComputedStyle(e).fontSize),
+                         h3: getComputedStyle(document.querySelector('.acct-meta h3')).fontSize, label: getComputedStyle(document.querySelector('label[for=first-name]')).textTransform }; }""")
+            check('Account (250:3399, Oct 4): "Go to dashboard" with a 16px arrow, title 8 below, content 40 below; cards 408 / 217 / 533; all card titles 20px, option titles 16px, labels upper case',
+                  al == {'back': 'Go to dashboard', 'arrow': 16, 'titleGap': 8, 'contentGap': 40, 'cards': [408, 217, 533], 'h2': ['20px'] * 3, 'h3': '16px', 'label': 'uppercase'}, al)
             sm = await ann.evaluate('''() => [...document.querySelectorAll('.acct-menu .ds-menu-item')].map(e => [e.getBoundingClientRect().height, e.classList.contains('is-selected')])''')
             check('Side menu: every item 40 high, clicking one selects it (no jump)', all(h == 40 for h, _ in sm) and [x for _, x in sm] == [False, False, True], sm)
             await ann.click('#menu-profile'); await ann.wait_for_timeout(900)

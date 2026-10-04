@@ -59,7 +59,7 @@ export default function AccountApp() {
       <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { location.href = '/?alert=' + encodeURIComponent([a.year, a.mi, a.group].join('|')); }} /></AppHeader>
       <div className="wrap acct-page">
         <header className="acct-head">
-          <ActionLink href="/" size="medium" icon={arrowStraightLeft} iconSize="lg" id="acct-back">Return to dashboard</ActionLink>
+          <ActionLink href="/" size="medium" icon={arrowStraightLeft} id="acct-back">Go to dashboard</ActionLink>
           <h1 className="app-title">Account</h1>
           <div className="app-sub">Manage your personal identity, security preferences, and data privacy controls.</div>
         </header>

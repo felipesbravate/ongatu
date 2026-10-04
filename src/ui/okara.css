@@ -3431,3 +3431,65 @@
 .login-code:not(#z){ width:auto; gap:var(--space-sm); }
 .login-code .login-code-box:not(#z){ flex:0 0 48px; width:48px; height:48px; min-height:48px; padding:0; }
 @media (max-width:640px){ .login-code:not(#z){ gap:var(--space-xs); } }
+
+/* Oct 4: Account (Ongatu 250:3399, updated). "Go to dashboard" Action link Medium with a 16px arrow, 4 apart; the title
+   block 8 below it, indented 20 each side (Display/Title over Body/Medium/Medium, 4 apart), the content 40 below.
+   Every card now has the "Personal information" header: Heading/XL over Body/Large/Medium, 4 apart, 24 above the
+   content. Options and data rows: title Heading/Large (16/20) over Body/Large/Medium (14/16), 4 apart; the delete
+   confirmation Body/Medium/Medium (12/14). Field labels upper case (FIRST NAME, LAST NAME, EMAIL). */
+@media (min-width:641px){
+  .acct-head:not(#z){ gap:0; }
+  .acct-head:not(#z) .app-title{ margin-top:8px; padding:0 20px; }
+  .acct-head:not(#z) .app-sub{ margin-top:4px; padding:0 20px; }
+  .acct-content:not(#z){ margin-top:40px; }
+  .acct-card:not(#z){ gap:24px; }
+  .acct-card:not(#z) .acct-card-head{ gap:4px; }
+  .acct-card:not(#z) .acct-card-head h2{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .acct-card:not(#z) .acct-card-head p{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .acct-meta:not(#z){ gap:4px; }
+  .acct-meta:not(#z) h3{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  .acct-meta:not(#z) p{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .acct-meta:not(#z) .ds-check{ margin-top:4px; }
+  .acct-meta:not(#z) .ds-check-label{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+}
+.acct-row:not(#z) .field label{ text-transform:uppercase; }
+
+/* Oct 4: list-selector 623:2690. The item is a focusable div (role=button) so it can hold the Delete button: a 16px
+   round button with a 10px X (surface/dark), 4px from the top right, shown on hover, keyboard focus and while selected. */
+.ds-list-sel:not(#z){ position:relative; text-align:left; cursor:pointer; }
+.ds-list-sel.is-selected:not(#z){ cursor:default; }
+.ds-list-sel:not(#z):focus-visible{ outline:2px solid var(--border-selected-item); outline-offset:2px; }
+.ds-list-sel-del:not(#z){ position:absolute; top:3px; right:3px; width:16px; height:16px; min-width:16px; min-height:16px; padding:0; border:none; background:transparent; color:var(--surface-dark); display:none; align-items:center; justify-content:center; }
+.ds-list-sel-del:not(#z):hover{ background:var(--surface-secondary); }
+.ds-list-sel:hover .ds-list-sel-del:not(#z), .ds-list-sel:focus-within .ds-list-sel-del:not(#z), .ds-list-sel.is-selected .ds-list-sel-del:not(#z){ display:inline-flex; }
+/* Title Body/Medium/Medium and description Body/Medium/Regular, 14/16 (list-selector is pinned to the Mobile tokens). */
+.ds-list-sel:not(#z) .ds-list-sel-title{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+.ds-list-sel:not(#z) .ds-list-sel-desc{ font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); }
+/* Set up your board (401:4464 / 402:4539, Oct 4): Category 240, Type fills, Summary 280, 24 apart. */
+@media (min-width:641px){ .ob-col-cats:not(#z){ width:240px; } .ob-col-summary:not(#z){ width:280px; } }
+
+/* Oct 4: Set up your board, filled (401:4464). The list-selector's Action link hugs its icon + label (underline too). */
+.ds-list-sel:not(#z) .ds-action-link{ align-self:flex-start; width:auto; }
+/* Summary: Tiny dropdowns on surface/primary (the summary itself is surface/body). */
+.ob-summary:not(#z) .ds-dd-trigger, .ob-summary:not(#z) .ds-dd{ background:var(--surface-primary); }
+/* Types: sub-category title Heading/Large (16/20) 12 above its list; the list indented 16 holds each group: its name
+   (Heading/Medium 14/14 in a 20 line) over its 24px rows. Sub-categories 24 apart. */
+.ob-type-group:not(#z){ gap:12px; }
+.ob-type-group + .ob-type-group:not(#z){ margin-top:0; }
+.ob-type-group-title:not(#z){ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+.ob-type-list{ display:flex; flex-direction:column; gap:8px; padding-left:16px; }
+.ob-type-cat{ display:flex; flex-direction:column; }
+.ob-type-cat-title{ margin:0; min-height:20px; display:flex; align-items:center; font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
+/* Card 1024 wide on desktop (401:4464): Category 240 · Type 376 · Summary 280, 24 apart, 40 padding. */
+@media (min-width:1100px){ .ob-page.is-wide:not(#z) .ob-content{ width:1024px; } }
+/* Summary (401:4464): "Start tracking from" 14/14, 12 above the dropdowns; categories 14/16 with 12/14 counts, 12
+   apart; Expenses' sub-categories indented 16, 12/14, 8 apart, 12 below their category; the note 12/14. */
+.ob-summary:not(#z) .fld-label{ font-size:14px; line-height:14px; }
+.ob-summary:not(#z) .ob-from{ display:flex; flex-direction:column; gap:12px; }
+.ob-summary-list:not(#z), .ob-sum-cat:not(#z){ gap:12px; }
+.ob-sum-row:not(#z){ gap:8px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+.ob-sum-count:not(#z), .ob-summary-note:not(#z){ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+.ob-sum-sub:not(#z){ padding-left:16px; font-size:var(--type-body-medium-medium-size); line-height:var(--type-body-medium-medium-lh); }
+.ob-sum-sub + .ob-sum-sub:not(#z){ margin-top:-4px; }
+.ob-summary:not(#z){ gap:40px; }
+.ob-summary-cta:not(#z){ gap:12px; }

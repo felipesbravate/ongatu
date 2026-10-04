@@ -56,7 +56,11 @@ export function Pager({ count, current, onGo, className }) {
 
 // list-selector: a selectable card. `label` = the Small Neutral tag beside the title; `action` = what a selected card
 // shows instead of the description (the Tiny Action link "Sub-category +").
-export function ListSelector({ title, description, label, selected, action, onSelect, className, ...rest }) {
+// list-selector 623:2690 (Oct 4): Default (border/default), Hover (surface/accent-light, border/selected-item) and Selected
+// (surface/primary, border/selected-item, shadow; the description turns text/accent-light and the `action`, an Action link
+// Tiny, follows 8 below). `onDelete` adds the "Delete button": a 16px round button with a 10px X, 4px from the top right,
+// shown on hover and while selected. An item with a `label` (the "Default" tag) is drawn without it by the screens.
+export function ListSelector({ title, description, label, selected, action, onSelect, onDelete, deleteLabel, className, ...rest }) {
   const body = (
     <div className="ds-list-sel-body">
       <div className="ds-list-sel-head"><span className="ds-list-sel-title">{title}</span>{label && <Tag size="small">{label}</Tag>}</div>
@@ -64,8 +68,18 @@ export function ListSelector({ title, description, label, selected, action, onSe
       {selected && action}
     </div>
   );
-  if (selected) return <div className={cx('ds-list-sel', 'is-selected', className)} aria-current="true" {...rest}>{body}</div>;
-  return <button type="button" className={cx('ds-list-sel', className)} onClick={onSelect} {...rest}>{body}</button>;
+  const del = onDelete && (
+    <button type="button" className="round-btn ds-list-sel-del" aria-label={deleteLabel || 'Delete ' + title}
+      onClick={(e) => { e.stopPropagation(); onDelete(); }}><Icon icon={x} size={10} /></button>
+  );
+  const cls = cx('ds-list-sel', selected && 'is-selected', onDelete && 'has-delete', className);
+  if (selected) return <div className={cls} aria-current="true" {...rest}>{body}{del}</div>;
+  return (
+    <div role="button" tabIndex={0} className={cls} onClick={onSelect} {...rest}
+      onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onSelect && onSelect(); } }}>
+      {body}{del}
+    </div>
+  );
 }
 
 // build-item 605:1358: a built row (Type over the name) with a Small Tertiary round button to remove it.

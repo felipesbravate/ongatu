@@ -6,7 +6,7 @@
 // settings/onboarding, so the dashboard never sends this account here again.
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
-import { ActionLink, Button, Divider, Dropdown, Logo, Modal, illustrations } from '../ui/index.js';
+import { ActionLink, Button, Divider, Dropdown, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
 import { arrowStraightRight, euro, plus, x } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
@@ -14,6 +14,7 @@ import { ListSelector, Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
 import { db, getMe, leavePage } from '../tracker/api.js';
 import { CATS, EXP_GROUPS, MONTH_NAMES, budgetDefaultDocId, fmtNum, parseAmount } from '../tracker/model.js';
 import { CategoryModal, KINDS, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
+import { useConfirm } from '../tracker/ConfirmModal.jsx';
 
 const STEPS = ['Account', 'Tour', 'Setup'];
 const nowYear = new Date().getFullYear();
@@ -156,6 +157,22 @@ function Setup({ mode, onStart, busy, error }) {
   const [board, setBoard] = useState(() => (mode === 'template' ? templateBoard() : emptyBoard()));
   const [sel, setSel] = useState('income');
   const [modal, setModal] = useState(null); // 'category' | 'sub' | 'type'
+  const [confirmModal, confirm] = useConfirm();
+  const mobile = useMobile();
+  // Oct 4: a category without the "Default" tag can be deleted (its X, 401:4464 / 719:18723), after the confirm modal.
+  // Its types go too; Expenses also takes its sub-categories. Income (Default) always stays.
+  const deleteKind = (k) => {
+    const n = board.types.filter((t) => t.type === k).length;
+    const parts = [k === 'expense' && board.groups.length ? `its ${board.groups.length} sub-categor${board.groups.length === 1 ? 'y' : 'ies'}` : null, n ? `${n} type${n === 1 ? '' : 's'}` : null].filter(Boolean);
+    confirm({
+      title: `Are you sure you want to delete ${kindLabel(k)}?`,
+      description: parts.length ? `This removes ${parts.join(' and ')} from your board. You can add the category again later.` : 'You can add the category again later.',
+      onConfirm: async () => {
+        setBoard((b) => ({ ...b, kinds: b.kinds.filter((x) => x !== k), types: b.types.filter((t) => t.type !== k), groups: k === 'expense' ? [] : b.groups }));
+        if (sel === k) setSel('income');
+      },
+    });
+  };
   const [year, setYear] = useState(String(nowYear));
   const [month, setMonth] = useState(String(new Date().getMonth()));
   const typesOf = (k) => board.types.filter((t) => t.type === k);
@@ -187,11 +204,15 @@ function Setup({ mode, onStart, busy, error }) {
           <div className="ob-col-content">
             <div className="ob-list">
               {board.kinds.map((k) => (
-                <ListSelector key={k} id={`ob-cat-${k}`} title={kindLabel(k)} label={k === 'income' ? 'Default' : null} description={descOf(k)} selected={sel === k} onSelect={() => setSel(k)}
-                  action={k === 'expense' ? <ActionLink size="tiny" trailing={plus} id="ob-add-sub" onClick={() => setModal('sub')}>Sub-category</ActionLink> : <span className="ds-list-sel-desc">{descOf(k)}</span>} />
+                <ListSelector key={k} id={`ob-cat-${k}`} title={kindLabel(k)} label={k === 'income' ? 'Default' : null} description={sel === k ? null : descOf(k)} selected={sel === k} onSelect={() => setSel(k)}
+                  onDelete={k === 'income' ? undefined : () => deleteKind(k)} deleteLabel={`Delete ${kindLabel(k)}`}
+                  action={<ActionLink size="tiny" icon={plus} id="ob-add-sub" onClick={() => setModal('sub')}>Add sub-category</ActionLink>} />
               ))}
             </div>
-            {board.kinds.length < KINDS.length && <Button variant="secondary" size="small" trailing={plus} id="ob-add-cat" onClick={() => setModal('category')}>Add category</Button>}
+            {/* 401:4464 / 402:4539 (desktop): "+ Add category" Tiny Secondary button, always there (the modal says when a
+                category is already on the board); phones (719:18723): an Action link. */}
+            {mobile ? <div><ActionLink icon={plus} id="ob-add-cat" onClick={() => setModal('category')}>Add category</ActionLink></div>
+              : <Button variant="secondary" size="tiny" icon={plus} id="ob-add-cat" onClick={() => setModal('category')}>Add category</Button>}
           </div>
         </div>
         <div className="ob-col ob-col-types">
@@ -199,14 +220,29 @@ function Setup({ mode, onStart, busy, error }) {
           <div className="ob-col-content">
             {selTypes.length === 0 && <p className="ob-empty">{sel === 'expense' && !board.groups.length ? 'Add a sub-category first, like Fixed or Variable.' : 'Add your first type.'}</p>}
             {sel === 'expense'
-              ? board.groups.filter((g) => selTypes.some((t) => t.group === g)).map((g) => (
-                  <div className="ob-type-group" key={g}>
-                    <h4 className="ob-type-group-title">{g}</h4>
-                    <div className="ob-types">{selTypes.filter((t) => t.group === g).map((t) => <TypeRow key={t.group + t.category + t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />)}</div>
-                  </div>
-                ))
+              /* 401:4464 (Oct 4): Sub-category (Heading 16/20), then its groups indented 16: the group name (14/14) over
+                 its types (breackdown rows, 24 high). Sub-categories 24 apart. Types without a group sit under the
+                 sub-category directly. */
+              ? board.groups.filter((g) => selTypes.some((t) => t.group === g)).map((g) => {
+                  const inG = selTypes.filter((t) => t.group === g);
+                  const cats = [...new Set(inG.map((t) => t.category || ''))];
+                  const row = (t) => <TypeRow key={t.group + t.category + t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />;
+                  return (
+                    <div className="ob-type-group" key={g}>
+                      <h4 className="ob-type-group-title">{g}</h4>
+                      <div className="ob-type-list">
+                        {cats.map((c) => (
+                          <div className="ob-type-cat" key={c || '-'} data-category={c}>
+                            {c && <h5 className="ob-type-cat-title">{c}</h5>}
+                            <div className="ob-types">{inG.filter((t) => (t.category || '') === c).map(row)}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })
               : selTypes.length > 0 && <div className="ob-types">{selTypes.map((t) => <TypeRow key={t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />)}</div>}
-            {selTypes.length > 0 ? <div><ActionLink icon={plus} id="ob-add-type" onClick={() => setModal('type')}>Add type</ActionLink></div> : <Button variant="secondary" size="small" trailing={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add Type</Button>}
+            {mobile ? <div><ActionLink icon={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add type</ActionLink></div> : <Button variant="secondary" size="tiny" icon={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add Type</Button>}
           </div>
         </div>
         <div className="ob-col ob-col-summary">
@@ -216,8 +252,8 @@ function Setup({ mode, onStart, busy, error }) {
               <div className="ob-from">
                 <span className="fld-label">Start tracking from</span>
                 <div className="ob-from-row">
-                  <Dropdown id="ob-year" size="sm" emptyOption={false} value={year} onChange={(v) => { setYear(v); if (Number(v) === nowYear && Number(month) > new Date().getMonth()) setMonth(String(new Date().getMonth())); }} options={years.map((y) => ({ value: y, label: y }))} ariaLabel="Year" />
-                  <Dropdown id="ob-month" size="sm" emptyOption={false} value={month} onChange={setMonth} options={months} ariaLabel="Month" />
+                  <Dropdown id="ob-year" size="tiny" emptyOption={false} value={year} onChange={(v) => { setYear(v); if (Number(v) === nowYear && Number(month) > new Date().getMonth()) setMonth(String(new Date().getMonth())); }} options={years.map((y) => ({ value: y, label: y }))} ariaLabel="Year" />
+                  <Dropdown id="ob-month" size="tiny" emptyOption={false} value={month} onChange={setMonth} options={months} ariaLabel="Month" />
                 </div>
               </div>
               <Divider />
@@ -248,6 +284,7 @@ function Setup({ mode, onStart, busy, error }) {
         onSave={({ groups }) => { setBoard((b) => ({ ...b, groups: EXP_GROUPS.filter((g) => b.groups.includes(g) || groups.includes(g)) })); setModal(null); }} />
       <TypeModal open={modal === 'type'} kind={sel} groups={board.groups.length ? board.groups : EXP_GROUPS} groupsOf={groupsOf} onClose={() => setModal(null)}
         onSave={(t) => { addTypes(t); setModal(null); }} />
+      {confirmModal}
     </section>
   );
 }
