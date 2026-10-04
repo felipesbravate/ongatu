@@ -308,6 +308,8 @@ async def main():
                 return { art: il && il.dataset.illustration, w: il && Math.round(il.getBoundingClientRect().width), title: m.querySelector('.ds-modal-title').textContent,
                          labels: [...m.querySelectorAll('.fld-label')].map(l => l.textContent), year: document.getElementById('year-modal-year-trigger').textContent.trim(),
                          cur: document.getElementById('year-modal-currency-trigger').textContent.trim(), pill: document.getElementById('year-add-panel').classList.contains('open') }; }""")
+            rad = await mp.evaluate("() => getComputedStyle(document.getElementById('year-modal')).borderRadius")
+            check('phone modals have 48px corners (DS 443:1485, Oct 4)', rad == '48px', rad)
             check('phone: the year + opens "Set up a new year" (Calendar 97 wide, Year + Currency, next free year picked, €), not the pill',
                   yrm['art'] == 'calendar' and yrm['w'] == 97 and yrm['title'] == 'Set up a new year' and yrm['labels'] == ['Year', 'Currency'] and yrm['year'].isdigit() and yrm['cur'] == '€' and not yrm['pill'], yrm)
             await mp.click('#year-modal-next'); await mp.wait_for_selector('#budget-panel.open'); await mp.wait_for_timeout(500)

@@ -3420,3 +3420,7 @@
   .ds-dd-menu.ds-drop-action:not(#z){ padding:var(--space-md); }
   .ds-drop-action:not(#z) .ds-dd-item{ min-height:36px; font-size:var(--type-label-small-size); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
 }
+
+/* Oct 4: Modal Surface=Mobile (DS 443:1485) has 48px corners on all four sides (a raw value in Figma, no radius variable).
+   Every phone modal (the Modal component: year, type, category, confirm/delete) follows it. */
+@media (max-width:640px){ .ds-modal:not(#z){ border-radius:48px; } }
