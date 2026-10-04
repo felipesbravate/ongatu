@@ -7,7 +7,7 @@ import LoginApp from '../../src/login/LoginApp.jsx';
 import { currentUser } from '../../src/server/auth.js';
 import { EMAIL_COOKIE, LOGIN_CTX_COOKIE, cleanEmail, decodeCtx } from '../../src/lib/otp-login.js';
 
-export const metadata = { title: 'Sign in · Ongatu', icons: { icon: 'data:,' }, robots: { index: false, follow: false } };
+export const metadata = { title: 'Sign in · Ongatu', icons: { icon: [{ url: '/favicon.ico', sizes: '48x48' }, { url: '/icon.svg', type: 'image/svg+xml' }], apple: '/apple-icon.png' }, robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
 
 const MESSAGES = {
