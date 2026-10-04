@@ -103,3 +103,20 @@ test('master key rotation re-wraps without touching data', async () => {
   const v3 = new Vault({ master: { active: 'v2', keys: { v2: fresh } }, keys: s.keys, docs: s.docs });
   assert.equal((await v3.get('alice', 'entries', 'e1')).data.amount, 5);
 });
+
+// Oct 4: a brand-new account's first page load asks for years, settings, entries… at once, often on different
+// serverless instances. Each saw "no key", made its own, and the later one replaced the earlier: documents written
+// with the first key became unreadable and the onboarding gate never got its answer.
+test('vault: concurrent first requests (two instances) agree on one data key', async () => {
+  const s = memoryStores();
+  const slowGet = s.keys.get;
+  const keys = { ...s.keys, async get(u) { const r = await slowGet(u); await new Promise((ok) => setTimeout(ok, 5)); return r; } };
+  const master = mk();
+  const a = new Vault({ master, keys, docs: s.docs }), b = new Vault({ master, keys, docs: s.docs });
+  await Promise.all([a.set('neo', 'settings', 'profile', { firstName: 'Neo' }), b.list('neo', 'years'), a.list('neo', 'entries'), b.set('neo', 'years', 'y1', { year: '2026' })]);
+  const c = new Vault({ master, keys, docs: s.docs }); // a third, cold instance reads everything
+  assert.deepEqual((await c.list('neo', 'settings')).map((d) => d.data.firstName), ['Neo']);
+  assert.deepEqual((await c.list('neo', 'years')).map((d) => d.data.year), ['2026']);
+  assert.deepEqual((await a.list('neo', 'years')).map((d) => d.data.year), ['2026']);
+  assert.deepEqual((await b.list('neo', 'settings')).map((d) => d.data.firstName), ['Neo']);
+});

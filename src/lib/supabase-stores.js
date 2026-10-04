@@ -14,8 +14,13 @@ export function supabaseStores(sb) {
         const d = ok(await sb.from('user_keys').select('kek_version,wrapped').eq('user_id', u).maybeSingle());
         return d ? { kekVersion: d.kek_version, wrapped: d.wrapped } : null;
       },
+      // A new account's key: insert, and if another request got there first (unique user_id), keep theirs.
+      async create(/** @type {string} */ u, /** @type {any} */ rec) {
+        const r = await sb.from('user_keys').insert({ user_id: u, kek_version: rec.kekVersion, wrapped: rec.wrapped });
+        if (r.error && r.error.code !== '23505') throw new Error(`db: ${r.error.message}`);
+      },
       async put(/** @type {string} */ u, /** @type {any} */ rec) {
-        // insert-only: never silently replace an existing data key (would orphan the user's data).
+        // Re-wrapping an existing key (master key rotation). New keys go through create().
         const existing = ok(await sb.from('user_keys').select('user_id').eq('user_id', u).maybeSingle());
         if (existing) ok(await sb.from('user_keys').update({ kek_version: rec.kekVersion, wrapped: rec.wrapped }).eq('user_id', u));
         else ok(await sb.from('user_keys').insert({ user_id: u, kek_version: rec.kekVersion, wrapped: rec.wrapped }));

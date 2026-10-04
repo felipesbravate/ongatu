@@ -3,7 +3,8 @@
 // It talks to two tiny storage interfaces so it can run against Supabase in production and
 // against in-memory maps in tests / the mock dev server.
 //
-// KeyStore : { get(userId) -> {kekVersion, wrapped} | null, put(userId, {kekVersion, wrapped}) -> void, remove(userId) }
+// KeyStore : { get(userId) -> {kekVersion, wrapped} | null, create(userId, rec) -> void (insert if absent, never replace),
+//              put(userId, {kekVersion, wrapped}) -> void (re-wrap an existing key), remove(userId) }
 // DocStore : { list(userId, collection) -> Row[], get(userId, collection, id) -> Row | null,
 //              put(row) -> void, remove(userId, collection, id) -> void, removeAll(userId) -> void }
 // Row      : { user_id, collection, doc_id, payload (base64 ciphertext), updated_at (ISO) }
@@ -46,13 +47,28 @@ export class Vault {
   async dekFor(userId) {
     const cached = this.cache.get(userId);
     if (cached) return cached;
+    // A new account's first page load asks for several collections at once. Requests in this process share one
+    // lookup; across processes (serverless instances) the first key stored wins and everyone re-reads it.
+    if (!this.pending) this.pending = new Map();
+    let p = this.pending.get(userId);
+    if (!p) {
+      p = this.loadOrCreateDek(userId).finally(() => this.pending.delete(userId));
+      this.pending.set(userId, p);
+    }
+    return p;
+  }
+
+  /** @param {string} userId @returns {Promise<Buffer>} */
+  async loadOrCreateDek(userId) {
     let rec = await this.keys.get(userId);
     if (!rec) {
-      const dek = newDek();
-      rec = wrapDek(this.master, userId, dek);
-      await this.keys.put(userId, rec);
-      this.cache.set(userId, dek);
-      return dek;
+      // Insert-if-absent, never replace (Oct 4): replacing a key another request already used to encrypt
+      // documents would make those documents unreadable. Then use whatever key is stored.
+      const fresh = wrapDek(this.master, userId, newDek());
+      if (this.keys.create) await this.keys.create(userId, fresh);
+      else await this.keys.put(userId, fresh);
+      rec = await this.keys.get(userId);
+      if (!rec) throw new VaultError('no_key', 'Could not create the data key');
     }
     const dek = unwrapDek(this.master, userId, rec.kekVersion, rec.wrapped);
     this.cache.set(userId, dek);
@@ -159,6 +175,7 @@ export function memoryStores() {
     keyMap, docMap,
     keys: {
       async get(u) { return keyMap.get(u) || null; },
+      async create(u, rec) { if (!keyMap.has(u)) keyMap.set(u, rec); },
       async put(u, rec) { keyMap.set(u, rec); },
       async remove(u) { keyMap.delete(u); },
     },
