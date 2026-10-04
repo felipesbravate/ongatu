@@ -104,6 +104,11 @@ async def main():
             check('Create account: the name is required', 'step=new' in sp.url or await sp.locator('#full-name:invalid').count() == 1)
             await sp.fill('#full-name', 'Nina Newbie'); await sp.click('#signup-submit'); await sp.wait_for_selector('#code-submit')
             boxes = await sp.locator('.login-code input:not([type=hidden])').count()
+            cb = await sp.evaluate("""() => { const b = [...document.querySelectorAll('.login-code-box')].map(e => e.getBoundingClientRect()), f = document.querySelector('.login-code-field').getBoundingClientRect(),
+                c = document.querySelector('.login-form').getBoundingClientRect(), l = document.getElementById('code-label').getBoundingClientRect();
+                return [Math.round(b[0].width), Math.round(b[0].height), Math.round(b[1].left - b[0].right), getComputedStyle(document.querySelector('.login-code-box')).borderRadius,
+                        Math.round(f.width), Math.round((f.left - c.left) - (c.right - f.right)), Math.round(l.left - b[0].left)]; }""")
+            check('code boxes (430:5508, Oct 4): 48 x 48, 8 apart, radius 6; the 328-wide field centred, label over the first box', cb == [48, 48, 8, '6px', 328, 0, 0], cb)
             await sp.click('#code-0'); await sp.keyboard.type('1a2b3')
             typed = await sp.eval_on_selector('input[name=code]', 'e => e.value')
             check('code step (568:5234): "Check your inbox", 6 boxes, digits only, typing moves to the next box, the resend link waits',
@@ -335,6 +340,7 @@ async def main():
             check('chart legend matches the lines: indigo, pink, lime', d['swatches'] == ['rgb(79, 70, 229)', 'rgb(227, 2, 159)', 'rgb(205, 217, 54)'], d)
             check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', d['tokens'] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
             check('money figures carry the Euro icon', d['euro'], d)
+            await pg.wait_for_selector('.month-btn:not(.estimated)')
             mb = await pg.evaluate("() => { const b = document.querySelector('.month-btn:not(.estimated)'), c = getComputedStyle(b); return [c.fontSize, c.fontWeight, c.lineHeight, c.letterSpacing, c.height, c.paddingLeft, c.textTransform]; }")
             check('month selector (4:171, Oct 2, Desktop): Label/Small 14/400/16 -2%, 20 high (space/tn round the text), space/sm sides, Jan..Dec as in the Oct 3 desktop frames', mb == ['14px', '400', '16px', '-0.28px', '20px', '8px', 'none'], mb)
 

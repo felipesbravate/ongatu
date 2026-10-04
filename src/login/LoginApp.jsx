@@ -147,7 +147,7 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
             : <><h1 className="login-title">Sign in</h1><Greeting name={name} email={email} /></>}
         </div>
         <form method="post" action="/auth/verify" id="code-form" className="login-form">
-          <div className="login-field">
+          <div className="login-field login-code-field">
             <Label htmlFor="code-0"><span id="code-label">{isNew ? 'Enter the 6-digit code' : 'Enter the 6-digit code sent to your email'}</span></Label>
             <CodeBoxes />
             <Message text={message || (sent ? 'We sent you a new code.' : null)} ok={!message && sent} />

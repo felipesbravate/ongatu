@@ -3424,3 +3424,10 @@
 /* Oct 4: Modal Surface=Mobile (DS 443:1485) has 48px corners on all four sides (a raw value in Figma, no radius variable).
    Every phone modal (the Modal component: year, type, category, confirm/delete) follows it. */
 @media (max-width:640px){ .ds-modal:not(#z){ border-radius:48px; } }
+
+/* Oct 4: Sign in - 6-digit code (Ongatu 430:5508, updated): six Medium inputs, 48 x 48, 8 apart. The field (label +
+   boxes, 328 wide) hugs its content and sits centred in the card; the label stays left-aligned over the first box. */
+.login-code-field:not(#z){ align-self:center; width:auto; max-width:100%; }
+.login-code:not(#z){ width:auto; gap:var(--space-sm); }
+.login-code .login-code-box:not(#z){ flex:0 0 48px; width:48px; height:48px; min-height:48px; padding:0; }
+@media (max-width:640px){ .login-code:not(#z){ gap:var(--space-xs); } }
