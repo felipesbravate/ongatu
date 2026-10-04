@@ -26,7 +26,7 @@ test('every Figma variable is in :root with the same value (aliases as var() to 
     if (collection === 'TextStyles') {
       for (const [name, s] of Object.entries(vars)) {
         const k = '--type-' + kebab(name);
-        const want = { size: `var(${cssName('Surface', s.sizeVar)})`, weight: String(s.weight), lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
+        const want = { size: s.sizeVar ? `var(${cssName('Surface', s.sizeVar)})` : s.size + 'px', weight: String(Number(s.weight) === 500 ? 400 : s.weight), /* Figma Medium (500) = 400 in code (Felipe, Oct 3) */ lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
         for (const [p, v] of Object.entries(want)) assert.equal(decl[`${k}-${p}`], v, `${k}-${p}: code has ${decl[`${k}-${p}`]}, Figma ${name} has ${v}`);
       }
       continue;
@@ -66,7 +66,8 @@ test('outside the token block, only Color variables and aliases are used (no Pri
   const body = css.slice(css.indexOf('/* @tokens:end */'))
     .replace(/\/\*[\s\S]*?\*\//g, '');         // comments may quote old values
   const prims = [...body.matchAll(/var\((--primitive-[\w-]+)\)/g)].map((m) => m[1])// Primitives a DS component binds directly (no Color variable for them): allocation labels, the Notification dot, the progress fill.
-    .filter((p) => !['--primitive-neutral-ink-muted', '--primitive-data-red-orange', '--primitive-data-green', '--primitive-data-green-light', '--primitive-brand-indigo', '--primitive-brand-mint', '--primitive-brand-mint-light'].includes(p));
+    .filter((p) => !['--primitive-neutral-ink-muted', '--primitive-data-red-orange', '--primitive-data-green', '--primitive-data-green-light', '--primitive-brand-indigo', '--primitive-brand-mint', '--primitive-brand-mint-light',
+      /* Oct 2: step and Pager tracks, chip-selector hover */ '--primitive-neutral-stone-325', '--primitive-status-green-pale'].includes(p));
   assert.deepEqual(prims, [], 'bind a Color variable instead of a Primitive');
   const colours = new Set(Object.values(figma.Primitives).map((v) => String(v).toLowerCase()));
   const hits = [...body.slice(body.indexOf('*{ box-sizing')).matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0].toLowerCase()).filter((h) => colours.has(h) && h !== '#ffffff');
@@ -85,4 +86,16 @@ test('the Mobile Surface values apply under the phone query', () => {
 test('native app tokens (mobile/src/theme/tokens.ts) are generated from the same Figma snapshot', async () => {
   const { execFileSync } = await import('node:child_process');
   execFileSync(process.execPath, ['scripts/sync-tokens-native.mjs', '--check'], { stdio: 'pipe' });
+});
+
+// Oct 3: the listed components always use the Surface Mobile mode (Figma: explicit mode Mobile), on any screen.
+test('components pinned to the Mobile mode redeclare every Mobile Surface value and the variables that read them', () => {
+  const block = css.slice(css.indexOf('/* @tokens-pinned:start */'), css.indexOf('/* @tokens-pinned:end */'));
+  assert.ok(block.length > 100, 'the @tokens-pinned block is missing: run node scripts/sync-tokens.mjs');
+  for (const sel of ['.seg-tabs', '.year-add-pill', '.year-tabs', '.year-btn', '.ds-input', '.ds-dd', '.ds-dd-menu', '.ds-dd-item',
+    '.ds-notif', '.ds-notif-panel', '.ds-notif-page', '.ds-notif-item', '.ds-app-header', '.ds-avatar']) assert.ok(block.includes(sel), `${sel} is not pinned to Mobile`);
+  const pinned = {};
+  for (const m of block.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) pinned[m[1]] = m[2].trim();
+  for (const [name, v] of Object.entries(figma.Surface)) assert.equal(pinned[cssName('Surface', name)], v.Mobile + 'px', `${name} not pinned to its Mobile value`);
+  for (const k of ['--type-label-medium-size', '--type-heading-small-size', '--layout-xl']) assert.equal(pinned[k], decl[k], `${k} must be redeclared on the pinned components`);
 });

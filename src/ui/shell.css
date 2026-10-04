@@ -6,7 +6,7 @@
 .ct-dialog{border:1px solid var(--border-card,#cbcac5);border-radius:var(--radius-md,16px);padding:24px;max-width:560px;width:calc(100% - 32px);font-family:var(--font-sans,"DM Sans",system-ui,sans-serif)}
 .ct-row{display:flex;gap:8px;align-items:center;padding:8px 0}
 .ct-row span{margin-right:auto}
-.ct-dialog-title{font-size:16px;font-weight:500;line-height:1.2;margin:0 0 8px}
-.ct-dialog-text{font-size:14px;font-weight:500;line-height:15.2px;letter-spacing:-.14px;color:var(--text-secondary);margin:0 0 24px}
+.ct-dialog-title{font-size:16px;font-weight:400;line-height:1.2;margin:0 0 8px}
+.ct-dialog-text{font-size:14px;font-weight:400;line-height:15.2px;letter-spacing:-.14px;color:var(--text-secondary);margin:0 0 24px}
 .ct-dialog-actions{display:flex;gap:8px;align-items:center;margin-top:16px}
-.ct-row span{font-size:12px;font-weight:500}
+.ct-row span{font-size:12px;font-weight:400}

@@ -8,7 +8,7 @@ import '../ui/okara.css';
 import '../ui/shell.css';
 import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, MobileBottomNav, SideMenu, Toggle, useToast } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { arrowStraightLeft, cancel, lock, security, trash, user } from '../ui/icons.js';
+import { arrowStraightLeft, lock, plus, security, trash, user } from '../ui/icons.js';
 import { api, deleteMe, deleteMyData, getMe, getSignIn, setSignIn, signOut } from './api.js';
 import { AccountNav } from './AccountBar.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
@@ -59,7 +59,7 @@ export default function AccountApp() {
       <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { location.href = '/?alert=' + encodeURIComponent([a.year, a.mi, a.group].join('|')); }} /></AppHeader>
       <div className="wrap acct-page">
         <header className="acct-head">
-          <ActionLink href="/" icon={arrowStraightLeft} id="acct-back">Return to dashboard</ActionLink>
+          <ActionLink href="/" size="medium" icon={arrowStraightLeft} iconSize="lg" id="acct-back">Return to dashboard</ActionLink>
           <h1 className="app-title">Account</h1>
           <div className="app-sub">Manage your personal identity, security preferences, and data privacy controls.</div>
         </header>
@@ -117,7 +117,7 @@ function ProfileCard({ me, profile, confirm, showToast }) {
           <Avatar large name={profile.name} image={profile.image} />
           <div className="acct-avatar-actions">
             {/* 250:3399: "Add image" (Button Tiny Secondary, 32 high) and a 32px tertiary Round button with a 12px Trash. */}
-            <Button size="tiny" variant="secondary" id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Add image</Button>
+            <Button size="tiny" variant="secondary" icon={plus} id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Add image</Button>
             <button type="button" className="round-btn tiny is-destructive" id="avatar-delete" aria-label="Delete picture" disabled={!profile.image} onClick={askRemove}><Icon icon={trash} size={12} /></button>
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden id="avatar-file" onChange={onFile} />
           </div>
@@ -128,7 +128,7 @@ function ProfileCard({ me, profile, confirm, showToast }) {
             <Field label="Last name" htmlFor="last-name"><Input id="last-name" value={last} onChange={(e) => setLast(e.target.value)} autoComplete="family-name" placeholder="Last name" /></Field>
           </div>
           <div className="acct-row">
-            <Field label="Email" htmlFor="email"><Input id="email" icon={lock} value={me.email} disabled readOnly /></Field>
+            <Field label="Email" htmlFor="email"><Input id="email" icon={lock} iconSize="md" value={me.email} disabled readOnly /></Field>
           </div>
         </div>
       </div>
@@ -250,7 +250,7 @@ function DataCard({ me, confirm, showToast }) {
             <p>Completely erase your credentials, billing context, settings, and all active tracking histories. This action cannot be undone.</p>
             <Checkbox id="delete-confirm" checked={sure} onChange={setSure}>I confirm that I want to close my account and permanently delete all associated data.</Checkbox>
           </div>
-          <Button size="small" variant="destructive" icon={cancel} id="delete-account-btn" onClick={deleteAccount} disabled={!sure}>Delete account</Button>
+          <Button size="small" variant="destructive" id="delete-account-btn" onClick={deleteAccount} disabled={!sure}>Delete account</Button>
         </div>
       </div>
     </section>

@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
-import { ActionLink, Button, Divider, Dropdown, Field, FieldGroup, Input, PanelHeader, ProgressBar, RoundButton, Segments } from '../ui/index.js';
+import { ActionLink, Button, Divider, Dropdown, Field, Illustration, Input, PanelHeader, ProgressBar, RoundButton, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { calendar, chevronDown, documentIcon, euro, image, questionFilled, upload, x } from '../ui/icons.js';
+import { calendar, chevronDown, documentIcon, euro, image, plus, questionOutlined, upload, x } from '../ui/icons.js';
+import { KINDS, TypeModal } from './TaxonomyModals.jsx';
 import { sample } from './api.js';
 import { DocReader, docIconName, docMeta } from './reader.js';
 import { EXP_GROUPS, TYPE_OPTS, fmtDateEU, fmtNum, parseAmount, periodKeyOfDate, periodLabel, periodMismatch, todayISO, typeKeyOf, yearLabelOfDate } from './model.js';
 
-const ENTRY_TYPES = [{ value: 'income', label: 'Incomes' }, { value: 'investment', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }];
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const simpleOpts = (values) => values.map((v) => ({ value: v, label: v }));
 
@@ -28,6 +28,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const dateRef = useRef(null);
   const [dateVal, setDateVal] = useState(todayISO());
   const panelRef = useRef(null);
+  const mobile = useMobile();
 
   // The date input is uncontrolled: code (and tests) may set .value and fire 'change', as on the legacy page.
   useEffect(() => {
@@ -43,18 +44,25 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const TX = model.taxonomyForYear(yearLabel);
   const isExp = entryType === 'expense';
   const gc = TX.expenses[entryGroup] || {};
+  // Oct 2 (229:18166): Group (Optional) is the taxonomy category, Type the item. With no group picked, Type lists
+  // every type of the sub-category and picking one fills its group.
+  const groupNames = Object.keys(gc).sort();
   const catVal = isExp && gc[cat] ? cat : '';
-  const pool = isExp ? (catVal ? gc[catVal].slice().sort() : []) : (((entryType === 'income' ? TX.incomes : TX.investments) || []).slice().sort());
-  // A category with a single sub-category selects it for you (174:15087).
-  const itemVal = pool.includes(item) ? item : (isExp && pool.length === 1 ? pool[0] : '');
+  const typeOwner = (it) => groupNames.find((g) => gc[g].includes(it)) || '';
+  const pool = isExp
+    ? (catVal ? gc[catVal].slice().sort() : [...new Set(groupNames.flatMap((g) => gc[g]))].sort())
+    : (((entryType === 'income' ? TX.incomes : TX.investments) || []).slice().sort());
+  const itemVal = pool.includes(item) ? item : (isExp && catVal && pool.length === 1 ? pool[0] : '');
+  const itemCat = isExp ? (catVal || typeOwner(itemVal)) : '';
+  const [typeModal, setTypeModal] = useState(false);
   const typeHas = (v) => (v === 'expense' ? EXP_GROUPS.some((g) => Object.keys(TX.expenses[g] || {}).length) : ((v === 'income' ? TX.incomes : TX.investments) || []).length > 0);
   const bounds = model.entryDateBounds();
 
-  // Opening the panel (from the Tracker's "+ Add ...") sets the type and starts a fresh form.
+  // Opening the panel (from the Tracker's "+ Add ..." or a row's "Add entry") sets the type (and the row's group and type) and starts a fresh form.
   useEffect(() => {
     if (!open) return;
     setEntryType(preset.type); if (preset.group) setEntryGroup(preset.group);
-    setCat(''); setItem(''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
+    setCat(preset.cat || ''); setItem(preset.item || ''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preset]);
   // Until the person picks a month, "Add to" follows the date (when that month exists).
@@ -65,7 +73,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateVal]);
 
-  const manualReady = !!desc.trim() && !!itemVal && (!isExp || !!catVal) && parseAmount(amount) > 0;
+  const manualReady = !!desc.trim() && !!itemVal && (!isExp || !!itemCat) && parseAmount(amount) > 0;
   const resetManual = () => {
     setDesc(''); setAmount(''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
     setStatus(null); setCat(''); setItem('');
@@ -78,13 +86,12 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     const amt = Math.round(parseAmount(amount) * 100) / 100;
     const date = (dateRef.current && dateRef.current.value) || todayISO();
     if (!description) return err('Add a description.');
-    if (isExp && !catVal) return err('Pick a category.');
-    if (!itemVal) return err('Pick a sub-category.');
+    if (!itemVal) return err('Pick a type.');
     if (periodMismatch(date, periodKey)) return err(`The date of the entry (${fmtDateEU(date)}) doesn't match the month and year selected (${periodLabel(periodKey)}). Change the date or the month.`);
     if (!(amt > 0)) return err('Enter an amount greater than 0.');
     setBusy(true);
     try {
-      await save.entries(periodKey, [{ type: entryType, group: isExp ? entryGroup : null, category: isExp ? catVal : null, item: itemVal, description, amount: amt, date }]);
+      await save.entries(periodKey, [{ type: entryType, group: isExp ? entryGroup : null, category: isExp ? itemCat : null, item: itemVal, description, amount: amt, date }]);
       resetManual();
     } catch (e) {
       err('Could not save: ' + (e && e.message ? e.message : 'unknown error'));
@@ -130,7 +137,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const closeReview = () => { setReview(null); reader.clear(); setDocStatus(null); };
 
   const enabled = reader.ready && !!reader.sampleFn;
-  const reviewFiles = review ? new Set(review.rows.map((r) => r.fileId)).size : 0;
+  // (Oct 3: the review title no longer counts entries and files.)
   // Files reading (Cost-tracker 229:18563): the drop area becomes a progress box; the rest of the panel fades.
   const readingDocs = reader.docs.filter((d) => ['reading', 'done', 'empty'].includes(d.status) || (d.status === 'error' && d.wasRead));
   const elapsed = readStart ? Date.now() - readStart : 0;
@@ -147,10 +154,10 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   return (
     <>
       <div className={'add-panel-backdrop' + (open ? ' open' : '')} id="add-panel-backdrop" onClick={onClose} />
-      <div ref={panelRef} className={'add-panel' + (open ? ' open' : '')} id="add-panel" role="dialog" aria-modal="true" aria-labelledby="add-panel-title">
+      <div ref={panelRef} className={'add-panel' + (open ? ' open' : '') + (review ? ' is-review' : '')} id="add-panel" role="dialog" aria-modal="true" aria-labelledby="add-panel-title">
         <PanelHeader closeId="entry-close-btn" titleId="add-panel-title" onClose={onClose} faded={showReading}
-            title={review ? `Review ${review.rows.length} ${review.rows.length === 1 ? 'entry' : 'entries'} from ${reviewFiles} ${reviewFiles === 1 ? 'file' : 'files'}` : 'Add an entry'}
-          hint={review ? "Check your entries. Change anything that's wrong, or remove what doesn't belong." : 'Upload receipts or statements or enter the information by hand.'} />
+            title={review && !mobile ? 'Review imported entries' : 'Add an entry'}
+          hint={review ? (mobile ? "Check your entries. Change anything that's wrong, or remove what doesn't belong." : "Edit details, adjust categories, or remove entries you don't want to track.") : 'Upload receipts or statements or enter the information by hand.'} />
 
         <div className="ap-main" id="ap-main" hidden={!!review}>
           <section className="ap-section" id="ap-upload">
@@ -159,8 +166,11 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               {showReading && (
                 <div className="dz-reading" id="dz-reading" role="status">
                   <div className="dz-reading-info">
-                    <div className="dz-reading-title">{`Reading ${readingDocs.length} ${readingDocs.length === 1 ? 'file' : 'files'}`}</div>
-                    <div className="dz-hint">It may take a few seconds.</div>
+                    <Illustration art={illustrations.upload} width={35} className="dz-reading-art" />
+                    <div className="dz-reading-text">
+                      <div className="dz-reading-title">{`Reading ${readingDocs.length} ${readingDocs.length === 1 ? 'file' : 'files'}`}</div>
+                      <div className="dz-hint">It may take a few seconds.</div>
+                    </div>
                   </div>
                   <div className="dz-progress-wrap">
                     <ProgressBar value={Math.max(0.04, readProgress)} className="dz-progress" />
@@ -175,7 +185,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
                 onDrop={(e) => { e.preventDefault(); setOver(false); setDocStatus(null); reader.add(e.dataTransfer && e.dataTransfer.files); }}>
                 <div className="dz-text">
-                  <div className="dz-line"><span className="ds-action-link medium"><Icon icon={upload} size={12} />Click to upload</span><span>or drag and drop your file here</span></div>
+                  <div className="dz-line"><span className={'ds-action-link ' + (mobile ? 'small' : 'medium')}><Icon icon={upload} size={mobile ? 16 : 20} />Click to upload</span><span>or drag and drop your file here</span></div>
                   <div className="dz-hint" id="dz-hint">{reader.ready && reader.imgCaps() ? 'JPG, PNG, PDF or CSV. Add as many as you like.' : 'PDF or CSV. Add as many as you like.'}</div>
                 </div>
               </div>
@@ -189,18 +199,18 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                   const bad = d.status === 'error' || d.status === 'empty';
                   return (
                     <div className="doc-item" key={d.id}>
-                      <span className="doc-ic"><Icon icon={docIconName(d) === 'image' ? image : documentIcon} size={20} /></span>
+                      <span className="doc-ic"><Icon icon={docIconName(d) === 'image' ? image : documentIcon} size={mobile ? 20 : 16} /></span>
                       <div className="doc-info"><div className="doc-name" title={d.name}>{d.name}</div><div className={'doc-meta' + (bad ? ' err' : '')}>{docMeta(d)}</div></div>
                       {d.status === 'preparing' ? <span className="doc-pct">{d.pct}%</span>
                         : d.status === 'reading' ? null
-                        : <RoundButton icon={x} size="micro" iconSize={12} className="doc-remove" label={'Remove ' + d.name} onClick={() => { setDocStatus(null); reader.remove(d.id); }} />}
+                        : <RoundButton icon={x} size="tiny" iconSize="sm" className="doc-remove" label={'Remove ' + d.name} onClick={() => { setDocStatus(null); reader.remove(d.id); }} />}
                     </div>
                   );
                 })}
               </div>
               <div className="add-actions" id="doc-actions" hidden={reader.docs.length === 0 || showReading}>
-                <Button id="doc-add" disabled={reader.analyzing || anyPrep || !anyReady} onClick={analyze}>Add files</Button>
-                <Button variant="tertiary" id="doc-cancel" onClick={() => { if (!reader.cancel()) setDocStatus(null); }}>Cancel</Button>
+                {/* 229:18169 / 415:13796: only "Add files" (Small Primary, no icon); full width on phones. */}
+                <Button id="doc-add" size="small" disabled={reader.analyzing || anyPrep || !anyReady} onClick={analyze}>Add files</Button>
                 <span className={'add-status' + (docStatus && docStatus.err ? ' err' : '')} id="doc-status" role="status">{docStatus ? docStatus.text : ''}</span>
               </div>
             </div>
@@ -210,50 +220,68 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
 
           <section className={'ap-section ap-manual' + (showReading ? ' is-faded' : '')} id="ap-manual">
             <h3 className="ap-section-title">Enter manually</h3>
-            <FieldGroup label="Type" className="ap-type">
-              <Segments id="entry-type-seg" value={entryType} onChange={(v) => { setEntryType(v); setCat(''); setItem(''); }}
-                options={ENTRY_TYPES.map((o) => ({ ...o, hidden: !typeHas(o.value) && o.value !== entryType }))} />
-              <div id="entry-group-field" hidden={!isExp}>
-                <Segments sub id="entry-group-seg" aria-label="Expense type" value={entryGroup} onChange={setEntryGroup}
-                  options={GROUP_TABS.map((o) => ({ ...o, hidden: !Object.keys(TX.expenses[o.value] || {}).length && o.value !== entryGroup }))} />
-              </div>
-            </FieldGroup>
             <div className="add-grid">
-              <Field className="span-2 field-period" label="Month and year" htmlFor="entry-period-trigger">
+              <div className="fld span-2 field-period">
+                <label className="fld-label" htmlFor="entry-period-trigger">Track in</label>
                 <Dropdown id="entry-period" size="md" emptyOption={false} value={periodKey} options={model.periodOptions()} onChange={(v) => { setPeriod(v); setPeriodTouched(true); }} />
-              </Field>
-              <Field className="span-2" label="Description" htmlFor="entry-desc">
+              </div>
+              <div className={'fld' + (isExp ? '' : ' span-2')}>
+                <label className="fld-label" htmlFor="entry-kind-trigger">Category</label>
+                <Dropdown id="entry-kind" size="md" emptyOption={false} value={entryType} onChange={(v) => { setEntryType(v); setCat(''); setItem(''); }}
+                  options={KINDS.filter((k) => typeHas(k.value) || k.value === entryType).map((k) => ({ value: k.value, label: k.label }))} />
+              </div>
+              <div className="fld" id="entry-group-field" hidden={!isExp}>
+                <label className="fld-label" htmlFor="entry-sub-trigger">Sub-category</label>
+                <Dropdown id="entry-sub" size="md" emptyOption={false} value={entryGroup} onChange={(v) => { setEntryGroup(v); setCat(''); setItem(''); }}
+                  options={GROUP_TABS.filter((o) => Object.keys(TX.expenses[o.value] || {}).length || o.value === entryGroup)} />
+              </div>
+              <div className="fld span-2">
+                <label className="fld-label" htmlFor="entry-desc">Description</label>
                 <Input id="entry-desc" placeholder="e.g., Grocery store" autoComplete="off" value={desc} onChange={(e) => setDesc(e.target.value)} />
-              </Field>
-              <Field id="entry-category-field" label="Category" htmlFor="entry-cat-trigger" hidden={!isExp}>
-                <Dropdown id="entry-cat" size="md" value={catVal} options={isExp ? simpleOpts(Object.keys(gc).sort()) : []} onChange={(v) => setCat(v)} />
-              </Field>
-              <Field id="entry-item-field" className={isExp ? undefined : 'span-2'} label="Sub-category" htmlFor="entry-item-trigger">
-                <Dropdown id="entry-item" size="md" value={itemVal} options={simpleOpts(pool)} disabled={isExp && !catVal} onChange={(v) => setItem(v)} />
-              </Field>
-              <Field label="Amount" htmlFor="entry-amount">
-                <Input id="entry-amount" icon={euro} type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} onChange={(e) => setAmount(e.target.value)}
+              </div>
+              <div className="fld" id="entry-category-field" hidden={!isExp}>
+                <label className="fld-label" htmlFor="entry-cat-trigger">Group (Optional)</label>
+                <Dropdown id="entry-cat" size="md" placeholder="Select" value={catVal || itemCat} options={isExp ? simpleOpts(groupNames) : []} onChange={(v) => { setCat(v); if (!(gc[v] || []).includes(itemVal)) setItem(''); }} />
+              </div>
+              <div className={'fld' + (isExp ? '' : ' span-2')} id="entry-item-field">
+                <label className="fld-label" htmlFor="entry-item-trigger">Type</label>
+                <Dropdown id="entry-item" size="md" placeholder="Select" value={itemVal} options={simpleOpts(pool)} onChange={(v) => setItem(v)} />
+              </div>
+              <div className="fld">
+                <label className="fld-label" htmlFor="entry-amount">Amount</label>
+                <Input id="entry-amount" icon={euro} iconSize={mobile ? 'lg' : 'md'} size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
                   onBlur={(e) => { if (e.target.value.trim()) setAmount(fmtNum(parseAmount(e.target.value))); }} />
-              </Field>
-              <Field label="Date" htmlFor="entry-date">
-                {/* Drawn as the field 229:19280 uses for Date: dd/mm/yyyy and a Calendar icon; the native picker opens on click. */}
-                <div className="date-dd">
+              </div>
+              <div className="fld">
+                <label className="fld-label" htmlFor="entry-date">Date</label>
+                {/* 229:18166: a Medium Dropdown with a 24px Calendar before dd/mm/yyyy and the chevron; phones (369:13388): no
+                    leading icon, a 12px Calendar where the chevron is. The native picker opens on click. */}
+                <div className={'date-dd' + (mobile ? ' is-phone' : '')}>
+                  {!mobile && <Icon icon={calendar} size="xl" className="date-dd-cal" />}
                   <input ref={dateRef} id="entry-date" type="date" defaultValue={todayISO()} min={bounds.min} max={bounds.max}
                     onClick={(e) => { try { e.currentTarget.showPicker(); } catch { /* older browsers open it themselves */ } }} />
                   <span className="date-dd-label" aria-hidden="true">{fmtDateEU(dateVal) || 'dd/mm/yyyy'}</span>
-                  <Icon icon={calendar} size={16} className="date-dd-chevron" />
+                  <Icon icon={mobile ? calendar : chevronDown} size={12} className="date-dd-chevron" />
                 </div>
-              </Field>
+              </div>
+              <div className="span-2">
+                <ActionLink size="medium" icon={plus} id="entry-add-type" onClick={() => setTypeModal(true)}>Add type</ActionLink>
+              </div>
             </div>
+            <TypeModal open={typeModal} kind={entryType} group={isExp ? entryGroup : undefined} groupsOf={() => groupNames} onClose={() => setTypeModal(false)} id="entry-type-modal"
+              onSave={async (t) => {
+                try { await save.addTypes(yearLabel, { type: entryType, ...t }); setTypeModal(false); if (isExp) setCat(t.category); setItem(t.items[0]); }
+                catch (e) { setStatus({ err: true, text: 'Could not add the type: ' + (e && e.message ? e.message : 'unknown error') }); setTypeModal(false); }
+              }} />
             <div className="add-actions">
-              {/* 229:19280: one Submit, at 40% until the form has what an entry needs (no Cancel in the Sept 28 frames). */}
-              <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Submit</Button>
+              {/* 229:18167 / 369:13388: one Submit (40% until the form has what an entry needs), full width on phones. */}
+              <Button id="entry-submit" disabled={busy || !manualReady} onClick={submitManual}>Save entry</Button>
               <span className={'add-status' + (status && status.err ? ' err' : '')} id="entry-status" role="status">{status ? status.text : ''}</span>
             </div>
           </section>
         </div>
 
-        <Review review={review} setReview={setReview} model={model} reader={reader} onCancel={closeReview} save={save} onDone={closeReview} />
+        <Review mobile={mobile} review={review} setReview={setReview} model={model} reader={reader} onCancel={closeReview} save={save} onDone={closeReview} />
       </div>
     </>
   );
@@ -287,7 +315,7 @@ function fitRows(rv, model) {
 }
 const shortDate = (iso) => { const d = new Date(iso + 'T00:00:00'); return isNaN(d) ? iso : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
 
-function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
+function Review({ review, setReview, model, reader, onCancel, save, onDone, mobile }) {
   const rowsRef = useRef(null);
   const focusReq = useRef(null);
   const [submitting, setSubmitting] = useState(false);
@@ -367,7 +395,7 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
 
   return (
     <div className="ap-section" id="ap-review">
-      <Field className="ap-period" id="rv-period-field" label="Month and year" htmlFor="rv-period-trigger" hidden={rows.length === 0}>
+      <Field className="ap-period" id="rv-period-field" label="Track in" htmlFor="rv-period-trigger" hidden={rows.length === 0}>
         <Dropdown id="rv-period" size="md" emptyOption={false} value={period} options={model.periodOptions()}
           onChange={(v) => setReview((rv) => fitRows({ ...rv, period: v, editing: null, snap: null, status: null }, model))} />
       </Field>
@@ -387,45 +415,28 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone }) {
             else if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); cancelEdit(); }
           }}
           onBlur={onFocusOut}>
-          {rows.map((r, i) => <ReviewRow key={r.id} r={r} iss={issues[i]} editing={review.editing === r.id} period={period} yl={yl} model={model} patchRow={patchRow} />)}
+          {/* 229:18167 / 415:14256 (Oct 3): every row is open: description input, Type and Category dropdowns, amount. */}
+          {rows.map((r, i) => <ReviewRow key={r.id} r={r} iss={issues[i]} editing mobile={mobile} period={period} yl={yl} model={model} patchRow={patchRow} />)}
         </div>
       </div>
-      <div className="add-actions">
-        <Button id="rv-submit" disabled={!rows.length || bad > 0 || submitting} onClick={submit}>{submitting ? 'Submitting…' : 'Submit'}</Button>
+      {/* 229:18717: the guess note (16px Question / Outlined + Body/Medium/Medium) on the left, then Cancel and Save entries,
+          8 apart. 415:14256: the note (20px icon, Body/Large/Medium), then Save entries over Cancel, full width, 16 apart. */}
+      <div className="add-actions rv-actions">
+        <span className={'add-status' + (st && st.err ? ' err' : '') + (st && st.guess ? ' has-guess' : '')} id="rv-status" role="status">{st && st.guess ? <span className="rv-guess" aria-hidden="true"><Icon icon={questionOutlined} size={mobile ? 20 : 16} /></span> : null}{st ? st.text : ''}</span>
         <Button variant="tertiary" id="rv-cancel" onClick={onCancel}>Cancel</Button>
-        <span className={'add-status' + (st && st.err ? ' err' : '') + (st && st.guess ? ' has-guess' : '')} id="rv-status" role="status">{st && st.guess ? <span className="rv-guess" aria-hidden="true"><Icon icon={questionFilled} size={20} /></span> : null}{st ? st.text : ''}</span>
+        <Button id="rv-submit" disabled={!rows.length || bad > 0 || submitting} onClick={submit}>{submitting ? 'Saving…' : 'Save entries'}</Button>
       </div>
     </div>
   );
 }
 
-function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
+function ReviewRow({ r, iss, editing, mobile, period, yl, model, patchRow }) {
   const has = (k) => iss.includes(k);
   const typeKey = typeKeyOf(r.type, r.group);
   const typeLabel = (TYPE_OPTS.find((t) => t.key === typeKey) || TYPE_OPTS.find((t) => t.key === 'expense:Variable')).label;
   const catLabel = rowCatLabel(r);
   const dateTitle = has('date') ? `The date of this entry doesn't match the month and year selected (${periodLabel(period)}).` : r.date;
-  const rm = <div className="c-rm"><RoundButton icon={x} size="micro" iconSize={12} className="rv-rm" data-rm={r.id} label={'Remove ' + (r.description || 'entry')} /></div>;
   const date = <span className={'c-date rv-date' + (has('date') ? ' bad' : '')} title={dateTitle}>{shortDate(r.date)}</span>;
-  if (!editing) {
-    const link = (field, text, ph, bad) => <button type="button" className={'ds-action-link rv-link' + (bad ? ' bad' : '')} data-edit={r.id} data-focus={field} title={text || ph}>{text || ph}</button>;
-    return (
-      <div className="rv-row" data-id={r.id}>{date}
-        <div className="c-desc" title={'From ' + r.fileName}>{link('desc', r.description, 'Add description', has('desc'))}</div>
-        <div className="c-type">{link('type', typeLabel, '', false)}</div>
-        <div className={'c-cat' + (r.guess && catLabel ? ' has-guess' : '')}>
-          {link('cat', catLabel, 'Select', has('cat'))}
-          {r.guess && catLabel ? <span className="rv-guess" role="img" aria-label="Guess" title="Guess: the reader was not sure about this category. Check it, or pick another."><Icon icon={questionFilled} size={20} /></span> : null}
-        </div>
-        <div className="c-amt">
-          <button type="button" className={'rv-amt' + (has('amount') || has('flag') ? ' bad' : '')} data-edit={r.id} data-focus="amount" title={r.flag || ''}>
-            <Icon icon={euro} size={12} /><span>{fmtNum(r.amount)}</span>
-          </button>
-        </div>
-        {rm}
-      </div>
-    );
-  }
   // Type: Income and Savings/Investment first, then the expense sub-types in an "Expenses" group.
   const list = model.typeOptsForYear(yl, typeKey);
   const typeOptions = [...list.filter((t) => t.type !== 'expense').map((t) => ({ value: t.key, label: t.label, selectedLabel: t.label }))];
@@ -439,27 +450,36 @@ function ReviewRow({ r, iss, editing, period, yl, model, patchRow }) {
     cats.forEach((o) => { if (!by.has(o.category)) by.set(o.category, []); by.get(o.category).push(o); });
     catOptions = [...by].map(([c, os]) => ({ group: c, options: os.map((o) => ({ value: o.label, label: o.item, selectedLabel: o.label })) }));
   } else catOptions = cats.map((o) => ({ value: o.label, label: o.item, selectedLabel: o.label }));
+  // 229:18717 (desktop): Sep 19 (Label/Small, text/secondary) | Input Tn 140 | Dropdown Tiny 140 | Dropdown Tiny 140 | the amount
+  // as a value (16px € + Value/Large), 8 apart; no remove. 415:14256 (phones): date | Input + two Dropdowns, Medium, stacked
+  // 8 apart | value, 16 apart. A guessed category shows Question / Outlined at the start of its dropdown (phones: both).
+  // An amount the reader could not read stays an input, so it can be fixed.
+  const guess = !!(r.guess && catLabel);
+  const amountOk = r.amount > 0 && !has('amount') && !has('flag');
   return (
     <div className="rv-row is-editing" data-id={r.id}>{date}
-      <div className="c-desc"><Input size="tiny" data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
-        onChange={(e) => patchRow(r.id, { description: e.target.value })} /></div>
-      <div className="c-type rv-select">
-        <Dropdown size="tiny" ariaLabel="Type" emptyOption={false} value={typeKey} options={typeOptions} selectProps={{ 'data-f': 'type' }}
-          onChange={(v) => {
-            const t = TYPE_OPTS.find((o) => o.key === v); if (!t) return;
-            const keep = model.catOptions(t.type, t.group, yl).find((o) => o.label === catLabel);
-            patchRow(r.id, { type: t.type, group: t.group, category: keep ? keep.category : null, item: keep ? keep.item : null });
-          }} />
+      <div className="c-fields">
+        <div className={'c-desc' + (has('desc') ? ' bad' : '')} title={'From ' + r.fileName}><Input size={mobile ? 'medium' : 'tiny'} data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
+          onChange={(e) => patchRow(r.id, { description: e.target.value })} /></div>
+        <div className="c-type rv-select">
+          <Dropdown size={mobile ? 'md' : 'tiny'} ariaLabel="Type" emptyOption={false} value={typeKey} options={typeOptions} selectProps={{ 'data-f': 'type' }} icon={guess && mobile ? questionOutlined : undefined}
+            onChange={(v) => {
+              const t = TYPE_OPTS.find((o) => o.key === v); if (!t) return;
+              const keep = model.catOptions(t.type, t.group, yl).find((o) => o.label === catLabel);
+              patchRow(r.id, { type: t.type, group: t.group, category: keep ? keep.category : null, item: keep ? keep.item : null });
+            }} />
+        </div>
+        <div className={'c-cat rv-select' + (has('cat') ? ' bad' : '') + (guess ? ' is-guess' : '')} title={guess ? 'Guess: the reader was not sure about this category. Check it, or pick another.' : undefined}>
+          <Dropdown size={mobile ? 'md' : 'tiny'} ariaLabel="Category" value={catLabel} options={catOptions} selectProps={{ 'data-f': 'cat' }} icon={guess ? questionOutlined : undefined}
+            onChange={(v) => { const o = cats.find((x) => x.label === v); patchRow(r.id, { category: o ? o.category : null, item: o ? o.item : null, guess: false }); }}
+            onChoose={() => patchRow(r.id, { guess: false })} />
+        </div>
       </div>
-      <div className="c-cat rv-select">
-        <Dropdown size="tiny" ariaLabel="Category" value={catLabel} options={catOptions} selectProps={{ 'data-f': 'cat' }}
-          onChange={(v) => { const o = cats.find((x) => x.label === v); patchRow(r.id, { category: o ? o.category : null, item: o ? o.item : null, guess: false }); }}
-          onChoose={() => patchRow(r.id, { guess: false })} />
-      </div>
-      <div className="c-amt"><label className="bd-input"><Icon icon={euro} size={12} />
-        <input data-f="amount" inputMode="decimal" aria-label="Amount" defaultValue={r.amount > 0 ? fmtNum(r.amount) : ''} placeholder="0,00" autoComplete="off"
-          onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /></label></div>
-      {rm}
+      {amountOk
+        ? <div className="c-amt rv-value"><Icon icon={euro} size={16} /><span>{fmtNum(r.amount)}</span></div>
+        : <div className="c-amt bad" title={r.flag || ''}><label className="bd-input"><Icon icon={euro} size={12} />
+            <input data-f="amount" inputMode="decimal" aria-label="Amount" defaultValue={r.amount > 0 ? fmtNum(r.amount) : ''} placeholder="0,00" autoComplete="off"
+              onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /></label></div>}
     </div>
   );
 }

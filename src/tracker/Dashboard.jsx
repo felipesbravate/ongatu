@@ -1,8 +1,8 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtMoney, fmtMoneyShort } from '../ui/index.js';
-import { actions as actionsIcon, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
-import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR } from './model.js';
+import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
+import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 import { Icon } from '../ui/Icon.jsx';
 
 const tok = (name) => (typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(name).trim());
@@ -12,7 +12,7 @@ export function HeroLeft({ model, y, monthIdx }) {
   const cur = y.currency;
   const c = model.computeMonth(y, monthIdx);
   const prev = monthIdx > 0 ? model.computeMonth(y, monthIdx - 1) : null;
-  const d = prev ? c.balance - prev.balance : 0;
+  // (the month-on-month balance change moved off the card on Oct 2: both layouts show "↑ details")
   const tiles = [
     // Ongatu 211:18753 (Sept 28): "Incomes", and a static "↑ details" line under Incomes and Expenses (no action, per Felipe).
     { label: 'Incomes', value: c.income, color: 'var(--kpi-income)', indicator: arrowStraightUp, detail: 'details' },
@@ -23,10 +23,7 @@ export function HeroLeft({ model, y, monthIdx }) {
   ];
   // Phones (Ongatu 342:7993, Sept 28): "Incomes", "Savings & Investments", and the rate as "↑ 8% rate of monthly Incomes".
   const mobile = useMobile();
-  if (mobile) {
-    tiles[2] = { ...tiles[2], label: 'Savings & Investments', indicator: c.income > 0 ? arrowStraightUp : null,
-      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate of monthly Incomes` : 'No income recorded' };
-  }
+  // Oct 2: phones (342:7993) show the same tiles and "↑ details" as desktop.
   // Expense allocation
   const total = Math.max(1, c.expenseTotal);
   // At a glance
@@ -37,15 +34,16 @@ export function HeroLeft({ model, y, monthIdx }) {
   return (
     <div className="hero-left">
       <div className="card balance-card">
-        <div className="label">Balance this month</div>
-        <div className="value" id="balance-value">{fmtMoney(c.balance, cur)}</div>
+        <div className="label" id="balance-label">{MONTH_NAMES[monthIdx]} balance</div>
+        <div className="value" id="balance-value">
+          {/* Balance card 441:1057: the € is a 20 x 27 shape beside Value/XL, space/xs apart (other currencies: text). */}
+          {cur === 'EUR'
+            ? <span className="money">{c.balance < 0 ? '-' : ''}<svg className="balance-euro" viewBox="4.5 2.5 11 15" width="20" height="27" aria-hidden="true"><path d={euro.d} fill="currentColor" /></svg><span>{fmtFigure(c.balance)}</span></span>
+            : fmtMoney(c.balance, cur)}
+        </div>
         {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
             phones (342:7993) keep the month change. */}
-        {mobile
-          ? <span className="pill-delta" id="balance-delta" style={prev ? { color: d >= 0 ? 'var(--good)' : 'var(--critical)' } : undefined}>
-              {prev ? `${d >= 0 ? '↑' : '↓'} ${fmtMoneyShort(Math.abs(d), cur)} vs last month` : ''}
-            </span>
-          : <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>}
+        <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
@@ -61,7 +59,7 @@ export function HeroLeft({ model, y, monthIdx }) {
               <div className="alloc-col" key={g}>
                 <div className="alloc-pct">{pct.toFixed(0)}%</div>
                 <div className="alloc-bar" style={{ height: `${Math.max(6, pct * 0.8).toFixed(1)}px`, background: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g] }} />
-                <div className="alloc-name">{mobile ? SHORT_GROUP[g] : g}</div>
+                <div className="alloc-name">{g}</div>
               </div>
             );
           })}
@@ -90,11 +88,10 @@ const TOP_TABS = [{ value: 'Income', label: 'Incomes' }, { value: 'Investments',
 // Phones (342:7993) shorten the tab and the allocation names.
 // Phones (Ongatu 342:7993, Sept 28): Incomes | Save/Invest | Expenses.
 const TOP_TABS_MOBILE = TOP_TABS;
-const SHORT_GROUP = { Fixed: 'Fixed', Variable: 'Var', Extra: 'Extra', Additional: 'Add' };
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');
 
-export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, onTab, onAdd, addOpen, tip, setTip, actions, onAdjustBudget }) {
+export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, onTab, onAdd, onAddItem, addOpen, tip, setTip, actions, onAdjustBudget }) {
   const cur = y.currency;
   const bd = model.buildBreakdown(y, monthIdx, breakdownType);
   const eligible = model.isFutureMonth(y, monthIdx);
@@ -117,6 +114,10 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         {total || (row.deleted ? '×' : (row.isEstimate ? '≈' : '•'))}
       </EntryCounter>
     );
+  };
+  const toggleTip = (row, anchor) => {
+    const key = `${row.yearLabel}|${row.mi}|${row.type}|${row.group}|${row.category}|${row.item}`;
+    setTip(tip && tip.key === key ? null : { key, row, cur, anchor });
   };
   const state = (r) => (r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined);
   // Phones (Tracker_Card_mobile 442:5153): the card stops at 555px with the Expander (DS 475:743) over its bottom;
@@ -153,8 +154,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
-            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
-            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={20} />)}
+            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={16} />)
+            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={16} />)}
         </div>
         <div id="itemslist" className="bd-list">
           {!bd.flat && bd.rows.length > 0 && rows.map((r, i) => (
@@ -162,7 +163,11 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
               <div className="bd-block">
                 <div className="bd-block-title">{r.category}</div>
                 {r.items.map((it) => (
-                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={16} />
+                  <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={16}
+                    amountLabel={`${it.item}: ${fmtMoney(it.amount, cur)}. ${counter(it) ? 'Show entries' : 'Add an entry'}`}
+                    onAmount={(ev) => { ev.stopPropagation(); if (counter(it)) toggleTip(it, ev.currentTarget); else if (onAddItem) onAddItem({ type: 'expense', group: breakdownType, cat: r.category, item: it.item }); }}
+                    actions={<RowMenu item={it.item} onAdd={onAddItem ? () => onAddItem({ type: 'expense', group: breakdownType, cat: r.category, item: it.item }) : null}
+                      onAdjustBudget={onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) ? onAdjustBudget : null} />} />
                 ))}
               </div>
             </FragmentDivider>
@@ -171,7 +176,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       </div>
       {mobile && tall && (
         <div className={'ds-expander' + (expanded ? ' is-open' : '')}>
-          <Button variant="tertiary" size="small" icon={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
+          <Button variant="tertiary" size="small" trailing={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
             {expanded ? 'See less' : 'See all'}
           </Button>
         </div>
@@ -192,6 +197,26 @@ function TrackerMenu({ onAdjustBudget }) {
       <RoundButton icon={actionsIcon} size="small" id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
       {open && <MenuList id="tracker-menu" items={[{ key: 'budget', id: 'adjust-budget', label: "Adjust month's budget", icon: edit, onSelect: () => { setOpen(false); onAdjustBudget(); } }]} />}
     </div>
+  );
+}
+// A Tracker row's Actions (breackdown-row 124:3667): Micro Tertiary round button (Actions icon), Active while open; its
+// menu is a Dropdown-list/Actions (663:935): the item's name as the description, then "Add entry" (the Add entry panel
+// with this type picked) and, for months that can still be planned, "Adjust month's budget".
+function RowMenu({ item, onAdd, onAdjustBudget }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  useDismiss(open, ref, close);
+  const items = [
+    onAdd && { key: 'add', label: 'Add entry', icon: plus, className: 'row-add', onSelect: () => { setOpen(false); onAdd(); } },
+    onAdjustBudget && { key: 'budget', label: "Adjust month's budget", icon: edit, className: 'row-budget', onSelect: () => { setOpen(false); onAdjustBudget(); } },
+  ].filter(Boolean);
+  if (!items.length) return null;
+  return (
+    <span className="br-actions" ref={ref}>
+      <RoundButton icon={actionsIcon} size="micro" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }} />
+      {open && <MenuList className="br-menu row-menu" description={item} items={items} />}
+    </span>
   );
 }
 const FragmentDivider = ({ divider, children }) => <>{divider && <hr className="ds-divider" />}{children}</>;

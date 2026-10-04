@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { Icon } from './Icon.jsx';
 import { checkmark } from './icons.js';
 import { useMobile } from './useMobile.js';
@@ -61,14 +62,21 @@ export function Checkbox({ checked, onChange, id, children }) {
   );
 }
 
-// App header (DS 285:600): full width, 64 high, padding 8/40, surface/body; the Symbol logo (48) on the left and the
-// User nav on the right. On the page it sits 40px from the top and sticks to the top edge when the page scrolls.
-// On phones (Ongatu 342:7994) the bar is 64 high with 16 padding and a 32px logo; the user menu gives way to the bottom nav.
+// Product header (DS 728:1445, replaces App header 285:600): full width, surface/body, the Symbol logo on the left.
+// Desktop: 64 high, pad xs xl, 48px logo, the User nav on the right; it sits 40px from the top and sticks when the page
+// scrolls. Mobile (Ongatu 342:7993): 64 high, pad xs md, 32px logo, only the Notification bell. Once the page scrolls
+// (Ongatu 369:12607) a phone shows the Surface=App, State=Small variant: 48 high, pad xs sm, 24px logo.
 export function AppHeader({ children, homeHref = '/' }) {
   const mobile = useMobile();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const on = () => { const s = window.scrollY > 8; document.body.classList.toggle('is-scrolled', s); setScrolled(s); };
+    on(); window.addEventListener('scroll', on, { passive: true });
+    return () => { window.removeEventListener('scroll', on); document.body.classList.remove('is-scrolled'); };
+  }, []);
   return (
     <header className="ds-app-header" id="app-header">
-      <a className="ds-app-header-logo" href={homeHref} aria-label="Ongatu, dashboard"><Logo variant="symbol" height={mobile ? 32 : 48} /></a>
+      <a className="ds-app-header-logo" href={homeHref} aria-label="Ongatu, dashboard"><Logo variant="symbol" height={mobile ? (scrolled ? 24 : 32) : 48} /></a>
       {children}
     </header>
   );

@@ -56,6 +56,7 @@
     --primitive-data-green-light: #76c8a4;
     --primitive-neutral-surface-transparent: #ffffff00;
     --primitive-neutral-off-white-transparent: #f9f9f700;
+    --primitive-brand-indigo-bright: #c2bcff;
 
     /* Collection: Color */
     --surface-primary: var(--primitive-neutral-surface);
@@ -70,8 +71,11 @@
     --action-primary-press: var(--primitive-neutral-charcoal-900);
     --action-secondary: var(--primitive-neutral-surface);
     --action-secondary-hover: var(--primitive-neutral-stone-100);
-    --action-secondary-press: var(--primitive-neutral-stone-150);
-    --action-secondary-active: var(--primitive-neutral-stone-325);
+    --action-secondary-press: var(--primitive-neutral-stone-300);
+    --action-secondary-active: var(--primitive-neutral-stone-100);
+    --action-tertiary-hover: var(--primitive-neutral-stone-50);
+    --action-tertiary-press: var(--primitive-neutral-stone-300);
+    --action-tertiary-active: var(--primitive-neutral-stone-100);
     --action-disable: var(--primitive-neutral-stone-500);
     --action-accent: var(--primitive-brand-indigo);
     --action-accent-hover: var(--primitive-brand-indigo-light);
@@ -112,6 +116,9 @@
     --status-warning: var(--primitive-status-ochre-deep);
     --surface-primary-transparent: var(--primitive-neutral-surface-transparent);
     --surface-body-transparent: var(--primitive-neutral-off-white-transparent);
+    --border-warning: #debba0;
+    --border-danger: #e58d90;
+    --surface-mobile-nav: #ffffffe0;
 
     /* Collection: Opacity */
     --opacity-disabled: 0.4;
@@ -166,46 +173,55 @@
     --radius-lg: 24px;
     --radius-full: 999px;
     --radius-card: 20px;
+    --icon-size-xl: 16px;
+    --icon-size-lg: 16px;
+    --icon-size-md: 16px;
+    --icon-size-sm: 12px;
+    --icon-size-tn: 10px;
 
     /* Collection: TextStyles */
     --type-display-title-size: var(--size-display-title);
     --type-display-title-weight: 600;
     --type-display-title-lh: var(--lh-display-title);
     --type-display-title-ls: 0;
+    --type-display-title-mobile-size: var(--size-value-xl);
+    --type-display-title-mobile-weight: 600;
+    --type-display-title-mobile-lh: var(--lh-display-title);
+    --type-display-title-mobile-ls: 0;
     --type-value-xl-size: var(--size-value-xl);
-    --type-value-xl-weight: 500;
+    --type-value-xl-weight: 400;
     --type-value-xl-lh: normal;
     --type-value-xl-ls: 0;
     --type-value-large-size: var(--size-value-lg);
-    --type-value-large-weight: 500;
+    --type-value-large-weight: 400;
     --type-value-large-lh: normal;
     --type-value-large-ls: 0;
     --type-value-medium-size: var(--size-value-md);
-    --type-value-medium-weight: 500;
+    --type-value-medium-weight: 400;
     --type-value-medium-lh: normal;
     --type-value-medium-ls: -0.04em;
     --type-value-small-size: var(--size-value-sm);
-    --type-value-small-weight: 500;
+    --type-value-small-weight: 400;
     --type-value-small-lh: normal;
     --type-value-small-ls: -0.04em;
     --type-heading-xl-size: var(--size-heading-xl);
-    --type-heading-xl-weight: 600;
+    --type-heading-xl-weight: 400;
     --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
     --type-heading-large-size: var(--size-heading-lg);
-    --type-heading-large-weight: 600;
+    --type-heading-large-weight: 400;
     --type-heading-large-lh: var(--lh-heading-lg);
-    --type-heading-large-ls: 0;
+    --type-heading-large-ls: -0.02em;
     --type-heading-medium-size: var(--size-heading-md);
-    --type-heading-medium-weight: 600;
+    --type-heading-medium-weight: 400;
     --type-heading-medium-lh: var(--lh-heading-md);
-    --type-heading-medium-ls: 0;
+    --type-heading-medium-ls: -0.02em;
     --type-heading-small-size: var(--size-heading-sm);
-    --type-heading-small-weight: 600;
+    --type-heading-small-weight: 400;
     --type-heading-small-lh: var(--lh-heading-sm);
-    --type-heading-small-ls: 0;
+    --type-heading-small-ls: -0.02em;
     --type-body-large-medium-size: var(--size-body-lg);
-    --type-body-large-medium-weight: 500;
+    --type-body-large-medium-weight: 400;
     --type-body-large-medium-lh: var(--lh-body-lg-medium);
     --type-body-large-medium-ls: -0.02em;
     --type-body-large-semibold-size: var(--size-body-lg);
@@ -217,7 +233,7 @@
     --type-body-medium-regular-lh: var(--lh-body-md);
     --type-body-medium-regular-ls: -0.02em;
     --type-body-medium-medium-size: var(--size-body-md);
-    --type-body-medium-medium-weight: 500;
+    --type-body-medium-medium-weight: 400;
     --type-body-medium-medium-lh: var(--lh-body-md);
     --type-body-medium-medium-ls: -0.02em;
     --type-body-medium-semibold-size: var(--size-body-md);
@@ -229,37 +245,41 @@
     --type-body-small-regular-lh: var(--lh-body-sm);
     --type-body-small-regular-ls: -0.02em;
     --type-body-small-medium-size: var(--size-body-sm);
-    --type-body-small-medium-weight: 500;
+    --type-body-small-medium-weight: 400;
     --type-body-small-medium-lh: var(--lh-body-sm);
     --type-body-small-medium-ls: -0.02em;
     --type-body-small-semibold-size: var(--size-body-sm);
-    --type-body-small-semibold-weight: 500;
+    --type-body-small-semibold-weight: 600;
     --type-body-small-semibold-lh: var(--lh-body-sm);
     --type-body-small-semibold-ls: -0.02em;
-    --type-label-default-semibold-size: var(--size-label-default);
-    --type-label-default-semibold-weight: 600;
-    --type-label-default-semibold-lh: var(--lh-label-default);
-    --type-label-default-semibold-ls: 0.02em;
-    --type-label-default-medium-size: var(--size-label-default);
-    --type-label-default-medium-weight: 500;
-    --type-label-default-medium-lh: var(--lh-label-default);
-    --type-label-default-medium-ls: -0.02em;
-    --type-label-tiny-regular-size: var(--size-label-tiny);
-    --type-label-tiny-regular-weight: 500;
-    --type-label-tiny-regular-lh: var(--lh-label-tiny);
-    --type-label-tiny-regular-ls: 0;
-    --type-label-tiny-semibold-size: var(--size-label-tiny);
-    --type-label-tiny-semibold-weight: 500;
-    --type-label-tiny-semibold-lh: var(--lh-label-tiny);
-    --type-label-tiny-semibold-ls: -0.02em;
-    --type-label-tiny-medium-size: var(--size-label-tiny);
-    --type-label-tiny-medium-weight: 500;
-    --type-label-tiny-medium-lh: var(--lh-label-tiny);
-    --type-label-tiny-medium-ls: -0.02em;
     --type-badge-semibolt-size: var(--size-badge);
-    --type-badge-semibolt-weight: 500;
+    --type-badge-semibolt-weight: 400;
     --type-badge-semibolt-lh: var(--lh-badge);
     --type-badge-semibolt-ls: -0.02em;
+    --type-label-large-size: 18px;
+    --type-label-large-weight: 400;
+    --type-label-large-lh: var(--lh-body-lg-semibold);
+    --type-label-large-ls: -0.02em;
+    --type-label-medium-size: var(--size-body-lg);
+    --type-label-medium-weight: 400;
+    --type-label-medium-lh: var(--lh-heading-lg);
+    --type-label-medium-ls: -0.02em;
+    --type-label-small-size: var(--size-body-lg);
+    --type-label-small-weight: 400;
+    --type-label-small-lh: var(--lh-body-lg-medium);
+    --type-label-small-ls: -0.02em;
+    --type-label-tiny-size: var(--size-body-md);
+    --type-label-tiny-weight: 400;
+    --type-label-tiny-lh: var(--lh-body-md);
+    --type-label-tiny-ls: -0.02em;
+    --type-label-micro-size: var(--size-body-sm);
+    --type-label-micro-weight: 400;
+    --type-label-micro-lh: var(--lh-body-md);
+    --type-label-micro-ls: -0.02em;
+    --type-label-nano-size: 10px;
+    --type-label-nano-weight: 400;
+    --type-label-nano-lh: var(--lh-body-sm);
+    --type-label-nano-ls: -0.02em;
     /* @tokens:end */
 
     /* Screen layout spacing. Sept 29 (later): the Ongatu screens are rebound to Surface, so the layout follows the
@@ -367,9 +387,120 @@
       --space-nav-padding-y: 8px;
       --space-control-gap: 12px;
       --space-tags-indent: 56px;
+      --icon-size-xl: 24px;
+      --icon-size-lg: 20px;
     }
   }
   /* @tokens-mobile:end */
+  /* @tokens-pinned:start */
+  /* Generated by scripts/sync-tokens.mjs: components pinned to the Surface Mobile mode. Do not edit by hand. */
+  .seg-tabs, .year-add-pill, .year-tabs, .year-btn, .ds-input, .ds-dd, .ds-dd-menu, .ds-dd-item, .date-dd, .ds-notif, .ds-notif-panel, .ds-notif-page, .ds-notif-item, .ds-app-header, .ds-avatar, .btn-pill, .round-btn, .ds-action-link{
+    --size-display-title: 40px;
+    --size-value-xl: 32px;
+    --size-value-lg: 16px;
+    --size-value-md: 14px;
+    --size-value-sm: 12px;
+    --size-heading-xl: 24px;
+    --size-heading-lg: 20px;
+    --size-heading-md: 16px;
+    --size-heading-sm: 14px;
+    --size-body-lg: 16px;
+    --size-body-md: 14px;
+    --size-body-sm: 12px;
+    --size-label-default: 12px;
+    --size-label-tiny: 10px;
+    --size-badge: 8px;
+    --lh-display-title: 48px;
+    --lh-heading-xl: 24px;
+    --lh-heading-lg: 24px;
+    --lh-heading-md: 16px;
+    --lh-heading-sm: 14px;
+    --lh-body-lg-medium: 20px;
+    --lh-body-lg-semibold: 20px;
+    --lh-body-md: 16px;
+    --lh-body-sm: 14px;
+    --lh-label-default: 12px;
+    --lh-label-tiny: 10px;
+    --lh-badge: 8px;
+    --space-tn: 4px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 40px;
+    --space-2xl: 48px;
+    --space-3xl: 80px;
+    --space-nav-padding-y: 8px;
+    --space-control-gap: 12px;
+    --space-tags-indent: 56px;
+    --radius-ty: 4px;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 999px;
+    --radius-card: 20px;
+    --icon-size-xl: 24px;
+    --icon-size-lg: 20px;
+    --icon-size-md: 16px;
+    --icon-size-sm: 12px;
+    --icon-size-tn: 10px;
+    --type-display-title-size: var(--size-display-title);
+    --type-display-title-lh: var(--lh-display-title);
+    --type-display-title-mobile-size: var(--size-value-xl);
+    --type-display-title-mobile-lh: var(--lh-display-title);
+    --type-value-xl-size: var(--size-value-xl);
+    --type-value-large-size: var(--size-value-lg);
+    --type-value-medium-size: var(--size-value-md);
+    --type-value-small-size: var(--size-value-sm);
+    --type-heading-xl-size: var(--size-heading-xl);
+    --type-heading-xl-lh: var(--lh-heading-xl);
+    --type-heading-large-size: var(--size-heading-lg);
+    --type-heading-large-lh: var(--lh-heading-lg);
+    --type-heading-medium-size: var(--size-heading-md);
+    --type-heading-medium-lh: var(--lh-heading-md);
+    --type-heading-small-size: var(--size-heading-sm);
+    --type-heading-small-lh: var(--lh-heading-sm);
+    --type-body-large-medium-size: var(--size-body-lg);
+    --type-body-large-medium-lh: var(--lh-body-lg-medium);
+    --type-body-large-semibold-size: var(--size-body-lg);
+    --type-body-large-semibold-lh: var(--lh-body-lg-semibold);
+    --type-body-medium-regular-size: var(--size-body-md);
+    --type-body-medium-regular-lh: var(--lh-body-md);
+    --type-body-medium-medium-size: var(--size-body-md);
+    --type-body-medium-medium-lh: var(--lh-body-md);
+    --type-body-medium-semibold-size: var(--size-body-md);
+    --type-body-medium-semibold-lh: var(--lh-body-md);
+    --type-body-small-regular-size: var(--size-body-sm);
+    --type-body-small-regular-lh: var(--lh-body-sm);
+    --type-body-small-medium-size: var(--size-body-sm);
+    --type-body-small-medium-lh: var(--lh-body-sm);
+    --type-body-small-semibold-size: var(--size-body-sm);
+    --type-body-small-semibold-lh: var(--lh-body-sm);
+    --type-badge-semibolt-size: var(--size-badge);
+    --type-badge-semibolt-lh: var(--lh-badge);
+    --type-label-large-lh: var(--lh-body-lg-semibold);
+    --type-label-medium-size: var(--size-body-lg);
+    --type-label-medium-lh: var(--lh-heading-lg);
+    --type-label-small-size: var(--size-body-lg);
+    --type-label-small-lh: var(--lh-body-lg-medium);
+    --type-label-tiny-size: var(--size-body-md);
+    --type-label-tiny-lh: var(--lh-body-md);
+    --type-label-micro-size: var(--size-body-sm);
+    --type-label-micro-lh: var(--lh-body-md);
+    --type-label-nano-lh: var(--lh-body-sm);
+    --layout-tn: var(--space-tn);
+    --layout-xs: var(--space-xs);
+    --layout-sm: var(--space-sm);
+    --layout-md: var(--space-md);
+    --layout-lg: var(--space-lg);
+    --layout-xl: var(--space-xl);
+    --layout-2xl: var(--space-2xl);
+    --layout-3xl: var(--space-3xl);
+    --layout-nav-padding-y: var(--space-nav-padding-y);
+    --layout-control-gap: var(--space-control-gap);
+    --layout-tags-indent: var(--space-tags-indent);
+  }
+  /* @tokens-pinned:end */
 
   *{ box-sizing:border-box; }
   html{ background:var(--page); }
@@ -378,7 +509,7 @@
     font-family:var(--font-sans); font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); padding:0 var(--layout-xl);
   }
   .wrap{ max-width:1238px; margin:0 auto; padding-block:var(--layout-xl) 72px; }
-  h1,h2,h3{ font-family:inherit; margin:0; font-weight:500; }
+  h1,h2,h3{ font-family:inherit; margin:0; font-weight:400; }
 
   /* ---- Header ---- */
   /* Header (Cost-tracker 211:18753 / 238:7184): "Hey, {first name}" (Display/Title, 32 SemiBold) and the line under it
@@ -450,7 +581,7 @@
   .ds-label{
     display:inline-flex; align-items:center; padding:0 var(--layout-xs); height:20px;
     border-radius:var(--radius-ty); background:var(--ink); color:var(--text-white);
-    font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); white-space:nowrap;
+    font-size:var(--type-label-micro-size); font-weight:600; line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); white-space:nowrap;
   }
   /* Action link: 12px SemiBold link-colored text button. link/default (#4f46e5)
      is identical to this app's existing --accent, so it reuses that variable rather
@@ -561,7 +692,7 @@
   .year-del-btn svg{ display:block; }
   .year-confirm{
     display:flex; align-items:center; gap:6px; height:32px; padding:0 6px; white-space:nowrap;
-    font-size:11px; font-weight:500; color:var(--ink);
+    font-size:11px; font-weight:400; color:var(--ink);
   }
   /* Yes/Cancel are now real Button, Size=Tiny instances (.btn-pill.tiny /
      .btn-pill.tiny.ghost, already matching Figma exactly elsewhere in this
@@ -722,7 +853,7 @@
   .month-btn{
     /* Month selector (DS node 4:171): 12px SemiBold, line height auto, tracking 0 (the Sept 22 pull dropped the +2%).
        The pill stays 20px high; Hover and Press use action/recessed-hover and -press. */
-    font-family:inherit; font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; height:20px; display:inline-flex; align-items:center; padding:0 var(--layout-xs); border-radius:var(--radius-full); border:none;
+    font-family:inherit; font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); text-transform:uppercase; height:20px; display:inline-flex; align-items:center; padding:0 var(--layout-xs); border-radius:var(--radius-full); border:none;
     background:var(--surface-2); color:var(--ink-2); cursor:pointer;
     transition: background-color .12s ease, color .12s ease;
   }
@@ -738,7 +869,7 @@
 
   .estimate-pill{
     display:inline-flex; align-items:center; gap:4px; margin-top:var(--layout-xs);
-    font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); text-transform:uppercase; padding:2px 8px; border-radius:var(--radius-full); background:var(--surface-2); color:var(--ink-2);
+    font-size:var(--type-label-micro-size); font-weight:600; line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); text-transform:uppercase; padding:2px 8px; border-radius:var(--radius-full); background:var(--surface-2); color:var(--ink-2);
   }
   .estimate-pill[hidden]{ display:none; }
 
@@ -777,7 +908,7 @@
   .mini-kpi .label{ display:flex; align-items:center; gap:var(--layout-xs); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mini-kpi .dot{ width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
   /* KPI card (DS 28:68): label 12px SemiBold, line height auto, tracking 0; the details line is mono 12 Medium -4% in text/secondary, 8px under the value. */
-  .mini-kpi .label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); color:var(--ink); text-transform:uppercase; }
+  .mini-kpi .label{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); color:var(--ink); text-transform:uppercase; }
   .mini-kpi .value{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .mini-kpi .detail{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-secondary); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   /* Money with the DS Euro icon: 12px glyph + 4px gap + the figure (Value component). */
@@ -796,7 +927,7 @@
   .hero-chart .hc-value{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .hc-delta{ margin-left:8px; }
   .legend{ display:flex; gap:var(--layout-md); flex-wrap:wrap; margin-top:var(--layout-md); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--legend-text); }
-  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:500; }
+  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:400; }
   .swatch{ width:9px; height:9px; border-radius:var(--radius-ty); display:inline-block; }
 
   /* Icons carry their DS size (10 / 12 / 20) as width/height attributes (Icon.jsx); CSS never resizes them. */
@@ -806,7 +937,7 @@
   .gridline{ stroke:var(--border); stroke-width:1; }
   .baseline{ stroke:var(--border-2); stroke-width:1; }
   .pin-label{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); fill:var(--ink); font-variant-numeric:tabular-nums; }
-  .pin-label-sub{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); fill:var(--ink-muted); }
+  .pin-label-sub{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); fill:var(--ink-muted); }
   .chart-wrap{ position:relative; }
   #trend-chart{ display:block; width:100%; height:auto; }
   .tooltip-chart{
@@ -825,7 +956,7 @@
   .ticker-item .ti-val, .ticker-item .ti-delta{ margin-top:0 !important; }
   .ticker-item .ti-top{ display:flex; align-items:center; gap:8px; }
   .ticker-item .ti-dot{ width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-white); }
-  .ticker-item .ti-name{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); }
+  .ticker-item .ti-name{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
   /* Expense card: value is Medium mono 14 (-4%), the delta line sits 4px under it. */
   .ticker-item .ti-val{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); font-variant-numeric:tabular-nums; display:flex; }
   /* details row (DS 130:3844): 12px arrow icon + 8px + mono 12 Medium -4%, coloured by the direction. */
@@ -846,16 +977,16 @@
   .alloc-col{ min-width:48px; display:flex; flex-direction:column; align-items:center; gap:var(--layout-xs); height:100%; justify-content:flex-end; }
   .alloc-pct{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); }
   .alloc-bar{ width:48px; border-radius:var(--radius-sm); }
-  .alloc-name{ font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); color:var(--label-muted); text-transform:uppercase; }
+  .alloc-name{ font-size:var(--type-label-micro-size); font-weight:600; line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); color:var(--label-muted); text-transform:uppercase; }
 
   .insight-text{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-2); margin-top:var(--layout-xs); }
-  .insight-text b{ color:var(--ink); font-weight:500; }
+  .insight-text b{ color:var(--ink); font-weight:400; }
   .insight-tags{ display:flex; gap:var(--layout-xs); flex-wrap:wrap; margin-top:var(--layout-xs); padding-top:var(--layout-xs); }
   /* Tags are the DS "Label" component (211:859): 20px high, 8px side padding, 4px radius, 12px SemiBold, line height auto,
      tracking 0. Types: Neutral (surface/secondary + text/secondary), Positive, Negative, Warning (surface/x + status/x). */
   .insight-tag, .hc-delta{
     display:inline-flex; align-items:center; gap:var(--layout-tn); height:20px; padding:0 var(--layout-xs); box-sizing:border-box;
-    font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; white-space:nowrap;
+    font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); text-transform:uppercase; white-space:nowrap;
     border-radius:var(--radius-ty); background:var(--surface-secondary); color:var(--text-secondary);
   }
   .hc-delta{ text-transform:none; }
@@ -959,7 +1090,7 @@
   #note-tip .tip-dot::before{ content:''; position:absolute; left:4px; top:4px; width:4px; height:4px; border-radius:50%; background:var(--action-disable); }
   #note-tip .tip-left{ flex:1 1 0; min-width:0; display:flex; align-items:center; gap:var(--layout-xs); }
   #note-tip .tip-name{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-white); overflow-wrap:anywhere; }
-  #note-tip .tip-date{ flex:none; font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); color:var(--text-secondary); white-space:nowrap; }
+  #note-tip .tip-date{ flex:none; font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); color:var(--text-secondary); white-space:nowrap; }
   #note-tip .tip-right{ flex:none; display:flex; align-items:center; gap:var(--layout-xs); }
   #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); color:var(--text-white); white-space:nowrap; font-variant-numeric:tabular-nums; }
   #note-tip .tip-amount .money-ic{ color:var(--text-white); }
@@ -1017,7 +1148,7 @@
   .add-panel-hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--ink-muted); width:100%; }
   .add-panel-content{ display:flex; flex-direction:column; gap:var(--layout-md); }
   .field-group{ display:flex; flex-direction:column; gap:var(--layout-tn); }
-  .field-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); color:var(--ink-2); text-transform:uppercase; }
+  .field-label{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); color:var(--ink-2); text-transform:uppercase; }
   .seg-tabs[hidden]{ display:none; }
   .seg-tabs.sub{ height:32px; }
   .seg-tabs.sub button{ height:24px; padding:0 var(--layout-xs); }
@@ -1162,7 +1293,7 @@
   .ap-manual .field-group{ gap:var(--layout-xs); }
   /* Figma 174:15081: every gap in the form is 8, the Type block and the form are 24 apart, the buttons sit 40 below. */
   #add-panel .add-grid{ gap:var(--layout-xs); }
-  .ap-manual .field-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); text-transform:uppercase; color:var(--text-secondary); }
+  .ap-manual .field-label{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); text-transform:uppercase; color:var(--text-secondary); }
   .ap-manual .add-actions{ margin-top:calc(var(--layout-xl) - var(--layout-lg)); }
   #doc-actions, #ap-review .add-actions{ gap:var(--layout-tn); }
   #add-panel .field-with-prefix .field-prefix{ left:var(--layout-md); width:23px; height:24px; display:flex; align-items:center; justify-content:center; }
@@ -1604,7 +1735,7 @@
   .ds-mnav-item svg{ display:block; flex-shrink:0; }
   .ds-mnav-item:focus-visible, .ds-mnav-action .round-btn:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
   .ds-mnav-img{ width:24px; height:24px; border-radius:var(--radius-full); object-fit:cover; display:block; flex-shrink:0; }
-  .ds-mnav-label{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:-0.02em; white-space:nowrap; }
+  .ds-mnav-label{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:-0.02em; white-space:nowrap; }
   .ds-mnav-action{ position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); display:flex; }
   /* The Add action is a 48px primary Round button in the nav (DS 378:673), not the 40px Medium size. */
   .ds-mnav-action .round-btn{ width:48px; height:48px; }
@@ -1661,7 +1792,7 @@
   .date-dd{ border-color:var(--border-default); }
   .date-dd:hover{ border-color:var(--state-border-hover); }
   .date-dd-label{ color:var(--text-secondary); }
-  .date-dd .date-dd-chevron{ width:16px; height:16px; color:var(--text-primary); }
+  .date-dd .date-dd-chevron{ width:12px; height:12px; color:var(--action-primary); }
   .budget-panel .add-panel-content{ gap:var(--layout-xl); }
   .budget-type-section{ gap:var(--layout-md); }
   .budget-group{ gap:var(--layout-xs); }
@@ -1794,7 +1925,7 @@
     /* Chart (Trend_Chart_Section 342:8068): label Heading/Small in text/secondary, Value/Large, 10px legend with 8px dots. */
     .hero-chart.is-compact .hc-label{ color:var(--text-secondary); }
     .hero-chart.is-compact .hc-value{ margin-top:var(--layout-tn); }
-    .hero-chart.is-compact .legend{ gap:var(--layout-sm); font-size:var(--type-label-tiny-semibold-size); font-weight:var(--type-label-tiny-semibold-weight); line-height:var(--type-label-tiny-semibold-lh); letter-spacing:var(--type-label-tiny-semibold-ls); color:var(--text-secondary); }
+    .hero-chart.is-compact .legend{ gap:var(--layout-sm); font-size:var(--type-label-micro-size); font-weight:600; line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); color:var(--text-secondary); }
     .hero-chart.is-compact .legend span{ gap:var(--layout-tn); }
     .hero-chart.is-compact .legend .swatch{ width:8px; height:8px; border-radius:var(--radius-full); }
     /* Modal, Surface=Mobile (DS 443:1484; Ongatu 420:6020): a bottom sheet, full width, top corners radius/md. */
@@ -1882,7 +2013,7 @@
   /* breackdown-row 124:3667: hugs the Tiny round button (32 / 24), space/tn apart. */
   .bd-row{ height:auto; min-height:calc(2 * var(--space-xs) + 16px); gap:var(--space-tn); }
   /* Entry tooltip counter 146:5252: fixed 14 high, space/tn sides, the count in Label/Default/SemiBold. */
-  .note-count{ font-size:var(--type-label-default-semibold-size); font-weight:var(--type-label-default-semibold-weight); line-height:var(--type-label-default-semibold-lh); letter-spacing:var(--type-label-default-semibold-ls); }
+  .note-count{ font-size:var(--type-label-tiny-size); font-weight:600; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
   /* Tooltip entry item 144:4426: fixed 24 high, space/xs gaps; name and date in Body/Medium/Medium (date text/secondary),
      amount Value/Small after a 12px Euro, Micro round button. */
   #note-tip .tip-name, #note-tip .tip-date{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
@@ -1943,3 +2074,1252 @@
     .ds-modal-text{ gap:var(--space-xs); }
     .ds-modal-actions{ gap:var(--space-md); padding:0; }
   }
+
+  /* ==========================================================================================================
+     Oct 2: DS Components 4:43 re-read. Text styles moved to the Label set (Large 18/600, Medium, Small, Tiny, Micro,
+     Nano); icons follow the icon-size/* variables (xl 24 -> 16 on desktop, lg 20 -> 16, md 16, sm 12, tn 10), so an
+     icon that binds xl or lg is drawn by .ico-xl / .ico-lg (the only CSS that sizes icons, see tests/icons.test.js).
+     ========================================================================================================== */
+  .ico-xl{ width:var(--icon-size-xl); height:var(--icon-size-xl); }
+  .ico-lg{ width:var(--icon-size-lg); height:var(--icon-size-lg); }
+
+  /* Button 41:119: Medium pad sm md + Label/Medium + xl icon; Small pad xs md + Label/Small + lg icon; Tiny pad xs sm +
+     Label/Tiny + 12px icon; Micro pad tn xs + Label/Nano + 12px icon. Secondary stroke border/default. */
+  .btn-pill{ gap:var(--space-tn); padding:calc(var(--space-sm) - 1px) calc(var(--space-md) - 1px);
+    font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+  .btn-pill.small{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px);
+    font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .btn-pill.tiny{ padding:calc(var(--space-xs) - 1px) calc(var(--space-sm) - 1px);
+    font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .btn-pill.micro{ padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px);
+    font-size:var(--type-label-nano-size); font-weight:var(--type-label-nano-weight); line-height:var(--type-label-nano-lh); letter-spacing:var(--type-label-nano-ls); }
+  .btn-pill.ghost{ border-color:var(--border-default); }
+  .btn-pill.ghost:hover{ border-color:var(--border-hover); }
+
+  /* Round button 52:629: every size hugs its padding round the icon slot. Medium sm + xl, Small xs + lg, Tiny xs + md,
+     Micro tn + md, Nano 16 with a 10px icon. Secondary stroke border/dark; Active fill action/secondary-active. */
+  .round-btn{ width:auto; height:auto; min-width:0; min-height:0; padding:calc(var(--space-sm) - 1px); }
+  .round-btn.small{ width:auto; height:auto; padding:calc(var(--space-xs) - 1px); }
+  .round-btn.tiny{ width:auto; height:auto; min-width:0; min-height:0; padding:calc(var(--space-xs) - 1px); }
+  .round-btn.micro{ width:auto; height:auto; min-width:0; min-height:0; padding:calc(var(--space-tn) - 1px); }
+  .round-btn.nano{ width:16px; height:16px; min-width:0; min-height:0; padding:0; }
+  .round-btn.secondary{ border-color:var(--border-dark); }
+  .round-btn.secondary.is-active, .round-btn.secondary[aria-expanded="true"]{ background:var(--action-secondary-active); border-color:var(--border-hover); }
+  .ds-mnav-action .round-btn{ width:auto; height:auto; }
+
+  /* Action link 607:1368: no padding, space/tn gap, trailing 12px icon, link/default. Medium Label/Large, Small
+     Label/Tiny, Tiny Label/Micro. */
+  .ds-action-link, .ds-action-link.medium, .ds-action-link.small, .ds-action-link.tiny{ padding:0; gap:var(--space-tn); color:var(--link-default); }
+  .ds-action-link.medium{ font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
+  .ds-action-link, .ds-action-link.small{ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-action-link.tiny{ font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
+  .ds-action-link:active{ color:var(--link-press); }
+  .ds-action-link:disabled{ color:var(--link-disable); cursor:not-allowed; text-decoration:none; }
+
+  /* Toggle 298:637: 40 x 24. */
+  .ds-toggle{ width:40px; }
+  .ds-toggle.is-on .ds-toggle-knob{ transform:translateX(16px); }
+
+  /* Tab 53:801 / Nav tabs 59:850: 26 high, 0 tn, Label/Large; Selected text/primary, other text/secondary, Hover
+     text/accent; tabs space/md apart. */
+  .year-btn{ height:26px; min-width:0; padding:0 var(--space-tn);
+    font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
+
+  /* Segments 30:98: tabs pad sm, Label/Medium; container pad tn, gap xs. Sub-segments: tabs xs sm. */
+  .seg-tabs button{ font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+
+  /* Month selector 4:171: pad tn sm, Label/Small, no uppercase. Unselected surface/secondary + text/secondary, Hover
+     action/secondary-hover, Press action/secondary-press, Selected surface/accent + text/white. */
+  .month-btn{ height:auto; padding:var(--space-tn) var(--space-sm); text-transform:none; background:var(--surface-secondary); color:var(--text-secondary);
+    font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .month-btn:hover{ background:var(--action-secondary-hover); }
+  .month-btn:active{ background:var(--action-secondary-press); }
+
+  /* menu-item 304:528: fixed 40, pad sm, gap xs, xl icon, Body/Large/Medium. mobile-nav-item: Body/Large/SemiBold when selected. */
+  .ds-mnav-label{ font-size:var(--type-body-large-semibold-size); font-weight:var(--type-body-large-semibold-weight); line-height:var(--type-body-large-semibold-lh); letter-spacing:var(--type-body-large-semibold-ls); }
+  .ds-mnav{ box-shadow:0 3px 12px #16150f1f; }
+
+  /* Input 71:1093 / Dropdown 71:1096: Medium pad sm md + Label/Large; Small pad xs (40 / 32); Tiny pad xs + Label/Tiny.
+     Filled border/selected-item, Active (open) border/focus, Disable surface/secondary + text/muted. */
+  .ds-input, .ds-dd-trigger{ font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
+  .ds-input input, .ds-dd-trigger .ds-dd-value{ font:inherit; letter-spacing:inherit; }
+  .ds-input.tiny, .ds-dd--tiny .ds-dd-trigger{ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-input.small{ height:auto; min-height:calc(2 * var(--space-xs) + var(--icon-size-xl)); }
+  .ds-dd-trigger{ height:auto; min-height:calc(2 * var(--space-xs) + var(--icon-size-xl)); }
+  .ds-input.is-filled, .ds-input:has(input:not(:placeholder-shown)), .ds-dd-trigger.is-filled{ border-color:var(--border-selected-item); }
+  .ds-input:focus-within, .ds-dd-trigger[aria-expanded="true"]{ border-color:var(--border-focus); }
+  /* dropdown-item 183:6858: Label/Small in text/secondary; the group title of a Dropdown-list is Label/Large. */
+  .ds-dd-item{ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+
+  /* KPI card 28:68 / Expense card 130:3844: pad md, gap sm, radius md; title Heading/Medium. */
+  .mini-kpi, .ticker-item{ gap:var(--space-sm); }
+  /* Balance card 441:1057: pad lg, gap md. */
+  .balance-card .value, .balance-card .pill-delta, .balance-card .balance-details{ margin-top:var(--space-md); }
+
+  /* Label 211:859: Regular 24 high, xs sides, radius full, Label/Tiny, 12px icon; Small 16 high, Label/Micro, 10px icon. */
+  .insight-tag, .hc-delta{ border-radius:var(--radius-full);
+    font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-tag{ display:inline-flex; align-items:center; gap:var(--space-tn); height:24px; padding:0 var(--space-xs); border-radius:var(--radius-full); white-space:nowrap;
+    background:var(--surface-secondary); color:var(--text-secondary);
+    font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-tag.small{ height:16px; font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
+  .ds-tag.positive{ background:var(--surface-success); color:var(--status-success); }
+  .ds-tag.negative{ background:var(--surface-fail); color:var(--status-fail); }
+  .ds-tag.warning{ background:var(--surface-warning); color:var(--status-warning); }
+
+  /* Tooltip entry item 144:4426: item Body/Large/SemiBold white, date Body/Large/Medium muted, amount Value/Medium. */
+  #note-tip .tip-name{ font-size:var(--type-body-large-semibold-size); font-weight:var(--type-body-large-semibold-weight); line-height:var(--type-body-large-semibold-lh); letter-spacing:var(--type-body-large-semibold-ls); }
+  #note-tip .tip-date{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-muted); }
+  /* Entry tooltip counter 146:5252: Body/Small/SemiBold. */
+  .note-count{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); }
+
+  /* Notification 228:455: the bell hugs a Small round button (36 / 32). */
+  .ds-notif{ width:auto; height:auto; }
+
+  /* Modal 443:1484: Top-nav holds a Medium Round close. */
+  .ds-modal-header .round-btn{ padding:calc(var(--space-sm) - 1px); }
+
+  /* ---- New components (Oct 2) ---- */
+  /* chip-selector 540:785: pad tn xs, gap tn, radius full, Label/Micro; Default stroke border/default + 10px ring in
+     border/hover; Selected bg brand/mint-light + stroke brand/mint + 10px check; Unselected-Hover bg status/green-pale,
+     ring brand/mint, 10px X. */
+  .ds-chip{ display:inline-flex; align-items:center; gap:var(--space-tn); padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px);
+    border:1px solid var(--border-default); border-radius:var(--radius-full); background:transparent; color:var(--text-primary); cursor:pointer; font-family:inherit;
+    font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
+  .ds-chip-ring{ width:10px; height:10px; border-radius:50%; border:1px solid var(--border-hover); box-sizing:border-box; flex-shrink:0; }
+  .ds-chip:hover{ background:var(--primitive-status-green-pale); border-color:var(--primitive-brand-mint); }
+  .ds-chip:hover .ds-chip-ring{ border-color:var(--primitive-brand-mint); }
+  .ds-chip.is-selected{ background:var(--primitive-brand-mint-light); border-color:var(--primitive-brand-mint); }
+
+  /* Step progress 543:798 / step 543:802: steps space/md apart; each a 6px bar (track stone-325, fill brand/mint) over a
+     label row (16px icon, Body/Large/Medium). Done text/secondary, On going text/primary, Idle text/muted. */
+  .ds-steps{ display:flex; gap:var(--space-md); width:344px; max-width:100%; }
+  .ds-step{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ds-step-bar{ height:6px; border-radius:var(--radius-full); background:var(--primitive-neutral-stone-325); overflow:hidden; }
+  .ds-step-fill{ height:100%; border-radius:var(--radius-ty); background:var(--primitive-brand-mint); transition:width .3s ease; }
+  .ds-step-label{ display:flex; align-items:center; gap:var(--space-xs); color:var(--text-muted);
+    font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ds-step-ring{ width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ds-step-ring::before{ content:''; width:12.8px; height:12.8px; border-radius:50%; border:1.5px dashed var(--action-disable); box-sizing:border-box; }
+  .ds-step.is-done .ds-step-label{ color:var(--text-secondary); }
+  .ds-step.is-current .ds-step-label{ color:var(--text-primary); }
+  .ds-step.is-current .ds-step-ring::before{ border-color:var(--surface-dark); }
+
+  /* Pager 543:823: 8px dots space/xs apart (radius ty); the current one 27 wide in surface/accent. */
+  .ds-pager{ display:flex; justify-content:center; gap:var(--space-xs); }
+  .ds-pager-dot{ width:8px; height:8px; border-radius:var(--radius-ty); background:var(--primitive-neutral-stone-325); border:none; padding:0; cursor:pointer; transition:width .2s ease, background-color .2s ease; }
+  .ds-pager-dot.is-current{ width:27px; background:var(--surface-accent); }
+
+  /* list-selector: card pad md, radius sm, Heading/Small title, Body/Small/Medium description, Small Neutral label.
+     Default stroke border/default; Hover surface/accent-light + border/selected-item; Selected border/selected-item +
+     Floating shadow. */
+  .ds-list-sel{ display:flex; align-items:center; width:100%; padding:calc(var(--space-md) - 1px); border:1px solid var(--border-default); border-radius:var(--radius-sm);
+    background:var(--surface-primary); text-align:left; cursor:pointer; font-family:inherit; color:var(--text-primary); box-sizing:border-box; transition:background-color .12s ease, border-color .12s ease; }
+  .ds-list-sel:hover{ background:var(--surface-accent-light); border-color:var(--border-selected-item); }
+  .ds-list-sel.is-selected{ background:var(--surface-primary); border-color:var(--border-selected-item); box-shadow:0 0 8px #16150f14; cursor:default; }
+  .ds-list-sel-body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:var(--space-tn); }
+  .ds-list-sel-head{ display:flex; align-items:center; gap:var(--space-xs); }
+  .ds-list-sel-title{ flex:1; min-width:0; font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
+  .ds-list-sel-desc{ color:var(--text-secondary); font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+
+  /* build-item 605:1358: pad sm md, gap md, radius md, surface/body; Type Label/Tiny secondary over the name in Label/Large. */
+  .ds-build-item{ display:flex; align-items:center; gap:var(--space-md); padding:var(--space-sm) var(--space-md); border-radius:var(--radius-md); background:var(--surface-body); }
+  .ds-build-item-text{ flex:1; min-width:0; display:flex; flex-direction:column; }
+  .ds-build-item-type{ color:var(--text-secondary); font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-build-item-name{ font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
+
+  /* info 632:905: pad sm, radius sm, a 16px icon then Heading/Small title over Body/Small/Medium text. Neutral
+     surface/body, Warning surface/warning, Danger surface/fail. */
+  .ds-info{ display:flex; gap:var(--space-xs); padding:var(--space-sm); border-radius:var(--radius-sm); background:var(--surface-body); color:var(--text-primary); }
+  .ds-info.warning{ background:var(--surface-warning); }
+  .ds-info.danger{ background:var(--surface-fail); }
+  .ds-info > svg{ flex-shrink:0; }
+  .ds-info-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:var(--space-tn); }
+  .ds-info-title{ margin:0; font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
+  .ds-info-desc{ margin:0; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+
+  /* Info tooltip 634:1351: a 20px badge (2px round a 16px Information icon); Hover shows the tip. */
+  .ds-info-tip{ position:relative; display:inline-flex; align-items:center; justify-content:center; padding:2px; border:none; background:none; border-radius:var(--radius-full); color:var(--text-secondary); cursor:help; }
+  .ds-info-tip:hover, .ds-info-tip:focus-visible{ color:var(--text-primary); background:var(--action-secondary-hover); }
+  .ds-info-tip-bubble{ position:absolute; left:50%; bottom:calc(100% + 6px); transform:translateX(-50%); width:max-content; max-width:240px; padding:var(--space-xs) var(--space-sm);
+    border-radius:var(--radius-sm); background:var(--surface-dark); color:var(--text-white); text-align:left; pointer-events:none; opacity:0; transition:opacity .12s ease; z-index:20;
+    font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+  .ds-info-tip:hover .ds-info-tip-bubble, .ds-info-tip:focus-visible .ds-info-tip-bubble{ opacity:1; }
+  /* Nav tabs - Add year (Oct 2): pad tn 6 tn 5, gap xs, border/default, Floating shadow; Small Tertiary Active close
+     (hugs xs round lg); Tiny dropdowns 120 wide, tn apart; Tiny primary button. */
+  .year-add-pill{ height:auto; gap:var(--space-xs); padding:calc(var(--space-tn) - 1px) 5px calc(var(--space-tn) - 1px) 4px; box-shadow:0 0 8px #16150f14; }
+  .year-add-pill .round-btn{ width:auto; height:auto; padding:var(--space-xs); }
+  .year-add-pill-inputs{ gap:var(--space-tn); }
+  .year-add-pill-currency, .year-add-pill-year{ width:120px; }
+  /* Modal 443:1484 (Oct 2) and the onboarding modals (Welcome, Category / Sub-category / Type creation): 480 wide,
+     Top-nav space/xs with a Medium close on the right; Content space/2xl sides and apart; header block space/xl apart
+     (64px illustration, then title Heading/XL over Body/Large/Medium, space/sm apart); Actions 160px buttons space/md apart. */
+  .ds-modal{ width:480px; }
+  .ds-modal-header{ padding:var(--space-xs); }
+  .ds-modal-body{ gap:var(--space-2xl); padding:0 var(--space-2xl); }
+  .ds-modal-content{ gap:var(--space-xl); padding:0; }
+  .ds-modal-text{ gap:var(--space-sm); }
+  .ds-modal-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .ds-modal-description{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ds-modal-actions{ padding:0; justify-content:center; }
+  .ds-modal-actions .btn-pill{ flex:0 1 160px; width:160px; }
+  .ds-modal-actions .btn-pill:only-child{ flex-basis:320px; width:320px; }
+  /* Form inside a modal (creation modals): fields space/md apart, label Label/Small over the control space/sm. */
+  .ds-modal-form{ display:flex; flex-direction:column; gap:var(--space-md); width:100%; text-align:left; }
+  .ds-modal-note{ margin:0; text-align:center; color:var(--text-muted); font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+  .fld{ display:flex; flex-direction:column; gap:var(--space-sm); min-width:0; }
+  .fld-label{ color:var(--text-secondary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .fld-rows{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .fld-row{ display:flex; align-items:center; gap:var(--space-sm); }
+  .fld-row .ds-input{ flex:1; min-width:0; }
+  .fld-remove{ color:var(--action-destructive); }
+  .fld-combo{ position:relative; }
+  .fld-combo .ds-input{ padding-right:calc(var(--space-md) + 20px); }
+  .fld-combo-chev{ position:absolute; right:var(--space-md); top:50%; transform:translateY(-50%); pointer-events:none; color:var(--text-primary); }
+  /* Add entry panel, Enter manually (229:18166, Oct 2): Track in (242 wide), then Category | Sub-category,
+     Description, Group (Optional) | Type, Amount | Date, "+ Add type"; fields space/md apart, Label/Small labels,
+     Medium dropdowns in Label/Large; Save entry. Date = a Dropdown with a Calendar icon first. */
+  #add-panel .add-grid{ gap:var(--space-md); }
+  #add-panel .field-period .ds-dd, #add-panel .field-period{ max-width:242px; }
+  .date-dd{ display:flex; align-items:center; gap:var(--space-xs); height:auto; min-height:calc(2 * var(--space-sm) + var(--icon-size-xl)); padding:0 calc(var(--space-md) - 1px); border-color:var(--border-selected-item); }
+  .date-dd input[type="date"]{ position:absolute; inset:0; width:100%; height:100%; padding:0; border:none; background:transparent; color:transparent; cursor:pointer; outline:none; }
+  .date-dd .date-dd-cal{ flex-shrink:0; color:var(--action-primary); pointer-events:none; }
+  .date-dd-label{ position:static; transform:none; flex:1; color:var(--text-primary);
+    font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
+  .date-dd .date-dd-chevron{ position:static; transform:none; }
+  .ds-input.is-value input{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); letter-spacing:var(--type-value-large-ls); }
+  #ap-manual > .ap-section-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
+  #add-panel .ap-section:not(#ap-manual) > .ap-section-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  /* Panel - Year budget (232:5853, Oct 2): filters like the Add entry form, group titles Heading/Large, rows with a
+     Micro Actions button whose menu removes the row. */
+  .budget-filters{ margin-bottom:var(--space-2xl); }
+  .budget-cat-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); text-transform:none; }
+  .br-actions{ position:relative; display:inline-flex; }
+  .br-menu{ position:absolute; right:0; top:calc(100% + 4px); z-index:30; min-width:140px; display:flex; flex-direction:column; background:var(--surface-primary); border:1px solid var(--border-secondary); box-shadow:0 0 8px #16150f14; }
+  .br-menu .br-remove{ color:var(--action-destructive); background:none; border:none; text-align:left; cursor:pointer; border-radius:var(--radius-sm); font-family:inherit; }
+  .br-menu .br-remove:hover{ background:var(--surface-accent-light); }
+  /* Main page (211:18753, Oct 2): card titles are sentence case. Balance card "<Month> balance" Heading/XL; KPI and
+     Expense card names, Expense allocation, At a glance and the chart title Heading/Medium; Tracker Heading/XL with
+     the month under it in Body/Medium/Medium; meter names Body/Large/Medium; the group blocks under the meters
+     Heading/XL with types in Body/Large/Medium (text/secondary); the at-a-glance tags Label/Tiny. */
+  .balance-card .label{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .mini-kpi .label, .ticker-item .ti-name{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .card h2, .hero-chart .hc-label{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .card.tracker-card > .card-head h2, #tracker-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .bd-title h2{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .bd-title .hint{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
+  .bd-block-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .bd-row .bd-item-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .insight-tag{ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  @media (max-width:640px){ .bd-block-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); } }
+  /* Sign-in and Create account (397:4392, Oct 2): logo 104 high, header space/xs; the card 480, no stroke, space/2xl
+     padding and gap; content space/xl; labels Label/Small sentence case; buttons 320 wide (Back + Continue share a
+     row); the 48px avatar over "Hello, X!" Heading/Large and the email Body/Large/Medium in text/accent-light;
+     "Re-send code in 0:42" and the spam note in Body/Large/Medium text/secondary. */
+  .login-content{ gap:var(--space-2xl); }
+  .login-tagline{ color:var(--text-accent); }
+  .login-card{ border:none; padding:var(--space-2xl); gap:var(--space-2xl); }
+  .login-head{ gap:var(--space-xl); }
+  .login-body, .login-form{ gap:var(--space-2xl); }
+  .login-form--tight{ gap:var(--space-md); }
+  .login-field{ gap:var(--space-sm); }
+  .login-label{ color:var(--text-secondary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); text-transform:none; }
+  .login-sub{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); margin-top:calc(var(--space-sm) - var(--space-xl)); }
+  .login-user{ gap:var(--space-md); }
+  .login-avatar{ width:48px; height:48px; font-size:var(--type-heading-large-size); }
+  .login-hello{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  .login-email{ color:var(--text-accent-light); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .login-cta-col{ display:flex; flex-direction:column; align-items:center; gap:var(--space-sm); }
+  .login-wide{ width:320px; max-width:100%; }
+  .login-link, .login-resend .ds-action-link{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .login-resend{ display:flex; flex-direction:column; align-items:center; gap:var(--space-tn); text-align:center; }
+  .login-resend-row{ display:inline-flex; align-items:center; gap:var(--space-tn); }
+  .login-note{ color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .login-code{ gap:var(--space-xs); }
+  .login-cta{ gap:var(--space-xs); }
+  .login-cta .btn-pill.tertiary{ display:inline-flex; align-items:center; gap:var(--space-tn); }
+  @media (max-width:640px){ .login-card{ padding:var(--space-xl) var(--space-md); } }
+
+  /* ==========================================================================================================
+     Onboarding and setup (Ongatu 397:4392, Oct 2). Page surface/body; content centred, space/2xl apart: header
+     (44px symbol, Display/Title, Body/Large/Medium), Step progress (344), then the card (surface/primary, radius/card).
+     Tour 520 wide (card pad xl 2xl 2xl, the art box 200 high in surface/body radius/md); Choose 720 (two option
+     cards 260 high, pad xl, radius/md, border/default); Set up 920 (Category 264 | Type | Summary 256, space/xl apart).
+     ========================================================================================================== */
+  .ob-page{ min-height:100vh; box-sizing:border-box; background:var(--surface-body); padding:var(--space-2xl) var(--space-md); display:flex; justify-content:center; font-family:var(--font-sans); color:var(--text-primary); }
+  .ob-content{ width:520px; max-width:100%; display:flex; flex-direction:column; align-items:center; gap:var(--space-2xl); margin:auto 0; }
+  .ob-page.is-mid .ob-content{ width:720px; }
+  .ob-page.is-wide .ob-content{ width:920px; }
+  .ob-header{ display:flex; flex-direction:column; align-items:center; gap:var(--space-xs); text-align:center; }
+  .ob-title{ margin:0; font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); }
+  .ob-sub{ margin:0; color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ob-card{ width:100%; box-sizing:border-box; background:var(--surface-primary); border-radius:var(--radius-card); padding:var(--space-2xl); display:flex; flex-direction:column; gap:var(--space-xl); }
+  .ob-card-head{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ob-card-title{ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .ob-card-text{ margin:0; color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ob-wide{ width:320px; max-width:100%; align-self:center; }
+  .ob-full{ width:100%; }
+  /* Tour */
+  .ob-tour{ padding-top:var(--space-xl); align-items:center; gap:var(--space-2xl); }
+  .ob-tour-content{ width:100%; display:flex; flex-direction:column; align-items:center; gap:var(--space-xl); }
+  .ob-tour-top{ width:100%; display:flex; flex-direction:column; align-items:flex-end; gap:var(--space-lg); }
+  .ob-skip{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ob-art{ width:100%; height:200px; border-radius:var(--radius-md); background:var(--surface-body); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .ob-art-col{ display:flex; flex-direction:column; align-items:center; gap:var(--space-xl); }
+  .ob-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:var(--space-sm); }
+  .ob-tag{ padding:0 var(--space-sm); font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+  .ob-tour-text{ width:440px; max-width:100%; display:flex; flex-direction:column; gap:var(--space-sm); text-align:center; }
+  .ob-mini{ width:300px; max-width:calc(100% - 32px); box-sizing:border-box; padding:var(--space-md); border-radius:var(--radius-md); background:var(--surface-primary); box-shadow:0 0 8px #16150f14; display:flex; flex-direction:column; gap:var(--space-lg); }
+  .ob-mini-head{ display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ob-mini-bal{ color:var(--text-primary); font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); }
+  .ob-mini-rows{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .ob-mini-meter{ display:flex; flex-direction:column; gap:var(--space-tn); }
+  .ob-mini-info{ display:flex; justify-content:space-between; align-items:center; gap:var(--space-md); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .ob-mini-val{ display:inline-flex; align-items:center; gap:var(--space-tn); font-family:var(--font-mono); font-size:var(--type-value-small-size); letter-spacing:var(--type-value-small-ls); }
+  .ob-mini-bar{ height:6px; border-radius:var(--radius-full); background:var(--surface-secondary); overflow:hidden; }
+  .ob-mini-bar > div{ height:100%; border-radius:var(--radius-full); }
+  /* Choose */
+  .ob-choose{ gap:var(--space-xl); }
+  .ob-options{ display:flex; gap:var(--space-lg); }
+  .ob-option{ flex:1 1 0; min-width:0; height:260px; box-sizing:border-box; display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-md); padding:calc(var(--space-xl) - 1px);
+    border:1px solid var(--border-default); border-radius:var(--radius-md); background:var(--surface-primary); text-align:left; font-family:inherit; color:var(--text-primary); cursor:pointer; transition:background-color .12s ease, border-color .12s ease; }
+  .ob-option:hover{ background:var(--surface-accent-light); border-color:var(--border-selected-item); }
+  .ob-option:hover .ob-option-link{ color:var(--link-hover); }
+  .ob-option-art{ height:64px; display:flex; align-items:flex-start; }
+  .ob-option-text{ flex:1; display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ob-option-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  .ob-option-desc{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  /* Set up your board */
+  .ob-setup{ gap:var(--space-xl); }
+  .ob-setup-cols{ display:flex; gap:var(--space-xl); align-items:flex-start; }
+  .ob-col{ display:flex; flex-direction:column; gap:var(--space-lg); min-width:0; }
+  .ob-col-cats{ width:264px; flex-shrink:0; }
+  .ob-col-types{ flex:1; }
+  .ob-col-summary{ width:256px; flex-shrink:0; }
+  .ob-col-head{ display:flex; align-items:center; gap:var(--space-sm); padding-right:28px; }
+  .ob-col-title{ margin:0; flex:1; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  .ob-col-aside{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .ob-col-content{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-xl); }
+  .ob-list{ width:100%; display:flex; flex-direction:column; gap:var(--space-sm); }
+  .ob-empty{ margin:0; color:var(--text-muted); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ob-type-group{ width:100%; display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ob-type-group + .ob-type-group{ margin-top:calc(var(--space-md) - var(--space-xl)); }
+  .ob-type-group-title{ margin:0; font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); color:var(--text-primary); }
+  .ob-types{ width:100%; display:flex; flex-direction:column; }
+  .ob-type-row{ display:flex; align-items:center; gap:var(--space-xs); min-height:24px; }
+  .ob-type-row .bd-item-name{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ob-budget{ gap:var(--space-tn); color:var(--text-primary); }
+  .ob-budget .ob-budget-val{ color:var(--link-default); font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); letter-spacing:var(--type-value-medium-ls); }
+  .ob-budget:hover .ob-budget-val{ color:var(--link-hover); }
+  .ob-budget-input{ width:104px; }
+  .ob-budget-input input{ font-family:var(--font-mono); }
+  .ob-summary{ width:100%; box-sizing:border-box; background:var(--surface-body); border-radius:var(--radius-card); padding:var(--space-lg); display:flex; flex-direction:column; gap:var(--space-2xl); }
+  .ob-summary-content{ display:flex; flex-direction:column; gap:var(--space-lg); }
+  .ob-from{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .ob-from-row{ display:flex; gap:var(--space-sm); }
+  .ob-from-row > *{ flex:1 1 0; min-width:0; }
+  .ob-summary-empty{ margin:0; text-align:center; color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ob-summary-list{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .ob-sum-cat{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .ob-sum-row{ display:flex; align-items:center; gap:var(--space-xs); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .ob-sum-name{ flex:1; min-width:0; }
+  .ob-sum-sub{ padding-left:var(--space-lg); font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+  .ob-sum-sub > span:first-child{ flex:1; }
+  .ob-sum-count{ color:var(--text-secondary); text-align:right; white-space:nowrap; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+  .ob-summary-cta{ display:flex; flex-direction:column; align-items:center; gap:var(--space-sm); }
+  .ob-summary-note{ margin:0; text-align:center; color:var(--text-muted); font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+  .ob-error{ margin:0; color:var(--status-fail); text-align:center; font-size:var(--type-body-small-medium-size); }
+  /* Phones (no phone frames in 397:4392 yet): one column; the setup columns stack. */
+  @media (max-width:640px){
+    .ob-page{ padding:var(--space-xl) var(--space-md); }
+    .ob-card{ padding:var(--space-xl) var(--space-md); }
+    .ob-options, .ob-setup-cols{ flex-direction:column; }
+    .ob-option{ height:auto; }
+    .ob-col-cats, .ob-col-summary, .ob-col-types{ width:100%; }
+  }
+  .ob-wide, .ob-full{ justify-content:center; }
+  .ds-step.is-done .ds-step-label svg{ color:var(--surface-dark); }
+  /* Inputs in the Oct 2 screens write Body/Large/Medium (the dropdowns Label/Large). */
+  .ds-input{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .ds-input.is-disabled, .ds-input.is-disabled:has(input:not(:placeholder-shown)){ border-color:var(--border-default); background:var(--surface-secondary); color:var(--text-muted); }
+  .ds-modal-actions .btn-pill{ flex:0 0 auto; width:auto; min-width:160px; white-space:nowrap; }
+  .ds-modal-actions .btn-pill:only-child{ min-width:320px; }
+  /* Upload box (229:18166): "Click to upload" Body/Large/Medium link with a 20px Upload icon, "or drag and drop..." Body/Large/SemiBold. */
+  .dz-line .ds-action-link, .dz-line .ds-action-link.medium{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .dz-line{ font-size:var(--type-body-large-semibold-size); font-weight:var(--type-body-large-semibold-weight); line-height:var(--type-body-large-semibold-lh); letter-spacing:var(--type-body-large-semibold-ls); }
+  .dz-hint{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .login-code .login-code-box:not(:focus-within){ border-color:var(--border-default); }
+  .login-code .login-code-box:has(input:not([value=""])):not(:focus-within){ border-color:var(--border-selected-item); }
+  body:has(.ob-page), body:has(.login-page){ background:var(--surface-body); }
+  @media (max-width:640px){
+    .ds-modal-actions .btn-pill, .ds-modal-actions .btn-pill:only-child{ flex:1 1 0; min-width:0; }
+    .ob-option-link{ flex-wrap:wrap; }
+  }
+  /* Round button: the icon slot counts even when a screen draws a smaller icon (a 12px X in a Micro button). */
+  .round-btn{ min-width:calc(2 * var(--space-sm) + var(--icon-size-xl)); min-height:calc(2 * var(--space-sm) + var(--icon-size-xl)); }
+  .round-btn.small{ min-width:calc(2 * var(--space-xs) + var(--icon-size-lg)); min-height:calc(2 * var(--space-xs) + var(--icon-size-lg)); }
+  .round-btn.tiny{ min-width:calc(2 * var(--space-xs) + var(--icon-size-md)); min-height:calc(2 * var(--space-xs) + var(--icon-size-md)); }
+  .round-btn.micro{ min-width:calc(2 * var(--space-tn) + var(--icon-size-md)); min-height:calc(2 * var(--space-tn) + var(--icon-size-md)); }
+  .round-btn.nano{ min-width:16px; min-height:16px; }
+  /* Sign in on a phone (369:11424 / 583:23904, Oct 2): white page, no card padding, 24 sides, 80 between the header
+     and the card, the header 138 below the top (197 in the frame, under its 59px status bar). */
+  @media (max-width:640px){
+    .login-page{ background:var(--surface-primary); padding:138px 24px 24px; }
+    body:has(.login-page){ background:var(--surface-primary); }
+    .login-content{ gap:80px; }
+    .login-header{ gap:12px; padding:0 24px; }
+    .login-card{ padding:0; gap:40px; }
+    .login-head, .login-form, .login-body{ gap:24px; }
+    .login-wide{ width:100%; }
+  }
+  /* Medium Input / Dropdown / Date hug space/sm round the icon-size/xl slot (48 on phones, 32 on desktop). */
+  .ds-input:not(.small):not(.tiny), .ds-dd--md .ds-dd-trigger, .date-dd{ min-height:calc(2 * var(--space-sm) + var(--icon-size-xl)); }
+  /* Dropdown-list group title Label/Large. */
+  .ds-dd-group{ font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); color:var(--text-primary); }
+  #add-panel .field-period .ds-dd{ width:242px; max-width:100%; }
+  .month-btn{ text-transform:none; }
+  /* Phones (342:7993, Oct 2): Tracker Heading/Large with the month in Body/Large/Medium; group blocks Heading/Medium. */
+  @media (max-width:640px){
+    .bd-title h2{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+    .bd-title .hint{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    .bd-block-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+    .hero-chart .hc-label{ font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); color:var(--text-secondary); }
+  }
+  .add-grid > .span-2{ grid-column:1 / -1; }
+
+  /* ================================================================
+     Oct 3 DS pass (Okara 607:1368 and the component sets around it)
+     ================================================================ */
+  /* Action link: Medium Label/Small + 16px icon, Small Label/Tiny + 12px icon. Hover/Press draw a 2px underline in
+     link/hover / link/press. */
+  .ds-action-link.medium{ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-action-link:hover, .dropzone:hover .ds-action-link{ color:var(--link-hover); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; }
+  .ds-action-link:active{ color:var(--link-press); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; }
+  .ds-action-link:disabled{ text-decoration:none; }
+
+  /* chip-selector: the Selected label turns action/primary. step: bar and label space/sm apart. */
+  .ds-chip.is-selected{ color:var(--action-primary); }
+  .ds-step{ gap:var(--space-sm); }
+
+  /* Segment tab 4:166: 8px top/bottom, space/xs sides, 14px text. Sub-segment tab 69:903: space/tn space/xs, 14px. */
+  .seg-tabs button{ padding:8px var(--space-xs); font-size:14px; }
+  .seg-tabs.sub button{ padding:var(--space-tn) var(--space-xs); font-size:14px; }
+
+  /* menu-item 304:528: unselected text/secondary; Selected and Hover text/primary. */
+  .ds-menu-item{ color:var(--text-secondary); }
+  .ds-menu-item:hover, .ds-menu-item.is-selected{ color:var(--text-primary); }
+
+  /* mobile-bottom-nav 378:673: surface/mobile-nav (88% white) with the "Mobile nav" effect (0 0 8 ink@8% + 2px
+     backdrop blur); pad nav-padding-y xs; items 12 apart, 136 wide. The scrim behind it carries no shadow. */
+  .ds-mnav{ box-shadow:none; }
+  @media (max-width:640px){
+    .ds-mnav-pill{ background:var(--surface-mobile-nav); box-shadow:0 0 8px #16150f14; -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+      padding:var(--space-nav-padding-y, var(--layout-nav-padding-y)) var(--space-xs); gap:12px; }
+    .ds-mnav-item{ width:136px; max-width:calc(50% - 30px); box-sizing:border-box; justify-content:center; }
+  }
+
+  /* list-selector: Selected keeps the description (text/accent-light) and adds the Tiny Action link under it. */
+  .ds-list-sel.is-selected .ds-list-sel-desc{ color:var(--text-accent-light); }
+
+  /* Input 71:1093 / Dropdown 71:1096: Medium and Small Label/Medium, Tiny Label/Tiny; placeholder text/secondary,
+     value text/primary. */
+  .ds-input, .ds-dd-trigger{ font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); color:var(--text-primary); }
+  .ds-input.tiny, .ds-dd--tiny .ds-dd-trigger{ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-input input{ color:var(--text-primary); }
+  .ds-input input::placeholder, .ds-dd-trigger:not(.is-filled) .ds-dd-value{ color:var(--text-secondary); }
+
+  /* dropdown-item 183:6858: Label/Small, text/secondary; Hover text/primary on surface/accent-light. Dropdown-list
+     group title Label/Large. */
+  .ds-dd-item{ color:var(--text-secondary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-dd-item:hover, .ds-dd-item.is-active, button.ds-dd-item:focus-visible{ color:var(--text-primary); background:var(--surface-accent-light); }
+  .ds-dd-group{ font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
+
+  /* Info tooltip 634:1351: Hover fills the badge surface/secondary and opens a surface/secondary tip (pad md, radius md,
+     Floating, 320 wide) in Body/Medium/Regular text/primary. */
+  .ds-info-tip:hover, .ds-info-tip:focus-visible{ background:var(--surface-secondary); color:var(--text-primary); }
+  .ds-info-tip-bubble{ width:320px; max-width:min(320px, calc(100vw - 32px)); padding:var(--space-md); border-radius:var(--radius-md); background:var(--surface-secondary); color:var(--text-primary);
+    box-shadow:0 0 8px #16150f14; font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); }
+
+  /* Toast 304:659: message Body/Medium/Medium. */
+  .ds-toast-msg{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  .ds-toast .ds-toast-close{ align-self:center; margin:var(--space-md) 0; }
+
+  /* notification-item 228:469: header row (date · time Body/Medium/SemiBold text/primary, action right, md apart),
+     text under it, all xs apart; "Mark as read" at the bottom in Body/Medium/Medium. */
+  .ds-notif-item{ gap:var(--space-xs); padding:var(--space-md); }
+  .ds-notif-body{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .ds-notif-head{ display:flex; align-items:center; justify-content:space-between; gap:var(--space-md); min-height:22px; }
+  .ds-notif-head .btn-pill{ flex-shrink:0; }
+  .ds-notif-when{ color:var(--text-primary); font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+  .ds-notif-item:hover .ds-notif-content{ gap:var(--space-md); }
+  .ds-notif-mark{ align-self:flex-start; padding:var(--space-tn) 0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  /* Notification 228:455: the bell is a Small round button (36); the open list is 320 wide, pad xs, tn apart. */
+  .ds-notif{ width:auto; height:auto; }
+  .ds-notif-panel{ top:44px; padding:var(--space-xs); gap:var(--space-tn); }
+
+  /* avatar 221:1044: 40 / 56 / 80 / 112, initial in Heading/Small / Medium / Large / XL. */
+  .ds-avatar{ font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); font-family:inherit; }
+  .ds-avatar.s56{ width:56px; height:56px; font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .ds-avatar.s80{ width:80px; height:80px; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  .ds-avatar.s112{ width:112px; height:112px; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  .ds-avatar.large{ font-family:inherit; }
+
+  /* KPI / Expense card: pad md, sm apart, radius md. Balance card: pad lg, md apart, radius card. */
+  .mini-kpi, .ticker-item{ padding:var(--space-md); gap:var(--space-sm); border-radius:var(--radius-md); }
+  .balance-card{ padding:var(--space-lg); border-radius:var(--radius-card); }
+
+  /* Meter 25:37: name Body/Large/Medium, info md apart, 8px bar tn under it. */
+  .meter-row .meter-top{ gap:var(--space-md); margin-bottom:0; }
+  .meter-row .meter-track{ height:8px; margin-top:var(--space-tn); }
+
+  /* Modal 443:1484, Surface=Mobile (Oct 3): a floating card 12px from the screen edges (366 on a 390 phone), radius 34,
+     space/md below; Top-nav pad md; Content pad 0 lg, xl apart; the illustration block md from the top, lg apart; text
+     xs apart; actions md apart, filling the row. */
+  @media (max-width:640px){
+    .ds-modal{ width:calc(100% - 24px); max-width:calc(100% - 24px); margin:auto 12px 12px; padding:0 0 var(--space-md); gap:0; border-radius:34px; }
+    .ds-modal-header{ padding:var(--space-md); }
+    .ds-modal-body{ gap:var(--space-xl); padding:0 var(--space-lg); }
+    .ds-modal-content{ gap:var(--space-lg); padding:var(--space-md) 0 0; }
+    .ds-modal-text{ gap:var(--space-xs); }
+    .ds-modal-actions{ gap:var(--space-md); }
+  }
+
+  /* Ongatu 342:7993 / 369:12607 (Oct 3, phones): "Hey, Felipe" in Display/Title-mobile (32/48), the line under it in
+     Body/Large/Medium text/secondary, 8 apart. Scrolled: Product header Surface=App, State=Small (48, pad xs sm, 24px
+     logo) and the sticky year/month nav with the Floating shadow, month chips sm apart. */
+  @media (max-width:640px){
+    .app-title{ font-size:var(--type-display-title-mobile-size); font-weight:var(--type-display-title-mobile-weight); line-height:var(--type-display-title-mobile-lh); letter-spacing:var(--type-display-title-mobile-ls); }
+    .app-sub{ margin-top:var(--space-xs); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    .ds-app-header{ transition:height .18s ease, padding .18s ease; }
+    body.is-scrolled .ds-app-header{ height:48px; padding:var(--space-xs) var(--space-sm); }
+    body.is-scrolled .actions-wrap{ top:48px; box-shadow:0 0 8px #16150f14; }
+    body.is-scrolled .months{ gap:var(--space-sm); }
+  }
+
+  /* Balance card 441:1057 (Oct 3): the month label in Heading/Large, as in the main page frames. */
+  .balance-card .label{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+
+  /* Oct 3 (Felipe): inputs and dropdowns write in 400, not the 500 of their Label / Value text styles. Covers the
+     field value and placeholder, the date field, the Amount field, the open list's rows and its group titles. */
+  .ds-input, .ds-input input, .ds-input input::placeholder, .ds-input.is-value input,
+  .ds-dd-trigger, .ds-dd-trigger .ds-dd-value, .date-dd-label,
+  .ds-input.tiny, .ds-input.tiny input, .ds-dd--tiny .ds-dd-trigger, .ds-dd--tiny .ds-dd-trigger .ds-dd-value,
+  .ds-dd-item, button.ds-dd-item, .ds-dd-group{ font-weight:400; }
+
+  /* ================================================================
+     Oct 3 (second pass): Segments, Buttons, Round buttons, Action links and cards, exactly as in Okara.
+     Buttons, round buttons and links are pinned to the Mobile tokens (see @tokens-pinned), like the segments.
+     ================================================================ */
+  /* Segments 30:98 / Sub-segments 69:900: surface/secondary, pad space/tn, tabs space/xs apart, radius/sm.
+     Segment tab 4:166: pad 8 top/bottom, space/xs sides, radius/sm (36 high). Sub-segment tab 69:903: pad space/tn
+     space/xs (28 high). Text 14/20 Medium -2% (size/body-md); Default text/secondary, Active surface/dark with
+     action/secondary text. */
+  .seg-tabs, .seg-tabs.sub{ display:flex; flex-wrap:nowrap; width:fit-content; height:auto; box-sizing:border-box; gap:var(--space-xs); padding:var(--space-tn); border-radius:var(--radius-sm); background:var(--surface-secondary); }
+  .seg-tabs button, .seg-tabs.sub button{ height:auto; min-height:0; min-width:0; box-sizing:border-box; border:none; border-radius:var(--radius-sm); background:transparent; color:var(--text-secondary);
+    font-size:var(--size-body-md); font-weight:400; line-height:20px; letter-spacing:-0.02em; white-space:nowrap; }
+  .seg-tabs button{ padding:8px var(--space-xs); }
+  .seg-tabs.sub button{ padding:var(--space-tn) var(--space-xs); }
+  .seg-tabs button:hover{ background:var(--action-secondary-hover); color:var(--text-primary); }
+  .seg-tabs button:active{ background:var(--action-secondary-press); }
+  .seg-tabs button[aria-pressed="true"], .seg-tabs button[aria-pressed="true"]:hover, .seg-tabs button[aria-pressed="true"]:active{ background:var(--surface-dark); color:var(--action-secondary); }
+
+  /* Button 41:119 (1px border on every style, so the padding gives it back). Medium pad sm md, Label/Medium, 20px icon,
+     min 80. Small pad xs sm (Primary) / xs md (Secondary, Tertiary), Label/Small, 16px icon, min 80. Tiny pad xs sm,
+     Label/Tiny, 12px icon, min 64. Micro pad tn, Label/Nano, 12px icon, min 48. Gap space/tn, radius/full.
+     Primary action/primary → hover primary-hover → press primary-press; Secondary border/default → hover fill
+     action/secondary-hover + border/hover → press action/secondary-press; Tertiary: no fill, except Micro (hover
+     secondary-hover, press secondary-press). Disabled: 40% opacity. Icons: Primary surface/primary, others surface/dark. */
+  .btn-pill{ height:auto; min-height:0; min-width:80px; box-sizing:border-box; justify-content:center; gap:var(--space-tn); border:1px solid transparent; border-radius:var(--radius-full);
+    padding:calc(var(--space-sm) - 1px) calc(var(--space-md) - 1px); background:var(--action-primary); color:var(--text-white);
+    font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+  .btn-pill svg{ color:var(--surface-primary); flex-shrink:0; }
+  .btn-pill:hover{ background:var(--action-primary-hover); }
+  .btn-pill:active{ background:var(--action-primary-press); }
+  .btn-pill:disabled, .btn-pill:disabled:hover{ background:var(--action-primary-press); opacity:var(--opacity-disabled, .4); cursor:not-allowed; }
+  .btn-pill.small{ padding:calc(var(--space-xs) - 1px) calc(var(--space-sm) - 1px);
+    font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .btn-pill.small.ghost, .btn-pill.small.tertiary{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); }
+  .btn-pill.tiny{ min-width:64px; padding:calc(var(--space-xs) - 1px) calc(var(--space-sm) - 1px);
+    font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .btn-pill.micro{ min-width:48px; padding:calc(var(--space-tn) - 1px);
+    font-size:var(--type-label-nano-size); font-weight:var(--type-label-nano-weight); line-height:var(--type-label-nano-lh); letter-spacing:var(--type-label-nano-ls); }
+  .btn-pill.ghost{ background:transparent; color:var(--text-primary); border-color:var(--border-default); }
+  .btn-pill.ghost:hover{ background:var(--action-secondary-hover); border-color:var(--border-hover); }
+  .btn-pill.ghost:active{ background:var(--action-secondary-press); border-color:var(--border-hover); }
+  .btn-pill.ghost:disabled, .btn-pill.ghost:disabled:hover{ background:transparent; border-color:var(--border-default); }
+  .btn-pill.tertiary, .btn-pill.tertiary:hover, .btn-pill.tertiary:active, .btn-pill.tertiary:disabled{ background:transparent; color:var(--text-primary); border-color:transparent; }
+  .btn-pill.micro.tertiary:hover{ background:var(--action-secondary-hover); }
+  .btn-pill.micro.tertiary:active{ background:var(--action-secondary-press); }
+  .btn-pill.ghost svg, .btn-pill.tertiary svg{ color:var(--surface-dark); }
+  .btn-pill.destructive{ background:var(--action-destructive); }
+  .btn-pill.destructive:hover{ background:linear-gradient(rgba(22,21,15,.12),rgba(22,21,15,.12)),var(--action-destructive); }
+  .btn-pill.destructive:active{ background:linear-gradient(rgba(22,21,15,.2),rgba(22,21,15,.2)),var(--action-destructive); }
+
+  /* Round button 52:629: radius/full, 1px border. Medium pad sm + 24 (48), Small pad xs + 20 (36), Tiny pad xs + 16
+     (32), Micro pad tn + 12 (24), Nano 16 with a 10px icon. Tertiary/Secondary icon action/primary (Nano surface/dark),
+     Secondary border/dark; Hover action/secondary-hover, Press secondary-press, Active secondary-active (Secondary
+     border/hover); Primary action/primary with a surface/primary icon; Inactive 40% opacity. */
+  .round-btn{ width:auto; height:auto; min-width:0; min-height:0; box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;
+    padding:calc(var(--space-sm) - 1px); border:1px solid transparent; border-radius:var(--radius-full); background:transparent; color:var(--action-primary); }
+  .round-btn.small, .round-btn.tiny{ padding:calc(var(--space-xs) - 1px); }
+  .round-btn.micro{ padding:calc(var(--space-tn) - 1px); }
+  .round-btn.nano{ width:16px; height:16px; padding:0; color:var(--surface-dark); }
+  .round-btn:hover{ background:var(--action-secondary-hover); }
+  .round-btn:active{ background:var(--action-secondary-press); }
+  .round-btn.is-active, .round-btn[aria-expanded="true"]{ background:var(--action-secondary-active); }
+  .round-btn.secondary{ border-color:var(--border-dark); }
+  .round-btn.secondary:hover, .round-btn.secondary:active, .round-btn.secondary.is-active, .round-btn.secondary[aria-expanded="true"]{ border-color:var(--border-hover); }
+  .round-btn.primary{ background:var(--action-primary); color:var(--surface-primary); }
+  .round-btn.primary:hover{ background:var(--action-primary-hover); }
+  .round-btn.primary:active{ background:var(--action-primary-press); }
+  .round-btn:disabled{ opacity:var(--opacity-disabled, .4); cursor:not-allowed; background:transparent; }
+  .round-btn.secondary:disabled{ border-color:var(--border-default); }
+  .round-btn.primary:disabled{ background:var(--action-primary-press); }
+
+  /* Action link 607:1368: no padding, space/tn gap. Medium Label/Small + 16px icon; Small Label/Tiny + 16px icon; Tiny
+     Label/Micro + 12px icon. Default link/default, Hover link/hover, Press link/press, Disable link/disable. Hover and
+     Press draw a 2px bar under the whole link, space/tn below it (it does not move the layout). */
+  .ds-action-link, .ds-action-link.small, .ds-action-link.medium, .ds-action-link.tiny{ position:relative; padding:0; gap:var(--space-tn); color:var(--link-default); text-decoration:none; }
+  .ds-action-link, .ds-action-link.small{ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-action-link.medium{ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-action-link.tiny{ font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
+  .ds-action-link:hover, .dropzone:hover .ds-action-link{ color:var(--link-hover); text-decoration:none; }
+  .ds-action-link:active{ color:var(--link-press); text-decoration:none; }
+  .ds-action-link::after{ content:''; position:absolute; left:0; right:0; bottom:calc(-1 * (var(--space-tn) + 2px)); height:2px; background:currentColor; opacity:0; pointer-events:none; }
+  .ds-action-link:hover::after, .ds-action-link:active::after, .dropzone:hover .ds-action-link::after{ opacity:1; }
+  .ds-action-link:disabled{ color:var(--link-disable); cursor:not-allowed; }
+  .ds-action-link:disabled::after{ opacity:0; }
+
+  /* KPI card 28:68 / Expense card 130:3844: surface/primary, pad md, sm apart, radius md. Title row xs apart (7px dot /
+     20px badge + Heading/Medium); value row tn apart (16px € + Value/Large); details tn apart (12px arrow + Value/Small
+     text/secondary). Balance card 441:1057: pad lg, md apart, radius card; Heading/Large; the € (20 x 27) and Value/XL
+     xs apart; details as above. */
+  .mini-kpi, .ticker-item{ display:flex; flex-direction:column; gap:var(--space-sm); padding:var(--space-md); border-radius:var(--radius-md); background:var(--surface-primary); }
+  .mini-kpi .label, .ticker-item .ti-top{ display:flex; align-items:center; gap:var(--space-xs); text-transform:none; color:var(--text-primary);
+    font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .ticker-item .ti-name{ font:inherit; letter-spacing:inherit; color:inherit; }
+  .mini-kpi .value, .ticker-item .ti-val{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); color:var(--text-primary); }
+  .mini-kpi .value .money, .ticker-item .ti-val .money{ gap:var(--space-tn); }
+  .mini-kpi .detail, .ticker-item .ti-delta, .balance-details{ display:flex; align-items:center; gap:var(--space-tn); font-family:var(--font-mono);
+    font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); }
+  .mini-kpi .detail, .balance-details{ color:var(--text-secondary); }
+  .balance-card{ display:flex; flex-direction:column; gap:var(--space-md); padding:var(--space-lg); border-radius:var(--radius-card); background:var(--surface-primary); }
+  .balance-card .value, .balance-card .pill-delta, .balance-card .balance-details{ margin-top:0; }
+  .balance-card .value{ font-family:var(--font-mono); font-size:var(--type-value-xl-size); font-weight:var(--type-value-xl-weight); line-height:var(--type-value-xl-lh); letter-spacing:var(--type-value-xl-ls); color:var(--text-primary); }
+  .balance-card .value .money{ gap:var(--space-xs); justify-content:flex-start; }
+  .balance-euro{ display:block; flex-shrink:0; color:var(--text-primary); }
+  .seg-tabs[hidden], .seg-tabs.sub[hidden]{ display:none; }
+
+  /* Oct 3 (third pass, Okara 41:119 / 52:629 / 607:1368 re-read). */
+  /* Button: Tertiary Small, Tiny and Micro fill action/secondary-hover on hover and action/secondary-press on press
+     (Medium Tertiary stays bare). Micro pad tn xs, items 2 apart. Disabled Primary: Medium keeps action/primary-press,
+     Small / Tiny / Micro keep action/primary. */
+  .btn-pill.small.tertiary:hover, .btn-pill.tiny.tertiary:hover, .btn-pill.micro.tertiary:hover{ background:var(--action-secondary-hover); }
+  .btn-pill.small.tertiary:active, .btn-pill.tiny.tertiary:active, .btn-pill.micro.tertiary:active{ background:var(--action-secondary-press); }
+  .btn-pill.small.tertiary:disabled, .btn-pill.tiny.tertiary:disabled, .btn-pill.micro.tertiary:disabled{ background:transparent; }
+  .btn-pill.micro{ gap:2px; padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px); }
+  .btn-pill.small:disabled, .btn-pill.tiny:disabled, .btn-pill.micro:disabled,
+  .btn-pill.small:disabled:hover, .btn-pill.tiny:disabled:hover, .btn-pill.micro:disabled:hover{ background:var(--action-primary); }
+  .btn-pill.ghost:disabled, .btn-pill.ghost:disabled:hover{ background:transparent; }
+  .btn-pill.tertiary:disabled, .btn-pill.tertiary:disabled:hover{ background:transparent; }
+  .btn-pill.destructive:disabled, .btn-pill.destructive:disabled:hover{ background:var(--action-destructive); }
+  /* Round button: Medium and Small draw their icon in action/primary; Tiny, Micro and Nano in surface/dark. */
+  /* :where keeps this at one class, so screen rules that recolour an icon (toast close, delete buttons) still win. */
+  .round-btn:where(.tiny, .micro, .nano){ color:var(--surface-dark); }
+  .round-btn.primary{ color:var(--surface-primary); }
+  /* Action link: the hover / press bar sits right under a Medium link and space/tn under Small and Tiny. */
+  .ds-action-link.medium::after{ bottom:-2px; }
+
+  /* ================================================================
+     Oct 3: Input 71:1093, Dropdown 71:1096, Dropdown-list 182:6851 (re-read). Weight 400 (Figma Medium = 400).
+     ================================================================ */
+  /* Input / Dropdown: radius/sm, 1px border, items space/xs apart. Medium pad sm md (48: 24px text line), Label/Medium,
+     20px icon. Small pad xs (36: around the 20px icon), Label/Small, 20px icon. Tiny pad xs (32), Label/Tiny, 16px icon.
+     Chevron 12 in action/primary (Disable action/disable). Empty border/default + text/secondary; Filled
+     border/selected-item + text/primary; Focus / Active border/focus; Disable surface/secondary + text/muted. */
+  .ds-input, .ds-dd-trigger{ height:auto; box-sizing:border-box; gap:var(--space-xs); border-radius:var(--radius-sm); }
+  .ds-input:not(.small):not(.tiny), .ds-dd--md .ds-dd-trigger, .date-dd{ min-height:calc(2 * var(--space-sm) + 24px); padding:0 calc(var(--space-md) - 1px);
+    font-size:var(--type-label-medium-size); font-weight:400; line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+  .ds-input.small, .ds-dd--sm .ds-dd-trigger{ min-height:calc(2 * var(--space-xs) + var(--icon-size-lg)); padding:0 calc(var(--space-xs) - 1px);
+    font-size:var(--type-label-small-size); font-weight:400; line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-input.tiny, .ds-dd--tiny .ds-dd-trigger{ min-height:calc(2 * var(--space-xs) + var(--icon-size-md)); padding:0 calc(var(--space-xs) - 1px);
+    font-size:var(--type-label-tiny-size); font-weight:400; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+  .ds-input input, .ds-dd-trigger .ds-dd-label{ font:inherit; letter-spacing:inherit; }
+  .ds-input svg{ color:var(--surface-dark); }
+  .ds-dd-trigger svg{ color:var(--action-primary); flex-shrink:0; }
+  .ds-dd-trigger:disabled svg, .ds-dd.is-disabled .ds-dd-trigger svg{ color:var(--action-disable); }
+
+  /* Dropdown-list: surface/primary, border/secondary, radius/md, pad space/md, Floating (0 0 8 ink 8%). Group: title
+     Label/Medium text/primary, space/xs above its items, items space/tn apart, a Divider between groups, blocks
+     space/xs apart. Simple: items touch. dropdown-item: pad space/xs, radius/sm, Label/Small, text/secondary with a
+     text/secondary icon; Hover surface/accent-light + text/primary (icon too). Action: Body/Medium/Medium
+     text/secondary over a Tiny Tertiary button. */
+  .ds-dd-menu{ padding:var(--space-md); gap:var(--space-xs); border:1px solid var(--border-secondary); border-radius:var(--radius-md); background:var(--surface-primary); box-shadow:0 0 8px #16150f14; }
+  .ds-dd-block{ gap:var(--space-xs); }
+  .ds-dd-group{ color:var(--text-primary); font-size:var(--type-label-medium-size); font-weight:400; line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); }
+  .ds-dd-items{ gap:var(--space-tn); }
+  .ds-dd-menu:not(.is-group) .ds-dd-items{ gap:0; }
+  .ds-dd-item, button.ds-dd-item{ padding:var(--space-xs); gap:var(--space-xs); border-radius:var(--radius-sm); color:var(--text-secondary);
+    font-size:var(--type-label-small-size); font-weight:400; line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  .ds-dd-item.has-icon svg{ color:var(--text-secondary); }
+  .ds-dd-item:hover, .ds-dd-item.is-active, button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); }
+  .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:hover svg, button.ds-dd-item:focus-visible svg{ color:var(--text-primary); }
+
+  /* Oct 3: Nav tabs 59:850 (Small Secondary Round add button, space/md to the tabs), Expander 475:743 (pad xs 0,
+     white 0 → 100% at 53%, Small Tertiary "See all" with a trailing 16px chevron), list-selector 623:2690 (title and
+     description Body/Small/Medium; Selected: description text/accent-light, space/xs above the Tiny link). */
+  .year-add-btn{ width:auto; height:auto; flex-shrink:0; }
+  .ds-expander{ padding:var(--space-xs) 0; }
+  .ds-list-sel-title{ font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-primary); }
+  .ds-list-sel-desc{ color:var(--text-secondary); }
+  .ds-list-sel.is-selected .ds-list-sel-body{ gap:var(--space-xs); }
+  .ds-list-sel.is-selected .ds-list-sel-desc{ color:var(--text-accent-light); margin-top:calc(var(--space-tn) - var(--space-xs)); }
+
+  /* Panel - Year budget 232:5852 (Oct 3). Income / Save-Invest: the Category field (214 on desktop) with "+ Add
+     sub-category" (Small link) and an Info tooltip beside it, tn apart; the types without a group title, "+ Add type"
+     md under them. Expenses: Category | Sub-category lg apart, labels xs above, Group (Optional), "+ Add type"; groups
+     lg apart with a Divider, title md above the rows (Heading/Large; Heading/Medium and lg on phones). */
+  .budget-filters .budget-kind-only{ grid-column:auto; }
+  .budget-sub-cta{ display:flex; align-items:center; gap:var(--space-tn); align-self:end; min-height:calc(2 * var(--space-sm) + 24px); }
+  .budget-type-section{ gap:var(--space-md); }
+  .budget-sections{ display:flex; flex-direction:column; gap:var(--space-lg); }
+  .budget-group{ gap:var(--space-md); }
+  @media (max-width:640px){
+    .budget-group, .budget-type-section{ gap:var(--space-lg); }
+    .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  }
+  /* Year budget rows (232:5852): the € is part of the link (link/default, link/hover on hover). */
+  .budget-row .bd-value .bd-euro{ color:var(--link-default); }
+  .budget-row .bd-value:hover .bd-euro{ color:var(--link-hover); }
+  /* Panel close (232:5852): Medium (48) on desktop, Small (36, pad xs) on phones. */
+  @media (max-width:640px){ .panel-close{ padding:calc(var(--space-xs) - 1px); } }
+  /* Month selector labels (Oct 3): "Jan" in the desktop frames (211:18753, 2:2), "JAN" in the phone frames (342:7993). */
+  @media (max-width:640px){ .month-btn{ text-transform:uppercase; } }
+  .login-resend.is-small .login-note{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+
+  /* ================================================================
+     Home 211:18753 / 229:19777 (Oct 3, measured against the frame at 1318)
+     ================================================================ */
+  /* The body gutter, resolved at :root (Desktop 24 / Mobile 40) and inherited as a length, so the Product header (pinned
+     to the Mobile tokens) bleeds by the page's gutter, not its own. Header: full width, logo and user nav on the 1238
+     page edges (40 at 1318). */
+  :root{ --body-gutter: var(--layout-xl); }
+  @media (min-width:641px){
+    .ds-app-header{ margin:0 calc(-1 * var(--body-gutter)); padding:var(--space-xs) max(40px, calc((100% - 1238px) / 2)); }
+  }
+  /* Pager header: Title block 72 high (Display/Title, Body/Medium/Medium xs under it), space/lg to the Top nav; Top nav =
+     Nav tabs (36) + space/sm + month chips (20), chips space/sm apart from a 56 indent; space/2xl to the cards. */
+  @media (min-width:641px){
+    header.top{ min-height:72px; box-sizing:border-box; margin-bottom:var(--layout-lg); }
+    .actions-wrap{ margin-bottom:var(--layout-2xl); }
+    .top-nav{ gap:var(--space-sm); }
+    .months{ gap:var(--space-sm); padding-left:56px; }
+  }
+  /* Nav tabs - Add year 79:1242 sits over the Nav tabs with its close button on the "+": 5px left, 2px up. */
+  .year-add-pill{ top:-2px; left:-5px; }
+  /* Cards: Content 12 apart. Balance pad lg, md apart (radius card, € row 29). KPI / Expense: pad md lg, sm apart.
+     Expense allocation, At a glance, Tracker and chart: radius/lg (24), pad lg. */
+  .mini-kpi, .ticker-item{ padding:var(--space-md) var(--space-lg); gap:var(--space-sm); }
+  .balance-card .value{ line-height:29px; }
+  .alloc-card, .glance-card, .breakdown-card, .hero-chart{ border-radius:var(--radius-lg); padding:var(--space-lg); }
+  .alloc-card{ display:flex; flex-direction:column; gap:var(--space-xs); }
+  .glance-card{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  .glance-card .insight-tags{ margin-top:0; padding-top:var(--space-xs); }
+  .insight-text{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
+  /* Tracker card: Header and Content space/xl apart; group titles Heading/Large; meters draw their name 16/20 and the
+     amount in Value/Medium 14 (the frame's Meter text, both modes); item amounts 14 too. */
+  .breakdown-card{ gap:var(--space-xl); }
+  .bd-block-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+
+  /* Tracker card internals (211:18753): title / month space/sm apart; tabs stack space/sm, the Add button centred on it;
+     meters (20 name row + 2 + 8 bar = 30) space/md apart; items list 24 under the meters; a group title space/md over
+     its rows, rows 2 apart; groups space/lg either side of the Divider. Balance € row 29 high. */
+  @media (min-width:641px){
+    .bd-title{ gap:var(--space-sm); }
+    .bd-tabs-stack{ gap:var(--space-sm); }
+    .bd-controllers{ align-items:center; }
+    #meters{ display:flex; flex-direction:column; gap:var(--space-md); }
+    #meters .meter-row{ margin:0; }
+    .meter-row .meter-top{ height:20px; align-items:center; }
+    .meter-row .meter-amt{ line-height:20px; }
+    .meter-row .meter-track{ margin-top:2px; }
+    #itemslist{ margin-top:8px; gap:var(--space-lg); }
+    .bd-block{ gap:2px; }
+    .bd-block-title{ margin-bottom:calc(var(--space-md) - 2px); }
+  }
+  .balance-card .value{ display:flex; align-items:center; height:29px; }
+  /* Tracker month under the title: Body/Large/Medium (14/16 desktop). KPI / Expense value rows 16 high (16px €). */
+  .bd-title .hint{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .mini-kpi .value, .ticker-item .ti-val{ display:flex; align-items:center; min-height:16px; line-height:16px; }
+  /* Expense allocation 211:18753: title, hint xs under it, the 120 bars frame xs under the header. */
+  .alloc-card h2, .alloc-card .hint, .glance-card h2{ margin:0; }
+  .alloc-card .alloc-bars{ margin-top:0; }
+  /* Tab 53:801 in the screens (211:18753, 342:7993): the year label is overridden to Label/Small (16/20), not the
+     component's Label/Large (18/20). Felipe, Oct 3: follow the screens. */
+  .year-btn{ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+
+  /* ================================================================
+     Oct 3 (late): Round button 52:629, Meter 25:37, breackdown-row 124:3667 (new Surface=Desktop variant)
+     ================================================================ */
+  /* Round button: Medium Tertiary uses the new action/tertiary-* fills (hover stone-50, press stone-300, active
+     stone-100); Small / Tiny / Micro / Nano Tertiary keep action/secondary-*. Primary Active = action/primary-hover. */
+  .round-btn:not(.small):not(.tiny):not(.micro):not(.nano):not(.primary):not(.secondary):hover{ background:var(--action-tertiary-hover); }
+  .round-btn:not(.small):not(.tiny):not(.micro):not(.nano):not(.primary):not(.secondary):active{ background:var(--action-tertiary-press); }
+  .round-btn:not(.small):not(.tiny):not(.micro):not(.nano):not(.primary):not(.secondary):is(.is-active, [aria-expanded="true"]){ background:var(--action-tertiary-active); }
+  .round-btn.primary:is(.is-active, [aria-expanded="true"]){ background:var(--action-primary-hover); }
+  /* Meter: name Body/Large/Medium and the amount (16px € + Value/Medium) md apart on a 20 row; the 8px bar tn under it. */
+  .meter-row .meter-top{ gap:var(--space-md); }
+  .meter-row .meter-name{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-primary); }
+  .meter-row .meter-amt{ font-family:var(--font-mono); font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); letter-spacing:var(--type-value-medium-ls); }
+  .meter-row .meter-amt .money{ gap:var(--space-tn); }
+  .meter-row .meter-track{ margin-top:var(--space-tn); }
+  /* breackdown-row, Surface=Mobile (phones): item Body/Large/Medium text/secondary; amount = Medium Action link (16px € +
+     Value/Medium 14, Mobile tokens). Surface=Desktop: item Body/Medium/Medium; amount = Small Action link (16px € +
+     Value/Small 12, Mobile tokens); Editing = Tiny input with a 12px € and Value/Small. Items xs apart, 24 high. */
+  .bd-row{ min-height:24px; gap:var(--space-xs); }
+  .bd-row .bd-item-name{ color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
+  .bd-row .n .money, .bd-row .bd-value{ gap:var(--space-tn); }
+  /* Oct 3 (third pass): the newest screens (581:19517 Tracker, 232:5851 / 232:5853 Year budget) draw Surface=Mobile rows on
+     desktop too, so the Desktop sizes above are no longer applied. */
+
+  /* ================================================================
+     Add entry panel 229:18167 (Oct 3, measured)
+     ================================================================ */
+  /* Desktop: modal-nav 64 with the Medium close 16 from the top, 12 from the edge; content 40 from the sides, the
+     header straight under the nav; sections (header, upload, divider, manual) space/2xl apart. "Enter manually" Heading/XL,
+     space/xl over the form; Track in space/2xl over the fields; fields space/lg apart in rows, space/md across; labels
+     space/sm over their control (Category / Sub-category space/xs); Save entry space/2xl under the form. */
+  @media (min-width:641px){
+    #add-panel{ padding:0 40px 40px; gap:0; }
+    #add-panel .panel-nav{ margin:0 -40px; padding:16px 12px 0; align-items:flex-start; }
+    #add-panel .add-panel-header{ margin-bottom:var(--space-2xl); }
+    #add-panel .ap-main{ gap:var(--space-2xl); }
+    #add-panel .ap-manual .ap-section-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+    #add-panel .ap-manual{ gap:var(--space-xl); }
+    #add-panel .add-grid{ row-gap:var(--space-lg); column-gap:var(--space-md); }
+    #add-panel .add-grid .field-period{ margin-bottom:calc(var(--space-2xl) - var(--space-lg)); }
+    #add-panel .add-grid .fld{ gap:var(--space-sm); }
+    #add-panel .ap-manual .add-actions{ margin-top:calc(var(--space-2xl) - var(--space-xl)); }
+    .ap-cancel-phone{ display:none; }
+  }
+  /* Phones: close (Small, back arrow) 8 from the edge; title block 16 under the nav; upload box items touch; "Enter
+     manually" Heading/Large, space/md over the form; Track in full width and space/xl over the fields; Category and
+     Sub-category stacked full width; the rest in pairs space/md apart; labels space/xs over their control; Save entry
+     and a Tertiary Cancel space/md apart. */
+  @media (max-width:640px){
+    #add-panel .panel-nav{ margin:0 calc(8px - var(--space-md)); }
+    #add-panel{ gap:0; }
+    #add-panel .add-panel-header{ margin:var(--space-md) 0 var(--space-lg); }
+    #add-panel .ap-manual .ap-section-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+    #add-panel .ap-manual{ gap:var(--space-md); }
+    #add-panel .add-grid{ row-gap:var(--space-md); column-gap:var(--space-md); }
+    #add-panel .add-grid .field-period{ margin-bottom:calc(var(--space-xl) - var(--space-md)); }
+    #add-panel .field-period .ds-dd{ width:100%; }
+    #add-panel #entry-group-field, #add-panel .add-grid > .fld:has(#entry-kind-trigger){ grid-column:1 / -1; }
+    #add-panel .add-grid .fld{ gap:var(--space-xs); }
+    #add-panel .dropzone{ gap:0; }
+    #add-panel .ap-manual .add-actions{ gap:var(--space-md); }
+  }
+  #add-panel [hidden]{ display:none !important; }
+  @media (min-width:641px){ #add-panel .add-grid > .fld:has(#entry-kind-trigger), #add-panel #entry-group-field{ gap:var(--space-xs); } }
+  @media (max-width:640px){ #add-panel .add-grid .field-period .ds-dd, #add-panel .add-grid .field-period{ width:100%; max-width:100%; } }
+
+  /* Panel - Year budget 232:5852 (Oct 3, measured). Desktop: Medium close 16 from the top, 12 from the edge; content 24
+     from the sides, header straight under the nav; header, selectors, entries and the buttons space/2xl apart; selectors
+     space/md apart (Category | Sub-category space/lg across, labels space/xs over their control); buttons space/lg apart.
+     Phones: labels space/xs, Category | Sub-category 8 across, entries and buttons space/lg. */
+  .budget-panel [hidden]{ display:none !important; }
+  @media (min-width:641px){
+    .budget-panel{ padding:0 var(--space-xl) var(--space-xl); gap:0; }
+    .budget-panel .panel-nav{ margin:0 calc(-1 * var(--space-xl)); padding:16px 12px 0; align-items:flex-start; }
+    .budget-panel .add-panel-header{ margin-bottom:var(--space-2xl); }
+    .budget-panel .add-panel-content{ gap:var(--space-2xl); }
+    .budget-panel .budget-filters{ margin-bottom:0; row-gap:var(--space-md); column-gap:var(--space-lg); }
+    .budget-panel .budget-filters .fld{ gap:var(--space-xs); }
+    .budget-panel .add-actions{ margin-top:var(--space-2xl); gap:var(--space-lg); }
+  }
+  @media (max-width:640px){
+    .budget-panel .budget-filters{ column-gap:8px; }
+    .budget-panel .budget-filters .fld{ gap:var(--space-xs); }
+    .budget-panel .add-actions{ gap:var(--space-lg); }
+  }
+  /* Files loading / review (229:18167): remove = Tiny Tertiary round (surface/dark 12px X); "Add files" (Small Primary,
+     +) and Cancel (Small Tertiary) space/sm apart (tn on phones). Review: "Track in" label Label/Small text/secondary over
+     a 200 Small dropdown, no header row, rows space/lg apart, "Save entries" and Cancel space/lg apart. */
+  #add-panel .round-btn.doc-remove{ color:var(--surface-dark); }
+  #doc-actions{ gap:var(--space-sm); }
+  @media (max-width:640px){ #doc-actions{ gap:var(--space-tn); } }
+  #ap-review .ap-period > label{ text-transform:none; color:var(--text-secondary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  #ap-review .ap-period{ display:flex; flex-direction:column; gap:var(--space-sm); }
+  #ap-review .rv-head{ display:none; }
+  #ap-review .add-actions{ gap:var(--space-lg); }
+
+  /* ================================================================
+     Panels, every variant (Oct 3, second pass): 229:18167 (Add entry: Default, Files loading / reading / review,
+     Desktop and Mobile) and 232:5852 (Year budget: Desktop Default / Sub-types, Mobile).
+     ================================================================ */
+  /* Review rows are always open (no click-to-edit): description input, Type and Category dropdowns, amount, remove.
+     Desktop: one line, items space/sm apart, Tiny controls (32), Type / Category 140, rows space/lg apart. A field that
+     needs attention gets border/destructive; a guessed category border/warning. */
+  #ap-review .rv-rows{ gap:var(--space-lg); }
+  #ap-review .rv-row{ height:auto; gap:var(--space-sm); }
+  #ap-review .c-type, #ap-review .c-cat{ width:140px; }
+  #ap-review .c-amt{ width:72px; }
+  #ap-review .c-date{ width:auto; min-width:44px; color:var(--text-primary); font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+  #ap-review .c-date.bad{ color:var(--status-fail); }
+  #ap-review .bad .ds-input, #ap-review .bad .ds-dd-trigger, #ap-review .bad .bd-input{ border-color:var(--border-destructive); }
+  #ap-review .is-guess .ds-dd-trigger{ border-color:var(--border-warning); }
+  #ap-review .rv-rm{ opacity:1; }
+  /* Phones (415:14256): "Track in" (Body/Large/Medium) beside a 206 Medium dropdown; each row = date | the three
+     controls stacked space/xs apart (Medium, 48) | amount, space/md apart; rows space/lg apart with a Divider; the guess
+     note, then Save entries and Cancel full width, space/md apart. */
+  @media (max-width:640px){
+    #ap-review .ap-period{ flex-direction:row; align-items:center; gap:var(--space-xs); }
+    #ap-review .ap-period > label{ color:var(--text-primary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    #ap-review .ap-period .ds-dd{ width:206px; }
+    #ap-review .ap-period .ds-dd-trigger, #ap-review .rv-row .ds-dd-trigger, #ap-review .rv-row .ds-input{ min-height:48px; padding:0 15px; font-size:var(--type-label-medium-size); line-height:var(--type-label-medium-lh); }
+    #ap-review .rv-row{ display:grid; grid-template-columns:auto 1fr auto; grid-template-areas:"date desc amt" "date type amt" "date cat amt" "rm rm rm"; column-gap:var(--space-md); row-gap:var(--space-xs); align-items:start;
+      padding-bottom:var(--space-lg); border-bottom:1px solid var(--border-secondary); }
+    #ap-review .rv-row:last-child{ border-bottom:none; padding-bottom:0; }
+    #ap-review .rv-row .c-date{ grid-area:date; padding-top:8px; font-size:var(--type-body-large-medium-size); line-height:var(--type-body-large-medium-lh); }
+    #ap-review .rv-row .c-desc{ grid-area:desc; }
+    #ap-review .rv-row .c-type{ grid-area:type; width:auto; }
+    #ap-review .rv-row .c-cat{ grid-area:cat; width:auto; }
+    #ap-review .rv-row .c-amt{ grid-area:amt; width:auto; padding-top:8px; }
+    #ap-review .rv-row .c-amt .bd-input{ width:84px; }
+    #ap-review .rv-row .c-rm{ grid-area:rm; width:auto; display:flex; justify-content:flex-end; }
+    #ap-review .add-actions{ flex-direction:column; align-items:stretch; gap:var(--space-md); }
+    #ap-review .add-actions .add-status{ order:-1; }
+    #ap-review .add-actions .btn-pill{ width:100%; }
+  }
+  /* Add entry, phones (369:13388 / 415:13796 / 415:14088): Save entry and "Add files" full width; no Cancel next to
+     "Add files"; files 16 apart (20px icon, 8 to the text), the button 24 under the list; the reading box solid, pad 24. */
+  @media (max-width:640px){
+    #add-panel .ap-manual .add-actions{ flex-direction:column; align-items:stretch; }
+    #add-panel #entry-submit, #add-panel #doc-add{ width:100%; }
+    #add-panel #doc-cancel{ display:none; }
+    #add-panel .doc-list{ gap:var(--space-md); }
+    #add-panel .doc-item{ gap:var(--space-xs); }
+    #add-panel #doc-actions{ margin-top:calc(var(--space-lg) - var(--space-md)); }
+  }
+  /* Year budget, phones (415:16066): title / hint space/md apart; selectors 40 under the header, space/md apart
+     (Category | Sub-category 8 across, labels space/xs); entries 40 under them, a group title (Heading/Medium) space/lg
+     over its rows, groups space/lg either side of the Divider; Save and Cancel full width, space/xs apart, 40 under. */
+  @media (max-width:640px){
+    .budget-panel{ gap:0; }
+    .budget-panel .add-panel-header{ margin:var(--space-md) 0 0; gap:var(--space-md); }
+    .budget-panel .add-panel-content{ margin-top:40px; gap:40px; }
+    .budget-panel .budget-filters{ margin-bottom:0; row-gap:var(--space-md); }
+    .budget-panel .budget-group{ gap:var(--space-lg); }
+    .budget-panel .budget-sections, .budget-panel .budget-type-section{ gap:var(--space-lg); }
+    .budget-panel .add-actions{ flex-direction:column; align-items:stretch; gap:var(--space-xs); margin-top:40px; }
+    .budget-panel .add-actions .btn-pill{ width:100%; }
+  }
+  #ap-review .c-cat{ display:flex; align-items:center; gap:var(--space-tn); }
+  #ap-review .c-cat .ds-dd{ flex:1 1 auto; min-width:0; }
+  #ap-review .c-cat .rv-guess{ flex-shrink:0; }
+  .doc-list:empty{ display:none; }
+  @media (max-width:640px){
+    #add-panel .add-panel-header{ margin-bottom:40px; }
+    #add-panel #ap-upload{ gap:var(--space-md); }
+    .budget-panel .panel-nav{ margin:0 calc(8px - var(--space-md)); }
+  }
+  @media (max-width:640px){ #add-panel .ap-main{ gap:var(--space-lg); } }
+  #ap-review .add-actions .btn-pill{ white-space:nowrap; flex-shrink:0; }
+  @media (min-width:641px){ #ap-review .rv-table + .add-actions, #ap-review .add-actions{ margin-top:calc(var(--space-2xl) - var(--space-lg)); } }
+
+  /* ================================================================
+     Oct 3 (third pass): Account 250:3399, Year budget 232:5851 / 232:5853 / 415:16066, Modal 443:1484, Tracker
+     581:19517, breackdown-row 124:3667, Entry tooltip 146:5252, Tooltip entry item 144:4426, user 221:1059,
+     Dropdown-list/Actions 663:935.
+     ================================================================ */
+  /* Panels (229:18167, 232:5852), desktop: the 64px modal-nav centres the Medium close (8 from the top, 12 from the edge);
+     the content starts 24 under it (32 on the Year budget's Default variant: Income and Save/Invest). */
+  @media (min-width:641px){
+    #add-panel .panel-nav, .budget-panel .panel-nav{ padding:0 12px; align-items:center; }
+    #add-panel .add-panel-header, .budget-panel .add-panel-header{ margin-top:24px; }
+    .budget-panel.is-default .add-panel-header{ margin-top:32px; }
+  }
+
+  /* breackdown-row 124:3667: item, the amount and the Micro Tertiary Actions button xs apart, 24 high. */
+  .bd-row{ min-height:24px; gap:var(--space-xs); }
+  .bd-row .bd-item-name{ flex:1 1 auto; min-width:0; }
+  .bd-row .br-actions{ flex:none; }
+  .bd-row .br-more{ color:var(--surface-dark); }
+  /* Row / group menus: Dropdown-list (Drop-actions; Actions 663:935 with a description), right-aligned 4 under the button. */
+  .br-menu{ position:absolute; right:0; top:calc(100% + 4px); z-index:30; min-width:200px; width:max-content; display:flex; flex-direction:column; gap:var(--space-xs); }
+  .br-menu .ds-dd-items{ gap:var(--space-tn); }
+  .br-menu .br-remove, .br-menu .group-delete{ color:var(--action-destructive); }
+  .ds-dd-desc{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); white-space:nowrap; }
+
+  /* Tracker 581:19517 (desktop): month xs under "Tracker"; the segments and the Add button xl apart. */
+  @media (min-width:641px){
+    .bd-title{ gap:var(--space-xs); }
+    .bd-controllers{ gap:var(--space-xl); }
+  }
+
+  /* Entry tooltip 146:5252: the counter hugs its count, 14 high, 4 each side, Body/Small/SemiBold; Icon = a 22 pill with
+     a 12 Chart. The tooltip: 320 wide (280 with nothing under the header), padding 16/8/16/16; header ("Budget set" Body/
+     Medium/SemiBold and a 16px € + Value/Medium, both text/muted, 10 apart), a Divider 16 above and below, then the
+     entries (gap 0). Empty: "There's no entries yet." Body/Medium/Medium white. */
+  .note-count{ padding:0 4px; }
+  .note-count.is-icon{ width:22px; padding:0; }
+  #note-tip{ width:320px; min-width:0; max-width:calc(100vw - 16px); }
+  #note-tip.is-empty{ width:280px; }
+  #note-tip .tip-head{ gap:10px; padding-right:0; }
+  #note-tip .tip-head-label{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--text-muted); }
+  #note-tip .tip-head-amount{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); color:var(--text-muted); }
+  #note-tip .tip-head-amount .money{ gap:0; }
+  #note-tip .tip-head-amount .money-ic{ color:var(--text-muted); }
+  #note-tip .tip-head-divider{ margin:16px 0; }
+  #note-tip .tip-empty{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-white); }
+  /* Tooltip entry item 144:4426: 24 high, 8 apart; the amount = 16px € + Value/Medium, 4 apart. */
+  #note-tip .tip-item{ gap:8px; min-height:24px; }
+  #note-tip .tip-left, #note-tip .tip-right{ gap:8px; }
+  #note-tip .tip-amount{ font-size:var(--type-value-medium-size); font-weight:var(--type-value-medium-weight); line-height:var(--type-value-medium-lh); letter-spacing:var(--type-value-medium-ls); }
+  #note-tip .tip-amount .money{ gap:4px; }
+
+  /* user 221:1059 (Active): card padding 4/4/8/4, the name row and the menu 8 apart; the menu 24 in from the left (4 on
+     the right), items 202 wide, tn apart, each with a 16px icon, text/primary. */
+  .ds-user-card{ gap:var(--space-xs); }
+  .ds-user-card .ds-menu-items{ width:auto; align-self:stretch; padding:0 4px 0 24px; }
+  .ds-user-card .ds-dd-item{ color:var(--text-primary); }
+  .ds-user-card .ds-dd-item svg{ color:var(--surface-dark); }
+
+  /* Year budget 232:5851 / 232:5853 (desktop): labels 8 over their control; groups 16 apart with a Divider; a group =
+     header (24: Heading/Large name, Micro Actions button, 8 apart), its rows (24, no gap) and "+ Add type", 12 apart; an
+     empty group says "No types added yet." centred on 48. Cancel then Save, right-aligned, 16 apart. */
+  .budget-panel .budget-filters .fld{ gap:var(--space-sm); }
+  .budget-panel .budget-type-section{ gap:var(--space-lg); }
+  .budget-panel .budget-group{ gap:var(--space-md); }
+  .budget-panel .budget-group-head{ min-height:24px; gap:var(--space-sm); align-items:center; }
+  .budget-panel .budget-cat-title{ flex:1 1 auto; min-width:0; }
+  .budget-panel .budget-items{ gap:0; }
+  .budget-panel .budget-row{ min-height:24px; height:auto; }
+  .budget-panel .budget-items.is-empty{ min-height:48px; display:flex; align-items:center; justify-content:center; }
+  .budget-group-empty{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+  .budget-group-rename{ flex:1 1 auto; max-width:240px; }
+  .budget-panel .add-actions{ justify-content:flex-end; gap:var(--space-lg); }
+  .budget-panel .add-actions .add-status{ margin-right:auto; }
+  .budget-panel .add-actions .add-status:empty{ display:none; }
+  /* Phones (415:16066): selectors md apart (Category | Sub-category xs across, labels xs over the control); groups lg
+     apart, a group's header (Heading/Medium) lg over its rows, rows tn apart; Save over Cancel, full width, xs apart. */
+  @media (max-width:640px){
+    .budget-panel .budget-filters{ row-gap:var(--space-md); column-gap:var(--space-xs); }
+    .budget-panel .budget-filters .fld{ gap:var(--space-xs); }
+    .budget-panel .budget-type-section{ gap:var(--space-lg); }
+    .budget-panel .budget-group{ gap:var(--space-lg); }
+    .budget-panel .budget-group-head{ gap:var(--space-tn); }
+    .budget-panel .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+    .budget-panel .budget-items{ gap:var(--space-tn); }
+    .budget-panel .add-actions{ flex-direction:column; align-items:stretch; gap:var(--space-xs); }
+    .budget-panel .add-actions .budget-save{ order:1; }
+    .budget-panel .add-actions .budget-cancel{ order:2; }
+    .budget-panel .add-actions .add-status{ order:3; margin:0; }
+    .budget-panel .add-actions .btn-pill{ width:100%; justify-content:center; }
+  }
+
+  /* Account 250:3399: the side menu (246, items tn apart) and the cards (800) space/3xl apart, centred; "Personal
+     information" Heading/XL over Body/Large/Medium, sm apart (the other cards keep Heading/Large + Body/Medium/Medium, tn);
+     the e-mail field 352 wide; the Security options 720 wide; Small destructive button md each side. */
+  @media (min-width:641px){
+    .acct-content{ justify-content:center; gap:var(--space-3xl); }
+    .acct-menu{ width:246px; flex:0 0 246px; gap:4px; }
+    #profile .acct-card-head{ gap:var(--space-sm); }
+    #profile .acct-card-head h2{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+    #profile .acct-card-head p{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    #profile .acct-form .acct-row:has(#email){ display:flex; gap:var(--space-lg); }
+    #profile .acct-form .acct-row:has(#email) .field{ width:352px; flex:0 0 352px; }
+    #security .acct-option{ max-width:720px; }
+  }
+  .acct-card .btn-pill.destructive.small{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); }
+
+  /* Modal 443:1484: Desktop — the two buttons share the row (FILL), 12 apart; Mobile — they hug their label, centred,
+     16 apart; the title Heading/Large. */
+  .ds-modal-actions .btn-pill, .ds-modal-actions .btn-pill:only-child{ flex:1 1 0; width:auto; min-width:0; }
+  @media (max-width:640px){
+    .ds-modal-actions{ justify-content:center; }
+    .ds-modal-actions .btn-pill, .ds-modal-actions .btn-pill:only-child{ flex:0 0 auto; width:auto; }
+    .ds-modal-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  }
+  /* The amount is a Medium Action link (pinned Mobile): 16px € and the figure 4 apart. Link-only wrappers hug the link. */
+  .bd-row .n .money, .bd-row .bd-value{ gap:4px; }
+  .budget-panel .budget-row{ gap:var(--space-xs); }
+  .budget-panel .budget-filters > .span-2:has(> .ds-action-link), .budget-panel .budget-group > div:has(> .budget-group-add),
+  .budget-panel .budget-type-section > div:has(> .ds-action-link){ display:flex; }
+  /* Tracker rows (581:19517): the figure is a Medium Action link (link/default; hover underlined). */
+  .bd-row .bd-amount-link{ display:inline-flex; align-items:center; flex:none; padding:0; border:0; background:none; cursor:pointer; color:var(--link-default); font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
+  .bd-row .bd-amount-link .money-ic{ color:currentColor; }
+  .bd-row .bd-amount-link:hover{ color:var(--link-hover); text-decoration:underline; text-underline-offset:3px; }
+  .bd-row .bd-amount-link:focus-visible{ outline:2px solid var(--border-focus, var(--link-default)); outline-offset:2px; border-radius:4px; }
+  @media (max-width:640px){ .budget-panel{ padding-bottom:var(--space-lg); } }
+  /* Year budget, Default (Income / Save-Invest, 232:5851): the Category field 214 wide, then "+ Add sub-category" and its
+     Info tooltip 12 to the right, the link 38 under the label's top (centred on the dropdown), the Info 8 after it. */
+  @media (min-width:641px){
+    .budget-panel.is-default .budget-filters{ display:flex; align-items:flex-start; gap:var(--space-md); }
+    .budget-panel.is-default .budget-filters .budget-kind-only{ width:214px; flex:0 0 214px; }
+    .budget-panel.is-default .budget-sub-cta{ height:20px; margin-top:36px; align-items:center; gap:8px; }
+  }
+  /* Modal 443:1484: Content and Actions space/3xl apart on desktop (xl on phones); the close is a Medium round button (48)
+     on both, so the phone Top-nav is 80. */
+  @media (min-width:641px){ .ds-modal-body{ gap:var(--space-3xl); } }
+  @media (max-width:640px){ .ds-modal-header .round-btn{ width:48px; height:48px; } }
+  #note-tip{ padding:16px 8px 16px 16px; }
+
+  /* ================================================================
+     Oct 3, clinical pass: Add entry 229:18166 / 229:18169 / 229:18563 / 229:18717 (desktop) and 369:13388 / 415:13796 /
+     415:14088 / 415:14256 (phones); Year budget 656:9776 / 656:10116 / 415:16066. Values as rendered in those frames.
+     ================================================================ */
+  /* Upload box: "Click to upload" 14/16 link/default (desktop: Medium link, 20px icon, 2 apart, 2 above and below; phones:
+     Small link, 16px icon, 4 apart, 4 above and below), "or drag and drop your file here" 14/16 SemiBold text/primary,
+     the hint 12/14 text/secondary centred. Desktop: line and hint 2 apart; phones: touching. */
+  #add-panel .dz-line{ flex-wrap:nowrap; gap:2px; font-size:14px; line-height:16px; font-weight:600; letter-spacing:-0.28px; color:var(--text-primary); }
+  #add-panel .dz-line .ds-action-link{ padding:2px 0; gap:2px; font-size:14px; line-height:16px; font-weight:400; letter-spacing:-0.28px; color:var(--link-default); }
+  #add-panel .dz-text{ gap:2px; }
+  #add-panel .dz-hint{ font-size:12px; line-height:14px; font-weight:400; letter-spacing:-0.24px; color:var(--text-secondary); }
+  @media (max-width:640px){
+    #add-panel .dz-line{ gap:4px; }
+    #add-panel .dz-line .ds-action-link{ padding:4px 0; gap:4px; }
+    #add-panel .dz-text{ gap:0; }
+  }
+  /* Files (229:18169 / 415:13796): the box, the list 16 under it, "Add files" 24 under the list. Items: icon 16 (20 on
+     phones), 4 apart (8), the name Body/Medium/SemiBold and "5MB ⋅ Ready" Body/Small/Medium text/secondary; 12 apart (16). */
+  #add-panel .ap-block{ gap:16px; }
+  #add-panel #doc-actions{ margin-top:8px; gap:8px; }
+  #add-panel .doc-list{ gap:12px; }
+  #add-panel .doc-item{ gap:4px; }
+  #add-panel .doc-ic{ width:auto; height:auto; color:var(--surface-dark); }
+  #add-panel .doc-meta{ color:var(--text-secondary); }
+  #add-panel #doc-add{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); }
+  @media (max-width:640px){
+    #add-panel .doc-list{ gap:16px; }
+    #add-panel .doc-item{ gap:8px; }
+  }
+  /* Reading (229:18563 / 415:14088): a bordered box (border/default, radius 8, no fill), padding 16 (24); the Upload
+     illustration (35x37) 12 over "Reading 3 files" (Heading/Medium; phones Body/Medium/SemiBold) and "It may take a few
+     seconds." 4 apart (touching on phones); the 8px bar (404 wide; full width on phones) and its % 2 (4) under it; the
+     two blocks 16 apart. Phones: "Upload documents" 24 over the box. */
+  #add-panel .dz-reading{ height:auto; padding:16px; gap:16px; border:1px solid var(--border-default); border-radius:8px; background:none; }
+  #add-panel .dz-reading-info{ gap:12px; }
+  #add-panel .dz-reading-art{ color:var(--surface-dark); }
+  #add-panel .dz-reading-text{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
+  #add-panel .dz-reading-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
+  #add-panel .dz-progress-wrap{ width:404px; gap:2px; }
+  #add-panel .dz-pct{ font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); color:var(--text-primary); }
+  @media (max-width:640px){
+    #add-panel #ap-upload:has(.dz-reading){ gap:24px; }
+    #add-panel .dz-reading{ padding:24px; }
+    #add-panel .dz-reading-text{ gap:0; }
+    #add-panel .dz-reading-title{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); }
+    #add-panel .dz-progress-wrap{ width:100%; gap:4px; }
+  }
+  /* Manual form (229:18166): Category | Sub-category 16 apart (272 each), the other pairs 12 apart; "+ Add type" 12 under
+     the fields; "Save entry" on the right (phones: full width, 40 under the form). Inputs write 14px on desktop (Body/Large/
+     Medium; the amount Value/Large 14 with a 16px €), 16px on phones (20px €). Date: Label/Medium 16/24 text/primary after a
+     24px Calendar (phones: no leading icon, a 12px Calendar in place of the chevron). */
+  @media (min-width:641px){
+    #add-panel .add-grid > .fld:not(.span-2):has(#entry-kind-trigger){ margin-right:2px; }
+    #add-panel #entry-group-field{ margin-left:2px; }
+    #add-panel .add-grid > .span-2:has(#entry-add-type){ display:flex; margin-top:-4px; }
+    #add-panel .ap-manual .add-actions{ justify-content:flex-end; }
+    #add-panel .ds-input input, .budget-panel .ds-input input{ font-size:14px; letter-spacing:-0.28px; }
+    #add-panel .ds-input.is-value input{ font-size:14px; letter-spacing:0; }
+  }
+  @media (max-width:640px){
+    #add-panel .add-grid > .span-2:has(#entry-add-type){ display:flex; }
+    #add-panel .ap-manual .add-actions{ margin-top:24px; }
+    #add-panel .ds-input.is-value input{ font-size:16px; letter-spacing:0; }
+  }
+  #add-panel .date-dd-label{ font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); color:var(--text-primary); }
+  #add-panel .date-dd.is-phone .date-dd-chevron{ color:var(--action-primary); }
+
+  /* Files review, desktop (229:18717): the panel is 608 wide with 24 sides; header, Track in (Medium 200) and the rows 24
+     apart; rows 16 apart, the buttons 40 under them. Row: date (Label/Small, text/secondary, 42) | Input Tn 140 | Dropdown
+     Tiny 140 | Dropdown Tiny 140 | 16px € + Value/Large 14 text/primary on the right; 8 apart. */
+  #add-panel .ds-dd-lead{ flex-shrink:0; color:var(--surface-dark); }
+  #ap-review .is-guess .ds-dd-trigger{ border-color:var(--border-selected-item); }
+  #ap-review .rv-value{ display:flex; align-items:center; justify-content:flex-end; gap:0; font-family:var(--font-mono); font-size:var(--type-value-large-size); line-height:normal; font-weight:400; color:var(--text-primary); white-space:nowrap; }
+  #ap-review .rv-value svg{ color:var(--text-primary); }
+  #ap-review .c-date{ color:var(--text-secondary); }
+  #ap-review .add-status{ display:flex; align-items:center; gap:4px; flex:1 1 auto; min-width:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
+  #ap-review .add-status.err{ color:var(--status-fail); }
+  #ap-review .add-status .rv-guess{ display:inline-flex; width:auto; height:auto; color:var(--surface-dark); background:none; }
+  @media (min-width:641px){
+    #add-panel.is-review{ width:608px; padding:0 24px 24px; }
+    #add-panel.is-review .panel-nav{ margin:0 -24px; }
+    #add-panel.is-review .add-panel-header{ margin-bottom:24px; }
+    #ap-review{ gap:24px; }
+    #ap-review .ap-period .ds-dd{ width:200px; }
+    #ap-review .rv-rows{ gap:16px; }
+    #ap-review .rv-row{ display:flex; align-items:center; gap:8px; }
+    #ap-review .c-fields{ display:contents; }
+    #ap-review .c-date{ width:42px; flex:0 0 42px; font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+    #ap-review .c-desc, #ap-review .c-type, #ap-review .c-cat{ width:140px; flex:0 0 140px; }
+    #ap-review .c-amt{ flex:1 1 auto; width:auto; min-width:0; }
+    #ap-review .rv-value{ font-size:14px; }
+    #ap-review .rv-actions{ margin-top:16px; gap:8px; justify-content:flex-end; }
+  }
+  /* Files review, phones (415:14256): title "Add an entry"; "Track in" (Body/Large/Medium) beside a 206 Medium dropdown;
+     header, Track in, the rows and the buttons 40 apart. Row: date (pt 8) | the three controls stacked 8 apart | value
+     (pt 8, 16px € + Value/Large 16), 16 apart; rows 24 apart with a Divider. Then the guess note (20px icon, Body/Large/
+     Medium), Save entries and Cancel, full width, 16 apart. */
+  @media (max-width:640px){
+    #add-panel.is-review .add-panel-header{ margin-bottom:40px; }
+    #ap-review{ gap:40px; }
+    #ap-review .rv-rows{ gap:24px; }
+    #ap-review .rv-row{ display:flex; align-items:flex-start; gap:16px; grid-template-areas:none; }
+    #ap-review .rv-row .c-date{ width:auto; flex:none; padding-top:8px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+    #ap-review .c-fields{ display:flex; flex-direction:column; gap:8px; flex:1 1 auto; min-width:0; }
+    #ap-review .c-fields > div{ width:100%; }
+    #ap-review .rv-row .c-amt{ flex:none; width:auto; padding-top:8px; }
+    #ap-review .rv-value{ font-size:16px; }
+    #ap-review .rv-actions{ flex-direction:column; align-items:stretch; gap:16px; margin-top:0; }
+    #ap-review .rv-actions #rv-submit{ order:2; width:100%; }
+    #ap-review .rv-actions #rv-cancel{ order:3; width:100%; }
+    #ap-review .add-status{ order:1; align-items:flex-start; gap:8px; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  }
+  #ap-review .add-status:empty{ display:none; }
+
+  /* Year budget menus (415:16066): "Change group name" text/primary, "Delete group" action/destructive. */
+  .group-menu .ds-dd-item{ color:var(--text-primary); }
+  .group-menu .group-delete{ color:var(--action-destructive); }
+  #entry-status:empty{ display:none; }
+  #add-panel .dz-line > *{ flex-shrink:0; white-space:nowrap; }
+  @media (min-width:641px){ #add-panel #ap-review .rv-actions{ margin-top:16px; } }
+  @media (max-width:640px){ #add-panel #ap-review .rv-actions{ margin-top:0; } }
+  #ap-review .rv-value span{ letter-spacing:0; }
+  @media (max-width:640px){ #ap-review .ap-period > label{ color:var(--text-secondary); } }
+  #add-panel .dz-reading-title{ min-height:16px; display:flex; align-items:center; justify-content:center; }
+  #doc-status:empty{ display:none; }
+  /* Year budget, phones: a group's "+ Add type" sits 16 under its rows (the group's other parts stay 24 apart). */
+  @media (max-width:640px){ .budget-panel .budget-group > div:has(> .budget-group-add){ margin-top:-8px; } }
+  .ds-modal-form > .ds-action-link{ align-self:flex-start; }
+
+  /* ================================================================
+     Oct 3: creation modals (661:6306 / 663:8893, Mobile variant 443:1485)
+     ================================================================ */
+  /* Rows: a single row is a full-width input; with two or more, every row leaves 12 + 24 on the right, where rows 2+ show
+     a Micro Tertiary round button with the 16px Remove icon in action/destructive. */
+  .fld-row .fld-remove, .fld-row .fld-remove-slot{ flex:0 0 24px; width:24px; height:24px; min-width:24px; min-height:24px; }
+  .fld-row .fld-remove{ color:var(--action-destructive); }
+  .fld-row .fld-remove svg{ color:var(--action-destructive); }
+  /* Group (Optional): the custom Dropdown-list 4 under the field. Simple (existing groups) spans the field; Action (a new
+     name typed) hugs its rows and starts with '+ Create "…"'. */
+  .fld-combo{ position:relative; }
+  .fld-combo-chev{ position:absolute; right:var(--space-md); top:50%; transform:translateY(-50%); display:flex; padding:0; border:0; background:none; cursor:pointer; color:var(--action-primary); pointer-events:auto; }
+  .fld-combo .ds-dd-menu.fld-combo-menu{ position:absolute; top:calc(100% + 4px); left:0; right:auto; width:100%; max-width:100%; max-height:260px; z-index:5; }
+  .fld-combo .ds-dd-menu.fld-combo-menu.is-action{ width:max-content; min-width:171px; }
+  .fld-combo-create{ color:var(--text-primary); }
+  /* Mobile modal: the form 40 under the text; Cancel and Save share the row (each half), 16 apart. */
+  @media (max-width:640px){
+    .ds-modal-content > .ds-modal-form{ margin-top:var(--space-md); }
+    .ds-modal-actions .btn-pill, .ds-modal-actions .btn-pill:only-child{ flex:1 1 0; width:auto; min-width:0; }
+  }
+  /* Year budget, phones (415:16066 / 656:10116): the group name and a Micro Secondary round "+" (border/dark, 12px Plus in
+     surface/dark) 12 apart; rows end with a Micro Tertiary round X (12px, surface/dark) that removes them. */
+  .budget-group-title{ display:flex; align-items:center; gap:12px; min-width:0; flex:1 1 auto; }
+  .budget-group-title .budget-cat-title{ flex:0 1 auto; }
+  .budget-panel .round-btn.budget-group-plus{ border-color:var(--border-dark); color:var(--surface-dark); }
+  .budget-panel .round-btn.br-x{ color:var(--surface-dark); }
+  @media (max-width:640px){ .ds-modal-actions{ margin-top:0; } }

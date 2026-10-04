@@ -41,7 +41,7 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
             {y.months.map((m, i) => {
               const future = model.isFutureMonth(y, i);
               const has = !future && model.monthHasData(y, i);
-              return <MonthSelector key={m} label={m.slice(0, 3)} selected={i === monthIdx} state={future ? 'estimated' : has ? undefined : 'empty'} onSelect={() => onMonth(i)} />;
+              return <MonthSelector key={m} label={m.slice(0, 1).toUpperCase() + m.slice(1, 3).toLowerCase()} selected={i === monthIdx} state={future ? 'estimated' : has ? undefined : 'empty'} onSelect={() => onMonth(i)} />;
             })}
           </div>
         </div>
@@ -80,7 +80,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
             options={[{ value: 'EUR', label: 'EUR' }, { value: 'SEK', label: 'SEK' }]} />
         </div>
       </div>
-      <Button size="tiny" icon={plus} iconSize={12} id="year-add-submit" onClick={submit}>Add year</Button>
+      <Button size="tiny" id="year-add-submit" onClick={submit}>Add</Button>
       <span className={'add-status' + (status && status.err ? ' err' : '')} id="year-add-status">{status ? status.text : ''}</span>
     </div>
   );

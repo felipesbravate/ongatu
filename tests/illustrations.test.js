@@ -9,7 +9,7 @@ test('illustrations.js is generated from the Illustrations folder', () => {
 });
 
 test('every illustration has a 0 0 w h viewBox and at least one path', () => {
-  assert.equal(ill.all.length, 109);
+  assert.equal(ill.all.length, 111); // + Head, Success (Oct 2, onboarding)
   for (const a of ill.all) {
     assert.equal(a.viewBox, `0 0 ${a.width} ${a.height}`, a.name);
     assert.ok(a.paths.length > 0, a.name);

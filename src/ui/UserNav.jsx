@@ -22,12 +22,14 @@ export function useDismiss(open, ref, onClose, alsoRef) {
   }, [open, ref, onClose, alsoRef]);
 }
 
-// avatar (DS 221:1044): 40px circle. Style=Text: surface/accent with the initial; Style=Image: the picture, cropped
-// to the circle. `large` is the 88px avatar of the Account page (initial in Value/XL).
-export function Avatar({ name, image, large, className }) {
+// avatar (DS 221:1044, Oct 3): a circle in four sizes, 40 (default), 56, 80 and 112. Style=Text: surface/accent with
+// the initial (Heading/Small, Medium, Large, XL); Style=Image: the picture, cropped to the circle. `large` = 80.
+const AVATAR_SIZES = [40, 56, 80, 112];
+export function Avatar({ name, image, large, size, className }) {
   const initial = (name || '?').trim().charAt(0).toUpperCase() || '?';
+  const px = AVATAR_SIZES.includes(size) ? size : (large ? 80 : 40);
   return (
-    <span className={cx('ds-avatar', image && 'is-image', large && 'large', className)} aria-hidden="true">
+    <span className={cx('ds-avatar', 's' + px, image && 'is-image', large && 'large', className)} aria-hidden="true">
       {image ? <img src={image} alt="" /> : initial}
     </span>
   );
@@ -35,13 +37,16 @@ export function Avatar({ name, image, large, className }) {
 
 // Menu of actions (Dropdown-list 182:6851, Type=Simple, made of dropdown-items 183:6858 with an optional left icon).
 // items: [{ key, label, icon, onSelect, id }]. `bare` drops the list's own card (the user menu draws its own).
-export function MenuList({ items, bare, className, ...rest }) {
+// dropdown-item (DS 183:6858): a 16px icon 8 before the label. `description` = Dropdown-list/Actions (663:935): a
+// Body/Medium/Medium text/secondary line over the items, 8 apart.
+export function MenuList({ items, bare, className, description, ...rest }) {
   return (
-    <div className={cx(bare ? 'ds-menu-items' : 'ds-dd-menu ds-menu', className)} role="menu" {...rest}>
+    <div className={cx(bare ? 'ds-menu-items' : 'ds-dd-menu ds-menu', description && 'has-desc', className)} role="menu" {...rest}>
+      {description && <div className="ds-dd-desc">{description}</div>}
       <div className="ds-dd-items">
         {items.map((it) => (
-          <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon')} onClick={it.onSelect}>
-            {it.icon && <Icon icon={it.icon} size={12} />}<span>{it.label}</span>
+          <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon', it.className)} onClick={it.onSelect}>
+            {it.icon && <Icon icon={it.icon} size="md" />}<span>{it.label}</span>
           </button>
         ))}
       </div>
@@ -85,16 +90,19 @@ export function UserMenu({ name, image, open, onToggle, onClose, items }) {
   );
 }
 
-// notification-item (DS 228:469): date · time, the text with an optional Micro Secondary action, and — while the item
-// is unread — the "Mark as read" Action link under it (Ongatu 211:19682). `onMarkRead` omitted = read (no link).
+// notification-item (DS 228:469, Oct 3): a header row (date · time in Body/Medium/SemiBold, the optional Micro Secondary
+// action on the right, 16 apart), the text under it and — while the item is unread — the "Mark as read" link at the
+// bottom. `onMarkRead` omitted = read (no link).
 export function NotificationItem({ date, time, children, action, onMarkRead, id }) {
   return (
     <div className={'ds-notif-item' + (onMarkRead ? ' is-unread' : '')} id={id}>
       <div className="ds-notif-body">
-        <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
+        <div className="ds-notif-head">
+          <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
+          {action && <Button variant="secondary" size="micro" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
+        </div>
         <div className="ds-notif-content">
           <div className="ds-notif-text">{children}</div>
-          {action && <Button variant="secondary" size="micro" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
         </div>
       </div>
       {onMarkRead && <ActionLink className="ds-notif-mark" onClick={onMarkRead}>Mark as read</ActionLink>}
@@ -127,7 +135,7 @@ export function Notification({ open, onToggle, onClose, unread, children }) {
       {open && mobile && createPortal(
         <div className="ds-notif-page" id="notif-panel" role="dialog" aria-modal="true" aria-labelledby="notif-page-title" ref={pageRef}>
           <div className="ds-notif-page-nav">
-            <RoundButton icon={arrowStraightLeft} size="tiny" iconSize={20} id="notif-back" label="Back" onClick={onClose} />
+            <RoundButton icon={arrowStraightLeft} size="tiny" iconSize="md" id="notif-back" label="Back" onClick={onClose} />
             <h2 className="ds-notif-page-title" id="notif-page-title">Notifications</h2>
           </div>
           <div className="ds-notif-page-list">

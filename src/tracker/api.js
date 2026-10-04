@@ -36,15 +36,21 @@ const cache = {};     // collection -> last docs
 const lastRefresh = {};
 const snapshotOf = (docs) => ({ docs: docs.map((d) => ({ id: d.id, data: () => d.data })), size: docs.length, empty: docs.length === 0 });
 
+// Leaving the page (the onboarding redirects): requests cut short by the navigation are not errors.
+let leaving = false;
+export function leavePage(url) { leaving = true; location.replace(url); }
+
 async function refresh(name) {
   const subs = listeners[name] || [];
-  if (!subs.length) return;
+  if (!subs.length || leaving) return;
   lastRefresh[name] = Date.now();
   try {
     const r = await api('GET', '/api/db/' + encodeURIComponent(name));
+    if (leaving || !r) return;
     cache[name] = r.docs;
     subs.slice().forEach((s) => { try { s.cb(snapshotOf(r.docs)); } catch (e) { console.error(e); } });
   } catch (e) {
+    if (leaving) return;
     subs.slice().forEach((s) => { if (s.err) try { s.err(e); } catch (x) { console.error(x); } });
   }
 }

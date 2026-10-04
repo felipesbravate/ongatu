@@ -6,6 +6,8 @@ import { getDeps, handle } from '../../../src/server/deps.js';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+// Reading a long statement can take 20-40 s; give the function room (Vercel caps it by plan).
+export const maxDuration = 60;
 
 async function run(request) {
   const url = new URL(request.url).pathname; // raw, still percent-encoded; the API decodes and validates ids itself

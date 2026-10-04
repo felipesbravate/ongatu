@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
 import { AppHeader, Button, MobileBottomNav, Toast, useToast } from '../ui/index.js';
-import { db, getMe } from './api.js';
+import { db, getMe, leavePage } from './api.js';
 import { AccountNav, firstNameOf } from './AccountBar.jsx';
 import { AddPanel } from './AddPanel.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
@@ -23,6 +23,7 @@ export default function TrackerApp() {
   const DATA = useMemo(() => yearsFromDocs(data.years), [data.years]);
   const model = useMemo(() => createModel({ data: DATA, entries: data.entries, overrides: data.overrides, budgets: data.budgets, budgetDefaults: data.budgetDefaults }), [DATA, data]);
   const modelRef = useRef(model); modelRef.current = model;
+  const dataRef = useRef(data); dataRef.current = data;
 
   // Which year and month are shown. Starts on today's month, like the legacy page.
   const [view, setView] = useState(() => {
@@ -45,6 +46,24 @@ export default function TrackerApp() {
   const yearToastTimer = useRef(null);
   const yearsHydrated = useRef(false);
   const autoYearTried = useRef(false);
+
+  // ---- onboarding gate ----
+  // A new account (no years, never onboarded) goes to /welcome first (Ongatu 397:4392).
+  useEffect(() => {
+    let years = null, settings = null, gone = false;
+    const decide = () => {
+      if (gone || years === null || settings === null) return;
+      if (!years && !settings) { gone = true; leavePage('/welcome'); return; }
+      // Onboarded but every year deleted: create the current year once, so entries have a home.
+      if (!years && settings && !autoYearTried.current) {
+        autoYearTried.current = true;
+        db.collection('years').add({ year: currentYearLabel(), currency: 'EUR', createdAt: new Date().toISOString() }).catch(() => {});
+      }
+    };
+    const offY = db.collection('years').onSnapshot((snap) => { years = snap.docs.length > 0; decide(); });
+    const offS = db.collection('settings').onSnapshot((snap) => { settings = snap.docs.some((d) => d.id === 'onboarding'); decide(); });
+    return () => { offY(); offS(); };
+  }, []);
 
   // ---- data ----
   useEffect(() => {
@@ -82,11 +101,6 @@ export default function TrackerApp() {
         const keep = currentLabel ? newData.findIndex((y) => y.year === currentLabel) : -1;
         if (keep >= 0) next = { ...v, yearIdx: keep };
         else { const yi = Math.max(0, Math.min(v.yearIdx, newData.length - 1)); next = { yearIdx: yi, monthIdx: tmp.defaultMonth(newData[yi]) }; }
-      }
-      // First visit of a new account: create the current year once, so entries have a home.
-      if (!docs.length && !autoYearTried.current) {
-        autoYearTried.current = true;
-        db.collection('years').add({ year: currentYearLabel(), currency: 'EUR', createdAt: new Date().toISOString() }).catch(() => {});
       }
       setData((d) => ({ ...d, years: docs }));
       setView(next);
@@ -144,6 +158,25 @@ export default function TrackerApp() {
     const yi = modelRef.current.DATA.findIndex((y) => y.year === added[0].year);
     if (yi >= 0) setView({ yearIdx: yi, monthIdx: added[0].monthIndex });
   };
+  // Adds types (items) to a year's stored taxonomy: rows = [{ type, group, category, item }].
+  function mergeTypes(tx, rows) {
+    rows.forEach((r) => {
+      const add = (arr) => { if (!arr.includes(r.item)) arr.push(r.item); };
+      if (r.type === 'expense') { const g = tx.expenses[r.group] || (tx.expenses[r.group] = {}); add(g[r.category] || (g[r.category] = [])); }
+      else add(r.type === 'income' ? (tx.incomes || (tx.incomes = [])) : (tx.investments || (tx.investments = [])));
+    });
+    return tx;
+  }
+  async function addTypesToYear(yearLabel, { type, group, category, items }) {
+    await addRowsToYear(yearLabel, items.map((item) => ({ type, group, category, item })));
+  }
+  async function addRowsToYear(yearLabel, rows) {
+    const tx = mergeTypes(copy(modelRef.current.taxonomyForYear(yearLabel)), rows);
+    const raw = dataRef.current.years.find((y) => y.year === yearLabel);
+    if (raw) { const { id, ...rest } = raw; await db.doc('years/' + id).set({ ...rest, taxonomy: tx }); }
+    else await db.collection('years').add({ year: yearLabel, currency: 'EUR', createdAt: new Date().toISOString(), taxonomy: tx });
+  }
+
   const save = {
     // Books entries in the month and year `periodKey`. Manual: one entry, throws on failure. Review: saves each,
     // returns { failed: [index] }, or null when the year could not be created.
@@ -164,6 +197,8 @@ export default function TrackerApp() {
       if (added.length) { focusMonthOf(added); showToast(toastFor(added), 'success'); }
       return { failed };
     },
+    // Adds types to a year's taxonomy (the Add type modal, Oct 2): { type, group, category, items }.
+    async addTypes(yearLabel, t) { await addTypesToYear(yearLabel, t); },
   };
 
   const tipActions = {
@@ -242,7 +277,9 @@ export default function TrackerApp() {
     const { label, currency } = pendingYear;
     try {
       // A new year starts with the categories of the nearest existing year (copied, so later edits never leak).
-      await db.collection('years').add({ year: label, currency, createdAt: new Date().toISOString(), taxonomy: copy(modelRef.current.taxonomyForYear(label)) });
+      // Types added in the panel ("+ Add type") join the new year's taxonomy.
+      const tx = mergeTypes(copy(modelRef.current.taxonomyForYear(label)), rows.filter((r) => r.added));
+      await db.collection('years').add({ year: label, currency, createdAt: new Date().toISOString(), taxonomy: tx });
       for (const r of rows) {
         const amount = Math.round(parseAmount(r.value) * 100) / 100; // typed in European format (1.163,59)
         const computed = parseFloat(r.computed) || 0;
@@ -272,6 +309,8 @@ export default function TrackerApp() {
         const amount = Math.round(parseAmount(r.value) * 100) / 100;
         await db.collection('budgets').add({ year: label, monthIndex: mi, type: r.type, group: r.group || null, category: r.category || null, item: r.item, amount, createdAt: new Date().toISOString() });
       }
+      const added = rows.filter((r) => r.added);
+      if (added.length) await addRowsToYear(label, added);
       setMonthBudget(null);
       showToast(`${MONTH_ABBR[mi]} ${label} budget saved.`, 'success');
     } catch (err) {
@@ -320,14 +359,15 @@ export default function TrackerApp() {
         <AddPanel open={addPanel.open} preset={addPanel.preset} model={model} yearIdx={yearIdx} monthIdx={monthIdx}
           onClose={() => setAddPanel((p) => ({ ...p, open: false }))} save={save} />
         <BudgetPanel pending={pendingYear} model={model} onClose={() => setPendingYear(null)} onCreate={createYear} />
-        <BudgetPanel month={monthBudget} model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} />
+        <BudgetPanel month={monthBudget} forMonth model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} />
         <div className="row1">
           <HeroLeft model={model} y={y} monthIdx={monthIdx} />
           <div className="hero-right">
             <TrackerCard model={model} y={y} monthIdx={monthIdx} breakdownType={bd.type} breakdownGroup={bd.group} tip={tip} setTip={setTip} actions={tipActions}
               addOpen={addPanel.open} onAdjustBudget={() => setMonthBudget({ yearIdx, monthIdx })}
               onTab={(type, group) => setBd((b) => ({ type, group: group || b.group }))}
-              onAdd={() => setAddPanel({ open: true, preset: { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: bd.group } })} />
+              onAdd={() => setAddPanel({ open: true, preset: { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: bd.group } })}
+              onAddItem={(preset) => setAddPanel({ open: true, preset })} />
             <ExpenseStrip model={model} y={y} monthIdx={monthIdx} />
             <TrendChart model={model} y={y} monthIdx={monthIdx} onMonth={selectMonth} />
           </div>

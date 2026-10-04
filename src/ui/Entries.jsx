@@ -11,18 +11,19 @@ export function EntryCounter({ variant, open, className, children, ...rest }) {
   return <span className={cls} {...rest}>{variant === 'icon' ? <Icon icon={chart} size={10} /> : children}</span>;
 }
 
-// Tooltip entry item (DS 144:4426): dot, name + date, then the amount and an optional remove button.
+// Tooltip entry item (DS 144:4426, Oct 3): 24 high, 8 apart: 12px Dot | name (Body/Large/SemiBold, white) + date
+// (Body/Large/Medium, muted) 8 apart | 16px € + Value/Medium (4 apart) and the Micro round X, 8 apart.
 export function TooltipEntryItem({ name, date, amount, currency, estimate, prefix, onRemove, removeTitle, extra, sub }) {
   return (
     <div className={'tip-item' + (sub ? ' sub' : '')}>
       <span className="tip-dot" />
       <span className="tip-left"><span className="tip-name">{name}</span>{date ? <span className="tip-date">{date}</span> : null}</span>
       <span className="tip-right">
-        {amount != null && <span className={'tip-amount' + (estimate ? ' is-estimate' : '')}>{prefix || ''}<Money value={amount} currency={currency} /></span>}
+        {amount != null && <span className={'tip-amount' + (estimate ? ' is-estimate' : '')}>{prefix || ''}<Money value={amount} currency={currency} iconSize={16} /></span>}
         {extra}
         {onRemove && (
           <button type="button" className="round-btn micro tip-del" title={removeTitle} onClick={(e) => { e.stopPropagation(); onRemove(); }}>
-            <Icon icon={x} size={16} />
+            <Icon icon={x} size="sm" />
           </button>
         )}
       </span>
@@ -38,10 +39,10 @@ export function EntriesTooltip({ visible, style, footnote, children, tipRef, bud
   const hasLines = Array.isArray(children) ? children.length > 0 : !!children;
   const empty = budget != null && !hasLines && !footnote;
   return (
-    <div id="note-tip" ref={tipRef} className={visible ? 'visible' : undefined} style={style}>
+    <div id="note-tip" ref={tipRef} className={[visible && 'visible', empty && 'is-empty'].filter(Boolean).join(' ') || undefined} style={style}>
       {budget != null && (
         <>
-          <div className="tip-head"><span className="tip-head-label">{budgetLabel}</span><span className="tip-head-amount"><Money value={budget} currency={currency} /></span></div>
+          <div className="tip-head"><span className="tip-head-label">{budgetLabel}</span><span className="tip-head-amount"><Money value={budget} currency={currency} iconSize={16} /></span></div>
           <hr className="tip-head-divider" />
         </>
       )}

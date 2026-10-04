@@ -1,9 +1,11 @@
 'use client';
-// The sign-in steps (Ongatu 335:7580 email, 335:7542 password, 335:7606 code for an account, 342:7702 create account,
-// 342:7885 code for a new account). Plain forms: they work before this script loads (the boxes post as `c`, joined by
+// The sign-in steps, Ongatu 397:4392 (Oct 2): 568:4059 email, 430:5487 password, 430:5508 code for an account,
+// 568:5262 create account, 568:5234 code for a new account ("Check your inbox"). Plain forms: they work before this script loads (the boxes post as `c`, joined by
 // /auth/verify); the script drives the eight code boxes (digits only, typing moves on, paste fills them all).
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActionLink, Avatar, Button, Input, Logo } from '../ui/index.js';
+import { arrowStraightLeft } from '../ui/icons.js';
+import { Icon } from '../ui/Icon.jsx';
 import '../ui/okara.css';
 
 const CODE_LENGTH = 8;
@@ -13,7 +15,7 @@ function Shell({ children }) {
     <main className="login-page">
       <div className="login-content">
         <header className="login-header">
-          <Logo variant="vertical" height={127} />
+          <Logo variant="vertical" height={104} />
           <p className="login-tagline">Take charge of your money</p>
         </header>
         <section className="login-card">{children}</section>
@@ -28,7 +30,7 @@ const Message = ({ text, ok }) => (text ? <p className={'login-msg' + (ok ? ' is
 function Greeting({ name, email }) {
   return (
     <div className="login-user">
-      <Avatar name={name} />
+      <Avatar name={name} className="login-avatar" />
       <div className="login-user-text"><p className="login-hello">Hello, {name}!</p><p className="login-email">{email}</p></div>
     </div>
   );
@@ -73,26 +75,39 @@ function CodeBoxes() {
   );
 }
 
+// "Re-send code in 0:42": the link waits a minute after a code is sent, then works.
+// 430:5508 (sign in): Medium link, Body/Large/Medium notes; 568:5234 (new account): Small link, Body/Medium/Medium.
+function Resend({ form, sent, small }) {
+  const [left, setLeft] = useState(60);
+  useEffect(() => { setLeft(60); const t = setInterval(() => setLeft((n) => (n > 0 ? n - 1 : 0)), 1000); return () => clearInterval(t); }, [sent]);
+  return (
+    <div className={'login-resend' + (small ? ' is-small' : '')}>
+      <span className="login-resend-row">
+        <ActionLink id="resend-code" size={small ? undefined : 'medium'} type="submit" form={form} disabled={left > 0}>Re-send code</ActionLink>
+        {left > 0 && <span className="login-note" id="resend-wait">in {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')}</span>}
+      </span>
+      <span className="login-note">Can&apos;t find it? Check spam or promotions.</span>
+    </div>
+  );
+}
+
 export default function LoginApp({ step, email, kind, name, message, sent }) {
   if (step === 'password') {
     return (
       <Shell>
         <div className="login-head"><h1 className="login-title">Sign in</h1><Greeting name={name} email={email} /></div>
-        <div className="login-body">
-          <form method="post" action="/auth/password" id="pw-form" className="login-form">
-            <div className="login-field">
-              <Label htmlFor="password">ENTER YOUR PASSWORD</Label>
-              <Input id="password" name="password" type="password" required autoComplete="current-password" placeholder="Password" autoFocus maxLength={200} />
-              <Message text={message} />
-              <ActionLink id="forgot-password" type="submit" form="forgot-form">Forgot the password?</ActionLink>
-            </div>
-          </form>
-          <form method="post" action="/auth/login" id="forgot-form"><input type="hidden" name="email" value={email} /><input type="hidden" name="send_code" value="1" /></form>
-          <div className="login-cta">
-            <a className="btn-pill ghost" href="/login" id="login-back">Back</a>
-            <Button type="submit" form="pw-form" id="pw-submit">Continue</Button>
+        <form method="post" action="/auth/password" id="pw-form" className="login-form">
+          <div className="login-field">
+            <Label htmlFor="password">Enter your password</Label>
+            <Input id="password" name="password" type="password" required autoComplete="current-password" placeholder="Password" autoFocus maxLength={200} />
+            <Message text={message} />
           </div>
-        </div>
+          <div className="login-cta-col">
+            <Button type="submit" id="pw-submit" className="login-wide">Sign in</Button>
+            <ActionLink id="forgot-password" type="submit" form="forgot-form" className="login-link">Forgot the password?</ActionLink>
+          </div>
+        </form>
+        <form method="post" action="/auth/login" id="forgot-form"><input type="hidden" name="email" value={email} /><input type="hidden" name="send_code" value="1" /></form>
       </Shell>
     );
   }
@@ -105,17 +120,17 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
         <div className="login-body">
           <form method="post" action="/auth/signup" id="signup-form" className="login-form login-form--tight">
             <div className="login-field">
-              <Label htmlFor="full-name">FULL NAME</Label>
+              <Label htmlFor="full-name">Full name</Label>
               <Input id="full-name" name="name" required autoComplete="name" placeholder="Your name" autoFocus maxLength={80} />
             </div>
             <div className="login-field">
-              <Label htmlFor="signup-email">ENTER YOUR EMAIL</Label>
+              <Label htmlFor="signup-email">Enter your email</Label>
               <Input id="signup-email" name="email" type="email" required autoComplete="email" defaultValue={email} maxLength={254} />
               <Message text={message} />
             </div>
           </form>
           <div className="login-cta">
-            <a className="btn-pill ghost" href="/login" id="login-back">Back</a>
+            <a className="btn-pill tertiary" href="/login" id="login-back"><Icon icon={arrowStraightLeft} size="xl" /><span>Back</span></a>
             <Button type="submit" form="signup-form" id="signup-submit">Continue</Button>
           </div>
         </div>
@@ -127,19 +142,20 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
     return (
       <Shell>
         <div className="login-head">
-          <h1 className="login-title">Sign in</h1>
           {isNew
-            ? <p className="login-sub">We sent your sign-in code to <strong>{email}</strong>. It can take a minute to arrive. It&apos;s worth checking your spam too.</p>
-            : <Greeting name={name} email={email} />}
+            ? <><h1 className="login-title">Check your inbox</h1><p className="login-sub">We sent your sign-in code to <strong>{email}</strong>. It can take a minute to arrive.</p></>
+            : <><h1 className="login-title">Sign in</h1><Greeting name={name} email={email} /></>}
         </div>
         <form method="post" action="/auth/verify" id="code-form" className="login-form">
           <div className="login-field">
-            <Label htmlFor="code-0"><span id="code-label">ENTER YOUR 8-DIGIT ONE-TIME CODE</span></Label>
+            <Label htmlFor="code-0"><span id="code-label">{isNew ? 'Enter the 8-digit code' : 'Enter the 8-digit code sent to your email'}</span></Label>
             <CodeBoxes />
             <Message text={message || (sent ? 'We sent you a new code.' : null)} ok={!message && sent} />
-            <ActionLink id="resend-code" type="submit" form="resend-form">Re-send code</ActionLink>
           </div>
-          <Button type="submit" id="code-submit" className="login-wide">Sign in</Button>
+          <div className="login-cta-col">
+            <Button type="submit" id="code-submit" className="login-wide">{isNew ? 'Continue' : 'Sign in'}</Button>
+            <Resend form="resend-form" sent={sent} small={isNew} />
+          </div>
         </form>
         <form method="post" action="/auth/login" id="resend-form"><input type="hidden" name="email" value={email} /><input type="hidden" name="send_code" value="1" /><input type="hidden" name="from" value={isNew ? 'new' : ''} /></form>
       </Shell>
@@ -150,8 +166,8 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
       <div className="login-head"><h1 className="login-title">Sign in or create an account</h1></div>
       <form method="post" action="/auth/login" id="email-form" className="login-form">
         <div className="login-field">
-          <Label htmlFor="login-email">ENTER YOUR EMAIL</Label>
-          <Input id="login-email" name="email" type="email" required autoComplete="email" placeholder="email@example.com" autoFocus maxLength={254} />
+          <Label htmlFor="login-email">Enter your email</Label>
+          <Input id="login-email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" autoFocus maxLength={254} />
           <Message text={message} />
         </div>
         <Button type="submit" id="email-submit" className="login-wide">Continue</Button>
