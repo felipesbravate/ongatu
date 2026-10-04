@@ -24,6 +24,8 @@ const deps = {
   profiles: memoryProfiles(), usage: memoryUsage(),
   ai: { async complete(a) { state.aiCalls.push(a); if (a.prompt.includes('CERTAIN SHOP')) return '[{"type":"expense","group":"Variable","category":"Food","item":"Groceries","certainty":"sure","description":"Mock certain shop","amount":23.4,"date":"2026-09-01"}]'; return process.env.MOCK_AI_REPLY || '[{"type":"expense","group":"Variable","category":"Food","item":"Groceries","description":"Mock supermarket","amount":23.4,"date":"2026-09-01"}]'; } },
   admins: parseAdminEmails(process.env.ADMIN_EMAILS || 'admin@example.com'),
+  // The mock keeps the approval step (the e2e test covers it) unless REQUIRE_APPROVAL=0.
+  requireApproval: process.env.REQUIRE_APPROVAL !== '0',
   appOrigin: ORIGIN, limiter: new RateLimiter(60, 60_000), dailyReadCap: Number(process.env.DAILY_READ_CAP || 50),
 };
 deps.accounts = memoryAccounts(deps.profiles);

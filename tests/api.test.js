@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
-import { handle, memoryAccounts, memoryProfiles, memoryUsage, passwordProblem } from '../src/lib/api.js';
+import { handle, memoryAccounts, memoryProfiles, memoryUsage, passwordProblem, pageAccess } from '../src/lib/api.js';
 import { Vault, memoryStores } from '../src/lib/vault.js';
 import { RateLimiter, parseAdminEmails, passesCsrf, passesFormCsrf, effectiveStatus } from '../src/lib/security.js';
 
@@ -223,4 +223,18 @@ test('native app: bearer-authenticated writes skip the cookie CSRF check; cookie
   const r = await handle({ ...noCsrf, authKind: 'bearer' }, deps);
   assert.equal(r.status, 201);
   assert.equal((await handle({ ...noCsrf, authKind: 'bearer', user: null }, deps)).status, 401);
+});
+
+// Oct 4: open sign-up (production default, REQUIRE_APPROVAL unset): a new account is approved at once; admins can still block.
+test('open sign-up: new users are approved on their first request; a blocked one stays out', async () => {
+  const { call, deps } = setup();
+  deps.requireApproval = false;
+  assert.equal((await call('GET', '/api/me', ann)).body.status, 'approved');
+  assert.equal((await deps.profiles.get('u-ann')).status, 'approved', 'stored as approved, so turning approval back on keeps them in');
+  assert.equal((await call('POST', '/api/db/entries', ann, { a: 1 })).status, 201);
+  assert.equal((await call('GET', '/api/admin/users', ann)).status, 403, 'still not an admin');
+  assert.equal((await call('POST', '/api/admin/users/u-ann/block', boss)).status, 200);
+  assert.equal((await call('GET', '/api/db/entries', ann)).status, 403);
+  assert.equal(await pageAccess(ann, deps), 'blocked');
+  assert.equal(await pageAccess(bob, deps), 'ok');
 });

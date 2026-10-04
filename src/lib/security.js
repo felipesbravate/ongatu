@@ -39,17 +39,21 @@ export function parseAdminEmails(raw) {
 }
 
 /**
- * Approval policy. Admins (ADMIN_EMAILS) are always approved. Everyone else must be approved
- * by an admin: signing up alone gives access to nothing.
+ * Approval policy. Admins (ADMIN_EMAILS) are always approved; a blocked account stays blocked.
+ * Since Oct 4 sign-up is open by default: everyone else is approved on sign-up. With approval
+ * required (REQUIRE_APPROVAL=1 on the server) a new account waits for an admin instead.
  * @param {{ email?: string|null, status?: string|null }} profile
  * @param {Set<string>} admins
+ * @param {boolean} [requireApproval]
  */
-export function effectiveStatus(profile, admins) {
+export function effectiveStatus(profile, admins, requireApproval = true) {
   const email = (profile.email || '').toLowerCase();
   if (email && admins.has(email)) return 'approved';
   if (profile.status === 'approved' || profile.status === 'blocked') return profile.status;
-  return 'pending';
+  return requireApproval ? 'pending' : 'approved';
 }
+/** The status a new account is stored with. @param {any} deps */
+export const newAccountStatus = (deps) => (deps.requireApproval === false ? 'approved' : 'pending');
 
 /** Fixed-window in-memory limiter (per instance; the DB-backed daily cap is the hard limit). */
 export class RateLimiter {

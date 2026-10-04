@@ -29,6 +29,8 @@ export function getDeps() {
       ? anthropicClient({ apiKey: process.env.ANTHROPIC_API_KEY, model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-5' })
       : { async complete() { throw Object.assign(new Error('Document reading is not configured on this server'), { code: 'not_available' }); } },
     admins: parseAdminEmails(process.env.ADMIN_EMAILS),
+    // Oct 4: open sign-up (no admin approval). Set REQUIRE_APPROVAL=1 on Vercel to bring the approval step back.
+    requireApproval: process.env.REQUIRE_APPROVAL === '1',
     appOrigin: need('APP_ORIGIN'),
     limiter: new RateLimiter(30, 60_000),
     loginLimiter: new RateLimiter(5, 10 * 60_000),

@@ -4,7 +4,7 @@
 // req  : { method, path (no query), headers (lower-case keys), body (parsed JSON or undefined), user ({id,email}|null),
 //          authKind ('cookie' default | 'bearer' for the native app) }
 // deps : { vault, profiles, usage, ai, admins, appOrigin, limiter, dailyReadCap, accounts? }
-import { effectiveStatus, passesCsrf, safeError } from './security.js';
+import { effectiveStatus, newAccountStatus, passesCsrf, safeError } from './security.js';
 import { VaultError } from './vault.js';
 import { validateImportBatch } from './import-commit.js';
 
@@ -44,10 +44,10 @@ export async function handle(req, deps) {
     if (!req.user) return json(401, { error: { code: 'unauthenticated', message: 'Sign in first' } });
     let profile = await cachedProfile(deps, user.id);
     if (!profile) {
-      profile = { user_id: user.id, email: user.email, status: 'pending' };
+      profile = { user_id: user.id, email: user.email, status: newAccountStatus(deps) };
       await deps.profiles.upsert(profile);
     }
-    const status = effectiveStatus(profile, deps.admins);
+    const status = effectiveStatus(profile, deps.admins, deps.requireApproval !== false);
     const isAdmin = deps.admins.has((user.email || '').toLowerCase());
 
     if (method === 'GET' && path === '/api/me') return json(200, { email: user.email, status, isAdmin, name: user.name || null });
@@ -150,7 +150,7 @@ export async function handle(req, deps) {
       if (!isAdmin) return json(403, { error: { code: 'forbidden', message: 'Admins only' } });
       if (method === 'GET' && path === '/api/admin/users') {
         const list = await deps.profiles.list();
-        return json(200, { users: list.map((/** @type {any} */ p) => ({ id: p.user_id, email: p.email, status: effectiveStatus(p, deps.admins), created_at: p.created_at })) });
+        return json(200, { users: list.map((/** @type {any} */ p) => ({ id: p.user_id, email: p.email, status: effectiveStatus(p, deps.admins, deps.requireApproval !== false), created_at: p.created_at })) });
       }
       const a = path.match(/^\/api\/admin\/users\/([A-Za-z0-9-]+)\/(approve|block)$/);
       if (method === 'POST' && a) {
@@ -183,8 +183,8 @@ export async function handle(req, deps) {
 export async function pageAccess(user, deps) {
   if (!user) return 'login';
   let profile = await deps.profiles.get(user.id);
-  if (!profile) { profile = { user_id: user.id, email: user.email, status: 'pending' }; await deps.profiles.upsert(profile); }
-  const st = effectiveStatus(profile, deps.admins);
+  if (!profile) { profile = { user_id: user.id, email: user.email, status: newAccountStatus(deps) }; await deps.profiles.upsert(profile); }
+  const st = effectiveStatus(profile, deps.admins, deps.requireApproval !== false);
   return st === 'approved' ? 'ok' : st === 'blocked' ? 'blocked' : 'pending';
 }
 
