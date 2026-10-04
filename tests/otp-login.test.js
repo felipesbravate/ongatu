@@ -4,14 +4,14 @@ import { cleanCode, cleanEmail, emailCookieOptions, EMAIL_COOKIE_MAX_AGE } from 
 import { cleanName, decodeCtx, encodeCtx, greetingName } from '../src/lib/otp-login.js';
 import { memoryAccounts, memoryProfiles } from '../src/lib/api.js';
 
-test('codes: digits only, 6 to 10, pasted spaces/dashes tolerated', () => {
+test('codes: exactly 6 digits, pasted spaces/dashes tolerated', () => {
   assert.equal(cleanCode('123456'), '123456');
   assert.equal(cleanCode(' 123 456 '), '123456');
   assert.equal(cleanCode('123-456'), '123456');
   assert.equal(cleanCode('12345'), null);
   assert.equal(cleanCode('12345a'), null);
   assert.equal(cleanCode(null), null);
-  assert.equal(cleanCode('12345678'), '12345678');
+  assert.equal(cleanCode('12345678'), null); // the old 8-digit length is refused
 });
 test('emails normalized, junk rejected', () => {
   assert.equal(cleanEmail('  Ann@Example.COM '), 'ann@example.com');

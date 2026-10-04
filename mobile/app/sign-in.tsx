@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { T } from '@/components/T';
 import { color as C, space, radius, text } from '@/theme/tokens';
 
-// Login - mobile (Ongatu 369:11424): "Sign in or create an account", email, then the 8-digit code from the email.
+// Login - mobile (Ongatu 369:11424): "Sign in or create an account", email, then the 6-digit code from the email.
 // Same Supabase OTP as the web (no magic link). Visual pass against the frame comes in the spike.
 export default function SignIn() {
   const [step, setStep] = useState<'email' | 'code'>('email');
@@ -30,21 +30,21 @@ export default function SignIn() {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   }
 
-  const canGo = step === 'email' ? /.+@.+\..+/.test(email) : /^\d{8}$/.test(code.trim());
+  const canGo = step === 'email' ? /.+@.+\..+/.test(email) : /^\d{6}$/.test(code.trim());
   return (
     <SafeAreaView style={s.root}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={s.center}>
         <View style={s.card}>
           <T v="HeadingXL" style={{ textAlign: 'center' }}>{step === 'email' ? 'Sign in or create an account' : 'Check your email'}</T>
-          {step === 'code' && <T v="BodyMediumRegular" c={C.textSecondary} style={{ textAlign: 'center' }}>We sent an 8-digit code to {email}.</T>}
+          {step === 'code' && <T v="BodyMediumRegular" c={C.textSecondary} style={{ textAlign: 'center' }}>We sent a 6-digit code to {email}.</T>}
           <View style={{ gap: space.xs }}>
             <T v="LabelDefaultMedium" c={C.textSecondary}>{step === 'email' ? 'ENTER YOUR EMAIL' : 'ENTER THE CODE'}</T>
             <TextInput
-              key={step} autoFocus style={s.input} placeholder={step === 'email' ? 'you@example.com' : '12345678'} placeholderTextColor={C.textMuted}
+              key={step} autoFocus style={s.input} placeholder={step === 'email' ? 'you@example.com' : '123456'} placeholderTextColor={C.textMuted}
               value={step === 'email' ? email : code} onChangeText={step === 'email' ? setEmail : setCode}
               keyboardType={step === 'email' ? 'email-address' : 'number-pad'} autoCapitalize="none" autoCorrect={false}
               textContentType={step === 'email' ? 'emailAddress' : 'oneTimeCode'} autoComplete={step === 'email' ? 'email' : 'one-time-code'}
-              maxLength={step === 'code' ? 8 : 254} returnKeyType="go" onSubmitEditing={() => canGo && (step === 'email' ? sendCode() : verify())}
+              maxLength={step === 'code' ? 6 : 254} returnKeyType="go" onSubmitEditing={() => canGo && (step === 'email' ? sendCode() : verify())}
               accessibilityLabel={step === 'email' ? 'Email' : 'Code'}
             />
           </View>

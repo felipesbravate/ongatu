@@ -1,14 +1,14 @@
 'use client';
 // The sign-in steps, Ongatu 397:4392 (Oct 2): 568:4059 email, 430:5487 password, 430:5508 code for an account,
 // 568:5262 create account, 568:5234 code for a new account ("Check your inbox"). Plain forms: they work before this script loads (the boxes post as `c`, joined by
-// /auth/verify); the script drives the eight code boxes (digits only, typing moves on, paste fills them all).
+// /auth/verify); the script drives the six code boxes (digits only, typing moves on, paste fills them all).
 import { useEffect, useRef, useState } from 'react';
 import { ActionLink, Avatar, Button, Input, Logo } from '../ui/index.js';
 import { arrowStraightLeft } from '../ui/icons.js';
 import { Icon } from '../ui/Icon.jsx';
 import '../ui/okara.css';
 
-const CODE_LENGTH = 8;
+const CODE_LENGTH = 6; // Supabase Auth -> Email -> Email OTP Length = 6 (Oct 4; was 8)
 
 function Shell({ children }) {
   return (
@@ -148,7 +148,7 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
         </div>
         <form method="post" action="/auth/verify" id="code-form" className="login-form">
           <div className="login-field">
-            <Label htmlFor="code-0"><span id="code-label">{isNew ? 'Enter the 8-digit code' : 'Enter the 8-digit code sent to your email'}</span></Label>
+            <Label htmlFor="code-0"><span id="code-label">{isNew ? 'Enter the 6-digit code' : 'Enter the 6-digit code sent to your email'}</span></Label>
             <CodeBoxes />
             <Message text={message || (sent ? 'We sent you a new code.' : null)} ok={!message && sent} />
           </div>

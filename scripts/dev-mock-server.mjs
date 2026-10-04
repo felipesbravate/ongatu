@@ -33,7 +33,7 @@ const cookieOf = (h, name) => { const m = new RegExp('(?:^|; )' + name + '=([^;]
 const setC = (name, value) => `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=900`;
 const clearC = (name) => `${name}=; Path=/; Max-Age=0`;
 // The mock's sign-in code (the real one is emailed by Supabase).
-const MOCK_CODE = '12345678';
+const MOCK_CODE = '123456';
 const readBody = (req) => new Promise((res, rej) => { const c = []; let n = 0; req.on('data', (d) => { n += d.length; if (n > 12e6) { rej(new Error('too big')); req.destroy(); } else c.push(d); }); req.on('end', () => res(Buffer.concat(c).toString('utf8'))); req.on('error', rej); });
 const send = (res, status, body, headers = {}) => { res.writeHead(status, { ...securityHeaders(), ...headers }); res.end(body); };
 
@@ -59,7 +59,7 @@ export const server = createServer(async (req, res) => {
     }
     if (path === '/auth/signout' && req.method === 'POST') return send(res, 200, '{}', { 'content-type': 'application/json', 'set-cookie': 'mock_user=; Path=/; Max-Age=0' });
     // Sign-in steps: the page itself is the real Next page (/login); these handlers stand in for app/auth/* with the
-    // same cookies and redirects, a fixed code (12345678) and in-memory accounts.
+    // same cookies and redirects, a fixed code (123456) and in-memory accounts.
     if (path === '/login') {
       if (user) return send(res, 303, '', { location: '/' });
       return proxy(req, res, path + url.search);

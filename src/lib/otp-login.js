@@ -14,10 +14,10 @@ export function cleanEmail(v) {
   const e = String(v || '').trim().toLowerCase().slice(0, 254);
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) ? e : null;
 }
-/** Digits only (people paste "123 456" or "123-456"); Supabase codes are 6 to 10 digits. @param {unknown} v */
+/** Digits only (people paste "123 456" or "123-456"); Ongatu's codes are 6 digits (Supabase Email OTP Length = 6). @param {unknown} v */
 export function cleanCode(v) {
   const c = String(v || '').replace(/[\s-]/g, '');
-  return /^\d{6,10}$/.test(c) ? c : null;
+  return /^\d{6}$/.test(c) ? c : null;
 }
 
 // What the sign-in pages show between steps, in a short-lived httpOnly cookie next to the address:

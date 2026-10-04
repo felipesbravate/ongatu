@@ -45,8 +45,8 @@ async def login(ctx, email, name=None):
     await sign_in(pg, email, name or email.split('@')[0].capitalize())
     return pg, errs
 
-# The sign-in steps (Ongatu 335:7580 ...): email, then "Create account" for a new address, then the 8-digit code
-# (the mock's code is 12345678). An account with a password stops at the password step.
+# The sign-in steps (Ongatu 335:7580 ...): email, then "Create account" for a new address, then the 6-digit code
+# (the mock's code is 123456). An account with a password stops at the password step.
 async def sign_in(pg, email, name):
     await pg.goto(BASE + '/login'); await pg.fill('#login-email', email)
     async with pg.expect_navigation(): await pg.click('#email-submit')
@@ -54,7 +54,7 @@ async def sign_in(pg, email, name):
         await pg.fill('#full-name', name)
         async with pg.expect_navigation(): await pg.click('#signup-submit')
     if 'step=code' in pg.url:
-        await pg.fill('#code-0', '12345678')
+        await pg.fill('#code-0', '123456')
         async with pg.expect_navigation(): await pg.click('#code-submit')
     await skip_onboarding(pg)
 
@@ -80,7 +80,7 @@ async def main():
             b = await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH', '/opt/pw-browsers/chromium'))
             admin_ctx = await b.new_context(viewport={'width': 1300, 'height': 900}); ann_ctx = await b.new_context(viewport={'width': 1300, 'height': 900})
 
-            # 0. sign-in steps (Ongatu 325:10734 ...): email -> Create account (new address) -> 8-digit code
+            # 0. sign-in steps (Ongatu 325:10734 ...): email -> Create account (new address) -> 6-digit code
             sp = await admin_ctx.new_page(); sp_errs = []
             sp.on('pageerror', lambda e: sp_errs.append(str(e))); sp.on('console', lambda m: sp_errs.append(m.text) if m.type == 'error' and not any(x in m.text for x in IGNORE) else None)
             await sp.goto(BASE + '/login'); await sp.wait_for_selector('#email-submit')
@@ -106,16 +106,16 @@ async def main():
             boxes = await sp.locator('.login-code input:not([type=hidden])').count()
             await sp.click('#code-0'); await sp.keyboard.type('1a2b3')
             typed = await sp.eval_on_selector('input[name=code]', 'e => e.value')
-            check('code step (568:5234): "Check your inbox", 8 boxes, digits only, typing moves to the next box, the resend link waits',
-                  boxes == 8 and typed == '123' and await sp.inner_text('.login-title') == 'Check your inbox' and 'We sent your sign-in code to newbie@example.com. It can take a minute to arrive.' == await sp.inner_text('.login-sub')
+            check('code step (568:5234): "Check your inbox", 6 boxes, digits only, typing moves to the next box, the resend link waits',
+                  boxes == 6 and typed == '123' and await sp.inner_text('.login-title') == 'Check your inbox' and 'We sent your sign-in code to newbie@example.com. It can take a minute to arrive.' == await sp.inner_text('.login-sub')
                   and await sp.eval_on_selector('#resend-code', 'e => e.disabled') and (await sp.inner_text('#resend-wait'))[:4] in ('in 0', 'in 1'), [boxes, typed])
             await sp.click('#code-0'); await sp.keyboard.press('Backspace'); await sp.keyboard.press('Backspace'); await sp.keyboard.press('Backspace')
-            await sp.evaluate("""() => { const dt = new DataTransfer(); dt.setData('text', '9876 5432'); document.getElementById('code-0').dispatchEvent(new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true })); }""")
+            await sp.evaluate("""() => { const dt = new DataTransfer(); dt.setData('text', '987 654'); document.getElementById('code-0').dispatchEvent(new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true })); }""")
             await sp.wait_for_timeout(100)
-            check('pasting "9876 5432" fills all eight boxes', await sp.eval_on_selector('input[name=code]', 'e => e.value') == '98765432')
+            check('pasting "987 654" fills all six boxes', await sp.eval_on_selector('input[name=code]', 'e => e.value') == '987654')
             await sp.click('#code-submit'); await sp.wait_for_selector('#login-msg')
             check('a wrong code says so and stays on the code step', 'step=code' in sp.url and "didn't work" in await sp.inner_text('#login-msg'))
-            await sp.fill('#code-0', '12345678')
+            await sp.fill('#code-0', '123456')
             async with sp.expect_navigation(): await sp.click('#code-submit')
             await sp.wait_for_timeout(300)
             check('the right code signs in (a new account waits for approval)', '/pending' in sp.url, sp.url)

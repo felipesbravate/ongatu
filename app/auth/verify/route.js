@@ -7,7 +7,7 @@ import { EMAIL_COOKIE, LOGIN_CTX_COOKIE, LOGIN_NAME_COOKIE, cleanCode, cleanEmai
 export const dynamic = 'force-dynamic';
 const back = (path) => new Response(null, { status: 303, headers: { location: path } });
 
-// Step 2: check the typed code (8 digits). Attempts are limited per address and per IP (a code must not be
+// Step 2: check the typed code (6 digits). Attempts are limited per address and per IP (a code must not be
 // guessable); Supabase also rate-limits verification on its side. A name typed on "Create account" is saved on the
 // account (user_metadata.full_name); the tracker copies it into Account > Profile on the first visit.
 export async function POST(request) {
@@ -19,7 +19,7 @@ export async function POST(request) {
   const ip = (request.headers.get('x-forwarded-for') || 'unknown').split(',')[0].trim();
   if (!deps.verifyLimiter.take(`em:${email}`) || !deps.verifyLimiter.take(`ip:${ip}`)) return back('/login?step=code&error=limit');
   const form = await request.formData();
-  // `code` from the page's script, else the eight boxes (`c`) as typed before the script ran.
+  // `code` from the page's script, else the six boxes (`c`) as typed before the script ran.
   const code = cleanCode(form.get('code') || form.getAll('c').join(''));
   if (!code) return back('/login?step=code&error=code');
   const sb = await authClient();

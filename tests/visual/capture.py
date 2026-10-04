@@ -243,7 +243,7 @@ async def main():
                     await pg.fill('#full-name', 'Felipe')
                     async with pg.expect_navigation(): await pg.click('#signup-submit')
                 if 'step=code' in pg.url:
-                    await pg.fill('#code-0', '12345678')
+                    await pg.fill('#code-0', '123456')
                     async with pg.expect_navigation(): await pg.click('#code-submit')
                 # Oct 2: a new account starts at /welcome (onboarding); mark it onboarded so the dashboard opens.
                 await pg.wait_for_url('**/welcome'); await seed_ctx.request.put(f'{BASE}/api/db/settings/onboarding', headers=HDR, data={'done': True})
