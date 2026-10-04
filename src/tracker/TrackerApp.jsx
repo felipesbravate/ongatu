@@ -309,8 +309,9 @@ export default function TrackerApp() {
         const amount = Math.round(parseAmount(r.value) * 100) / 100;
         await db.collection('budgets').add({ year: label, monthIndex: mi, type: r.type, group: r.group || null, category: r.category || null, item: r.item, amount, createdAt: new Date().toISOString() });
       }
-      const added = rows.filter((r) => r.added);
-      if (added.length) await addRowsToYear(label, added);
+      // The stand-in year has no saved doc yet: create it with every row's type, so the month and its types stick.
+      const added = yr.isPlaceholder ? rows : rows.filter((r) => r.added);
+      if (added.length || yr.isPlaceholder) await addRowsToYear(label, added);
       setMonthBudget(null);
       showToast(`${MONTH_ABBR[mi]} ${label} budget saved.`, 'success');
     } catch (err) {

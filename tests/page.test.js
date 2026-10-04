@@ -47,13 +47,13 @@ test('month budget replaces the starting budget for its month', async () => {
   assert.ok(m.canAdjustMonthBudget(y, 0));
 });
 
-test('onboarding starter template follows the template doc and fits the data model', async () => {
-  const { STARTER_TEMPLATE, EXP_GROUPS } = await import('../src/tracker/model.js');
-  assert.equal(STARTER_TEMPLATE.incomes.length, 4);
-  assert.equal(STARTER_TEMPLATE.investments.length, 5);
-  assert.deepEqual(Object.keys(STARTER_TEMPLATE.expenses), ['Fixed', 'Variable']);
-  Object.keys(STARTER_TEMPLATE.expenses).forEach((g) => assert.ok(EXP_GROUPS.includes(g)));
-  const items = Object.values(STARTER_TEMPLATE.expenses).flatMap((cats) => Object.values(cats).flat());
-  assert.equal(new Set(items).size, items.length, 'type names are unique');
-  assert.ok(!/felipe|sbravate|barcelona/i.test(JSON.stringify(STARTER_TEMPLATE)));
+// Oct 4: an account with no saved year sees a stand-in for the current year; it must still be editable (Juliana).
+test('the stand-in year (no saved years) can have its months budgeted', async () => {
+  const { createModel, yearsFromDocs, currentYearLabel } = await import('../src/tracker/model.js');
+  const m = createModel({ data: yearsFromDocs([]), entries: [], overrides: [], budgets: [], budgetDefaults: [] });
+  const y = m.DATA[0];
+  assert.ok(y.isPlaceholder && y.year === currentYearLabel());
+  const cur = new Date().getMonth();
+  assert.ok(m.canAdjustMonthBudget(y, cur));
+  assert.ok(m.canAdjustMonthBudget(y, 0));
 });

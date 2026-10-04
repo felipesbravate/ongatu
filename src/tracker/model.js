@@ -24,34 +24,6 @@ export const CATS = {
   },
 };
 
-// Onboarding "Start from a template" (Felipe's Google Doc "Expense Categories & Subcategories", Oct 3, 2026).
-// Income and Savings & Investments are flat; expenses are Sub-category (Fixed / Variable) -> Group -> Type.
-// Only used to seed a new account's first year; CATS above stays the fallback for years without a taxonomy.
-export const STARTER_TEMPLATE = {
-  incomes: ['Primary salary / wages', 'Secondary income', 'Passive / investment income', 'Other income'],
-  investments: ['Emergency fund', 'Retirement / pension', 'Short-term savings', 'Long-term savings', 'General investments'],
-  expenses: {
-    Fixed: {
-      Housing: ['Rent / mortgage', 'HOA / condominium fees'],
-      Utilities: ['Internet', 'TV / cable', 'Mobile phone plan'],
-      Insurance: ['Health insurance', 'Auto insurance', 'Home / renters insurance', 'Life insurance', 'Pet insurance'],
-      'Debt repayment': ['Student loan', 'Auto loan', 'Personal loan'],
-      'Education & childcare': ['Tuition', 'Online courses', 'Daycare', 'School supplies'],
-      'Financial fees': ['Bank fees', 'Tax preparation', 'Professional services'],
-      Subscriptions: ['Gym membership', 'Software', 'Streaming services'],
-    },
-    Variable: {
-      'Food & dining': ['Groceries / supermarket', 'Dining out', 'Takeout / delivery'],
-      Transportation: ['Fuel / gas', 'Public transit', 'Rideshares & taxis', 'Vehicle maintenance & parking'],
-      'Household & living': ['Electricity, water & heating', 'Household supplies', 'Home maintenance & services'],
-      'Health & wellness': ['Medical / therapy', 'Pharmacy & medications', 'Sports & fitness'],
-      'Personal care & apparel': ['Haircuts & grooming', 'Clothing, shoes & accessories', 'Cosmetics & toiletries'],
-      'Entertainment & leisure': ['Events', 'Hobbies & recreation'],
-      Miscellaneous: ['Gifts & donations', 'Pet care', 'Unplanned expenses'],
-    },
-  },
-};
-
 // Type/sub-type as one pickable value (the review table's Type column). Order = the Type controller (52:3443).
 export const TYPE_OPTS = [
   { key: 'income', type: 'income', group: null, label: 'Income' },
@@ -215,7 +187,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     ? BUDGETS.filter((b) => b.year === yearLabel && b.monthIndex === mi)
     : BUDGETS.filter((b) => b.year === yearLabel && !isMonthBudget(b)));
   // A month's budget counts where figures are planned: any month of a year added here, future months of the others.
-  const budgetApplies = (y, mi) => y.isExtra || (hasMonthBudget(y.year, mi) && isFutureMonth(y, mi));
+  const budgetApplies = (y, mi) => y.isExtra || y.isPlaceholder || (hasMonthBudget(y.year, mi) && isFutureMonth(y, mi));
   const findBudget = (yearLabel, type, group, category, itemName, mi) => budgetsFor(yearLabel, mi).find((b) => b.type === type && (type !== 'expense' || b.group === group) && (b.category || null) === (category || null) && b.item === itemName);
   const findBudgetDefault = (type, group, category, itemName) => BUDGET_DEFAULTS.find((b) => b.type === type && (type !== 'expense' || b.group === group) && (b.category || null) === (category || null) && b.item === itemName);
   const budgetItemsFor = (yearLabel, type, group, mi) => budgetsFor(yearLabel, mi).filter((b) => b.type === type && (type !== 'expense' || b.group === group)).map((b) => ({ item: b.item, category: b.category || null }));
@@ -258,7 +230,9 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
   }
 
   // "Adjust month's budget" is offered where a month's figures are planned rather than recorded.
-  function canAdjustMonthBudget(y, mi) { return !!y && (y.isExtra || isFutureMonth(y, mi)); }
+  // Every month of the account's own years can be planned. The stand-in year (shown while the account has no saved
+  // year) counts too (Oct 4): saving its budget creates the year, so a new account is never locked out of editing.
+  function canAdjustMonthBudget(y, mi) { return !!y && (y.isExtra || y.isPlaceholder || isFutureMonth(y, mi)); }
   // Rows of the month-budget panel: every item of the month with the figure it shows now.
   function monthBudgetRows(y, mi) {
     const yi = DATA.indexOf(y);
