@@ -10,7 +10,7 @@ import { useConfirm } from './ConfirmModal.jsx';
 import { useProfile } from './profile.js';
 import { BudgetPanel } from './BudgetPanel.jsx';
 import { ExpenseStrip, HeroLeft, TrackerCard, TrendChart, YearOverYear } from './Dashboard.jsx';
-import { MONTH_ABBR, budgetDefaultDocId, createModel, currentYearLabel, parseAmount, yearsFromDocs } from './model.js';
+import { MONTH_ABBR, addTypeToTaxonomy, isCustomType, budgetDefaultDocId, createModel, currentYearLabel, parseAmount, yearsFromDocs } from './model.js';
 import { YearNav } from './YearNav.jsx';
 
 const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetDefaults'];
@@ -32,7 +32,7 @@ export default function TrackerApp() {
     return cur ? { yearIdx: cur.yearIdx, monthIdx: cur.monthIndex } : { yearIdx: 0, monthIdx: m.defaultMonth(m.DATA[0]) };
   });
   const viewRef = useRef(view); viewRef.current = view;
-  const [bd, setBd] = useState({ type: 'Fixed', group: 'Fixed' });
+  const [bd, setBd] = useState({ type: 'Fixed', group: 'Fixed', sub: null });
   const [tip, setTip] = useState(null);
   const [confirmModal, confirm] = useConfirm();
   const profile = useProfile(me);
@@ -160,15 +160,11 @@ export default function TrackerApp() {
   };
   // Adds types (items) to a year's stored taxonomy: rows = [{ type, group, category, item }].
   function mergeTypes(tx, rows) {
-    rows.forEach((r) => {
-      const add = (arr) => { if (!arr.includes(r.item)) arr.push(r.item); };
-      if (r.type === 'expense') { const g = tx.expenses[r.group] || (tx.expenses[r.group] = {}); add(g[r.category] || (g[r.category] = [])); }
-      else add(r.type === 'income' ? (tx.incomes || (tx.incomes = [])) : (tx.investments || (tx.investments = [])));
-    });
+    rows.forEach((r) => addTypeToTaxonomy(tx, r, r.kindName));
     return tx;
   }
-  async function addTypesToYear(yearLabel, { type, group, category, items }) {
-    await addRowsToYear(yearLabel, items.map((item) => ({ type, group, category, item })));
+  async function addTypesToYear(yearLabel, { type, group, category, items, kindName }) {
+    await addRowsToYear(yearLabel, items.map((item) => ({ type, group, category, item, kindName })));
   }
   async function addRowsToYear(yearLabel, rows) {
     const tx = mergeTypes(copy(modelRef.current.taxonomyForYear(yearLabel)), rows);
@@ -325,17 +321,17 @@ export default function TrackerApp() {
     const yi = modelRef.current.DATA.findIndex((d) => d.year === a.year);
     if (yi < 0) return;
     setView({ yearIdx: yi, monthIdx: a.mi });
-    setBd({ type: a.group, group: a.group });
+    setBd((b) => (isCustomType(a.type) ? { type: a.type, group: b.group, sub: a.group || null } : { type: a.group, group: a.group, sub: b.sub }));
     const el = document.querySelector('.breakdown-card');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
   // Coming from Account with ?alert=…: open it once the years are in.
   useEffect(() => {
     if (!pendingAlert.current) return;
-    const [year, mi, group] = pendingAlert.current.split('|');
+    const [year, mi, group, type] = pendingAlert.current.split('|');
     if (!model.DATA.some((d) => d.year === year)) return;
     pendingAlert.current = null;
-    openAlert({ year, mi: Number(mi), group });
+    openAlert({ year, mi: Number(mi), group, type: type || 'expense' });
   }, [model, openAlert]);
 
   const y = model.DATA[view.yearIdx] || model.DATA[model.DATA.length - 1];
@@ -343,7 +339,9 @@ export default function TrackerApp() {
   const monthIdx = view.monthIdx;
   const selectYear = (i) => setView({ yearIdx: i, monthIdx: model.defaultMonth(model.DATA[i]) });
   const selectMonth = (i) => setView((v) => ({ ...v, monthIdx: i }));
-  const topTab = (bd.type === 'Income' || bd.type === 'Investments') ? bd.type : 'Expenses';
+  const topTab = (bd.type === 'Income' || bd.type === 'Investments' || isCustomType(bd.type)) ? bd.type : 'Expenses';
+  // The Add button's preset follows the tab (Oct 4: custom categories add to their own type and sub-category).
+  const addPreset = () => (isCustomType(topTab) ? { type: topTab, group: bd.sub || null } : { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: topTab === 'Income' || topTab === 'Investments' ? null : bd.group });
 
   if (!me) return null;
   return (
@@ -364,10 +362,10 @@ export default function TrackerApp() {
         <div className="row1">
           <HeroLeft model={model} y={y} monthIdx={monthIdx} />
           <div className="hero-right">
-            <TrackerCard model={model} y={y} monthIdx={monthIdx} breakdownType={bd.type} breakdownGroup={bd.group} tip={tip} setTip={setTip} actions={tipActions}
+            <TrackerCard model={model} y={y} monthIdx={monthIdx} breakdownType={bd.type} breakdownGroup={bd.group} breakdownSub={bd.sub} tip={tip} setTip={setTip} actions={tipActions}
               addOpen={addPanel.open} onAdjustBudget={() => setMonthBudget({ yearIdx, monthIdx })}
-              onTab={(type, group) => setBd((b) => ({ type, group: group || b.group }))}
-              onAdd={() => setAddPanel({ open: true, preset: { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: bd.group } })}
+              onTab={(type, group, sub) => setBd((b) => ({ type, group: group || b.group, sub: sub === undefined ? b.sub : sub }))}
+              onAdd={() => setAddPanel({ open: true, preset: addPreset() })}
               onAddItem={(preset) => setAddPanel({ open: true, preset })} />
             <ExpenseStrip model={model} y={y} monthIdx={monthIdx} />
             <TrendChart model={model} y={y} monthIdx={monthIdx} onMonth={selectMonth} />
@@ -377,7 +375,7 @@ export default function TrackerApp() {
         <footer className="note" id="app-footer">Costs Tracker. Your entries are encrypted before they are stored. Documents you upload are read once to extract entries and are never saved.</footer>
       </div>
       <MobileBottomNav selection="home" image={profile.image}
-        onAdd={() => setAddPanel({ open: true, preset: { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: bd.group } })} />
+        onAdd={() => setAddPanel({ open: true, preset: addPreset() })} />
       {toastEl}
       <Toast id="year-toast" type="neutral" visible={!!yearToast} onClose={hideYearToast}
         action={yearToast ? <Button size="tiny" variant="secondary" className="toast-undo" onClick={yearToast.undo}>Undo</Button> : null}>{yearToast ? yearToast.message : ''}</Toast>

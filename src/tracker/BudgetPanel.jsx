@@ -4,10 +4,13 @@ import { ActionLink, Button, Dropdown, InfoTooltip, Input, MenuList, PanelHeader
 import { KINDS, SubCategoryModal, TypeModal } from './TaxonomyModals.jsx';
 import { Icon } from '../ui/Icon.jsx';
 import { actions, edit, euro, plus, trash, x } from '../ui/icons.js';
-import { EXP_GROUPS, MONTH_NAMES, fmtNum, parseAmount } from './model.js';
+import { EXP_GROUPS, MONTH_NAMES, fmtNum, hasGroups, isCustomType, parseAmount } from './model.js';
+
+const NONE = '__none'; // the Dropdown drops '' values, so "no sub-category" needs a value of its own
 
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
-const COMBOS = [{ type: 'income', group: null, label: 'Income' }, { type: 'investment', group: null, label: 'Save/Invest' }, ...EXP_GROUPS.map((g) => ({ type: 'expense', group: g, label: g }))];
+// Oct 4: one section per category / sub-category of the board (custom categories and the board's own sub-categories too).
+const combosFor = (model, label) => model.combosOf(label).map((c) => ({ type: c.type, group: c.group, label: c.group || c.kindLabel }));
 let seq = 0;
 
 // Panel - Year budget (Cost-tracker 232:5852).
@@ -22,6 +25,11 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const my = isMonth && month ? model.DATA[month.yearIdx] : null;
   const [topTab, setTopTab] = useState('expense');
   const [group, setGroup] = useState('Fixed');
+  const [sub, setSub] = useState(''); // the sub-category shown for Income, Savings and custom categories ('' = none)
+  const baseLabel = isMonth ? (my ? my.year : null) : (model.DATA.length ? model.DATA[model.DATA.length - 1].year : null);
+  const kinds = baseLabel ? model.kindsOf(baseLabel) : [];
+  const kindName = (kinds.find((k) => k.type === topTab) || {}).label || topTab;
+  const isSel = (x) => x.type === topTab && (topTab === 'expense' ? x.group === group : (x.group || '') === sub);
   const [newGroup, setNewGroup] = useState('');
   const newGroupRef = useRef(null);
   const [typeModal, setTypeModal] = useState(false);
@@ -35,19 +43,20 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   // Every section is built once per opening, so an edit in one survives switching tabs.
   useEffect(() => {
     if (!open) return;
-    setTopTab('expense'); setGroup('Fixed'); setNewGroup(''); setStatus(null);
-    const sugg = isMonth ? monthSections(model.monthBudgetRows(my, month.monthIdx)) : model.buildBudgetSuggestions();
-    setSections(COMBOS.map(({ type, group: g, label }) => {
-      const sec = sugg.find((s) => s.type === type && (type !== 'expense' || s.group === g));
+    setTopTab('expense'); setGroup('Fixed'); setSub(''); setNewGroup(''); setStatus(null);
+    const combos = combosFor(model, baseLabel);
+    const sugg = isMonth ? monthSections(model.monthBudgetRows(my, month.monthIdx), combos) : model.buildBudgetSuggestions();
+    setSections(combos.map(({ type, group: g, label }) => {
+      const sec = sugg.find((s) => s.type === type && (s.group || null) === (g || null));
       const row = (it) => ({ key: ++seq, ...it, value: fmtNum(it.suggested != null ? it.suggested : 0), editing: false });
       const items = sec ? sec.items : [];
       const blocks = [];
-      if (type === 'expense') {
+      if (hasGroups(type)) {
         const byCat = new Map();
         items.forEach((it) => { const k = it.category || '(uncategorized)'; if (!byCat.has(k)) byCat.set(k, []); byCat.get(k).push(row(it)); });
         [...byCat.entries()].sort((a, b) => a[0].localeCompare(b[0])).forEach(([category, rows]) => blocks.push({ category, rows }));
       }
-      return { type, group: g, label, pre: [], rows: type === 'expense' ? [] : items.map(row), blocks, empty: !items.length, adding: false };
+      return { type, group: g, label, pre: [], rows: hasGroups(type) ? [] : items.map(row), blocks, empty: !items.length, adding: false };
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -60,7 +69,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const rowProps = { onValue: setValue, onRemove: removeRow, onEditing: setEditing, mobile };
   const addItem = (i, it) => patchSection(i, (x) => {
     const r = { key: ++seq, type: x.type, group: x.group, ...it, computed: 0, isCustomized: false, value: fmtNum(it.amount || 0), added: true };
-    if (x.type !== 'expense') return { ...x, adding: false, empty: false, pre: [...x.pre, r] };
+    if (!hasGroups(x.type)) return { ...x, adding: false, empty: false, pre: [...x.pre, r] };
     const bi = x.blocks.findIndex((b) => b.category === it.category);
     const blocks = bi >= 0 ? x.blocks.map((b, k) => (k === bi ? { ...b, rows: [...b.rows, r] } : b)) : [...x.blocks, { category: it.category, rows: [r] }];
     return { ...x, adding: false, empty: false, blocks };
@@ -68,7 +77,15 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const allRows = () => sections.flatMap((s) => [...s.pre, ...s.rows, ...s.blocks.flatMap((b) => b.rows)]);
   // Groups (232:5853, Oct 3): "Create new group" adds an empty group to the shown sub-category; each group's menu renames
   // or deletes it (its types and their figures go with it). An empty group is not saved: only types carry a budget.
-  const curIdx = () => sections.findIndex((x) => x.type === 'expense' && x.group === group);
+  const curIdx = () => sections.findIndex(isSel);
+  // "+ Add sub-category" (Income, Savings, custom categories): new empty sections, the first one shown.
+  const addSubs = (groups) => {
+    setSections((ss) => [...ss, ...groups.filter((g) => !ss.some((x) => x.type === topTab && x.group === g)).map((g) => ({ type: topTab, group: g, label: g, pre: [], rows: [], blocks: [], empty: true, adding: false }))]);
+    if (groups[0]) setSub(groups[0]);
+  };
+  const namedSubs = topTab === 'expense' ? [] : [...new Set(sections.filter((x) => x.type === topTab && x.group).map((x) => x.group))];
+  const expGroups = [...new Set(sections.filter((x) => x.type === 'expense').map((x) => x.group))];
+  const groupOptions = [...GROUP_TABS.filter((o) => expGroups.includes(o.value)), ...expGroups.filter((g) => !GROUP_TABS.some((o) => o.value === g)).map((g) => ({ value: g, label: g }))];
   const createGroup = () => {
     const name = newGroup.trim();
     if (!name) { if (newGroupRef.current) newGroupRef.current.focus(); return; }
@@ -93,7 +110,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   return (
     <>
       <div className={'add-panel-backdrop' + (open ? ' open' : '')} id="budget-panel-backdrop" onClick={onClose} />
-      <div className={'add-panel budget-panel' + (open ? ' open' : '') + (topTab === 'expense' ? '' : ' is-default')} id={isMonth ? 'month-budget-panel' : 'budget-panel'} role="dialog" aria-modal="true" aria-labelledby={isMonth ? 'month-budget-title' : 'budget-panel-title'}>
+      <div className={'add-panel budget-panel' + (open ? ' open' : '') + (hasGroups(topTab) ? '' : ' is-default')} id={isMonth ? 'month-budget-panel' : 'budget-panel'} role="dialog" aria-modal="true" aria-labelledby={isMonth ? 'month-budget-title' : 'budget-panel-title'}>
         {isMonth
           ? <PanelHeader closeId="month-budget-close" titleId="month-budget-title" title={month ? `${MONTH_NAMES[month.monthIdx]} ${my ? my.year : ''} / Editing budget` : 'Editing budget'} hintId="month-budget-hint"
               hint="Need to make a change? Tweak your planned income and expenses to ensure your budget matches your goals for the month." onClose={onClose} />
@@ -103,17 +120,19 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
         <div className="add-panel-content">
           {/* 232:5853 (Oct 2): Category | Sub-category, Group (Optional), "+ Add type"; then the types by group. */}
           <div className="add-grid budget-filters">
-            <div className={'fld' + (topTab === 'expense' ? '' : ' budget-kind-only')}>
+            <div className={'fld' + (topTab === 'expense' || namedSubs.length ? '' : ' budget-kind-only')}>
               <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-kind-trigger'}>Category</label>
-              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-kind'} size="md" emptyOption={false} value={topTab} onChange={(v) => { setTopTab(v); setNewGroup(''); }} options={KINDS.map((k) => ({ value: k.value, label: k.label }))} />
+              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-kind'} size="md" emptyOption={false} value={topTab} onChange={(v) => { setTopTab(v); setSub(isCustomType(v) ? ([...new Set(sections.filter((x) => x.type === v && x.group).map((x) => x.group))][0] || '') : ''); setNewGroup(''); }} options={(kinds.length ? kinds.map((k) => ({ value: k.type, label: k.label })) : KINDS.map((k) => ({ value: k.value, label: k.label })))} />
             </div>
-            <div className="fld" id={isMonth ? 'month-budget-group-field' : 'budget-group-field'} hidden={topTab !== 'expense'}>
+            <div className="fld" id={isMonth ? 'month-budget-group-field' : 'budget-group-field'} hidden={topTab !== 'expense' && !namedSubs.length}>
               <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-sub-trigger'}>Sub-category</label>
-              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-sub'} size="md" emptyOption={false} value={group} onChange={(v) => { setGroup(v); setNewGroup(''); }} options={GROUP_TABS} />
+              {topTab === 'expense'
+                ? <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-sub'} size="md" emptyOption={false} value={group} onChange={(v) => { setGroup(v); setNewGroup(''); }} options={groupOptions} />
+                : <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-sub'} size="md" emptyOption={false} value={sub || NONE} onChange={(v) => { setSub(v === NONE ? '' : v); setNewGroup(''); }} options={[{ value: NONE, label: 'None' }, ...namedSubs.map((g) => ({ value: g, label: g }))]} />}
             </div>
             {/* Phones (703:16128, Oct 4): "Group name (Optional)", "+ Add group", "Rename group" and a shorter hint. */}
             {/* 232:5853 (Oct 3): "Create group (Optional)" input, then "+ Create new group" (Small; Medium on phones). */}
-            {topTab === 'expense' && (
+            {hasGroups(topTab) && (
               <div className="fld span-2">
                 <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-new-group'}>{mobile ? 'Group name (Optional)' : 'Create group (Optional)'}</label>
                 <Input id={(isMonth ? 'month-budget' : 'budget') + '-new-group'} ref={newGroupRef} value={newGroup} placeholder="e.g., Utilities, Transportation, Health"
@@ -128,25 +147,25 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
                 <InfoTooltip text="Sub-categories split a category into groups you track separately." />
               </div>
             )}
-            {topTab === 'expense' && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-create-group'} onClick={createGroup}>{mobile ? 'Add group' : 'Create new group'}</ActionLink></div>}
+            {hasGroups(topTab) && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-create-group'} onClick={createGroup}>{mobile ? 'Add group' : 'Create new group'}</ActionLink></div>}
           </div>
-          <SubCategoryModal open={subModal} kind={topTab} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={() => setSubModal(false)} />
-          <TypeModal open={typeModal} kind={topTab} group={topTab === 'expense' ? group : undefined} category={topTab === 'expense' ? typeCat : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
-            groupsOf={() => (sections.find((x) => x.type === 'expense' && x.group === group) || { blocks: [] }).blocks.map((bk) => bk.category)}
+          <SubCategoryModal open={subModal} kind={topTab} kindName={kindName} existing={namedSubs} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={({ groups }) => { addSubs(groups); setSubModal(false); }} />
+          <TypeModal open={typeModal} kind={topTab} kindName={kindName} group={topTab === 'expense' ? group : (sub || null)} category={hasGroups(topTab) ? typeCat : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
+            groupsOf={() => (sections.find(isSel) || { blocks: [] }).blocks.map((bk) => bk.category)}
             onClose={() => setTypeModal(false)}
-            onSave={(t) => { const i = sections.findIndex((x) => x.type === topTab && (topTab !== 'expense' || x.group === group)); t.items.forEach((item) => addItem(i, { category: t.category, item, amount: 0 })); setTypeModal(false); }} />
+            onSave={(t) => { const i = curIdx(); t.items.forEach((item) => addItem(i, { category: t.category, item, amount: 0, kindName })); setTypeModal(false); }} />
           <div id={isMonth ? 'month-budget-sections' : 'budget-sections'} className="budget-sections">
             {sections.map((s, i) => (
               <div key={s.type + (s.group || '')} className="budget-type-section" data-type={s.type} data-group={s.group || ''}
-                hidden={!(s.type === topTab && (topTab !== 'expense' || s.group === group))}>
+                hidden={!isSel(s)}>
                 {/* 232:5852 (Sept 28): each group is its title with a 24px + Round button (secondary) that adds an item to it;
                     groups are 16 apart with a Divider between them. An empty section keeps the "+ New" link (the frames draw none). */}
-                {s.type !== 'expense' && !s.empty && (
+                {!hasGroups(s.type) && !s.empty && (
                   <div className="budget-group">
                     <div className="budget-items">{[...s.pre, ...s.rows].map((r) => <BudgetRow key={r.key} r={r} {...rowProps} />)}</div>
                   </div>
                 )}
-                {s.type !== 'expense' && <div><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-type' + (s.type === 'income' ? '' : '-' + s.type)} onClick={() => { setTypeCat(''); setTypeModal(true); }}>Add type</ActionLink></div>}
+                {!hasGroups(s.type) && <div><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-type' + (s.type === 'income' ? '' : '-' + s.type) + (s.group ? '-' + s.group.replace(/\W+/g, '-') : '')} onClick={() => { setTypeCat(''); setTypeModal(true); }}>Add type</ActionLink></div>}
                 {s.empty && <div className="budget-empty">{isMonth ? 'Nothing planned here for this month. Use "+ Add type" above to add one.' : 'No history for this yet. Use "+ Add type" above, or create the year and add entries as they come in.'}</div>}
                 {s.blocks.map((b, bi) => (
                   <BlockFrag key={b.category} divider={bi > 0}>
@@ -247,6 +266,6 @@ function BudgetRow({ r, onValue, onRemove, onEditing, mobile }) {
 }
 
 // Month-budget rows grouped like buildBudgetSuggestions() returns them.
-function monthSections(rows) {
-  return COMBOS.map(({ type, group }) => ({ type, group, items: rows.filter((r) => r.type === type && (type !== 'expense' || r.group === group)).map((r) => ({ ...r, suggested: r.amount, computed: r.amount })) }));
+function monthSections(rows, combos) {
+  return combos.map(({ type, group }) => ({ type, group, items: rows.filter((r) => r.type === type && (r.group || null) === (group || null)).map((r) => ({ ...r, suggested: r.amount, computed: r.amount })) }));
 }

@@ -12,7 +12,7 @@ import { arrowStraightRight, euro, plus, x } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
 import { ListSelector, Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
 import { db, getMe, leavePage } from '../tracker/api.js';
-import { CATS, EXP_GROUPS, MONTH_NAMES, budgetDefaultDocId, fmtNum, parseAmount } from '../tracker/model.js';
+import { CATS, EXP_GROUPS, MONTH_NAMES, addSubToTaxonomy, addTypeToTaxonomy, budgetDefaultDocId, ensureCustom, fmtNum, hasGroups, isCustomType, parseAmount } from '../tracker/model.js';
 import { CategoryModal, KINDS, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
 import { useConfirm } from '../tracker/ConfirmModal.jsx';
 
@@ -25,18 +25,15 @@ function templateBoard() {
   CATS.incomes.forEach((item) => types.push({ type: 'income', group: null, category: null, item, budget: 0 }));
   CATS.investments.forEach((item) => types.push({ type: 'investment', group: null, category: null, item, budget: 0 }));
   Object.entries(CATS.expenses).forEach(([group, cats]) => Object.entries(cats).forEach(([category, items]) => items.forEach((item) => types.push({ type: 'expense', group, category, item, budget: 0 }))));
-  return { kinds: ['income', 'investment', 'expense'], groups: EXP_GROUPS.slice(), types };
+  return { kinds: ['income', 'investment', 'expense'], names: {}, subs: { expense: EXP_GROUPS.slice() }, types };
 }
-const emptyBoard = () => ({ kinds: ['income'], groups: [], types: [] });
+// board = { kinds: [type], names: { customType: name }, subs: { [type]: [sub-category] }, types: [{ type, group, category, item, budget }] }
+const emptyBoard = () => ({ kinds: ['income'], names: {}, subs: {}, types: [] });
 
 export function taxonomyOfBoard(board) {
   const tx = { incomes: [], investments: [], expenses: {} };
-  board.groups.forEach((g) => { tx.expenses[g] = {}; });
-  board.types.forEach((t) => {
-    if (t.type === 'income') tx.incomes.push(t.item);
-    else if (t.type === 'investment') tx.investments.push(t.item);
-    else { const g = tx.expenses[t.group] || (tx.expenses[t.group] = {}); (g[t.category] || (g[t.category] = [])).push(t.item); }
-  });
+  board.kinds.forEach((k) => { if (isCustomType(k)) ensureCustom(tx, k, board.names[k]); (board.subs[k] || []).forEach((g) => addSubToTaxonomy(tx, k, g, board.names[k])); });
+  board.types.forEach((t) => addTypeToTaxonomy(tx, t, board.names[t.type]));
   return tx;
 }
 
@@ -163,12 +160,13 @@ function Setup({ mode, onStart, busy, error }) {
   // Its types go too; Expenses also takes its sub-categories. Income (Default) always stays.
   const deleteKind = (k) => {
     const n = board.types.filter((t) => t.type === k).length;
-    const parts = [k === 'expense' && board.groups.length ? `its ${board.groups.length} sub-categor${board.groups.length === 1 ? 'y' : 'ies'}` : null, n ? `${n} type${n === 1 ? '' : 's'}` : null].filter(Boolean);
+    const ns = (board.subs[k] || []).length;
+    const parts = [ns ? `its ${ns} sub-categor${ns === 1 ? 'y' : 'ies'}` : null, n ? `${n} type${n === 1 ? '' : 's'}` : null].filter(Boolean);
     confirm({
-      title: `Are you sure you want to delete ${kindLabel(k)}?`,
+      title: `Are you sure you want to delete ${label(k)}?`,
       description: parts.length ? `This removes ${parts.join(' and ')} from your board. You can add the category again later.` : 'You can add the category again later.',
       onConfirm: async () => {
-        setBoard((b) => ({ ...b, kinds: b.kinds.filter((x) => x !== k), types: b.types.filter((t) => t.type !== k), groups: k === 'expense' ? [] : b.groups }));
+        setBoard((b) => { const subs = { ...b.subs }; delete subs[k]; const names = { ...b.names }; delete names[k]; return { ...b, kinds: b.kinds.filter((x) => x !== k), names, subs, types: b.types.filter((t) => t.type !== k) }; });
         if (sel === k) setSel('income');
       },
     });
@@ -176,16 +174,17 @@ function Setup({ mode, onStart, busy, error }) {
   const [year, setYear] = useState(String(nowYear));
   const [month, setMonth] = useState(String(new Date().getMonth()));
   const typesOf = (k) => board.types.filter((t) => t.type === k);
+  const label = (k) => kindLabel(k, board.names);
+  const subsOf = (k) => board.subs[k] || [];
   const patchType = (t, fn) => setBoard((b) => ({ ...b, types: b.types.map((x) => (x === t ? fn(x) : x)) }));
   const removeType = (t) => setBoard((b) => ({ ...b, types: b.types.filter((x) => x !== t) }));
   const addTypes = ({ group, category, items }) => setBoard((b) => {
-    const exists = (it) => b.types.some((x) => x.type === sel && x.item.toLowerCase() === it.toLowerCase() && (sel !== 'expense' || x.group === group));
+    const exists = (it) => b.types.some((x) => x.type === sel && x.item.toLowerCase() === it.toLowerCase() && (x.group || null) === (group || null));
     return { ...b, types: [...b.types, ...items.filter((it) => !exists(it)).map((item) => ({ type: sel, group, category, item, budget: 0 }))] };
   });
-  const groupsOf = (g) => [...new Set(board.types.filter((t) => t.type === 'expense' && t.group === g).map((t) => t.category))];
+  const groupsOf = (g) => [...new Set(board.types.filter((t) => t.type === sel && (t.group || null) === (g || null) && t.category).map((t) => t.category))];
   const descOf = (k) => {
-    if (k !== 'expense') return 'No sub-categories';
-    const n = board.groups.length;
+    const n = subsOf(k).length;
     return n ? `${n} sub-categor${n === 1 ? 'y' : 'ies'}` : 'No sub-categories';
   };
   const selTypes = typesOf(sel);
@@ -204,8 +203,8 @@ function Setup({ mode, onStart, busy, error }) {
           <div className="ob-col-content">
             <div className="ob-list">
               {board.kinds.map((k) => (
-                <ListSelector key={k} id={`ob-cat-${k}`} title={kindLabel(k)} label={k === 'income' ? 'Default' : null} description={sel === k ? null : descOf(k)} selected={sel === k} onSelect={() => setSel(k)}
-                  onDelete={k === 'income' ? undefined : () => deleteKind(k)} deleteLabel={`Delete ${kindLabel(k)}`}
+                <ListSelector key={k} id={`ob-cat-${k}`} title={label(k)} label={k === 'income' ? 'Default' : null} description={sel === k ? null : descOf(k)} selected={sel === k} onSelect={() => setSel(k)}
+                  onDelete={k === 'income' ? undefined : () => deleteKind(k)} deleteLabel={`Delete ${label(k)}`}
                   action={<ActionLink size="tiny" icon={plus} id="ob-add-sub" onClick={() => setModal('sub')}>Add sub-category</ActionLink>} />
               ))}
             </div>
@@ -218,31 +217,37 @@ function Setup({ mode, onStart, busy, error }) {
         <div className="ob-col ob-col-types">
           <div className="ob-col-head"><h3 className="ob-col-title">Type</h3>{selTypes.length > 0 && <span className="ob-col-aside">Budget</span>}</div>
           <div className="ob-col-content">
-            {selTypes.length === 0 && <p className="ob-empty">{sel === 'expense' && !board.groups.length ? 'Add a sub-category first, like Fixed or Variable.' : 'Add your first type.'}</p>}
-            {sel === 'expense'
-              /* 401:4464 (Oct 4): Sub-category (Heading 16/20), then its groups indented 16: the group name (14/14) over
-                 its types (breackdown rows, 24 high). Sub-categories 24 apart. Types without a group sit under the
-                 sub-category directly. */
-              ? board.groups.filter((g) => selTypes.some((t) => t.group === g)).map((g) => {
-                  const inG = selTypes.filter((t) => t.group === g);
-                  const cats = [...new Set(inG.map((t) => t.category || ''))];
-                  const row = (t) => <TypeRow key={t.group + t.category + t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />;
-                  return (
+            {selTypes.length === 0 && <p className="ob-empty">{sel === 'expense' && !subsOf('expense').length ? 'Add a sub-category first, like Fixed or Variable.' : 'Add your first type.'}</p>}
+            {/* 401:4464 (Oct 4): Sub-category (Heading 16/20), then its groups indented 16: the group name (14/14) over
+                its types (breackdown rows, 24 high). Sub-categories 24 apart. Types without a sub-category come first,
+                without a title; a category without sub-categories simply lists its types. */}
+            {(() => {
+              const named = subsOf(sel);
+              const row = (t) => <TypeRow key={(t.group || '') + (t.category || '') + t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />;
+              const byCat = (list) => {
+                if (!hasGroups(sel)) return <div className="ob-types">{list.map(row)}</div>;
+                const cats = [...new Set(list.map((t) => t.category || ''))];
+                return cats.map((c) => (
+                  <div className="ob-type-cat" key={c || '-'} data-category={c}>
+                    {c && <h5 className="ob-type-cat-title">{c}</h5>}
+                    <div className="ob-types">{list.filter((t) => (t.category || '') === c).map(row)}</div>
+                  </div>
+                ));
+              };
+              const loose = selTypes.filter((t) => !t.group || !named.includes(t.group));
+              return (
+                <>
+                  {loose.length > 0 && (named.length ? <div className="ob-type-group ob-type-loose"><div className="ob-type-list">{byCat(loose)}</div></div> : byCat(loose))}
+                  {named.filter((g) => selTypes.some((t) => t.group === g)).map((g) => (
                     <div className="ob-type-group" key={g}>
                       <h4 className="ob-type-group-title">{g}</h4>
-                      <div className="ob-type-list">
-                        {cats.map((c) => (
-                          <div className="ob-type-cat" key={c || '-'} data-category={c}>
-                            {c && <h5 className="ob-type-cat-title">{c}</h5>}
-                            <div className="ob-types">{inG.filter((t) => (t.category || '') === c).map(row)}</div>
-                          </div>
-                        ))}
-                      </div>
+                      <div className="ob-type-list">{byCat(selTypes.filter((t) => t.group === g))}</div>
                     </div>
-                  );
-                })
-              : selTypes.length > 0 && <div className="ob-types">{selTypes.map((t) => <TypeRow key={t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />)}</div>}
-            {mobile ? <div><ActionLink icon={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add type</ActionLink></div> : <Button variant="secondary" size="tiny" icon={plus} id="ob-add-type" disabled={sel === 'expense' && !board.groups.length} onClick={() => setModal('type')}>Add Type</Button>}
+                  ))}
+                </>
+              );
+            })()}
+            {mobile ? <div><ActionLink icon={plus} id="ob-add-type" disabled={sel === 'expense' && !subsOf('expense').length} onClick={() => setModal('type')}>Add type</ActionLink></div> : <Button variant="secondary" size="tiny" icon={plus} id="ob-add-type" disabled={sel === 'expense' && !subsOf('expense').length} onClick={() => setModal('type')}>Add Type</Button>}
           </div>
         </div>
         <div className="ob-col ob-col-summary">
@@ -263,8 +268,8 @@ function Setup({ mode, onStart, busy, error }) {
                   <div className="ob-summary-list">
                     {board.kinds.map((k) => (
                       <div key={k} className="ob-sum-cat">
-                        <div className="ob-sum-row"><span className="ob-sum-name">{kindLabel(k)}</span><span className="ob-sum-count">{typesOf(k).length} type{typesOf(k).length === 1 ? '' : 's'}</span></div>
-                        {k === 'expense' && board.groups.map((g) => { const n = typesOf('expense').filter((t) => t.group === g).length; return <div key={g} className="ob-sum-row ob-sum-sub"><span>{g}</span><span className="ob-sum-count">{n} item{n === 1 ? '' : 's'}</span></div>; })}
+                        <div className="ob-sum-row"><span className="ob-sum-name">{label(k)}</span><span className="ob-sum-count">{typesOf(k).length} type{typesOf(k).length === 1 ? '' : 's'}</span></div>
+                        {subsOf(k).map((g) => { const n = typesOf(k).filter((t) => t.group === g).length; return <div key={g} className="ob-sum-row ob-sum-sub"><span>{g}</span><span className="ob-sum-count">{n} item{n === 1 ? '' : 's'}</span></div>; })}
                       </div>
                     ))}
                   </div>
@@ -278,11 +283,20 @@ function Setup({ mode, onStart, busy, error }) {
           </div>
         </div>
       </div>
-      <CategoryModal open={modal === 'category'} existing={board.kinds} onClose={() => setModal(null)}
-        onSave={({ kind, groups }) => { setBoard((b) => ({ ...b, kinds: KINDS.map((k) => k.value).filter((v) => b.kinds.includes(v) || v === kind), groups: kind === 'expense' ? [...new Set([...b.groups, ...groups])] : b.groups })); setSel(kind); setModal(null); }} />
-      <SubCategoryModal open={modal === 'sub'} kind={sel} existing={board.groups} onClose={() => setModal(null)}
-        onSave={({ groups }) => { setBoard((b) => ({ ...b, groups: EXP_GROUPS.filter((g) => b.groups.includes(g) || groups.includes(g)) })); setModal(null); }} />
-      <TypeModal open={modal === 'type'} kind={sel} groups={board.groups.length ? board.groups : EXP_GROUPS} groupsOf={groupsOf} onClose={() => setModal(null)}
+      {/* Oct 4: any category and sub-category name; built-in categories keep their order, custom ones follow. */}
+      <CategoryModal open={modal === 'category'} existing={board.kinds} names={board.names} onClose={() => setModal(null)}
+        onSave={({ kind, name, groups }) => {
+          setBoard((b) => {
+            const builtins = KINDS.map((k) => k.value).filter((v) => b.kinds.includes(v) || v === kind);
+            const customs = [...b.kinds.filter(isCustomType), ...(isCustomType(kind) ? [kind] : [])];
+            const subs = { ...b.subs, [kind]: [...new Set([...(b.subs[kind] || []), ...groups])] };
+            return { ...b, kinds: [...builtins, ...customs], names: isCustomType(kind) ? { ...b.names, [kind]: name } : b.names, subs };
+          });
+          setSel(kind); setModal(null);
+        }} />
+      <SubCategoryModal open={modal === 'sub'} kind={sel} kindName={label(sel)} existing={subsOf(sel)} onClose={() => setModal(null)}
+        onSave={({ groups }) => { setBoard((b) => ({ ...b, subs: { ...b.subs, [sel]: [...(b.subs[sel] || []), ...groups] } })); setModal(null); }} />
+      <TypeModal open={modal === 'type'} kind={sel} kindName={label(sel)} groups={subsOf(sel)} groupsOf={groupsOf} onClose={() => setModal(null)}
         onSave={(t) => { addTypes(t); setModal(null); }} />
       {confirmModal}
     </section>

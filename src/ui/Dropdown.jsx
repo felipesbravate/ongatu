@@ -120,7 +120,9 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
           </div>
         </FragmentWithDivider>
       ))}
-    </div>, document.body) : null;
+    </div>,
+    // Inside a modal <dialog> (top layer) the menu must live in the dialog, or it renders under it and can't be clicked.
+    (wrapRef.current && wrapRef.current.closest('dialog')) || document.body) : null;
 
   const cls = ['ds-dd', 'ds-dd--' + size, !chosen && 'is-empty', disabled && 'is-disabled', open && 'open', className].filter(Boolean).join(' ');
   return (

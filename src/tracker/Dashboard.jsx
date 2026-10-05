@@ -2,7 +2,19 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
-import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
+import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES, isCustomType } from './model.js';
+
+// Oct 4: the board's own Expenses sub-categories and custom categories (money out) join the four default groups in the
+// allocation, the glance line and the expense cards. Colours beyond the defaults cycle through the data palette.
+const EXTRA_COLORS = ['var(--data-lime)', 'var(--data-blue)', 'var(--data-orange)', 'var(--data-light-blue)', 'var(--data-pink)', 'var(--data-purple)'];
+export function spendParts(model, y, c) {
+  const parts = EXP_GROUPS.map((g) => ({ key: g, label: g, value: c.byGroup[g] || 0, color: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g], badge: g === 'Fixed' ? 'var(--badge-fixed)' : GROUP_COLOR[g] }));
+  let n = 0;
+  Object.keys(c.byGroup).filter((g) => !EXP_GROUPS.includes(g)).forEach((g) => { const col = EXTRA_COLORS[n++ % EXTRA_COLORS.length]; parts.push({ key: g, label: g, value: c.byGroup[g] || 0, color: col, badge: col }); });
+  model.kindsOf(y.year).filter((k) => k.custom).forEach((k) => { const col = EXTRA_COLORS[n++ % EXTRA_COLORS.length]; parts.push({ key: k.type, label: k.label, value: (c.byCustom || {})[k.type] || 0, color: col, badge: col }); });
+  return parts;
+}
+const partValue = (c, key) => (isCustomType(key) ? (c.byCustom || {})[key] || 0 : c.byGroup[key] || 0);
 import { Icon } from '../ui/Icon.jsx';
 
 const tok = (name) => (typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(name).trim());
@@ -27,8 +39,9 @@ export function HeroLeft({ model, y, monthIdx }) {
   // Expense allocation
   const total = Math.max(1, c.expenseTotal);
   // At a glance
+  const parts = spendParts(model, y, c);
   let topGroup = EXP_GROUPS[0], topVal = -1;
-  EXP_GROUPS.forEach((g) => { if (c.byGroup[g] > topVal) { topVal = c.byGroup[g]; topGroup = g; } });
+  parts.forEach((p) => { if (p.value > topVal) { topVal = p.value; topGroup = p.label; } });
   const sharePct = c.expenseTotal > 0 ? (topVal / c.expenseTotal * 100) : 0;
   const expChange = prev ? c.expenseTotal - prev.expenseTotal : null;
   return (
@@ -53,13 +66,13 @@ export function HeroLeft({ model, y, monthIdx }) {
         <h2>Expense allocation</h2>
         <div className="hint" id="alloc-hint">Share of this month's spend</div>
         <div className="alloc-bars" id="alloc-bars">
-          {EXP_GROUPS.map((g) => {
-            const pct = Math.max(0, c.byGroup[g] / total * 100);
+          {parts.map((p) => {
+            const pct = Math.max(0, p.value / total * 100);
             return (
-              <div className="alloc-col" key={g}>
+              <div className="alloc-col" key={p.key}>
                 <div className="alloc-pct">{pct.toFixed(0)}%</div>
-                <div className="alloc-bar" style={{ height: `${Math.max(6, pct * 0.8).toFixed(1)}px`, background: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g] }} />
-                <div className="alloc-name">{g}</div>
+                <div className="alloc-bar" style={{ height: `${Math.max(6, pct * 0.8).toFixed(1)}px`, background: p.color }} />
+                <div className="alloc-name">{p.label}</div>
               </div>
             );
           })}
@@ -88,16 +101,33 @@ const TOP_TABS = [{ value: 'Income', label: 'Incomes' }, { value: 'Investments',
 // Phones (342:7993) shorten the tab and the allocation names.
 // Phones (Ongatu 342:7993, Sept 28): Incomes | Save/Invest | Expenses.
 const TOP_TABS_MOBILE = TOP_TABS;
-const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
-const topTabFor = (type) => ((type === 'Income' || type === 'Investments') ? type : 'Expenses');
+const GROUP_ORDER = ['Fixed', 'Variable', 'Additional', 'Extra'];
+const topTabFor = (type) => ((type === 'Income' || type === 'Investments' || isCustomType(type)) ? type : 'Expenses');
 
-export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, onTab, onAdd, onAddItem, addOpen, tip, setTip, actions, onAdjustBudget }) {
+// Oct 4: the tabs follow the board: Incomes | Save/Invest | Expenses | each custom category. The sub-tabs list Expenses'
+// sub-categories (the four defaults first, then the board's own) or a custom category's named sub-categories.
+export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, breakdownSub, onTab, onAdd, onAddItem, addOpen, tip, setTip, actions, onAdjustBudget }) {
   const cur = y.currency;
-  const bd = model.buildBreakdown(y, monthIdx, breakdownType);
+  const kinds = model.kindsOf(y.year);
+  const customKinds = kinds.filter((k) => k.custom);
+  const customKind = isCustomType(breakdownType) ? customKinds.find((k) => k.type === breakdownType) : null;
+  const effType = isCustomType(breakdownType) && !customKind ? 'Fixed' : breakdownType;
+  // A custom category's sub-tabs: its sub-categories, plus "General" for types without one.
+  const customSubs = customKind ? model.subsOf(customKind.type, y.year) : [];
+  const sub = customKind ? (customSubs.includes(breakdownSub ?? null) ? (breakdownSub ?? null) : (customSubs[0] ?? null)) : null;
+  const bd = model.buildBreakdown(y, monthIdx, effType, sub);
   const eligible = model.isFutureMonth(y, monthIdx);
-  const topTab = topTabFor(breakdownType);
+  const topTab = topTabFor(effType);
   const mobile = useMobile();
-  const color = GROUP_COLOR[breakdownType];
+  const expSubs = model.subsOf('expense', y.year).filter(Boolean);
+  const groupTabs = [...GROUP_ORDER.filter((g) => expSubs.includes(g)), ...expSubs.filter((g) => !GROUP_ORDER.includes(g))].map((g) => ({ value: g, label: g }));
+  const topTabs = [...TOP_TABS, ...customKinds.map((k) => ({ value: k.type, label: k.label }))];
+  const color = GROUP_COLOR[effType] || (customKind ? 'var(--expense)' : 'var(--data-lime)');
+  // What a row's "Add entry" adds to: the tab's kind, sub-category and the row's group.
+  const rowTarget = (block, it) => (effType === 'Income' || effType === 'Investments'
+    ? { type: effType === 'Income' ? 'income' : 'investment', group: block.group || null, cat: null, item: it.item }
+    : customKind ? { type: customKind.type, group: sub, cat: it.category || null, item: it.item }
+      : { type: 'expense', group: effType, cat: block.category, item: it.item });
   // Always the user's order (the year's categories), never re-sorted by amount: bars and the list below match.
   const rows = bd.rows;
   const maxV = Math.max(1, ...rows.map((r) => r.amount));
@@ -130,7 +160,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
     if (!mobile || !el) { setTall(false); return; }
     setTall(el.scrollHeight > 555 + 1);
   });
-  useEffect(() => { setExpanded(false); }, [breakdownType, monthIdx, y.year]);
+  useEffect(() => { setExpanded(false); }, [breakdownType, breakdownSub, monthIdx, y.year]);
   const collapsed = mobile && tall && !expanded;
 
   return (
@@ -145,11 +175,14 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       <div className="bd-content">
         <div className="bd-controllers">
           <div className="bd-tabs-stack">
-            <Segments id="breakdown-top-seg" options={mobile ? TOP_TABS_MOBILE : TOP_TABS} value={topTab} onChange={(v) => onTab(v === 'Expenses' ? breakdownGroup : v, null)} />
-            <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={GROUP_TABS} value={breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
+            <Segments id="breakdown-top-seg" options={mobile ? [...TOP_TABS_MOBILE, ...topTabs.slice(TOP_TABS.length)] : topTabs} value={topTab}
+              onChange={(v) => (v === 'Expenses' ? onTab(breakdownGroup, null) : isCustomType(v) ? onTab(v, null, model.subsOf(v, y.year)[0] ?? null) : onTab(v, null))} />
+            {customKind
+              ? <Segments sub id="breakdown-group-seg" aria-label={customKind.label + ' sub-category'} options={customSubs.map((g) => ({ value: g || '__general', label: g || 'General' }))} value={sub || '__general'} hidden={customSubs.length < 2 && !customSubs[0]} onChange={(v) => onTab(breakdownType, null, v === '__general' ? null : v)} />
+              : <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />}
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
-            {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : 'Add expense'}
+            {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : customKind ? 'Add entry' : 'Add expense'}
           </Button>
         </div>
         <div id="meters">
@@ -165,8 +198,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
                 {r.items.map((it) => (
                   <BreakdownRow key={it.item} name={it.item} amount={it.amount} currency={cur} state={state(it)} counter={counter(it)} euroSize={16}
                     amountLabel={`${it.item}: ${fmtMoney(it.amount, cur)}. ${counter(it) ? 'Show entries' : 'Add an entry'}`}
-                    onAmount={(ev) => { ev.stopPropagation(); if (counter(it)) toggleTip(it, ev.currentTarget); else if (onAddItem) onAddItem({ type: 'expense', group: breakdownType, cat: r.category, item: it.item }); }}
-                    actions={<RowMenu item={it.item} onAdd={onAddItem ? () => onAddItem({ type: 'expense', group: breakdownType, cat: r.category, item: it.item }) : null}
+                    onAmount={(ev) => { ev.stopPropagation(); if (counter(it)) toggleTip(it, ev.currentTarget); else if (onAddItem) onAddItem(rowTarget(r, it)); }}
+                    actions={<RowMenu item={it.item} onAdd={onAddItem ? () => onAddItem(rowTarget(r, it)) : null}
                       onAdjustBudget={onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) ? onAdjustBudget : null} />} />
                 ))}
               </div>
@@ -281,13 +314,13 @@ export function ExpenseStrip({ model, y, monthIdx }) {
   const prev = monthIdx > 0 ? model.computeMonth(y, monthIdx - 1) : null;
   return (
     <div className="ticker-strip" id="ticker-strip">
-      {EXP_GROUPS.map((g) => {
-        const v = c.byGroup[g];
-        const d = prev ? v - prev.byGroup[g] : null;
+      {spendParts(model, y, c).map(({ key: g, label, badge }) => {
+        const v = partValue(c, g);
+        const d = prev ? v - partValue(prev, g) : null;
         const delta = d === null ? null
           : Math.abs(d) < 0.005 ? { icon: minus, text: 'same as last month', color: 'var(--text-secondary)' }
           : { icon: d < 0 ? arrowStraightDown : arrowStraightUp, text: `${fmtMoneyShort(Math.abs(d), cur)} vs last month`, color: d < 0 ? 'var(--good)' : 'var(--critical)' };
-        return <ExpenseCard key={g} name={g} initial={g[0]} badgeColor={g === 'Fixed' ? 'var(--badge-fixed)' : GROUP_COLOR[g]} value={v} currency={cur} delta={delta} />;
+        return <ExpenseCard key={g} name={label} initial={label[0]} badgeColor={badge} value={v} currency={cur} delta={delta} />;
       })}
     </div>
   );

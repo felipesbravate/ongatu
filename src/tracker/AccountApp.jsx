@@ -56,7 +56,7 @@ export default function AccountApp() {
   return (
     <>
       <div className="app-top-gap" />
-      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { location.href = '/?alert=' + encodeURIComponent([a.year, a.mi, a.group].join('|')); }} /></AppHeader>
+      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { location.href = '/?alert=' + encodeURIComponent([a.year, a.mi, a.group, a.type || 'expense'].join('|')); }} /></AppHeader>
       <div className="wrap acct-page">
         <header className="acct-head">
           <ActionLink href="/" size="medium" icon={arrowStraightLeft} id="acct-back">Go to dashboard</ActionLink>
