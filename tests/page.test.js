@@ -96,8 +96,11 @@ test('custom categories count as money out; Income/Savings sub-categories add up
   assert.deepEqual(inv.rows.map((r) => [r.category, r.amount]), [['Savings and investments', 100], ['Funds', 200]]);
   assert.ok(m.typeOptsForYear('2031').some((t) => t.key === phil + ':Doctors without borders' && t.label === 'Philanthropy/Doctors without borders'));
   // An old board (no new fields) computes exactly as before.
-  const old = createModel({ data: yearsFromDocs([{ id: 'o', year: '2031', currency: 'EUR', taxonomy: { incomes: ['Salary'], investments: [], expenses: { Fixed: { Home: ['Rent'] } } } }]), entries: [entries[0], entries[1], entries[3]], overrides: [], budgets: [], budgetDefaults: [] });
+  const old = createModel({ data: yearsFromDocs([{ id: 'o', year: '2031', currency: 'EUR', taxonomy: { incomes: ['Salary'], investments: [], expenses: { Fixed: { Home: ['Rent'] }, Variable: {}, Extra: {}, Additional: {} } } }]), entries: [entries[0], entries[1], entries[3]], overrides: [], budgets: [], budgetDefaults: [] });
   const oc = old.computeMonth(old.DATA[0], 0);
   assert.deepEqual([oc.income, oc.invest, oc.expenseTotal, oc.balance, Object.keys(oc.byGroup)], [3000, 100, 1000, 1900, ['Fixed', 'Variable', 'Extra', 'Additional']]);
   assert.equal(old.buildBreakdown(old.DATA[0], 0, 'Investments').flat, true);
+  // A board built with only some Expenses sub-categories shows just those (Oct 5).
+  const lean = createModel({ data: yearsFromDocs([{ id: 'l', year: '2031', currency: 'EUR', taxonomy: { incomes: [], investments: [], expenses: { Essentials: { Home: ['Rent'] } } } }]), entries: [], overrides: [], budgets: [], budgetDefaults: [] });
+  assert.deepEqual(Object.keys(lean.computeMonth(lean.DATA[0], 0).byGroup), ['Essentials']);
 });

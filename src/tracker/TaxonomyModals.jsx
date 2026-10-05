@@ -209,3 +209,29 @@ export function SubCategoryModal({ open, kind, kindName, existing = [], onClose,
     </Modal>
   );
 }
+
+// Renaming a category or a sub-category (Oct 5; no Figma frame yet): the Modal with the Pencil illustration, one Input
+// with the current name, Cancel + Rename. `existing` = the names it must not clash with. onSave(newName).
+export function RenameModal({ open, title, label, value, existing = [], description, onClose, onSave, id = 'rename-modal' }) {
+  const [name, setName] = useState(value || '');
+  const [warn, setWarn] = useState(null);
+  useEffect(() => { if (open) { setName(value || ''); setWarn(null); } }, [open, value]);
+  const save = () => {
+    const n = name.trim();
+    if (!n) return setWarn('Give it a name');
+    if (norm(n) === norm(value)) return onClose();
+    if (existing.some((x) => norm(x) === norm(n))) return setWarn(`${n} is already on your board`);
+    onSave(n);
+  };
+  return (
+    <Modal open={open} onClose={onClose} id={id} illustration={illustrations.pencil} title={title} description={description}
+      secondary={{ label: 'Cancel', onClick: onClose, id: `${id}-cancel` }} primary={{ label: 'Rename', onClick: save, id: `${id}-save` }}>
+      <div className="ds-modal-form">
+        <div className="fld"><label className="fld-label" htmlFor={`${id}-name`}>{label}</label>
+          <Input id={`${id}-name`} value={name} maxLength={60} autoComplete="off" onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } }} /></div>
+        {warn && <InfoMessage message="warning" title={warn} />}
+      </div>
+    </Modal>
+  );
+}

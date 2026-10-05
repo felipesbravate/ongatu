@@ -3493,3 +3493,9 @@
 .ob-sum-sub + .ob-sum-sub:not(#z){ margin-top:-4px; }
 .ob-summary:not(#z){ gap:40px; }
 .ob-summary-cta:not(#z){ gap:12px; }
+/* Editing budget (Oct 5): "Rename category" and "Rename sub-category", Action links 16 apart. */
+.budget-rename{ display:flex; flex-wrap:wrap; gap:16px; }
+/* Set up your board (Oct 5): "+ Add sub-category" and "Rename" side by side (each hugs its label); a sub-category
+   title with its 24px rename button. */
+.ob-sel-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+.ob-type-group-head{ display:flex; align-items:center; gap:8px; }

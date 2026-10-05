@@ -1,7 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { ActionLink, Button, Dropdown, InfoTooltip, Input, MenuList, PanelHeader, RoundButton, useDismiss, useMobile } from '../ui/index.js';
-import { KINDS, SubCategoryModal, TypeModal } from './TaxonomyModals.jsx';
+import { KINDS, RenameModal, SubCategoryModal, TypeModal } from './TaxonomyModals.jsx';
+import { useConfirm } from './ConfirmModal.jsx';
+import { pencil } from '../ui/illustrations.js';
 import { Icon } from '../ui/Icon.jsx';
 import { actions, edit, euro, plus, trash, x } from '../ui/icons.js';
 import { EXP_GROUPS, MONTH_NAMES, fmtNum, hasGroups, isCustomType, parseAmount } from './model.js';
@@ -19,7 +21,7 @@ let seq = 0;
 // Editing budget ("{Mon} {year} / Editing budget", `month` = { yearIdx, monthIdx }): the month's items with the figures
 //   it shows now; "Save" stores them as that month's budget.
 // `forMonth` marks the Editing-budget instance, so its ids stay its own while it is closed.
-export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate, onSave }) {
+export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate, onSave, onRename }) {
   const isMonth = forMonth != null ? !!forMonth : !!month;
   const open = isMonth ? !!month : !!pending;
   const my = isMonth && month ? model.DATA[month.yearIdx] : null;
@@ -35,6 +37,8 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const [typeModal, setTypeModal] = useState(false);
   const [typeCat, setTypeCat] = useState('');
   const [subModal, setSubModal] = useState(false);
+  const [renaming, setRenaming] = useState(null); // { level: 'category' | 'sub', from, label }
+  const [confirmModal, confirm] = useConfirm(isMonth ? 'month-rename-confirm' : 'budget-rename-confirm');
   const mobile = useMobile();
   const [sections, setSections] = useState([]);
   const [status, setStatus] = useState(null);
@@ -82,6 +86,28 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const addSubs = (groups) => {
     setSections((ss) => [...ss, ...groups.filter((g) => !ss.some((x) => x.type === topTab && x.group === g)).map((g) => ({ type: topTab, group: g, label: g, pre: [], rows: [], blocks: [], empty: true, adding: false }))]);
     if (groups[0]) setSub(groups[0]);
+  };
+  // Rename (Oct 5, Editing budget only): the Rename modal, then a confirmation that says what spreads, then the write.
+  const curSubName = topTab === 'expense' ? group : (sub || null);
+  const askRename = (to) => {
+    const r = renaming; setRenaming(null);
+    if (!r || !month) return;
+    const when = `${MONTH_NAMES[month.monthIdx]} ${my ? my.year : ''}`.trim();
+    confirm({
+      title: `Rename "${r.from}" to "${to}"?`,
+      description: r.level === 'category'
+        ? `${my ? my.year : 'This year'} and every year after it will show "${to}". Your entries and budgets stay as they are.`
+        : `This applies to ${when} and every month after it, later years included. Earlier months keep "${r.from}".`,
+      illustration: pencil, destructive: false, confirmLabel: 'Rename', busyLabel: 'Renaming…',
+      onConfirm: async () => {
+        await onRename({ level: r.level, type: topTab, from: r.level === 'sub' ? r.from : null, fromLabel: r.from, to, year: my.year, mi: month.monthIdx });
+        if (r.level === 'sub') {
+          setSections((ss) => ss.map((x) => (x.type === topTab && x.group === r.from ? { ...x, group: to, label: to,
+            pre: x.pre.map((q) => ({ ...q, group: to })), rows: x.rows.map((q) => ({ ...q, group: to })), blocks: x.blocks.map((b) => ({ ...b, rows: b.rows.map((q) => ({ ...q, group: to })) })) } : x)));
+          if (topTab === 'expense') setGroup(to); else setSub(to);
+        }
+      },
+    });
   };
   const namedSubs = topTab === 'expense' ? [] : [...new Set(sections.filter((x) => x.type === topTab && x.group).map((x) => x.group))];
   const expGroups = [...new Set(sections.filter((x) => x.type === 'expense').map((x) => x.group))];
@@ -147,8 +173,21 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
                 <InfoTooltip text="Sub-categories split a category into groups you track separately." />
               </div>
             )}
+            {/* Oct 5 (no Figma frame yet): rename the category or the shown sub-category, from this month on. */}
+            {isMonth && onRename && (
+              <div className="span-2 budget-rename">
+                <ActionLink icon={edit} id="month-budget-rename-cat" onClick={() => setRenaming({ level: 'category', from: kindName })}>Rename category</ActionLink>
+                {curSubName && <ActionLink icon={edit} id="month-budget-rename-sub" onClick={() => setRenaming({ level: 'sub', from: curSubName })}>Rename sub-category</ActionLink>}
+              </div>
+            )}
             {hasGroups(topTab) && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-create-group'} onClick={createGroup}>{mobile ? 'Add group' : 'Create new group'}</ActionLink></div>}
           </div>
+          <RenameModal open={!!renaming} id={isMonth ? 'month-rename-modal' : 'budget-rename-modal'}
+            title={renaming && renaming.level === 'category' ? 'Rename category' : 'Rename sub-category'}
+            label={renaming && renaming.level === 'category' ? 'Category' : 'Sub-category'} value={renaming ? renaming.from : ''}
+            existing={renaming && renaming.level === 'category' ? kinds.map((k) => k.label).filter((l) => l !== renaming.from) : (topTab === 'expense' ? expGroups : namedSubs).filter((g) => renaming && g !== renaming.from)}
+            onClose={() => setRenaming(null)} onSave={askRename} />
+          {confirmModal}
           <SubCategoryModal open={subModal} kind={topTab} kindName={kindName} existing={namedSubs} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={({ groups }) => { addSubs(groups); setSubModal(false); }} />
           <TypeModal open={typeModal} kind={topTab} kindName={kindName} group={topTab === 'expense' ? group : (sub || null)} category={hasGroups(topTab) ? typeCat : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
             groupsOf={() => (sections.find(isSel) || { blocks: [] }).blocks.map((bk) => bk.category)}

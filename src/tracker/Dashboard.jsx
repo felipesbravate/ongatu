@@ -8,10 +8,14 @@ import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES, isCustomType } from '
 // allocation, the glance line and the expense cards. Colours beyond the defaults cycle through the data palette.
 const EXTRA_COLORS = ['var(--data-lime)', 'var(--data-blue)', 'var(--data-orange)', 'var(--data-light-blue)', 'var(--data-pink)', 'var(--data-purple)'];
 export function spendParts(model, y, c) {
-  const parts = EXP_GROUPS.map((g) => ({ key: g, label: g, value: c.byGroup[g] || 0, color: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g], badge: g === 'Fixed' ? 'var(--badge-fixed)' : GROUP_COLOR[g] }));
+  // The month's Expenses sub-categories in board order (the four defaults keep their colours), then custom categories.
+  const parts = [];
   let n = 0;
-  Object.keys(c.byGroup).filter((g) => !EXP_GROUPS.includes(g)).forEach((g) => { const col = EXTRA_COLORS[n++ % EXTRA_COLORS.length]; parts.push({ key: g, label: g, value: c.byGroup[g] || 0, color: col, badge: col }); });
-  model.kindsOf(y.year).filter((k) => k.custom).forEach((k) => { const col = EXTRA_COLORS[n++ % EXTRA_COLORS.length]; parts.push({ key: k.type, label: k.label, value: (c.byCustom || {})[k.type] || 0, color: col, badge: col }); });
+  Object.keys(c.byGroup).forEach((g) => {
+    if (EXP_GROUPS.includes(g)) parts.push({ key: g, label: g, value: c.byGroup[g] || 0, color: g === 'Extra' ? 'var(--alloc-extra)' : GROUP_COLOR[g], badge: g === 'Fixed' ? 'var(--badge-fixed)' : GROUP_COLOR[g] });
+    else { const col = EXTRA_COLORS[n++ % EXTRA_COLORS.length]; parts.push({ key: g, label: g, value: c.byGroup[g] || 0, color: col, badge: col }); }
+  });
+  model.kindsOf(y.year, c.mi).filter((k) => k.custom).forEach((k) => { const col = EXTRA_COLORS[n++ % EXTRA_COLORS.length]; parts.push({ key: k.type, label: k.label, value: (c.byCustom || {})[k.type] || 0, color: col, badge: col }); });
   return parts;
 }
 const partValue = (c, key) => (isCustomType(key) ? (c.byCustom || {})[key] || 0 : c.byGroup[key] || 0);
@@ -108,20 +112,23 @@ const topTabFor = (type) => ((type === 'Income' || type === 'Investments' || isC
 // sub-categories (the four defaults first, then the board's own) or a custom category's named sub-categories.
 export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup, breakdownSub, onTab, onAdd, onAddItem, addOpen, tip, setTip, actions, onAdjustBudget }) {
   const cur = y.currency;
-  const kinds = model.kindsOf(y.year);
+  const kinds = model.kindsOf(y.year, monthIdx);
   const customKinds = kinds.filter((k) => k.custom);
   const customKind = isCustomType(breakdownType) ? customKinds.find((k) => k.type === breakdownType) : null;
   const effType = isCustomType(breakdownType) && !customKind ? 'Fixed' : breakdownType;
   // A custom category's sub-tabs: its sub-categories, plus "General" for types without one.
-  const customSubs = customKind ? model.subsOf(customKind.type, y.year) : [];
+  const customSubs = customKind ? model.subsOf(customKind.type, y.year, monthIdx) : [];
   const sub = customKind ? (customSubs.includes(breakdownSub ?? null) ? (breakdownSub ?? null) : (customSubs[0] ?? null)) : null;
   const bd = model.buildBreakdown(y, monthIdx, effType, sub);
   const eligible = model.isFutureMonth(y, monthIdx);
   const topTab = topTabFor(effType);
   const mobile = useMobile();
-  const expSubs = model.subsOf('expense', y.year).filter(Boolean);
+  const expSubs = model.subsOf('expense', y.year, monthIdx).filter(Boolean);
   const groupTabs = [...GROUP_ORDER.filter((g) => expSubs.includes(g)), ...expSubs.filter((g) => !GROUP_ORDER.includes(g))].map((g) => ({ value: g, label: g }));
-  const topTabs = [...TOP_TABS, ...customKinds.map((k) => ({ value: k.type, label: k.label }))];
+  // Built-in tabs keep their short names unless the board renamed the category (taxonomy labels, Oct 5).
+  const TXL = model.taxonomyForYear(y.year).labels || {};
+  const builtinTabs = TOP_TABS.map((t) => { const k = t.value === 'Income' ? 'income' : t.value === 'Investments' ? 'investment' : 'expense'; return TXL[k] ? { ...t, label: TXL[k] } : t; });
+  const topTabs = [...builtinTabs, ...customKinds.map((k) => ({ value: k.type, label: k.label }))];
   const color = GROUP_COLOR[effType] || (customKind ? 'var(--expense)' : 'var(--data-lime)');
   // What a row's "Add entry" adds to: the tab's kind, sub-category and the row's group.
   const rowTarget = (block, it) => (effType === 'Income' || effType === 'Investments'
@@ -175,8 +182,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       <div className="bd-content">
         <div className="bd-controllers">
           <div className="bd-tabs-stack">
-            <Segments id="breakdown-top-seg" options={mobile ? [...TOP_TABS_MOBILE, ...topTabs.slice(TOP_TABS.length)] : topTabs} value={topTab}
-              onChange={(v) => (v === 'Expenses' ? onTab(breakdownGroup, null) : isCustomType(v) ? onTab(v, null, model.subsOf(v, y.year)[0] ?? null) : onTab(v, null))} />
+            <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
+              onChange={(v) => (v === 'Expenses' ? onTab(breakdownGroup, null) : isCustomType(v) ? onTab(v, null, model.subsOf(v, y.year, monthIdx)[0] ?? null) : onTab(v, null))} />
             {customKind
               ? <Segments sub id="breakdown-group-seg" aria-label={customKind.label + ' sub-category'} options={customSubs.map((g) => ({ value: g || '__general', label: g || 'General' }))} value={sub || '__general'} hidden={customSubs.length < 2 && !customSubs[0]} onChange={(v) => onTab(breakdownType, null, v === '__general' ? null : v)} />
               : <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />}

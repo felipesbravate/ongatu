@@ -6,14 +6,14 @@
 // settings/onboarding, so the dashboard never sends this account here again.
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
-import { ActionLink, Button, Divider, Dropdown, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
+import { ActionLink, Button, Divider, Dropdown, Logo, Modal, RoundButton, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { arrowStraightRight, euro, plus, x } from '../ui/icons.js';
+import { arrowStraightRight, edit, euro, plus, x } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
 import { ListSelector, Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
 import { db, getMe, leavePage } from '../tracker/api.js';
 import { CATS, EXP_GROUPS, MONTH_NAMES, addSubToTaxonomy, addTypeToTaxonomy, budgetDefaultDocId, ensureCustom, fmtNum, hasGroups, isCustomType, parseAmount } from '../tracker/model.js';
-import { CategoryModal, KINDS, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
+import { CategoryModal, KINDS, RenameModal, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
 import { useConfirm } from '../tracker/ConfirmModal.jsx';
 
 const STEPS = ['Account', 'Tour', 'Setup'];
@@ -32,7 +32,7 @@ const emptyBoard = () => ({ kinds: ['income'], names: {}, subs: {}, types: [] })
 
 export function taxonomyOfBoard(board) {
   const tx = { incomes: [], investments: [], expenses: {} };
-  board.kinds.forEach((k) => { if (isCustomType(k)) ensureCustom(tx, k, board.names[k]); (board.subs[k] || []).forEach((g) => addSubToTaxonomy(tx, k, g, board.names[k])); });
+  board.kinds.forEach((k) => { if (isCustomType(k)) ensureCustom(tx, k, board.names[k]); else if (board.names[k]) tx.labels = { ...(tx.labels || {}), [k]: board.names[k] }; (board.subs[k] || []).forEach((g) => addSubToTaxonomy(tx, k, g, board.names[k])); });
   board.types.forEach((t) => addTypeToTaxonomy(tx, t, board.names[t.type]));
   return tx;
 }
@@ -154,6 +154,15 @@ function Setup({ mode, onStart, busy, error }) {
   const [board, setBoard] = useState(() => (mode === 'template' ? templateBoard() : emptyBoard()));
   const [sel, setSel] = useState('income');
   const [modal, setModal] = useState(null); // 'category' | 'sub' | 'type'
+  const [renaming, setRenaming] = useState(null); // { level: 'category' | 'sub', kind, from }
+  // Oct 5: rename a category (any, Income too) or one of its sub-categories while setting up. Nothing is saved yet,
+  // so the change is immediate.
+  const applyRename = (to) => {
+    const r = renaming; setRenaming(null); if (!r) return;
+    setBoard((b) => (r.level === 'category'
+      ? { ...b, names: { ...b.names, [r.kind]: to } }
+      : { ...b, subs: { ...b.subs, [r.kind]: (b.subs[r.kind] || []).map((g) => (g === r.from ? to : g)) }, types: b.types.map((t) => (t.type === r.kind && t.group === r.from ? { ...t, group: to } : t)) }));
+  };
   const [confirmModal, confirm] = useConfirm();
   const mobile = useMobile();
   // Oct 4: a category without the "Default" tag can be deleted (its X, 401:4464 / 719:18723), after the confirm modal.
@@ -205,7 +214,8 @@ function Setup({ mode, onStart, busy, error }) {
               {board.kinds.map((k) => (
                 <ListSelector key={k} id={`ob-cat-${k}`} title={label(k)} label={k === 'income' ? 'Default' : null} description={sel === k ? null : descOf(k)} selected={sel === k} onSelect={() => setSel(k)}
                   onDelete={k === 'income' ? undefined : () => deleteKind(k)} deleteLabel={`Delete ${label(k)}`}
-                  action={<ActionLink size="tiny" icon={plus} id="ob-add-sub" onClick={() => setModal('sub')}>Add sub-category</ActionLink>} />
+                  action={<div className="ob-sel-actions"><ActionLink size="tiny" icon={plus} id="ob-add-sub" onClick={() => setModal('sub')}>Add sub-category</ActionLink>
+                    <ActionLink size="tiny" icon={edit} id="ob-rename-cat" onClick={() => setRenaming({ level: 'category', kind: k, from: label(k) })}>Rename</ActionLink></div>} />
               ))}
             </div>
             {/* 401:4464 / 402:4539 (desktop): "+ Add category" Tiny Secondary button, always there (the modal says when a
@@ -240,7 +250,8 @@ function Setup({ mode, onStart, busy, error }) {
                   {loose.length > 0 && (named.length ? <div className="ob-type-group ob-type-loose"><div className="ob-type-list">{byCat(loose)}</div></div> : byCat(loose))}
                   {named.filter((g) => selTypes.some((t) => t.group === g)).map((g) => (
                     <div className="ob-type-group" key={g}>
-                      <h4 className="ob-type-group-title">{g}</h4>
+                      <div className="ob-type-group-head"><h4 className="ob-type-group-title">{g}</h4>
+                        <RoundButton icon={edit} size="micro" iconSize={12} className="ob-rename-sub" label={`Rename ${g}`} onClick={() => setRenaming({ level: 'sub', kind: sel, from: g })} /></div>
                       <div className="ob-type-list">{byCat(selTypes.filter((t) => t.group === g))}</div>
                     </div>
                   ))}
@@ -298,6 +309,10 @@ function Setup({ mode, onStart, busy, error }) {
         onSave={({ groups }) => { setBoard((b) => ({ ...b, subs: { ...b.subs, [sel]: [...(b.subs[sel] || []), ...groups] } })); setModal(null); }} />
       <TypeModal open={modal === 'type'} kind={sel} kindName={label(sel)} groups={subsOf(sel)} groupsOf={groupsOf} onClose={() => setModal(null)}
         onSave={(t) => { addTypes(t); setModal(null); }} />
+      <RenameModal open={!!renaming} id="ob-rename-modal" title={renaming && renaming.level === 'category' ? 'Rename category' : 'Rename sub-category'}
+        label={renaming && renaming.level === 'category' ? 'Category' : 'Sub-category'} value={renaming ? renaming.from : ''}
+        existing={renaming ? (renaming.level === 'category' ? board.kinds.map(label) : subsOf(renaming.kind)).filter((n) => n !== renaming.from) : []}
+        onClose={() => setRenaming(null)} onSave={applyRename} />
       {confirmModal}
     </section>
   );

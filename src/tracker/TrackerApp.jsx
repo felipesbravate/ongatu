@@ -7,6 +7,7 @@ import { db, getMe, leavePage } from './api.js';
 import { AccountNav, firstNameOf } from './AccountBar.jsx';
 import { AddPanel } from './AddPanel.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
+import { planRename } from './rename.js';
 import { useProfile } from './profile.js';
 import { BudgetPanel } from './BudgetPanel.jsx';
 import { ExpenseStrip, HeroLeft, TrackerCard, TrendChart, YearOverYear } from './Dashboard.jsx';
@@ -293,6 +294,24 @@ export default function TrackerApp() {
     }
   };
 
+  // Rename a category or sub-category from the month being edited on (Oct 5; rename.js has the rules). The confirm modal
+  // in the panel has already told the person what spreads; the toast confirms it.
+  const renameName = async ({ level, type, from, to, year, mi, fromLabel }) => {
+    const d = dataRef.current;
+    const plan = planRename({ level, type, from, to, year, mi, data: { years: d.years || [], entries: d.entries || [], overrides: d.overrides || [], budgets: d.budgets || [], budgetDefaults: d.budgetDefaults || [] }, taxonomyForYear: modelRef.current.taxonomyForYear });
+    try {
+      for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
+      for (const x of plan.adds) await db.collection(x.col).add(x.doc);
+      for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
+      showToast(level === 'category'
+        ? `"${fromLabel}" is now "${to}" in ${year} and the years after it.`
+        : `"${from}" is now "${to}" from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep "${from}".`, 'success');
+    } catch (err) {
+      showToast(`Could not rename "${from || fromLabel}".`, 'fail');
+      throw err;
+    }
+  };
+
   // "Adjust month's budget": one budget doc per item for that month (monthIndex set); it wins over the starting budget.
   const saveMonthBudget = async (rows) => {
     const { yearIdx: yi, monthIdx: mi } = monthBudget;
@@ -358,7 +377,7 @@ export default function TrackerApp() {
         <AddPanel open={addPanel.open} preset={addPanel.preset} model={model} yearIdx={yearIdx} monthIdx={monthIdx}
           onClose={() => setAddPanel((p) => ({ ...p, open: false }))} save={save} />
         <BudgetPanel pending={pendingYear} model={model} onClose={() => setPendingYear(null)} onCreate={createYear} />
-        <BudgetPanel month={monthBudget} forMonth model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} />
+        <BudgetPanel month={monthBudget} forMonth model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} onRename={renameName} />
         <div className="row1">
           <HeroLeft model={model} y={y} monthIdx={monthIdx} />
           <div className="hero-right">

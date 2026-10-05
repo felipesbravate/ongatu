@@ -8,7 +8,8 @@ import { trashCan } from '../ui/illustrations.js';
 //   const [confirmModal, confirm] = useConfirm();
 //   confirm({ title, description, onConfirm: async () => { … } });  // render {confirmModal} once
 // Delete stays disabled ("Deleting…") while onConfirm runs; the modal closes when it settles.
-export function useConfirm() {
+// req.destructive === false makes it a plain confirmation (Primary button, req.confirmLabel, req.busyLabel while it runs).
+export function useConfirm(id = 'confirm-modal') {
   const [req, setReq] = useState(null);
   const [busy, setBusy] = useState(false);
   const confirm = useCallback((r) => setReq(r), []);
@@ -18,10 +19,10 @@ export function useConfirm() {
     try { await req.onConfirm(); } finally { setBusy(false); setReq(null); }
   };
   const modal = (
-    <Modal id="confirm-modal" open={!!req} onClose={close} title={req ? req.title : ''} description={req ? req.description : ''}
+    <Modal id={id} open={!!req} onClose={close} title={req ? req.title : ''} description={req ? req.description : ''}
       illustration={req && req.illustration !== undefined ? req.illustration : trashCan}
-      secondary={{ label: 'Cancel', onClick: close, disabled: busy, id: 'confirm-cancel' }}
-      primary={{ label: busy ? 'Deleting…' : (req && req.confirmLabel) || 'Delete', onClick: run, disabled: busy, destructive: true, id: 'confirm-delete' }} />
+      secondary={{ label: 'Cancel', onClick: close, disabled: busy, id: id === 'confirm-modal' ? 'confirm-cancel' : id + '-cancel' }}
+      primary={{ label: busy ? ((req && req.busyLabel) || 'Deleting…') : (req && req.confirmLabel) || 'Delete', onClick: run, disabled: busy, destructive: !req || req.destructive !== false, id: id === 'confirm-modal' ? 'confirm-delete' : id + '-ok' }} />
   );
   return [modal, confirm];
 }
