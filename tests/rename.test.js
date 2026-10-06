@@ -1,7 +1,7 @@
-// Oct 5: renaming a category / sub-category from a month on (planRename).
+// Oct 5: renaming / deleting a sub-category from a month on (planRename, planDeleteSub).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { planRename } from '../src/tracker/rename.js';
+import { planDeleteSub, planRename } from '../src/tracker/rename.js';
 
 const tx = { incomes: [], investments: ['Savings'], expenses: { Fixed: { Home: ['Rent'] } }, investmentSubs: { Funds: ['ETF'] } };
 const data = {
@@ -21,7 +21,7 @@ const data = {
 };
 
 test('sub-category: renamed from the month on, earlier months keep the old name and their plan', () => {
-  const p = planRename({ level: 'sub', type: 'investment', from: 'Funds', to: 'Index funds', year: '2026', mi: 9, data, taxonomyForYear: () => tx });
+  const p = planRename({ type: 'investment', from: 'Funds', to: 'Index funds', year: '2026', mi: 9, data, taxonomyForYear: () => tx });
   const set = (col, id) => p.sets.find((s) => s.col === col && s.id === id);
   assert.equal(set('entries', 'e1'), undefined);
   assert.equal(set('entries', 'e2').doc.group, 'Index funds');
@@ -38,17 +38,9 @@ test('sub-category: renamed from the month on, earlier months keep the old name 
   assert.ok(p.sets.some((s) => s.col === 'budgetDefaults' && s.doc.group === 'Index funds'));
 });
 
-test('category: a new label in that year and later years, data untouched', () => {
-  const p = planRename({ level: 'category', type: 'investment', to: 'Nest egg', year: '2026', mi: 9, data, taxonomyForYear: () => tx });
-  assert.deepEqual(p.sets.map((s) => [s.col, s.id, s.doc.taxonomy.labels.investment]), [['years', 'y26', 'Nest egg'], ['years', 'y27', 'Nest egg']]);
-  assert.equal(p.adds.length + p.deletes.length, 0);
-  const c = planRename({ level: 'category', type: 'custom-pets', to: 'Animals', year: '2026', mi: 0, data: { years: [{ id: 'y', year: '2026', taxonomy: { ...tx, custom: [{ type: 'custom-pets', name: 'Pets', subs: {} }] } }] }, taxonomyForYear: () => tx });
-  assert.equal(c.sets[0].doc.taxonomy.custom[0].name, 'Animals');
-});
-
 test('after the rename, earlier months list the old name only, later months the new one', async () => {
   const { createModel, yearsFromDocs } = await import('../src/tracker/model.js');
-  const p = planRename({ level: 'sub', type: 'investment', from: 'Funds', to: 'Index funds', year: '2026', mi: 9, data, taxonomyForYear: () => tx });
+  const p = planRename({ type: 'investment', from: 'Funds', to: 'Index funds', year: '2026', mi: 9, data, taxonomyForYear: () => tx });
   const years = p.sets.filter((s) => s.col === 'years').map((s) => ({ id: s.id, ...s.doc }));
   assert.deepEqual(years.find((y) => y.year === '2027').taxonomy.renames, undefined, 'only the edited year remembers it');
   const ents = data.entries.map((e) => { const s = p.sets.find((x) => x.col === 'entries' && x.id === e.id); return s ? { id: e.id, ...s.doc } : e; });
@@ -56,4 +48,22 @@ test('after the rename, earlier months list the old name only, later months the 
   assert.deepEqual(m.subsOf('investment', '2026', 3), [null, 'Funds']);
   assert.deepEqual(m.subsOf('investment', '2026', 9), [null, 'Index funds']);
   assert.deepEqual(m.subsOf('investment', '2027', 0), [null, 'Index funds']);
+});
+
+test('delete a sub-category from a month on: refused with entries, else its plan goes and earlier months keep it', async () => {
+  const withEntries = planDeleteSub({ type: 'investment', sub: 'Funds', year: '2026', mi: 9, data, taxonomyForYear: () => tx });
+  assert.equal(withEntries.entriesFrom, 2, 'Oct 2026 and Jan 2027 entries');
+  const clean = { ...data, entries: data.entries.filter((e) => !(e.group === 'Funds' && (e.year === '2027' || e.monthIndex >= 9))) };
+  const p = planDeleteSub({ type: 'investment', sub: 'Funds', year: '2026', mi: 9, data: clean, taxonomyForYear: () => tx });
+  assert.equal(p.entriesFrom, 0);
+  assert.deepEqual(p.deletes.map((d) => d.col + '/' + d.id).sort(), ['budgetDefaults/old', 'budgets/b1']);
+  assert.deepEqual(p.adds.map((a) => a.doc.monthIndex), [0, 2, 3, 4, 5, 6, 7, 8], 'earlier months keep their plan');
+  const y26 = p.sets.find((s) => s.id === 'y26').doc.taxonomy;
+  assert.deepEqual(Object.keys(y26.investmentSubs), []);
+  const { createModel, yearsFromDocs } = await import('../src/tracker/model.js');
+  const years = p.sets.map((s) => ({ id: s.id, ...s.doc }));
+  const m = createModel({ data: yearsFromDocs(years), entries: clean.entries, overrides: [], budgets: [], budgetDefaults: [] });
+  assert.deepEqual(m.subsOf('investment', '2026', 3), [null, 'Funds']);
+  assert.deepEqual(m.subsOf('investment', '2026', 9), [null]);
+  assert.deepEqual(m.subsOf('investment', '2027', 0), [null]);
 });

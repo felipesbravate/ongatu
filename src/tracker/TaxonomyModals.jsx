@@ -3,24 +3,24 @@
 // Type creation 577:6584 / Type creation - Sub-category 563:2261). Shared by the onboarding setup and the Add entry panel.
 //
 // How the board maps onto the data (Oct 4: no restrictions, the board is the person's own mental model):
-// Category = income | investment | expense | a custom category (always money out, type 'custom-<slug>');
+// Category = income | investment | expense (fixed, Oct 5);
 // Sub-category = the entry's group (Expenses: Fixed, Variable… plus any; other categories: any, optional);
-// Group (Optional, Expenses and custom categories) = the taxonomy category (Habitation, Bank...); Type = the item.
+// Group (Optional, Expenses) = the taxonomy category (Habitation, Bank...); Type = the item.
 // An expense type saved without a group goes under "Other".
 import { useEffect, useId, useRef, useState } from 'react';
 import { ActionLink, Divider, Dropdown, Input, Modal, illustrations, useDismiss, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
 import { chevronDown, plus, remove } from '../ui/icons.js';
 import { InfoMessage, InfoTooltip } from '../ui/Selectors.jsx';
-import { EXP_GROUPS, customTypeOf, hasGroups } from './model.js';
+import { EXP_GROUPS, hasGroups } from './model.js';
 
 export const KINDS = [
   { value: 'income', label: 'Income', noun: 'income' },
   { value: 'investment', label: 'Savings and investments', noun: 'savings' },
   { value: 'expense', label: 'Expenses', noun: 'expense' },
 ];
-// A category's name: the three built-in labels, else the custom name passed in `names` ({ type: name }).
-export const kindLabel = (k, names) => (names && names[k]) || (KINDS.find((x) => x.value === k) || {}).label || k;
+// A category's name.
+export const kindLabel = (k) => (KINDS.find((x) => x.value === k) || {}).label || k;
 export const UNGROUPED = 'Other';
 const norm = (s) => String(s || '').trim().toLowerCase();
 
@@ -51,7 +51,7 @@ function Rows({ values, setValues, placeholder, label, idPrefix }) {
 // A text field that suggests the existing values ("Select or type to create new..."), with the Dropdown-list under it
 // (577:5997, Simple: the groups, full width; 573:6715, typing a new name: an Action list that hugs its rows and starts
 // with '+ Create "Bank"'). Arrow keys move, Enter picks, Escape closes.
-function Combo({ id, value, onChange, options, placeholder }) {
+export function Combo({ id, value, onChange, onPick, onBlur, options, placeholder, listLabel = 'Show the groups', className }) {
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
@@ -61,7 +61,7 @@ function Combo({ id, value, onChange, options, placeholder }) {
   const shown = q ? options.filter((o) => norm(o).includes(norm(q))) : options;
   const create = !!q && !options.some((o) => norm(o) === norm(q));
   const items = [...(create ? [{ create: true, label: q }] : []), ...shown.map((o) => ({ label: o }))];
-  const pick = (it) => { onChange(it.label); setOpen(false); setActive(-1); };
+  const pick = (it) => { onChange(it.label); if (onPick) onPick(it.label, !!it.create); setOpen(false); setActive(-1); };
   const onKey = (e) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setActive((a) => Math.min(items.length - 1, a + 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((a) => Math.max(0, a - 1)); }
@@ -69,10 +69,10 @@ function Combo({ id, value, onChange, options, placeholder }) {
     else if (e.key === 'Escape' && open) { e.preventDefault(); e.stopPropagation(); setOpen(false); }
   };
   return (
-    <div className="fld-combo" ref={ref}>
+    <div className={'fld-combo' + (className ? ' ' + className : '')} ref={ref}>
       <Input id={id} role="combobox" aria-expanded={open ? 'true' : 'false'} aria-controls={listId} aria-autocomplete="list" value={value} placeholder={placeholder} maxLength={60} autoComplete="off"
-        onFocus={() => setOpen(true)} onClick={() => setOpen(true)} onKeyDown={onKey} onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(0); }} />
-      <button type="button" className="fld-combo-chev" tabIndex={-1} aria-label="Show the groups" onMouseDown={(e) => { e.preventDefault(); setOpen((o) => !o); }}><Icon icon={chevronDown} size={12} /></button>
+        onFocus={() => setOpen(true)} onClick={() => setOpen(true)} onKeyDown={onKey} onBlur={onBlur} onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(0); }} />
+      <button type="button" className="fld-combo-chev" tabIndex={-1} aria-label={listLabel} onMouseDown={(e) => { e.preventDefault(); setOpen((o) => !o); }}><Icon icon={chevronDown} size={12} /></button>
       {open && items.length > 0 && (
         <div className={'ds-dd-menu fld-combo-menu' + (create ? ' is-action ds-drop-action' : '')} role="listbox" id={listId}>
           <div className="ds-dd-items">
@@ -93,15 +93,15 @@ function Combo({ id, value, onChange, options, placeholder }) {
 const cleanList = (vals) => { const out = []; vals.map((v) => v.trim()).filter(Boolean).forEach((v) => { if (!out.some((o) => norm(o) === norm(v))) out.push(v); }); return out; };
 
 // Type creation. kind fixes the category. `groups` = the category's named sub-categories: when there are any, the
-// sub-category is picked here (or fixed by `group`); Income, Savings and custom categories may also leave it empty.
-// Expenses and custom categories also take a Group (Optional); groupsOf(sub) lists the existing ones.
+// sub-category is picked here (or fixed by `group`); Income and Savings may also leave it empty.
+// Expenses also take a Group (Optional); groupsOf(sub) lists the existing ones.
 // onSave({ group, category, items }).
 export function TypeModal({ open, kind, kindName, group: fixedGroup, category: fixedCat, groups = EXP_GROUPS, groupsOf = () => [], onClose, onSave, id = 'type-modal' }) {
   const isExp = kind === 'expense';
   const grouped = hasGroups(kind);
   const subList = (groups || []).filter(Boolean);
   const optionalSub = !isExp;
-  // Income and Savings start on None (their types usually have no sub-category); Expenses and custom categories on
+  // Income and Savings start on None (their types usually have no sub-category); Expenses on
   // their first sub-category.
   const firstSub = fixedGroup !== undefined ? (fixedGroup || '') : ((kind === 'income' || kind === 'investment') ? '' : (subList[0] || ''));
   const [sub, setSub] = useState(firstSub);
@@ -143,43 +143,7 @@ export function TypeModal({ open, kind, kindName, group: fixedGroup, category: f
   );
 }
 
-// Category creation (Oct 4: any name). A name that is one of the built-in categories adds it back to the board;
-// anything else creates a custom category (money out). Sub-categories: any names. onSave({ kind, name, groups }).
-// `existing` = the categories on the board (types); `names` = { type: name } of its custom ones.
-export function CategoryModal({ open, existing = [], names = {}, onClose, onSave, id = 'category-modal' }) {
-  const [name, setName] = useState('');
-  const [subs, setSubs] = useState(['']);
-  const [warn, setWarn] = useState(null);
-  useEffect(() => { if (open) { setName(''); setSubs(['']); setWarn(null); } }, [open]);
-  const save = () => {
-    const n = norm(name);
-    if (!n) return setWarn({ title: 'Give the category a name' });
-    const builtin = KINDS.find((k) => norm(k.label) === n || k.value === n || (k.value === 'investment' && /^(savings?|investments?|savings and investments)$/.test(n)) || (k.value === 'expense' && n === 'expense'));
-    const kind = builtin ? builtin.value : customTypeOf(name);
-    const label = builtin ? builtin.label : name.trim();
-    if (existing.includes(kind) || Object.values(names).some((v) => norm(v) === n)) return setWarn({ title: `${label} is already on your board` });
-    if (kind === 'custom-') return setWarn({ title: 'Use letters or numbers in the name' });
-    onSave({ kind, name: label, groups: cleanList(subs) });
-  };
-  return (
-    <Modal open={open} onClose={onClose} id={id} illustration={illustrations.signalBars} title="Create a category"
-      description="Organize where your money goes by defining high-level categories."
-      secondary={{ label: 'Cancel', onClick: onClose, id: `${id}-cancel` }} primary={{ label: 'Create category', onClick: save, id: `${id}-save` }}>
-      <div className="ds-modal-form">
-        <div className="fld"><label className="fld-label" htmlFor={`${id}-name`}>Category</label>
-          <Input id={`${id}-name`} value={name} maxLength={60} autoComplete="off" placeholder="e.g., Philanthropy, Pets, Travel" onChange={(e) => setName(e.target.value)} /></div>
-        <div className="fld"><span className="fld-label">Sub-category</span>
-          <Rows values={subs} setValues={setSubs} label="Sub-category" idPrefix={`${id}-sub`} placeholder="e.g., Monthly donations, One-off gifts" /></div>
-        <div className="fld-row">
-          <ActionLink icon={plus} id={`${id}-more`} onClick={() => setSubs([...subs, ''])}>Add sub-category</ActionLink>
-          <InfoTooltip text="Sub-categories split a category into parts you track separately. They are optional." />
-        </div>
-        {warn && <InfoMessage message="warning" title={warn.title}>{warn.text}</InfoMessage>}
-        <p className="ds-modal-note">New categories count as money out in your balance.</p>
-      </div>
-    </Modal>
-  );
-}
+// Oct 5 (Felipe): no category creation; the three categories are fixed. Sub-categories and groups stay free.
 
 // Sub-category creation for a category already on the board (shown read-only). Any names (Oct 4).
 export function SubCategoryModal({ open, kind, kindName, existing = [], onClose, onSave, id = 'subcategory-modal' }) {

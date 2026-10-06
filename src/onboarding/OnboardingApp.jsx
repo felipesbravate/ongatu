@@ -6,14 +6,15 @@
 // settings/onboarding, so the dashboard never sends this account here again.
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
-import { ActionLink, Button, Divider, Dropdown, Logo, Modal, RoundButton, illustrations, useMobile } from '../ui/index.js';
+import { ActionLink, Button, CategorySelector, Divider, Dropdown, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { arrowStraightRight, edit, euro, plus, x } from '../ui/icons.js';
+import { arrowStraightRight, edit, euro, plus, trash } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
-import { ListSelector, Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
+import { Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
 import { db, getMe, leavePage } from '../tracker/api.js';
-import { CATS, EXP_GROUPS, MONTH_NAMES, addSubToTaxonomy, addTypeToTaxonomy, budgetDefaultDocId, ensureCustom, fmtNum, hasGroups, isCustomType, parseAmount } from '../tracker/model.js';
-import { CategoryModal, KINDS, RenameModal, SubCategoryModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
+import { CATS, EXP_GROUPS, MONTH_NAMES, addGroupToTaxonomy, addSubToTaxonomy, addTypeToTaxonomy, budgetDefaultDocId, fmtNum, hasGroups, parseAmount } from '../tracker/model.js';
+import { Combo, RenameModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
+import { BlockFrag, BudgetRow, GroupHeader } from '../tracker/BudgetPanel.jsx';
 import { useConfirm } from '../tracker/ConfirmModal.jsx';
 
 const STEPS = ['Account', 'Tour', 'Setup'];
@@ -25,15 +26,20 @@ function templateBoard() {
   CATS.incomes.forEach((item) => types.push({ type: 'income', group: null, category: null, item, budget: 0 }));
   CATS.investments.forEach((item) => types.push({ type: 'investment', group: null, category: null, item, budget: 0 }));
   Object.entries(CATS.expenses).forEach(([group, cats]) => Object.entries(cats).forEach(([category, items]) => items.forEach((item) => types.push({ type: 'expense', group, category, item, budget: 0 }))));
-  return { kinds: ['income', 'investment', 'expense'], names: {}, subs: { expense: EXP_GROUPS.slice() }, types };
+  return { kinds: KINDS3.slice(), subs: { expense: EXP_GROUPS.slice() }, groups: {}, types };
 }
-// board = { kinds: [type], names: { customType: name }, subs: { [type]: [sub-category] }, types: [{ type, group, category, item, budget }] }
-const emptyBoard = () => ({ kinds: ['income'], names: {}, subs: {}, types: [] });
+// Oct 5 (Felipe): Income, Savings and investments and Expenses are the only categories, always there, never deleted or
+// renamed. Sub-categories and groups are the user's: added, renamed and deleted freely.
+// board = { kinds: [type], subs: { [type]: [sub-category] }, groups: { 'expense|<sub>': [empty groups] },
+//           types: [{ type, group (sub-category), category (group), item, budget }] }
+const KINDS3 = ['income', 'investment', 'expense'];
+const emptyBoard = () => ({ kinds: KINDS3.slice(), subs: {}, groups: {}, types: [] });
 
 export function taxonomyOfBoard(board) {
   const tx = { incomes: [], investments: [], expenses: {} };
-  board.kinds.forEach((k) => { if (isCustomType(k)) ensureCustom(tx, k, board.names[k]); else if (board.names[k]) tx.labels = { ...(tx.labels || {}), [k]: board.names[k] }; (board.subs[k] || []).forEach((g) => addSubToTaxonomy(tx, k, g, board.names[k])); });
-  board.types.forEach((t) => addTypeToTaxonomy(tx, t, board.names[t.type]));
+  board.kinds.forEach((k) => (board.subs[k] || []).forEach((g) => addSubToTaxonomy(tx, k, g)));
+  Object.entries(board.groups || {}).forEach(([key, names]) => { const [k, sub] = key.split('|'); if (k === 'expense') names.forEach((g) => addGroupToTaxonomy(tx, sub, g)); });
+  board.types.forEach((t) => addTypeToTaxonomy(tx, t));
   return tx;
 }
 
@@ -51,7 +57,7 @@ function Header({ name }) {
 const TOUR = [
   { title: 'Every cent in one place', text: 'Track your income, expenses, and savings month by month. See exactly where you stand in seconds.' },
   { title: 'Your data is safe and stays yours', text: 'Your data is fully encrypted and accessible only by you. AI is strictly used to categorize your receipts, nothing else. Export or erase your account whenever you want.' },
-  { title: 'Built for how your brain works', text: 'Forget rigid budgeting templates. Create custom categories and types that match exactly how you think about your money, from daily coffee runs to long-term investments.' },
+  { title: 'Built for how your brain works', text: 'Forget rigid budgeting templates. Create your own sub-categories, groups and types that match exactly how you think about your money, from daily coffee runs to long-term investments.' },
 ];
 function MiniDashboard() {
   const rows = [['Income', '3.900,00', 'var(--data-purple)', 72], ['Expenses', '1.160,00', 'var(--data-pink)', 44], ['Savings', '1.500,00', 'var(--data-light-blue)', 55]];
@@ -79,18 +85,36 @@ function TourArt({ i }) {
   );
   return <Illustration art={illustrations.head} width={177} />;
 }
+// Oct 6: changing card slides the next one in from the right (and the current one out to the left) inside the card;
+// going back slides the other way. Reduced motion: no slide.
 function Tour({ card, setCard, onDone }) {
-  const t = TOUR[card];
+  const last = useRef(card);
+  const [out, setOut] = useState(null); // { i, dir } — the card sliding out
+  useEffect(() => {
+    if (last.current === card) return undefined;
+    setOut({ i: last.current, dir: card > last.current ? 'next' : 'prev' });
+    last.current = card;
+    const t = setTimeout(() => setOut(null), 420);
+    return () => clearTimeout(t);
+  }, [card]);
+  const slide = (i, cls, current) => (
+    <div className={'ob-slide ' + cls} key={i + cls} aria-hidden={current ? undefined : 'true'}>
+      <div className="ob-art"><TourArt i={i} /></div>
+      <div className="ob-tour-text">
+        <h2 className="ob-card-title" id={current ? 'ob-tour-title' : undefined}>{TOUR[i].title}</h2>
+        <p className="ob-card-text">{TOUR[i].text}</p>
+      </div>
+    </div>
+  );
   return (
     <section className="ob-card ob-tour" aria-labelledby="ob-tour-title">
       <div className="ob-tour-content">
         <div className="ob-tour-top">
           <ActionLink id="ob-skip" className="ob-skip" onClick={onDone}>Skip</ActionLink>
-          <div className="ob-art"><TourArt i={card} /></div>
-        </div>
-        <div className="ob-tour-text">
-          <h2 className="ob-card-title" id="ob-tour-title">{t.title}</h2>
-          <p className="ob-card-text">{t.text}</p>
+          <div className="ob-slides">
+            {out && slide(out.i, 'is-out is-' + out.dir, false)}
+            {slide(card, out ? 'is-in is-' + out.dir : 'is-still', true)}
+          </div>
         </div>
         <Pager count={TOUR.length} current={card} onGo={setCard} />
       </div>
@@ -115,7 +139,7 @@ function Choose({ onPick }) {
         </button>
         <button type="button" className="ob-option" id="ob-empty" onClick={() => onPick('empty')}>
           <span className="ob-option-art"><Illustration art={illustrations.pencil} width={60} /></span>
-          <span className="ob-option-text"><span className="ob-option-title">Build your own board</span><span className="ob-option-desc">Create your own tracking categories from zero, one at a time.</span></span>
+          <span className="ob-option-text"><span className="ob-option-title">Build your own board</span><span className="ob-option-desc">Start from Income, Savings and Expenses, and add your own types one at a time.</span></span>
           <span className="ds-action-link medium ob-option-link">Organise your own<Icon icon={arrowStraightRight} size={12} /></span>
         </button>
       </div>
@@ -124,28 +148,30 @@ function Choose({ onPick }) {
 }
 
 // ---------- 03a Set up your board ----------
-function BudgetCell({ t, onBudget }) {
-  const [editing, setEditing] = useState(false);
-  if (editing) {
-    return (
-      <span className="ds-input tiny ob-budget-input"><Icon icon={euro} size={12} />
-        <input autoFocus inputMode="decimal" aria-label={`Monthly budget for ${t.item}`} defaultValue={fmtNum(t.budget)}
-          onBlur={(e) => { onBudget(parseAmount(e.target.value)); setEditing(false); }}
-          onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); else if (e.key === 'Escape') setEditing(false); }} /></span>
-    );
-  }
+// 401:4464 (starter template) / 749:10871 (start empty), Oct 6: Categories = the three fixed categories (categories
+// 827:2047); under them Sub-category and Group (Optional) fields; then the shown sub-category's groups (Heading/Large
+// with its Actions menu: Rename group / Delete group), each with its types (breackdown rows: name, € budget, Actions)
+// and "+ Add type", Dividers between groups; "No types added yet." for an empty group. Nothing on the board yet: the
+// Empty state illustration with "No income added yet". Summary on the right (280).
+const CAT_INFO = {
+  income: { title: 'Income', description: 'Money entering your accounts from salaries, freelance work, or other revenue streams.', empty: 'No income added yet', emptyText: 'Define a specific income to track, and optionally organize it into sub-categories.' },
+  investment: { title: 'Savings and investments', description: 'Money set aside for future goals, emergencies, or assets meant to build wealth.', empty: 'No savings or investments added yet', emptyText: 'Define what you put aside, and optionally organize it into sub-categories.' },
+  expense: { title: 'Expenses', description: 'Money leaving your accounts to pay for living costs, bills, and everyday purchases.', empty: 'No expenses added yet', emptyText: 'Define a specific expense to track, and organize it into sub-categories and groups.' },
+};
+const NO_SUB = 'No sub-category';
+const ALL_GROUPS = 'All groups';
+const gkey = (k, sub) => k + '|' + (sub || '');
+
+// A combobox that picks (or creates, by typing) one value; the text goes back to the picked value when left.
+function PickField({ id, label, value, options, placeholder, onPick, listLabel }) {
+  const [text, setText] = useState(value || '');
+  useEffect(() => { setText(value || ''); }, [value]);
   return (
-    <button type="button" className="ds-action-link ob-budget" aria-label={`Monthly budget for ${t.item}: ${fmtNum(t.budget)}. Edit`} onClick={() => setEditing(true)}>
-      <Icon icon={euro} size={16} /><span className="ob-budget-val">{fmtNum(t.budget)}</span>
-    </button>
-  );
-}
-function TypeRow({ t, onBudget, onRemove }) {
-  return (
-    <div className="bd-row ob-type-row" data-item={t.item}>
-      <span className="bd-item-name">{t.item}</span>
-      <BudgetCell t={t} onBudget={onBudget} />
-      <button type="button" className="round-btn micro" aria-label={`Remove ${t.item}`} onClick={onRemove}><Icon icon={x} size="md" /></button>
+    <div className="fld">
+      <label className="fld-label" htmlFor={id}>{label}</label>
+      <Combo id={id} value={text} onChange={setText} options={options} placeholder={placeholder} listLabel={listLabel}
+        onPick={(v, created) => { const name = String(v || '').trim(); if (name) onPick(name, created); else setText(value || ''); }}
+        onBlur={() => setTimeout(() => setText(value || ''), 150)} />
     </div>
   );
 }
@@ -153,113 +179,172 @@ function TypeRow({ t, onBudget, onRemove }) {
 function Setup({ mode, onStart, busy, error }) {
   const [board, setBoard] = useState(() => (mode === 'template' ? templateBoard() : emptyBoard()));
   const [sel, setSel] = useState('income');
-  const [modal, setModal] = useState(null); // 'category' | 'sub' | 'type'
-  const [renaming, setRenaming] = useState(null); // { level: 'category' | 'sub', kind, from }
-  // Oct 5: rename a category (any, Income too) or one of its sub-categories while setting up. Nothing is saved yet,
-  // so the change is immediate.
-  const applyRename = (to) => {
-    const r = renaming; setRenaming(null); if (!r) return;
-    setBoard((b) => (r.level === 'category'
-      ? { ...b, names: { ...b.names, [r.kind]: to } }
-      : { ...b, subs: { ...b.subs, [r.kind]: (b.subs[r.kind] || []).map((g) => (g === r.from ? to : g)) }, types: b.types.map((t) => (t.type === r.kind && t.group === r.from ? { ...t, group: to } : t)) }));
-  };
+  const [subSel, setSubSel] = useState(() => ({ income: '', investment: '', expense: mode === 'template' ? EXP_GROUPS[0] : '' }));
+  const [groupSel, setGroupSel] = useState(''); // '' = every group of the shown sub-category
+  const [modal, setModal] = useState(null); // { kind: 'type', category } | null
+  const [renaming, setRenaming] = useState(null); // { kind, from } — a sub-category
   const [confirmModal, confirm] = useConfirm();
   const mobile = useMobile();
-  // Oct 4: a category without the "Default" tag can be deleted (its X, 401:4464 / 719:18723), after the confirm modal.
-  // Its types go too; Expenses also takes its sub-categories. Income (Default) always stays.
-  const deleteKind = (k) => {
-    const n = board.types.filter((t) => t.type === k).length;
-    const ns = (board.subs[k] || []).length;
-    const parts = [ns ? `its ${ns} sub-categor${ns === 1 ? 'y' : 'ies'}` : null, n ? `${n} type${n === 1 ? '' : 's'}` : null].filter(Boolean);
+  const [year, setYear] = useState(String(nowYear));
+  const [month, setMonth] = useState(String(new Date().getMonth()));
+
+  const label = (k) => kindLabel(k);
+  const subsOf = (k) => board.subs[k] || [];
+  const typesOf = (k) => board.types.filter((t) => t.type === k);
+  const sub = subsOf(sel).includes(subSel[sel]) ? subSel[sel] : (sel === 'expense' ? (subsOf('expense')[0] || '') : '');
+  const grouped = hasGroups(sel);
+  const viewTypes = board.types.filter((t) => t.type === sel && (t.group || '') === (sub || ''));
+  const declared = board.groups[gkey(sel, sub)] || [];
+  const groupNames = [...new Set([...declared, ...viewTypes.map((t) => t.category || '').filter(Boolean)])];
+  const shownGroups = grouped ? (groupSel && groupNames.includes(groupSel) ? [groupSel] : groupNames) : [];
+  const loose = grouped ? viewTypes.filter((t) => !t.category) : viewTypes;
+  const typeCount = (n) => `${n} type${n === 1 ? '' : 's'}`;
+
+  const pickKind = (k) => { setSel(k); setGroupSel(''); };
+  const pickSub = (name, created) => {
+    if (name === NO_SUB && sel !== 'expense') { setSubSel((s) => ({ ...s, [sel]: '' })); setGroupSel(''); return; }
+    const existing = subsOf(sel).find((g) => g.toLowerCase() === name.toLowerCase());
+    if (!existing && created) setBoard((b) => ({ ...b, subs: { ...b.subs, [sel]: [...(b.subs[sel] || []), name] } }));
+    setSubSel((s) => ({ ...s, [sel]: existing || name })); setGroupSel('');
+  };
+  const pickGroup = (name, created) => {
+    if (name === ALL_GROUPS) { setGroupSel(''); return; }
+    const existing = groupNames.find((g) => g.toLowerCase() === name.toLowerCase());
+    if (!existing && created) setBoard((b) => ({ ...b, groups: { ...b.groups, [gkey(sel, sub)]: [...(b.groups[gkey(sel, sub)] || []), name] } }));
+    setGroupSel(existing || name);
+  };
+  // Oct 5: rename a sub-category while setting up. Nothing is saved yet, so the change is immediate.
+  const applyRename = (to) => {
+    const r = renaming; setRenaming(null); if (!r) return;
+    setBoard((b) => {
+      const groups = {}; Object.entries(b.groups).forEach(([k, v]) => { groups[k === gkey(r.kind, r.from) ? gkey(r.kind, to) : k] = v; });
+      return { ...b, groups, subs: { ...b.subs, [r.kind]: (b.subs[r.kind] || []).map((g) => (g === r.from ? to : g)) }, types: b.types.map((t) => (t.type === r.kind && t.group === r.from ? { ...t, group: to } : t)) };
+    });
+    setSubSel((s) => ({ ...s, [r.kind]: to }));
+  };
+  const deleteSub = (k, g) => {
+    const n = board.types.filter((t) => t.type === k && t.group === g).length;
     confirm({
-      title: `Are you sure you want to delete ${label(k)}?`,
-      description: parts.length ? `This removes ${parts.join(' and ')} from your board. You can add the category again later.` : 'You can add the category again later.',
+      title: `Are you sure you want to delete ${g}?`,
+      description: n ? `This removes ${g} and its ${typeCount(n)} from your board. You can add it again later.` : 'You can add it again later.',
       onConfirm: async () => {
-        setBoard((b) => { const subs = { ...b.subs }; delete subs[k]; const names = { ...b.names }; delete names[k]; return { ...b, kinds: b.kinds.filter((x) => x !== k), names, subs, types: b.types.filter((t) => t.type !== k) }; });
-        if (sel === k) setSel('income');
+        setBoard((b) => { const groups = { ...b.groups }; delete groups[gkey(k, g)]; return { ...b, groups, subs: { ...b.subs, [k]: (b.subs[k] || []).filter((x) => x !== g) }, types: b.types.filter((t) => !(t.type === k && t.group === g)) }; });
+        setSubSel((s) => ({ ...s, [k]: '' })); setGroupSel('');
       },
     });
   };
-  const [year, setYear] = useState(String(nowYear));
-  const [month, setMonth] = useState(String(new Date().getMonth()));
-  const typesOf = (k) => board.types.filter((t) => t.type === k);
-  const label = (k) => kindLabel(k, board.names);
-  const subsOf = (k) => board.subs[k] || [];
+  const renameGroup = (from, to) => {
+    const name = String(to || '').trim();
+    if (!name || name === from || groupNames.some((g) => g !== from && g.toLowerCase() === name.toLowerCase())) return;
+    const key = gkey(sel, sub);
+    setBoard((b) => ({ ...b, groups: { ...b.groups, [key]: (b.groups[key] || []).map((g) => (g === from ? name : g)) },
+      types: b.types.map((t) => (t.type === sel && (t.group || '') === (sub || '') && t.category === from ? { ...t, category: name } : t)) }));
+    if (groupSel === from) setGroupSel(name);
+  };
+  const deleteGroup = (c) => {
+    const n = viewTypes.filter((t) => t.category === c).length;
+    confirm({
+      title: `Are you sure you want to delete ${c}?`,
+      description: n ? `This removes the group and its ${typeCount(n)} from your board.` : 'This removes the group from your board.',
+      onConfirm: async () => {
+        const key = gkey(sel, sub);
+        setBoard((b) => ({ ...b, groups: { ...b.groups, [key]: (b.groups[key] || []).filter((g) => g !== c) },
+          types: b.types.filter((t) => !(t.type === sel && (t.group || '') === (sub || '') && t.category === c)) }));
+        if (groupSel === c) setGroupSel('');
+      },
+    });
+  };
   const patchType = (t, fn) => setBoard((b) => ({ ...b, types: b.types.map((x) => (x === t ? fn(x) : x)) }));
   const removeType = (t) => setBoard((b) => ({ ...b, types: b.types.filter((x) => x !== t) }));
-  const addTypes = ({ group, category, items }) => setBoard((b) => {
-    const exists = (it) => b.types.some((x) => x.type === sel && x.item.toLowerCase() === it.toLowerCase() && (x.group || null) === (group || null));
-    return { ...b, types: [...b.types, ...items.filter((it) => !exists(it)).map((item) => ({ type: sel, group, category, item, budget: 0 }))] };
-  });
-  const groupsOf = (g) => [...new Set(board.types.filter((t) => t.type === sel && (t.group || null) === (g || null) && t.category).map((t) => t.category))];
-  const descOf = (k) => {
-    const n = subsOf(k).length;
-    return n ? `${n} sub-categor${n === 1 ? 'y' : 'ies'}` : 'No sub-categories';
+  const addTypes = ({ group, category, items }) => {
+    setBoard((b) => {
+      const exists = (it) => b.types.some((x) => x.type === sel && x.item.toLowerCase() === it.toLowerCase() && (x.group || null) === (group || null));
+      const subs = group && !(b.subs[sel] || []).includes(group) ? { ...b.subs, [sel]: [...(b.subs[sel] || []), group] } : b.subs;
+      return { ...b, subs, types: [...b.types, ...items.filter((it) => !exists(it)).map((item) => ({ type: sel, group: group || null, category: category || null, item, budget: 0 }))] };
+    });
+    if ((group || '') !== (sub || '')) setSubSel((s) => ({ ...s, [sel]: group || '' }));
   };
-  const selTypes = typesOf(sel);
+
+  // A board type as a budget row (the Editing budget's row, 232:5853): the figure is the monthly budget.
+  const [editing, setEditing] = useState(null);
+  const rowOf = (t, i) => ({ key: i, item: t.item, value: fmtNum(t.budget), editing: editing === t, type: t.type, group: t.group, category: t.category });
+  const rowsFor = (list) => (
+    <div className="budget-items">
+      {list.map((t, i) => (
+        <BudgetRow key={(t.category || '') + '|' + t.item} r={rowOf(t, i)} mobile={mobile}
+          onValue={(_, v) => patchType(t, (x) => ({ ...x, budget: parseAmount(v) }))}
+          onEditing={(_, on) => setEditing(on ? t : null)} onRemove={() => removeType(t)} />
+      ))}
+    </div>
+  );
+  const addTypeLink = (category, cls, id) => (
+    <div><ActionLink size={mobile ? 'medium' : undefined} icon={plus} className={cls} id={id} onClick={() => setModal({ kind: 'type', category: category || '' })}>Add type</ActionLink></div>
+  );
+  const isEmpty = !viewTypes.length && !shownGroups.length;
+  const needSub = sel === 'expense' && !sub;
+  const info = CAT_INFO[sel];
   const years = Array.from({ length: 6 }, (_, i) => String(nowYear - i));
   const months = MONTH_NAMES.map((m, i) => ({ value: String(i), label: m, selectedLabel: m.slice(0, 3) })).filter((o) => Number(year) < nowYear || Number(o.value) <= new Date().getMonth());
+  const subOptions = [...(sel === 'expense' ? [] : [NO_SUB]), ...subsOf(sel)];
 
   return (
-    <section className="ob-card ob-setup" aria-labelledby="ob-setup-title">
+    <section className="ob-card ob-setup ob-board" aria-labelledby="ob-setup-title">
       <div className="ob-card-head">
         <h2 className="ob-card-title" id="ob-setup-title">Set up your board</h2>
-        <p className="ob-card-text">Keep what fits and add your own. Nothing is locked in.</p>
+        <p className="ob-card-text">{mode === 'template' ? 'Keep what fits and add your own. Nothing is locked in.' : 'Start with a category, then add your own types. Organize them only if you need to.'}</p>
       </div>
       <div className="ob-setup-cols">
-        <div className="ob-col ob-col-cats">
-          <h3 className="ob-col-title">Category</h3>
-          <div className="ob-col-content">
-            <div className="ob-list">
-              {board.kinds.map((k) => (
-                <ListSelector key={k} id={`ob-cat-${k}`} title={label(k)} label={k === 'income' ? 'Default' : null} description={sel === k ? null : descOf(k)} selected={sel === k} onSelect={() => setSel(k)}
-                  onDelete={k === 'income' ? undefined : () => deleteKind(k)} deleteLabel={`Delete ${label(k)}`}
-                  action={<div className="ob-sel-actions"><ActionLink size="tiny" icon={plus} id="ob-add-sub" onClick={() => setModal('sub')}>Add sub-category</ActionLink>
-                    <ActionLink size="tiny" icon={edit} id="ob-rename-cat" onClick={() => setRenaming({ level: 'category', kind: k, from: label(k) })}>Rename</ActionLink></div>} />
-              ))}
+        <div className="ob-col ob-col-board">
+          <h3 className="ob-col-title">Categories</h3>
+          <div className="ob-board-top">
+            <CategorySelector id="ob-cat" value={sel} onChange={pickKind} options={KINDS3.map((k) => ({ value: k, title: CAT_INFO[k].title, description: CAT_INFO[k].description }))} />
+            <div className={'ob-board-fields' + (grouped ? '' : ' is-single')}>
+              <PickField id="ob-sub" label={sel === 'expense' ? 'Sub-category' : 'Sub-category (Optional)'} value={sub || ''} options={subOptions}
+                placeholder="Select sub-category" listLabel="Show the sub-categories" onPick={pickSub} />
+              {grouped && (
+                <PickField id="ob-group" label="Group (Optional)" value={groupSel} options={[...(groupSel ? [ALL_GROUPS] : []), ...groupNames]}
+                  placeholder={groupNames.length ? 'Select or type to create a group' : 'Type to create a group'} listLabel="Show the groups" onPick={pickGroup} />
+              )}
             </div>
-            {/* 401:4464 / 402:4539 (desktop): "+ Add category" Tiny Secondary button, always there (the modal says when a
-                category is already on the board); phones (719:18723): an Action link. */}
-            {mobile ? <div><ActionLink icon={plus} id="ob-add-cat" onClick={() => setModal('category')}>Add category</ActionLink></div>
-              : <Button variant="secondary" size="tiny" icon={plus} id="ob-add-cat" onClick={() => setModal('category')}>Add category</Button>}
+            {/* Oct 6 (not in the frames): the shown sub-category's Rename and Delete. */}
+            {sub && (
+              <div className="ob-sel-actions">
+                <ActionLink size="tiny" icon={edit} id="ob-rename-sub" onClick={() => setRenaming({ kind: sel, from: sub })}>Rename sub-category</ActionLink>
+                <ActionLink size="tiny" icon={trash} id="ob-delete-sub" onClick={() => deleteSub(sel, sub)}>Delete sub-category</ActionLink>
+              </div>
+            )}
           </div>
-        </div>
-        <div className="ob-col ob-col-types">
-          <div className="ob-col-head"><h3 className="ob-col-title">Type</h3>{selTypes.length > 0 && <span className="ob-col-aside">Budget</span>}</div>
-          <div className="ob-col-content">
-            {selTypes.length === 0 && <p className="ob-empty">{sel === 'expense' && !subsOf('expense').length ? 'Add a sub-category first, like Fixed or Variable.' : 'Add your first type.'}</p>}
-            {/* 401:4464 (Oct 4): Sub-category (Heading 16/20), then its groups indented 16: the group name (14/14) over
-                its types (breackdown rows, 24 high). Sub-categories 24 apart. Types without a sub-category come first,
-                without a title; a category without sub-categories simply lists its types. */}
-            {(() => {
-              const named = subsOf(sel);
-              const row = (t) => <TypeRow key={(t.group || '') + (t.category || '') + t.item} t={t} onBudget={(v) => patchType(t, (x) => ({ ...x, budget: v }))} onRemove={() => removeType(t)} />;
-              const byCat = (list) => {
-                if (!hasGroups(sel)) return <div className="ob-types">{list.map(row)}</div>;
-                const cats = [...new Set(list.map((t) => t.category || ''))];
-                return cats.map((c) => (
-                  <div className="ob-type-cat" key={c || '-'} data-category={c}>
-                    {c && <h5 className="ob-type-cat-title">{c}</h5>}
-                    <div className="ob-types">{list.filter((t) => (t.category || '') === c).map(row)}</div>
-                  </div>
-                ));
-              };
-              const loose = selTypes.filter((t) => !t.group || !named.includes(t.group));
-              return (
-                <>
-                  {loose.length > 0 && (named.length ? <div className="ob-type-group ob-type-loose"><div className="ob-type-list">{byCat(loose)}</div></div> : byCat(loose))}
-                  {named.filter((g) => selTypes.some((t) => t.group === g)).map((g) => (
-                    <div className="ob-type-group" key={g}>
-                      <div className="ob-type-group-head"><h4 className="ob-type-group-title">{g}</h4>
-                        <RoundButton icon={edit} size="micro" iconSize={12} className="ob-rename-sub" label={`Rename ${g}`} onClick={() => setRenaming({ level: 'sub', kind: sel, from: g })} /></div>
-                      <div className="ob-type-list">{byCat(selTypes.filter((t) => t.group === g))}</div>
+          {isEmpty ? (
+            <div className="ob-board-empty">
+              {illustrations.emptyState && <Illustration art={illustrations.emptyState} width={136} />}
+              <div className="ob-board-empty-text">
+                <h4>{needSub ? 'Start with a sub-category' : info.empty}</h4>
+                <p>{needSub ? 'Type a name in Sub-category above, like Fixed or Variable. Then add your types.' : info.emptyText}</p>
+              </div>
+              {!needSub && addTypeLink(groupSel || '', 'ob-add-type', 'ob-add-type')}
+            </div>
+          ) : (
+            <div className="budget-sections ob-board-groups">
+              {loose.length > 0 && (
+                <div className="budget-group ob-board-loose">
+                  {rowsFor(loose)}
+                  {addTypeLink('', 'ob-add-type', 'ob-add-type')}
+                </div>
+              )}
+              {shownGroups.map((c, i) => {
+                const list = viewTypes.filter((t) => t.category === c);
+                return (
+                  <BlockFrag key={c} divider={i > 0 || loose.length > 0}>
+                    <div className="budget-group" data-category={c}>
+                      <GroupHeader title={c} mobile={mobile} renameLabel="Rename group" onAdd={() => setModal({ kind: 'type', category: c })} onRename={(to) => renameGroup(c, to)} onDelete={() => deleteGroup(c)} />
+                      {list.length ? rowsFor(list) : <div className="budget-items is-empty"><span className="budget-group-empty">No types added yet.</span></div>}
+                      {!mobile && addTypeLink(c, 'budget-group-add')}
                     </div>
-                  ))}
-                </>
-              );
-            })()}
-            {mobile ? <div><ActionLink icon={plus} id="ob-add-type" disabled={sel === 'expense' && !subsOf('expense').length} onClick={() => setModal('type')}>Add type</ActionLink></div> : <Button variant="secondary" size="tiny" icon={plus} id="ob-add-type" disabled={sel === 'expense' && !subsOf('expense').length} onClick={() => setModal('type')}>Add Type</Button>}
-          </div>
+                  </BlockFrag>
+                );
+              })}
+            </div>
+          )}
         </div>
         <div className="ob-col ob-col-summary">
           <h3 className="ob-col-title">Summary</h3>
@@ -273,45 +358,28 @@ function Setup({ mode, onStart, busy, error }) {
                 </div>
               </div>
               <Divider />
-              {board.types.length === 0
-                ? <p className="ob-summary-empty">Nothing added yet.</p>
-                : (
-                  <div className="ob-summary-list">
-                    {board.kinds.map((k) => (
-                      <div key={k} className="ob-sum-cat">
-                        <div className="ob-sum-row"><span className="ob-sum-name">{label(k)}</span><span className="ob-sum-count">{typesOf(k).length} type{typesOf(k).length === 1 ? '' : 's'}</span></div>
-                        {subsOf(k).map((g) => { const n = typesOf(k).filter((t) => t.group === g).length; return <div key={g} className="ob-sum-row ob-sum-sub"><span>{g}</span><span className="ob-sum-count">{n} item{n === 1 ? '' : 's'}</span></div>; })}
-                      </div>
-                    ))}
+              <div className="ob-summary-list">
+                {board.kinds.map((k) => (
+                  <div key={k} className="ob-sum-cat">
+                    <div className="ob-sum-row"><span className="ob-sum-name">{label(k)}</span><span className="ob-sum-count">{typeCount(typesOf(k).length)}</span></div>
+                    {subsOf(k).map((g) => { const n = typesOf(k).filter((t) => t.group === g).length; return <div key={g} className="ob-sum-row ob-sum-sub"><span>{g}</span><span className="ob-sum-count">{n} item{n === 1 ? '' : 's'}</span></div>; })}
                   </div>
-                )}
+                ))}
+              </div>
             </div>
             <div className="ob-summary-cta">
-              <p className="ob-summary-note">You can rename or add categories later.</p>
+              <p className="ob-summary-note">You can add, rename or delete sub-categories later.</p>
               {error && <p className="ob-error" role="alert">{error}</p>}
               <Button id="ob-start" className="ob-full" disabled={busy || board.types.length === 0} onClick={() => onStart(board, { year, month: Number(month) })}>Start tracking</Button>
             </div>
           </div>
         </div>
       </div>
-      {/* Oct 4: any category and sub-category name; built-in categories keep their order, custom ones follow. */}
-      <CategoryModal open={modal === 'category'} existing={board.kinds} names={board.names} onClose={() => setModal(null)}
-        onSave={({ kind, name, groups }) => {
-          setBoard((b) => {
-            const builtins = KINDS.map((k) => k.value).filter((v) => b.kinds.includes(v) || v === kind);
-            const customs = [...b.kinds.filter(isCustomType), ...(isCustomType(kind) ? [kind] : [])];
-            const subs = { ...b.subs, [kind]: [...new Set([...(b.subs[kind] || []), ...groups])] };
-            return { ...b, kinds: [...builtins, ...customs], names: isCustomType(kind) ? { ...b.names, [kind]: name } : b.names, subs };
-          });
-          setSel(kind); setModal(null);
-        }} />
-      <SubCategoryModal open={modal === 'sub'} kind={sel} kindName={label(sel)} existing={subsOf(sel)} onClose={() => setModal(null)}
-        onSave={({ groups }) => { setBoard((b) => ({ ...b, subs: { ...b.subs, [sel]: [...(b.subs[sel] || []), ...groups] } })); setModal(null); }} />
-      <TypeModal open={modal === 'type'} kind={sel} kindName={label(sel)} groups={subsOf(sel)} groupsOf={groupsOf} onClose={() => setModal(null)}
+      <TypeModal open={!!modal} kind={sel} kindName={label(sel)} group={sub || null} category={grouped ? (modal ? modal.category : '') : undefined}
+        groups={subsOf(sel)} groupsOf={() => groupNames} onClose={() => setModal(null)}
         onSave={(t) => { addTypes(t); setModal(null); }} />
-      <RenameModal open={!!renaming} id="ob-rename-modal" title={renaming && renaming.level === 'category' ? 'Rename category' : 'Rename sub-category'}
-        label={renaming && renaming.level === 'category' ? 'Category' : 'Sub-category'} value={renaming ? renaming.from : ''}
-        existing={renaming ? (renaming.level === 'category' ? board.kinds.map(label) : subsOf(renaming.kind)).filter((n) => n !== renaming.from) : []}
+      <RenameModal open={!!renaming} id="ob-rename-modal" title="Rename sub-category" label="Sub-category" value={renaming ? renaming.from : ''}
+        existing={renaming ? subsOf(renaming.kind).filter((n) => n !== renaming.from) : []}
         onClose={() => setRenaming(null)} onSave={applyRename} />
       {confirmModal}
     </section>

@@ -35,26 +35,17 @@ export const TYPE_OPTS = [
 ];
 export const typeKeyOf = (type, group) => (group ? type + ':' + group : type);
 
-// ---- the board's own categories (Oct 4) ----
-// Felipe: people build their board however they want. On top of Income, Savings and investments and Expenses (and
-// Expenses' four default sub-categories), a year's taxonomy can hold:
-//   incomeSubs / investmentSubs: { [sub-category]: [types] }      (the flat `incomes` / `investments` = no sub-category)
-//   custom: [{ type: 'custom-<slug>', name, subs: { [sub-category or '']: { [group or '']: [types] } } }]
-//   and any extra key of `expenses` is an Expenses sub-category.
-// A custom category always counts as money out (Felipe, Oct 4). Entries keep { type, group, category, item }: group =
-// sub-category (null when none), category = group name (expenses and custom categories only).
-export const isCustomType = (t) => typeof t === 'string' && t.startsWith('custom-');
-export const customTypeOf = (name) => 'custom-' + String(name || '').trim().toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
-/** Types whose rows sit in named groups (Habitation, Food…): Expenses and custom categories. */
-export const hasGroups = (t) => t === 'expense' || isCustomType(t);
+// ---- the board (Oct 4–6) ----
+// Felipe (Oct 5–6): Income, Savings and investments and Expenses are the only categories: always there, never created,
+// deleted or renamed. Sub-categories and groups are the user's. A year's taxonomy holds:
+//   incomes / investments: [types]  (no sub-category);  incomeSubs / investmentSubs: { [sub-category]: [types] }
+//   expenses: { [sub-category]: { [group]: [types] } }  (Fixed, Variable, Extra, Additional, or the user's own)
+// Entries keep { type, group (= sub-category, null when none), category (= group name, expenses only), item }.
+/** Types whose rows sit in named groups (Habitation, Food…): Expenses. */
+export const hasGroups = (t) => t === 'expense';
 export const KIND_LABEL = { income: 'Income', investment: 'Savings and investments', expense: 'Expenses' };
-/** Label of a type for a year's taxonomy. */
-export function typeLabel(TX, type) {
-  if (TX && TX.labels && TX.labels[type]) return TX.labels[type];
-  if (KIND_LABEL[type]) return KIND_LABEL[type];
-  const c = ((TX && TX.custom) || []).find((x) => x.type === type);
-  return c ? c.name : type;
-}
+/** Label of a category. */
+export const typeLabel = (TX, type) => KIND_LABEL[type] || type;
 
 export const currentYearLabel = () => String(new Date().getFullYear());
 export function todayISO() { const d = new Date(); const pad = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
@@ -103,33 +94,68 @@ export function yearsFromDocs(docs) {
   return data;
 }
 
-/** The custom category `type` of a taxonomy, created (with `name`) if missing. */
-export function ensureCustom(tx, type, name) {
-  tx.custom = tx.custom || [];
-  let c = tx.custom.find((x) => x.type === type);
-  if (!c) { c = { type, name: name || type.slice(7).replace(/-/g, ' '), subs: {} }; tx.custom.push(c); }
-  return c;
-}
 /** Declares a sub-category (no types yet) on a taxonomy. */
-export function addSubToTaxonomy(tx, type, sub, name) {
+export function addSubToTaxonomy(tx, type, sub) {
   if (!sub) return tx;
   if (type === 'expense') { tx.expenses = tx.expenses || {}; tx.expenses[sub] = tx.expenses[sub] || {}; }
   else if (type === 'income' || type === 'investment') { const k = type === 'income' ? 'incomeSubs' : 'investmentSubs'; tx[k] = tx[k] || {}; tx[k][sub] = tx[k][sub] || []; }
-  else if (isCustomType(type)) { const c = ensureCustom(tx, type, name); c.subs[sub] = c.subs[sub] || {}; }
   return tx;
 }
-/** Adds one type ({ type, group, category, item }) to a taxonomy, in place. `name` names a new custom category. */
-export function addTypeToTaxonomy(tx, { type, group, category, item }, name) {
+/** Declares an (empty) group of an Expenses sub-category. */
+export function addGroupToTaxonomy(tx, sub, group) {
+  if (!sub || !group) return tx;
+  tx.expenses = tx.expenses || {}; const g = tx.expenses[sub] || (tx.expenses[sub] = {}); g[group] = g[group] || [];
+  return tx;
+}
+/** Adds one type ({ type, group, category, item }) to a taxonomy, in place. */
+export function addTypeToTaxonomy(tx, { type, group, category, item }) {
   const add = (arr) => { if (item && !arr.includes(item)) arr.push(item); };
   if (type === 'expense') { tx.expenses = tx.expenses || {}; const g = tx.expenses[group] || (tx.expenses[group] = {}); add(g[category] || (g[category] = [])); }
   else if (type === 'income' || type === 'investment') {
     if (group) { const k = type === 'income' ? 'incomeSubs' : 'investmentSubs'; tx[k] = tx[k] || {}; add(tx[k][group] || (tx[k][group] = [])); }
     else add(type === 'income' ? (tx.incomes || (tx.incomes = [])) : (tx.investments || (tx.investments = [])));
-  } else if (isCustomType(type)) {
-    const c = ensureCustom(tx, type, name);
-    const g = c.subs[group || ''] || (c.subs[group || ''] = {}); add(g[category || ''] || (g[category || ''] = []));
   }
   return tx;
+}
+
+/**
+ * Oct 5 (Felipe): Income, Savings and investments and Expenses are the only categories. Boards made while custom
+ * categories existed (Oct 4–5) are read with each custom category folded into Expenses: it becomes an Expenses
+ * sub-category with the same name, its sub-categories become groups (its groups too, for types without a sub-category;
+ * "General" when neither). It was money out already, so totals and the balance don't move. Read-time only: a doc is
+ * rewritten in the new shape the next time it is saved.
+ */
+const isLegacyCustom = (t) => typeof t === 'string' && t.startsWith('custom-');
+export function foldLegacyCustom(data) {
+  const cols = ['entries', 'overrides', 'budgets', 'budgetDefaults'];
+  const years = data.years || [];
+  const legacyTx = (tx) => !!(tx && ((tx.custom && tx.custom.length) || tx.labels));
+  if (!years.some((y) => legacyTx(y.taxonomy)) && !cols.some((c) => (data[c] || []).some((d) => isLegacyCustom(d.type)))) return data;
+  const names = {};
+  years.forEach((y) => ((y.taxonomy && y.taxonomy.custom) || []).forEach((c) => { if (c.name) names[c.type] = c.name; }));
+  const nameOf = (t) => names[t] || (t.slice(7).replace(/-/g, ' ').replace(/^./, (ch) => ch.toUpperCase()) || 'Other');
+  const out = { ...data };
+  out.years = years.map((y) => {
+    if (!legacyTx(y.taxonomy)) return y;
+    const custom = y.taxonomy.custom || [];
+    const tx = copyTaxonomy(y.taxonomy);
+    custom.forEach((c) => {
+      const exp = tx.expenses || (tx.expenses = {});
+      const g = exp[c.name] || (exp[c.name] = {});
+      Object.entries(c.subs || {}).forEach(([sub, groups]) => {
+        if (sub && !Object.keys(groups || {}).length) g[sub] = g[sub] || [];
+        Object.entries(groups || {}).forEach(([grp, types]) => {
+          const arr = g[sub || grp || 'General'] || (g[sub || grp || 'General'] = []);
+          (types || []).forEach((t) => { if (!arr.includes(t)) arr.push(t); });
+        });
+      });
+    });
+    if (tx.renames) tx.renames = tx.renames.filter((r) => !isLegacyCustom(r.type));
+    return { ...y, taxonomy: tx };
+  });
+  const fold = (d) => (isLegacyCustom(d.type) ? { ...d, type: 'expense', group: nameOf(d.type), category: d.group || d.category || 'General' } : d);
+  cols.forEach((c) => { if (data[c]) out[c] = data[c].map(fold); });
+  return out;
 }
 
 /** A deep copy of a taxonomy, new fields included. */
@@ -138,9 +164,8 @@ export function copyTaxonomy(base) {
   const out = { incomes: (b.incomes || []).slice(), investments: (b.investments || []).slice(), expenses: {} };
   Object.keys(b.expenses || {}).forEach((g) => { out.expenses[g] = {}; Object.keys(b.expenses[g]).forEach((c) => { out.expenses[g][c] = b.expenses[g][c].slice(); }); });
   ['incomeSubs', 'investmentSubs'].forEach((k) => { if (b[k]) { out[k] = {}; Object.keys(b[k]).forEach((g) => { out[k][g] = b[k][g].slice(); }); } });
-  if (b.labels) out.labels = { ...b.labels };
   if (b.renames) out.renames = b.renames.map((r) => ({ ...r }));
-  if (b.custom) out.custom = b.custom.map((c) => ({ type: c.type, name: c.name, subs: Object.fromEntries(Object.entries(c.subs || {}).map(([g, cats]) => [g, Object.fromEntries(Object.entries(cats).map(([k, v]) => [k, v.slice()]))])) }));
+  if (b.removed) out.removed = b.removed.map((r) => ({ ...r }));
   return out;
 }
 
@@ -357,7 +382,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
 
   // ---- the board's categories for a year (Oct 4) ----
   // Sub-categories of a type, in board order. Expenses: the four defaults, then the board's own, then any an entry
-  // uses. Income and savings: null (types without a sub-category) first, then their sub-categories. Custom
+  // uses. Income and savings: null (types without a sub-category) first, then their sub-categories.
   // categories: their sub-categories ('' = none -> null).
   const subsCache = new Map();
   // With `mi`, only that month's entries and budgets add names (so a sub-category renamed from a month on doesn't
@@ -375,11 +400,6 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     ];
     if (type === 'expense') { const own = Object.keys(TX.expenses || {}); (own.length ? own : EXP_GROUPS).forEach(add); ents.forEach((e) => { if (e.group) add(e.group); }); }
     else if (type === 'income' || type === 'investment') { add(null); Object.keys((type === 'income' ? TX.incomeSubs : TX.investmentSubs) || {}).forEach(add); ents.forEach((e) => add(e.group)); }
-    else {
-      const c = (TX.custom || []).find((x) => x.type === type);
-      Object.keys((c && c.subs) || {}).forEach(add); ents.forEach((e) => add(e.group));
-      if (!out.length) add(null);
-    }
     // A sub-category renamed from a later month of this year still has its old name in this month (Oct 5).
     if (mi != null) {
       (TX.renames || []).filter((r) => r.type === type && r.year === yearLabel && mi < r.mi).reverse().forEach((r) => {
@@ -387,16 +407,14 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
         if (out.includes(r.from)) out.splice(i, 1); else out[i] = r.from;
       });
     }
+    // A sub-category deleted from a later month of this year is still there in this month (Oct 5).
+    if (mi != null) (TX.removed || []).filter((r) => r.type === type && r.year === yearLabel && mi < r.mi && !out.includes(r.sub)).forEach((r) => out.push(r.sub));
     subsCache.set(key, out);
     return out;
   }
-  /** The categories of a year, in board order: Income, Savings and investments, Expenses, then the custom ones. */
-  function kindsOf(yearLabel, mi) {
-    const TX = taxonomyForYear(yearLabel);
-    const custom = (TX.custom || []).map((c) => c.type);
-    ENTRIES.forEach((e) => { if (e.year === yearLabel && (mi == null || e.monthIndex === mi) && isCustomType(e.type) && !custom.includes(e.type)) custom.push(e.type); });
-    return ['income', 'investment', 'expense', ...custom].map((t) => ({ type: t, label: typeLabel(TX, t), flow: t === 'income' ? 'in' : t === 'investment' ? 'save' : 'out', custom: isCustomType(t) }));
-  }
+  /** The three categories, in board order. (`yearLabel`/`mi` kept for callers; the list never changes.) */
+  // eslint-disable-next-line no-unused-vars
+  const kindsOf = (yearLabel, mi) => ['income', 'investment', 'expense'].map((t) => ({ type: t, label: KIND_LABEL[t], flow: t === 'income' ? 'in' : t === 'investment' ? 'save' : 'out' }));
   /** Every type/sub-category pair of a year (budgets, the month-budget panel). */
   const combosOf = (yearLabel, mi) => kindsOf(yearLabel, mi).flatMap((k) => subsOf(k.type, yearLabel, mi).map((g) => ({ type: k.type, group: g, kindLabel: k.label })));
 
@@ -412,12 +430,8 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     const byGroup = {};
     const groups = subsOf('expense', y.year, mi);
     groups.forEach((g) => { byGroup[g] = groupTotal('expense', g); });
-    // Custom categories always count as money out (Felipe, Oct 4): inside the Expenses total and the balance.
-    const byCustom = {};
-    kindsOf(y.year, mi).filter((k) => k.custom).forEach((k) => { byCustom[k.type] = sumType(k.type); });
-    const customTotal = Object.values(byCustom).reduce((a, v) => a + v, 0);
-    const expenseTotal = groups.reduce((a, g) => a + byGroup[g], 0) + customTotal;
-    const out = { mi, income, invest, byGroup, byCustom, customTotal, expenseTotal, balance: income - invest - expenseTotal, manual: entriesFor(y.year, mi), isEstimateMonth: isFutureMonth(y, mi) };
+    const expenseTotal = groups.reduce((a, g) => a + byGroup[g], 0);
+    const out = { mi, income, invest, byGroup, expenseTotal, balance: income - invest - expenseTotal, manual: entriesFor(y.year, mi), isEstimateMonth: isFutureMonth(y, mi) };
     monthCache.set(key, out);
     return out;
   }
@@ -479,8 +493,8 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     for (let mi = 0; mi < 12; mi++) {
       if (!budgetApplies(y, mi)) continue;
       for (const b of budgetsFor(y.year, mi)) {
-        // Variable, Additional, Extra and the board's own Expenses sub-categories (not Fixed), and custom categories.
-        const alertable = (b.type === 'expense' && b.group && (ALERT_GROUPS.includes(b.group) || !EXP_GROUPS.includes(b.group))) || isCustomType(b.type);
+        // Variable, Additional, Extra and the board's own Expenses sub-categories (not Fixed).
+        const alertable = b.type === 'expense' && b.group && (ALERT_GROUPS.includes(b.group) || !EXP_GROUPS.includes(b.group));
         if (!alertable || !(b.amount > 0)) continue;
         const manual = manualEntriesFor(y, mi, b.type, b.group, b.category || null, b.item)
           .slice().sort((a, c) => String(a.date || a.createdAt || '').localeCompare(String(c.date || c.createdAt || '')));
@@ -488,7 +502,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
         for (const e of manual) { run += e.amount || 0; if (crossed === null && run > b.amount + 0.004) crossed = e; }
         if (!crossed) continue;
         out.push({
-          id: [y.year, mi, b.group, b.category || '', b.item].join('|') + (isCustomType(b.type) ? '|' + b.type : ''), year: y.year, mi, type: b.type, group: b.group, category: b.category || null, item: b.item,
+          id: [y.year, mi, b.group, b.category || '', b.item].join('|'), year: y.year, mi, type: b.type, group: b.group, category: b.category || null, item: b.item,
           spent: Math.round(run * 100) / 100, budget: b.amount, at: crossed.createdAt || crossed.date || null, date: crossed.date || null,
         });
       }
@@ -501,9 +515,8 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     item, category: category || null, amount: 0, entries: [], importedCells: [], noteEntries: [], isEstimate: false, deleted: false, override: null,
     baseAmount: 0, estimateSamples: 0, estimateSource: null, type, group: group || null, yearLabel: y.year, mi, empty: true, budget: null,
   });
-  // `type`: 'Income' | 'Investments' | an Expenses sub-category (Fixed…) | a custom category's type, with `sub` its
-  // sub-category. Income and savings with sub-categories come back as blocks (one per sub-category), like Expenses.
-  function buildBreakdown(y, mi, type, sub) {
+  // `type`: 'Income' | 'Investments' | an Expenses sub-category (Fixed…). Income and savings with sub-categories come back as blocks (one per sub-category), like Expenses.
+  function buildBreakdown(y, mi, type) {
     const yi = DATA.indexOf(y);
     const TX = taxonomyForYear(y.year);
     if (type === 'Income' || type === 'Investments') {
@@ -527,20 +540,19 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
       if (rest.length) blocks.unshift({ category: KIND_LABEL[t], group: null, amount: rest.reduce((a, r) => a + r.amount, 0), items: rest });
       return { flat: false, rows: blocks };
     }
-    const kind = isCustomType(type) ? type : 'expense';
-    const grp = kind === 'expense' ? type : (sub || null);
+    const kind = 'expense';
+    const grp = type;
     const catMap = new Map();
     const catOf = (name) => { if (!catMap.has(name)) catMap.set(name, { category: name, amount: 0, items: [] }); return catMap.get(name); };
     listItemsForMonth(yi, mi, kind, grp).forEach((r) => {
       const row = itemRowFor(yi, mi, kind, grp, r, y);
-      const cat = catOf(row.category || (kind === 'expense' ? 'Other' : typeLabel(TX, kind)));
+      const cat = catOf(row.category || 'Other');
       cat.amount += row.amount;
       cat.items.push(row);
     });
-    const customSubs = kind === 'expense' ? null : (((TX.custom || []).find((c) => c.type === kind) || {}).subs || {});
-    const groupTx = kind === 'expense' ? ((TX.expenses || {})[type] || {}) : (customSubs[grp || ''] || {});
+    const groupTx = (TX.expenses || {})[type] || {};
     Object.entries(groupTx).forEach(([category, items]) => {
-      const cat = catOf(category || typeLabel(TX, kind));
+      const cat = catOf(category || 'Other');
       items.forEach((item) => { if (!cat.items.some((i) => i.item === item)) cat.items.push(zeroRow(kind, grp, category || null, item, y, mi)); });
     });
     // Categories and their items always in the order the user set (the year's taxonomy), never by amount; anything
@@ -561,13 +573,13 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
 
   // Annual totals for the year-over-year chart.
   const yearIncome = (y) => sumItemsYear(y.incomes) + entriesForYear(y.year).filter((e) => e.type === 'income').reduce((a, e) => a + e.amount, 0);
-  const yearExpense = (y) => EXP_GROUPS.reduce((a, g) => a + sumItemsYear(y.expenses[g]), 0) + entriesForYear(y.year).filter((e) => e.type === 'expense' || isCustomType(e.type)).reduce((a, e) => a + e.amount, 0);
+  const yearExpense = (y) => EXP_GROUPS.reduce((a, g) => a + sumItemsYear(y.expenses[g]), 0) + entriesForYear(y.year).filter((e) => e.type === 'expense').reduce((a, e) => a + e.amount, 0);
 
   // ---- per-year taxonomy ----
   // A year's own stored taxonomy wins; otherwise the nearest year that has one (earlier first), else the
   // starter list, plus whatever its own entries already use.
   function entryTaxonomy(label) {
-    const t = { incomes: [], investments: [], expenses: {}, incomeSubs: {}, investmentSubs: {}, custom: [] };
+    const t = { incomes: [], investments: [], expenses: {}, incomeSubs: {}, investmentSubs: {} };
     const add = (arr, v) => { if (v && !arr.includes(v)) arr.push(v); };
     ENTRIES.filter((e) => e.year === label).forEach((e) => {
       if (e.type === 'income' || e.type === 'investment') {
@@ -575,10 +587,6 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
         if (e.group) add(subs[e.group] || (subs[e.group] = []), e.item); else add(e.type === 'income' ? t.incomes : t.investments, e.item);
       }
       else if (e.type === 'expense' && e.group && e.category) { const g = t.expenses[e.group] || (t.expenses[e.group] = {}); add(g[e.category] || (g[e.category] = []), e.item); }
-      else if (isCustomType(e.type)) {
-        let c = t.custom.find((x) => x.type === e.type); if (!c) { c = { type: e.type, name: e.type.slice(7).replace(/-/g, ' '), subs: {} }; t.custom.push(c); }
-        const g = c.subs[e.group || ''] || (c.subs[e.group || ''] = {}); add(g[e.category || ''] || (g[e.category || ''] = []), e.item);
-      }
     });
     return t;
   }
@@ -602,20 +610,15 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     ['incomeSubs', 'investmentSubs'].forEach((k) => Object.keys(own[k]).forEach((g) => {
       const subs = out[k] || (out[k] = {}); own[k][g].forEach((i) => add(subs[g] || (subs[g] = []), i));
     }));
-    own.custom.forEach((oc) => {
-      const list = out.custom || (out.custom = []);
-      let c = list.find((x) => x.type === oc.type); if (!c) { c = { type: oc.type, name: oc.name, subs: {} }; list.push(c); }
-      Object.keys(oc.subs).forEach((g) => Object.keys(oc.subs[g]).forEach((cat) => { const gg = c.subs[g] || (c.subs[g] = {}); oc.subs[g][cat].forEach((i) => add(gg[cat] || (gg[cat] = []), i)); }));
-    });
     taxCache.set(label, out);
     return out;
   }
-  // Category options: "Group/Item" for expenses and custom categories (the item alone when it has no group), the item
+  // Category options: "Group/Item" for expenses (the item alone when it has no group), the item
   // alone for income and savings.
   function catOptions(type, group, yearLabel) {
     const TX = taxonomyForYear(yearLabel);
     if (hasGroups(type)) {
-      const gc = type === 'expense' ? (TX.expenses[group] || {}) : ((((TX.custom || []).find((c) => c.type === type) || {}).subs || {})[group || ''] || {});
+      const gc = TX.expenses[group] || {};
       const out = [];
       Object.keys(gc).sort().forEach((c) => gc[c].slice().sort().forEach((i) => out.push({ label: c ? c + '/' + i : i, category: c || null, item: i })));
       return out;
@@ -624,7 +627,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     return list.slice().sort().map((i) => ({ label: i, category: null, item: i }));
   }
   // The Type picker's options for a year: the fixed list (Income, Savings/Investment, Expenses/<four>) plus the
-  // board's own sub-categories and custom categories, each "Category/Sub-category".
+  // board's own sub-categories, each "Category/Sub-category".
   function typeOpts(yearLabel) {
     const out = TYPE_OPTS.slice();
     kindsOf(yearLabel).forEach((k) => subsOf(k.type, yearLabel).forEach((g) => {

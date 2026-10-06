@@ -6,7 +6,7 @@ import { calendar, chevronDown, documentIcon, euro, image, plus, questionOutline
 import { KINDS, TypeModal } from './TaxonomyModals.jsx';
 import { sample } from './api.js';
 import { DocReader, docIconName, docMeta } from './reader.js';
-import { EXP_GROUPS, TYPE_OPTS, hasGroups, isCustomType, fmtDateEU, fmtNum, parseAmount, periodKeyOfDate, periodLabel, periodMismatch, todayISO, typeKeyOf, yearLabelOfDate } from './model.js';
+import { EXP_GROUPS, TYPE_OPTS, hasGroups, fmtDateEU, fmtNum, parseAmount, periodKeyOfDate, periodLabel, periodMismatch, todayISO, typeKeyOf, yearLabelOfDate } from './model.js';
 
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
 const simpleOpts = (values) => values.map((v) => ({ value: v, label: v }));
@@ -43,15 +43,13 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const yearLabel = (periodKey || '').slice(0, 4) || yearLabelOfDate(dateVal);
   const TX = model.taxonomyForYear(yearLabel);
   const isExp = entryType === 'expense';
-  // Oct 4: any category of the board (custom ones too) and any of its sub-categories. Expenses always have one;
-  // Income, Savings and custom categories may have none ('' = None).
+  // The three categories and any of their sub-categories. Expenses always have one; Income and Savings may have none.
   const kinds = model.kindsOf(yearLabel);
   const kindName = (kinds.find((k) => k.type === entryType) || {}).label || entryType;
   const grouped = hasGroups(entryType);
   const namedSubs = model.subsOf(entryType, yearLabel).filter(Boolean);
   const subVal = isExp ? entryGroup : (namedSubs.includes(entryGroup) ? entryGroup : '');
-  const customSubs = isCustomType(entryType) ? ((((TX.custom || []).find((c) => c.type === entryType) || {}).subs) || {}) : null;
-  const gc = !grouped ? {} : isExp ? (TX.expenses[subVal] || {}) : (customSubs[subVal || ''] || {});
+  const gc = !grouped ? {} : (TX.expenses[subVal] || {});
   // Oct 2 (229:18166): Group (Optional) is the taxonomy category, Type the item. With no group picked, Type lists
   // every type of the sub-category and picking one fills its group.
   const groupNames = Object.keys(gc).sort();
@@ -67,11 +65,13 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   const subOptions = [...(isExp ? [] : [{ value: '__none', label: 'None' }]), ...(isExp ? GROUP_TABS.map((o) => o.value).filter((g) => namedSubs.includes(g)).concat(namedSubs.filter((g) => !GROUP_TABS.some((o) => o.value === g))) : namedSubs)
     .filter((g) => !isExp || Object.keys(TX.expenses[g] || {}).length || g === entryGroup).map((g) => ({ value: g, label: g }))];
   const bounds = model.entryDateBounds();
+  // Oct 5: Expenses' sub-categories are the user's (Fixed may be gone): fall back to the first one the year has.
+  const expDefault = (g) => { const subs = model.subsOf('expense', yearLabel).filter(Boolean); return subs.includes(g) ? g : subs.includes('Fixed') ? 'Fixed' : (subs[0] || 'Fixed'); };
 
   // Opening the panel (from the Tracker's "+ Add ..." or a row's "Add entry") sets the type (and the row's group and type) and starts a fresh form.
   useEffect(() => {
     if (!open) return;
-    setEntryType(preset.type); setEntryGroup(preset.group || (preset.type === 'expense' ? 'Fixed' : ''));
+    setEntryType(preset.type); setEntryGroup(preset.type === 'expense' ? expDefault(preset.group) : (preset.group || ''));
     setCat(preset.cat || ''); setItem(preset.item || ''); setDate(todayISO()); setPeriodTouched(false); setPeriod(model.defaultPeriodKey(yearIdx, monthIdx));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, preset]);
@@ -238,7 +238,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               </div>
               <div className={'fld' + (isExp || namedSubs.length ? '' : ' span-2')}>
                 <label className="fld-label" htmlFor="entry-kind-trigger">Category</label>
-                <Dropdown id="entry-kind" size="md" emptyOption={false} value={entryType} onChange={(v) => { setEntryType(v); setEntryGroup(v === 'expense' ? 'Fixed' : isCustomType(v) ? (model.subsOf(v, yearLabel)[0] || '') : ''); setCat(''); setItem(''); }}
+                <Dropdown id="entry-kind" size="md" emptyOption={false} value={entryType} onChange={(v) => { setEntryType(v); setEntryGroup(v === 'expense' ? expDefault('Fixed') : ''); setCat(''); setItem(''); }}
                   options={kinds.filter((k) => typeHas(k.type) || k.type === entryType).map((k) => ({ value: k.type, label: k.label }))} />
               </div>
               <div className="fld" id="entry-group-field" hidden={!isExp && !namedSubs.length}>

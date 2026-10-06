@@ -4,7 +4,7 @@
 // the red dot is the same on every device.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { db } from './api.js';
-import { createModel, yearsFromDocs } from './model.js';
+import { createModel, foldLegacyCustom, yearsFromDocs } from './model.js';
 
 // `seen`: alerts the bell has shown (the red dot goes when the list is opened). `read`: alerts the user marked as read
 // ("Mark as read" on the item, Ongatu 211:19682); a read alert no longer offers the link. Both live in settings/notifications.
@@ -41,5 +41,5 @@ export function useBudgetAlertsStandalone() {
     }));
     return () => offs.forEach((off) => off());
   }, []);
-  return useMemo(() => createModel({ data: yearsFromDocs(data.years), entries: data.entries, overrides: data.overrides, budgets: data.budgets, budgetDefaults: data.budgetDefaults }).budgetAlerts(), [data]);
+  return useMemo(() => { const f = foldLegacyCustom(data); return createModel({ data: yearsFromDocs(f.years), entries: f.entries, overrides: f.overrides, budgets: f.budgets, budgetDefaults: f.budgetDefaults }).budgetAlerts(); }, [data]);
 }

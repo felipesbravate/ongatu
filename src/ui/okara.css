@@ -3499,3 +3499,68 @@
    title with its 24px rename button. */
 .ob-sel-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
 .ob-type-group-head{ display:flex; align-items:center; gap:8px; }
+
+/* Oct 6: Tour cards slide. The next card comes in from the right while the current one leaves to the left, inside the
+   card (going back: the other way). The art box and the text move together. */
+.ob-slides{ position:relative; width:100%; overflow:hidden; }
+.ob-slide{ width:100%; display:flex; flex-direction:column; align-items:center; gap:var(--space-xl); }
+.ob-slide.is-out{ position:absolute; top:0; left:0; }
+.ob-slide.is-in.is-next{ animation:ob-in-right .4s cubic-bezier(.2,.8,.2,1) both; }
+.ob-slide.is-out.is-next{ animation:ob-out-left .4s cubic-bezier(.2,.8,.2,1) both; }
+.ob-slide.is-in.is-prev{ animation:ob-in-left .4s cubic-bezier(.2,.8,.2,1) both; }
+.ob-slide.is-out.is-prev{ animation:ob-out-right .4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ob-in-right{ from{ transform:translateX(100%); } to{ transform:translateX(0); } }
+@keyframes ob-out-left{ from{ transform:translateX(0); } to{ transform:translateX(-100%); } }
+@keyframes ob-in-left{ from{ transform:translateX(-100%); } to{ transform:translateX(0); } }
+@keyframes ob-out-right{ from{ transform:translateX(0); } to{ transform:translateX(100%); } }
+@media (prefers-reduced-motion:reduce){ .ob-slide.is-in, .ob-slide.is-out{ animation:none; } .ob-slide.is-out{ display:none; } }
+
+/* Oct 6: categories 827:2047 with category-item 827:2063. One bordered box (96 high, radius/sm, border/default), the
+   items side by side (16 padding, title Heading/Small over Body/Small/Medium, 8 apart). The selected item sits on a
+   raised pill: action/accent-disable, 2px wider than its slot and 104 high (centred), radius/sm, the Floating shadow;
+   it slides to the picked item. Hover (not selected): surface/accent-light. Selected: text/white. Phones: stacked. */
+.ds-cat-sel{ position:relative; display:grid; grid-template-columns:repeat(var(--n, 3), minmax(0, 1fr)); width:100%; min-height:96px; box-sizing:border-box; border:1px solid var(--border-default); border-radius:var(--radius-sm); }
+.ds-cat-sel-bg{ position:absolute; top:50%; left:calc(var(--i, 0) * (100% / var(--n, 3)) - 1px); width:calc(100% / var(--n, 3) + 2px); height:calc(100% + 10px); transform:translateY(-50%);
+  background:var(--action-accent-disable); border-radius:var(--radius-sm); box-shadow:0 4px 12px 0 rgba(22, 21, 15, .16); pointer-events:none;
+  transition:left .32s cubic-bezier(.2,.8,.2,1), top .32s cubic-bezier(.2,.8,.2,1); }
+.ds-cat-item{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-xs); min-height:68px; padding:var(--space-md); margin:0; border:none; border-radius:var(--radius-sm);
+  background:transparent; color:var(--text-primary); font:inherit; text-align:left; cursor:pointer; transition:color .2s ease, background-color .2s ease; }
+.ds-cat-item:not(.is-selected):hover{ background:var(--surface-accent-light); }
+.ds-cat-item:focus-visible{ outline:2px solid var(--border-selected-item); outline-offset:2px; }
+/* Figma Heading/Small 14/14 and Body/Small/Medium 12/14: in this token set those values are heading-medium and body-medium-medium. */
+.ds-cat-item-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+.ds-cat-item-desc{ color:var(--text-secondary); font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); transition:color .2s ease; }
+.ds-cat-item.is-selected, .ds-cat-item.is-selected .ds-cat-item-desc{ color:var(--text-white); cursor:default; }
+@media (max-width:640px){
+  .ds-cat-sel{ grid-template-columns:minmax(0, 1fr); grid-auto-rows:1fr; }
+  .ds-cat-sel-bg{ left:-1px; width:calc(100% + 2px); top:calc(var(--i, 0) * (100% / var(--n, 3)) - 1px); height:calc(100% / var(--n, 3) + 2px); transform:none; }
+}
+@media (prefers-reduced-motion:reduce){ .ds-cat-sel-bg{ transition:none; } }
+
+/* Oct 6: Set up your board (401:4464 / 749:10871). Left: "Categories" (Heading/Large) 16 over the selector, the
+   Sub-category | Group (Optional) fields 16 below (16 apart), the groups 40 below; Summary 280 on the right, 24 apart.
+   The groups reuse the Editing budget's (232:5853): header 24 (Heading/Large, Actions), rows 24, "+ Add type", 12
+   apart; Dividers between groups (16 each side); "No types added yet." centred on 48. */
+.ob-board:not(#z) .ob-col-board{ flex:1 1 auto; min-width:0; gap:var(--space-lg); }
+.ob-board-top{ display:flex; flex-direction:column; gap:var(--space-lg); }
+.ob-board-fields{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:var(--space-lg); }
+.ob-board-fields .fld{ display:flex; flex-direction:column; gap:var(--space-sm); min-width:0; }
+.ob-board:not(#z) .ob-board-top + *{ margin-top:var(--space-xl); }
+.ob-board:not(#z) .ob-board-groups{ display:flex; flex-direction:column; gap:var(--space-lg); }
+.ob-board:not(#z) .budget-group{ display:flex; flex-direction:column; gap:var(--space-md); }
+.ob-board:not(#z) .budget-group-head{ display:flex; min-height:24px; gap:var(--space-sm); align-items:center; }
+.ob-board:not(#z) .budget-group-title{ flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:var(--space-tn); }
+.ob-board:not(#z) .budget-cat-title{ flex:1 1 auto; min-width:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+.ob-board:not(#z) .budget-items{ display:flex; flex-direction:column; gap:0; }
+.ob-board:not(#z) .budget-row{ min-height:24px; height:auto; }
+.ob-board:not(#z) .budget-items.is-empty{ min-height:48px; align-items:center; justify-content:center; }
+.ob-board:not(#z) .budget-divider{ margin:0; }
+.ob-board-empty{ display:flex; flex-direction:column; align-items:center; gap:var(--space-xl); width:400px; max-width:100%; align-self:center; text-align:center; }
+.ob-board-empty-text{ display:flex; flex-direction:column; gap:var(--space-sm); }
+.ob-board-empty-text h4{ margin:0; color:var(--text-primary); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+.ob-board-empty-text p{ margin:0; color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+@media (max-width:640px){
+  .ob-board-fields{ grid-template-columns:minmax(0, 1fr); }
+  .ob-board:not(#z) .budget-group{ gap:var(--space-lg); }
+  .ob-board:not(#z) .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+}

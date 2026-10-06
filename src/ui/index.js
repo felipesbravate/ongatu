@@ -20,4 +20,4 @@ export * as illustrations from './illustrations.js';
 export * from './format.js';
 export { MobileNavItem, MobileBottomNav } from './MobileNav.jsx';
 export { useMobile } from './useMobile.js';
-export { Tag, ChipSelector, StepProgress, Pager, ListSelector, BuildItem, InfoMessage, InfoTooltip } from './Selectors.jsx';
+export { Tag, ChipSelector, StepProgress, Pager, ListSelector, CategorySelector, BuildItem, InfoMessage, InfoTooltip } from './Selectors.jsx';

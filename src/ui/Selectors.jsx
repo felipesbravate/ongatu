@@ -82,6 +82,26 @@ export function ListSelector({ title, description, label, selected, action, onSe
   );
 }
 
+// categories 827:2047 (Oct 6): the three categories side by side in one bordered box (96 high, radius/sm); the selected
+// one sits on a raised accent pill (action/accent-disable, 104 high, 2px wider than its slot, Floating shadow) that
+// slides to the picked item. Items are category-item 827:2063: title Heading/Small over description Body/Small/Medium,
+// 8 apart, 16 padding; Hover surface/accent-light; Selected text/white. Phones stack them, the pill slides down.
+export function CategorySelector({ options, value, onChange, id, className, label = 'Categories' }) {
+  const i = Math.max(0, options.findIndex((o) => o.value === value));
+  return (
+    <div className={cx('ds-cat-sel', className)} role="tablist" aria-label={label} id={id} style={{ '--i': i, '--n': options.length }}>
+      <span className="ds-cat-sel-bg" aria-hidden="true" />
+      {options.map((o, k) => (
+        <button key={o.value} type="button" role="tab" aria-selected={k === i ? 'true' : 'false'} id={id ? `${id}-${o.value}` : undefined}
+          className={cx('ds-cat-item', k === i && 'is-selected')} onClick={() => onChange && onChange(o.value)}>
+          <span className="ds-cat-item-title">{o.title}</span>
+          {o.description && <span className="ds-cat-item-desc">{o.description}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // build-item 605:1358: a built row (Type over the name) with a Small Tertiary round button to remove it.
 export function BuildItem({ type, name, onRemove, removeLabel }) {
   return (

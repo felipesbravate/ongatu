@@ -7,11 +7,11 @@ import { db, getMe, leavePage } from './api.js';
 import { AccountNav, firstNameOf } from './AccountBar.jsx';
 import { AddPanel } from './AddPanel.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
-import { planRename } from './rename.js';
+import { planDeleteSub, planRename } from './rename.js';
 import { useProfile } from './profile.js';
 import { BudgetPanel } from './BudgetPanel.jsx';
 import { ExpenseStrip, HeroLeft, TrackerCard, TrendChart, YearOverYear } from './Dashboard.jsx';
-import { MONTH_ABBR, addTypeToTaxonomy, isCustomType, budgetDefaultDocId, createModel, currentYearLabel, parseAmount, yearsFromDocs } from './model.js';
+import { MONTH_ABBR, addTypeToTaxonomy, budgetDefaultDocId, createModel, currentYearLabel, foldLegacyCustom, parseAmount, yearsFromDocs } from './model.js';
 import { YearNav } from './YearNav.jsx';
 
 const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetDefaults'];
@@ -21,10 +21,12 @@ const copy = (o) => JSON.parse(JSON.stringify(o));
 export default function TrackerApp() {
   const [me, setMe] = useState(null);
   const [data, setData] = useState({ years: [], entries: [], overrides: [], budgets: [], budgetDefaults: [] });
-  const DATA = useMemo(() => yearsFromDocs(data.years), [data.years]);
-  const model = useMemo(() => createModel({ data: DATA, entries: data.entries, overrides: data.overrides, budgets: data.budgets, budgetDefaults: data.budgetDefaults }), [DATA, data]);
+  // Oct 5: boards from the custom-categories build read with those categories folded into Expenses.
+  const fdata = useMemo(() => foldLegacyCustom(data), [data]);
+  const DATA = useMemo(() => yearsFromDocs(fdata.years), [fdata.years]);
+  const model = useMemo(() => createModel({ data: DATA, entries: fdata.entries, overrides: fdata.overrides, budgets: fdata.budgets, budgetDefaults: fdata.budgetDefaults }), [DATA, fdata]);
   const modelRef = useRef(model); modelRef.current = model;
-  const dataRef = useRef(data); dataRef.current = data;
+  const dataRef = useRef(fdata); dataRef.current = fdata;
 
   // Which year and month are shown. Starts on today's month, like the legacy page.
   const [view, setView] = useState(() => {
@@ -33,7 +35,7 @@ export default function TrackerApp() {
     return cur ? { yearIdx: cur.yearIdx, monthIdx: cur.monthIndex } : { yearIdx: 0, monthIdx: m.defaultMonth(m.DATA[0]) };
   });
   const viewRef = useRef(view); viewRef.current = view;
-  const [bd, setBd] = useState({ type: 'Fixed', group: 'Fixed', sub: null });
+  const [bd, setBd] = useState({ type: 'Fixed', group: 'Fixed' });
   const [tip, setTip] = useState(null);
   const [confirmModal, confirm] = useConfirm();
   const profile = useProfile(me);
@@ -86,7 +88,7 @@ export default function TrackerApp() {
       if (name !== 'years') { setData((d) => ({ ...d, [name]: docs })); return; }
       // Years: keep looking at the same year when the list changes; jump to a year that was just added.
       const prevData = modelRef.current.DATA;
-      const newData = yearsFromDocs(docs);
+      const newData = yearsFromDocs(foldLegacyCustom({ years: docs }).years);
       const tmp = createModel({ data: newData, entries: modelRef.current.ENTRIES, overrides: modelRef.current.OVERRIDES, budgets: modelRef.current.BUDGETS, budgetDefaults: modelRef.current.BUDGET_DEFAULTS });
       const v = viewRef.current;
       const currentLabel = prevData[v.yearIdx] ? prevData[v.yearIdx].year : null;
@@ -161,7 +163,7 @@ export default function TrackerApp() {
   };
   // Adds types (items) to a year's stored taxonomy: rows = [{ type, group, category, item }].
   function mergeTypes(tx, rows) {
-    rows.forEach((r) => addTypeToTaxonomy(tx, r, r.kindName));
+    rows.forEach((r) => addTypeToTaxonomy(tx, r));
     return tx;
   }
   async function addTypesToYear(yearLabel, { type, group, category, items, kindName }) {
@@ -246,7 +248,7 @@ export default function TrackerApp() {
     const entrySnaps = m.ENTRIES.filter((e) => e.year === label).map((e) => ({ ...e }));
     const overrideSnaps = m.OVERRIDES.filter((o) => o.year === label).map((o) => ({ ...o }));
     const budgetSnaps = m.BUDGETS.filter((b) => b.year === label).map((b) => ({ ...b }));
-    const extraDoc = data.years.find((e) => e.id === y.dbId) || {};
+    const extraDoc = fdata.years.find((e) => e.id === y.dbId) || {};
     const snap = { year: label, currency: y.currency, createdAt: extraDoc.createdAt || new Date().toISOString(), entrySnaps, overrideSnaps, budgetSnaps, taxonomy: extraDoc.taxonomy || null };
     await Promise.all([
       ...entrySnaps.map((e) => db.doc('entries/' + e.id).delete().catch(() => {})),
@@ -296,18 +298,33 @@ export default function TrackerApp() {
 
   // Rename a category or sub-category from the month being edited on (Oct 5; rename.js has the rules). The confirm modal
   // in the panel has already told the person what spreads; the toast confirms it.
-  const renameName = async ({ level, type, from, to, year, mi, fromLabel }) => {
+  const renameName = async ({ type, from, to, year, mi }) => {
     const d = dataRef.current;
-    const plan = planRename({ level, type, from, to, year, mi, data: { years: d.years || [], entries: d.entries || [], overrides: d.overrides || [], budgets: d.budgets || [], budgetDefaults: d.budgetDefaults || [] }, taxonomyForYear: modelRef.current.taxonomyForYear });
+    const plan = planRename({ type, from, to, year, mi, data: { years: d.years || [], entries: d.entries || [], overrides: d.overrides || [], budgets: d.budgets || [], budgetDefaults: d.budgetDefaults || [] }, taxonomyForYear: modelRef.current.taxonomyForYear });
     try {
       for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
       for (const x of plan.adds) await db.collection(x.col).add(x.doc);
       for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
-      showToast(level === 'category'
-        ? `"${fromLabel}" is now "${to}" in ${year} and the years after it.`
-        : `"${from}" is now "${to}" from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep "${from}".`, 'success');
+      showToast(`"${from}" is now "${to}" from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep "${from}".`, 'success');
     } catch (err) {
-      showToast(`Could not rename "${from || fromLabel}".`, 'fail');
+      showToast(`Could not rename "${from}".`, 'fail');
+      throw err;
+    }
+  };
+
+  // Delete a sub-category from a month on (Oct 5). Refused while it still has entries from that month on.
+  const deleteSub = async ({ type, sub, year, mi }) => {
+    const d = dataRef.current;
+    const plan = planDeleteSub({ type, sub, year, mi, data: { years: d.years || [], entries: d.entries || [], overrides: d.overrides || [], budgets: d.budgets || [], budgetDefaults: d.budgetDefaults || [] }, taxonomyForYear: modelRef.current.taxonomyForYear });
+    if (plan.entriesFrom) { showToast(`"${sub}" still has ${plan.entriesFrom} entr${plan.entriesFrom === 1 ? 'y' : 'ies'} from ${MONTH_ABBR[mi]} ${year} on. Move or delete them first.`, 'fail'); return false; }
+    try {
+      for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
+      for (const x of plan.adds) await db.collection(x.col).add(x.doc);
+      for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
+      showToast(`"${sub}" was deleted from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep it.`, 'success');
+      return true;
+    } catch (err) {
+      showToast(`Could not delete "${sub}".`, 'fail');
       throw err;
     }
   };
@@ -340,7 +357,7 @@ export default function TrackerApp() {
     const yi = modelRef.current.DATA.findIndex((d) => d.year === a.year);
     if (yi < 0) return;
     setView({ yearIdx: yi, monthIdx: a.mi });
-    setBd((b) => (isCustomType(a.type) ? { type: a.type, group: b.group, sub: a.group || null } : { type: a.group, group: a.group, sub: b.sub }));
+    setBd({ type: a.group, group: a.group });
     const el = document.querySelector('.breakdown-card');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
@@ -358,9 +375,9 @@ export default function TrackerApp() {
   const monthIdx = view.monthIdx;
   const selectYear = (i) => setView({ yearIdx: i, monthIdx: model.defaultMonth(model.DATA[i]) });
   const selectMonth = (i) => setView((v) => ({ ...v, monthIdx: i }));
-  const topTab = (bd.type === 'Income' || bd.type === 'Investments' || isCustomType(bd.type)) ? bd.type : 'Expenses';
-  // The Add button's preset follows the tab (Oct 4: custom categories add to their own type and sub-category).
-  const addPreset = () => (isCustomType(topTab) ? { type: topTab, group: bd.sub || null } : { type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: topTab === 'Income' || topTab === 'Investments' ? null : bd.group });
+  const topTab = (bd.type === 'Income' || bd.type === 'Investments') ? bd.type : 'Expenses';
+  // The Add button's preset follows the tab.
+  const addPreset = () => ({ type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: topTab === 'Income' || topTab === 'Investments' ? null : bd.group });
 
   if (!me) return null;
   return (
@@ -377,13 +394,13 @@ export default function TrackerApp() {
         <AddPanel open={addPanel.open} preset={addPanel.preset} model={model} yearIdx={yearIdx} monthIdx={monthIdx}
           onClose={() => setAddPanel((p) => ({ ...p, open: false }))} save={save} />
         <BudgetPanel pending={pendingYear} model={model} onClose={() => setPendingYear(null)} onCreate={createYear} />
-        <BudgetPanel month={monthBudget} forMonth model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} onRename={renameName} />
+        <BudgetPanel month={monthBudget} forMonth model={model} onClose={() => setMonthBudget(null)} onSave={saveMonthBudget} onRename={renameName} onDeleteSub={deleteSub} />
         <div className="row1">
           <HeroLeft model={model} y={y} monthIdx={monthIdx} />
           <div className="hero-right">
-            <TrackerCard model={model} y={y} monthIdx={monthIdx} breakdownType={bd.type} breakdownGroup={bd.group} breakdownSub={bd.sub} tip={tip} setTip={setTip} actions={tipActions}
+            <TrackerCard model={model} y={y} monthIdx={monthIdx} breakdownType={bd.type} breakdownGroup={bd.group} tip={tip} setTip={setTip} actions={tipActions}
               addOpen={addPanel.open} onAdjustBudget={() => setMonthBudget({ yearIdx, monthIdx })}
-              onTab={(type, group, sub) => setBd((b) => ({ type, group: group || b.group, sub: sub === undefined ? b.sub : sub }))}
+              onTab={(type, group) => setBd((b) => ({ type, group: group || b.group }))}
               onAdd={() => setAddPanel({ open: true, preset: addPreset() })}
               onAddItem={(preset) => setAddPanel({ open: true, preset })} />
             <ExpenseStrip model={model} y={y} monthIdx={monthIdx} />

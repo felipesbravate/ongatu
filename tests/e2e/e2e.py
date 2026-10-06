@@ -60,6 +60,12 @@ async def sign_in(pg, email, name):
 
 # Oct 2: a new account starts at /welcome (onboarding, 397:4392). Tests that are about the dashboard mark the account
 # onboarded and open it; the onboarding has its own checks.
+async def ob_pick(pg, fid, name, create=False):
+    if await pg.input_value(f'#{fid}') == name: return
+    # Setup board comboboxes (Oct 6): type the name, then pick it (or 'Create "name"') from the list.
+    await pg.click(f'#{fid}'); await pg.fill(f'#{fid}', name)
+    await pg.wait_for_selector('.fld-combo-menu .ds-dd-item.is-active'); await pg.keyboard.press('Enter'); await pg.wait_for_timeout(250)
+
 async def skip_onboarding(pg):
     for _ in range(30):
         if '/welcome' in pg.url or '/pending' in pg.url or '/login' in pg.url: break
@@ -638,29 +644,32 @@ async def main():
             await ann.wait_for_selector('#ob-next')
             check('a newly approved account starts at the onboarding (397:4392): tour card 1, steps Account done and Tour on going',
                   await ann.inner_text('.ob-card-title') == 'Every cent in one place' and await ann.locator('.ds-step.is-done').count() == 1 and 'Tour' in await ann.inner_text('.ds-step.is-current'))
-            # Set up your board (401:4464, Oct 4): list-selector sizes, Default has no delete, deleting asks first
+            # Set up your board (401:4464 / 749:10871, Oct 6): the categories selector (827:2047), fixed categories
             await ann.click('#ob-skip'); await ann.click('#ob-template'); await ann.wait_for_selector('.ob-setup')
-            ls = await ann.evaluate("""() => [...document.querySelectorAll('.ds-list-sel')].map(e => { const b = e.getBoundingClientRect(); return [e.id, Math.round(b.width), Math.round(b.height), !!e.querySelector('.ds-list-sel-del'), getComputedStyle(e.querySelector('.ds-list-sel-title')).fontSize]; })""")
-            check('setup categories (list-selector 623:2690): 240 wide, 72 selected / 68 default, 14px titles; Income (Default) has no delete',
-                  ls == [['ob-cat-income', 240, 72, False, '14px'], ['ob-cat-investment', 240, 68, True, '14px'], ['ob-cat-expense', 240, 68, True, '14px']], ls)
-            await ann.hover('#ob-cat-investment'); await ann.click('#ob-cat-investment .ds-list-sel-del'); await ann.wait_for_selector('#confirm-modal[open]')
-            check('deleting a category asks first', 'delete Savings and investments?' in await ann.inner_text('#confirm-modal .ds-modal-title'))
-            await ann.click('#confirm-cancel'); await ann.wait_for_timeout(250)
-            check('Cancel keeps it', await ann.locator('#ob-cat-investment').count() == 1)
-            await ann.hover('#ob-cat-investment'); await ann.click('#ob-cat-investment .ds-list-sel-del'); await ann.click('#confirm-delete'); await ann.wait_for_timeout(300)
-            check('Delete removes it (and its types)', await ann.locator('#ob-cat-investment').count() == 0 and await ann.locator('#ob-cat-income').count() == 1)
-            # Oct 4: any category / sub-category name (the board is the person's own mental model)
-            await ann.click('#ob-add-cat'); await ann.wait_for_selector('#category-modal[open]')
-            await ann.fill('#category-modal-name', 'Philanthropy'); await ann.fill('#category-modal-sub-0', 'Doctors without borders'); await ann.click('#category-modal-save'); await ann.wait_for_timeout(300)
-            check('a custom category is accepted (no "Ongatu tracks..." refusal) and selected', await ann.locator('#category-modal[open]').count() == 0 and await ann.inner_text('.ds-list-sel.is-selected .ds-list-sel-title') == 'Philanthropy')
-            await ann.click('#ob-add-type'); await ann.wait_for_selector('#type-modal[open]')
-            await ann.fill('#type-modal-group', 'Monthly'); await ann.fill('#type-modal-item-0', 'Donation'); await ann.click('#type-modal-save'); await ann.wait_for_timeout(300)
-            await ann.click('#ob-cat-income'); await ann.click('#ob-add-sub'); await ann.wait_for_selector('#subcategory-modal[open]')
-            await ann.fill('#subcategory-modal-sub-0', 'Side projects'); await ann.click('#subcategory-modal-save'); await ann.wait_for_timeout(300)
-            check('any sub-category name for Income (no "can\'t be a sub-category yet")', await ann.locator('#subcategory-modal[open]').count() == 0)
+            cs = await ann.evaluate("""() => { const r = (s) => { const b = document.querySelector(s).getBoundingClientRect(); return [Math.round(b.width), Math.round(b.height)]; };
+              return [r('.ds-cat-sel'), r('.ds-cat-sel-bg'), [...document.querySelectorAll('.ds-cat-item')].map(e => [e.id, e.getAttribute('aria-selected'), getComputedStyle(e.querySelector('.ds-cat-item-title')).fontSize])]; }""")
+            check('categories selector (827:2047): 640x96, the pill 2px wider and 104 high, the three items, Income selected, 14px titles',
+                  cs[0] == [640, 96] and cs[1][1] == 104 and cs[2] == [['ob-cat-income', 'true', '14px'], ['ob-cat-investment', 'false', '14px'], ['ob-cat-expense', 'false', '14px']], cs)
+            # Oct 5–6 (Felipe): no category creation or renaming at all
+            check('no category creation or renaming', await ann.locator('#ob-add-cat, #ob-rename-cat, #category-modal').count() == 0)
+            # ...but sub-categories and groups are free: delete one of the four Expenses defaults, and a group
+            await ann.click('#ob-cat-expense'); await ann.wait_for_timeout(400)
+            check('Expenses opens on its first sub-category with its groups', await ann.input_value('#ob-sub') == 'Fixed' and await ann.locator('.ob-board .budget-group').count() > 2)
+            await ob_pick(ann, 'ob-sub', 'Extra'); await ann.click('#ob-delete-sub'); await ann.wait_for_selector('#confirm-modal[open]')
+            check('deleting a sub-category asks first', 'delete Extra?' in await ann.inner_text('#confirm-modal .ds-modal-title'))
+            await ann.click('#confirm-delete'); await ann.wait_for_timeout(300)
+            check('a default Expenses sub-category can be deleted', 'Extra' not in await ann.inner_text('.ob-summary-list'))
+            await ob_pick(ann, 'ob-sub', 'Fixed')
+            g0 = await ann.locator('.ob-board .budget-group[data-category]').first.get_attribute('data-category')
+            await ann.locator('.ob-board .budget-group-more').first.click(); await ann.click('.group-menu .group-delete'); await ann.wait_for_selector('#confirm-modal[open]')
+            await ann.click('#confirm-delete'); await ann.wait_for_timeout(300)
+            check('a group can be deleted (with its types)', await ann.locator(f'.ob-board .budget-group[data-category="{g0}"]').count() == 0, g0)
+            await ob_pick(ann, 'ob-group', 'Pets', create=True)
+            check('typing a new group creates it, empty', await ann.locator('.ob-board .budget-group[data-category="Pets"] .budget-group-empty').count() == 1)
+            await ann.click('#ob-cat-income'); await ob_pick(ann, 'ob-sub', 'Side projects', create=True)
+            check('any sub-category name for Income, created by typing it', await ann.input_value('#ob-sub') == 'Side projects' and 'No income added yet' in await ann.inner_text('.ob-board-empty'))
             summ = await ann.inner_text('.ob-summary-list')
-            check('summary lists the custom category with its sub-category and type, and Income\'s new sub-category',
-                  'Philanthropy' in summ and 'Doctors without borders' in summ and 'Side projects' in summ, summ)
+            check('summary: Income\'s new sub-category, no deleted Extra', 'Side projects' in summ and 'Extra' not in summ, summ)
             await skip_onboarding(ann); await ann.wait_for_selector('#user-nav'); await ann.wait_for_timeout(700)
             abody = await ann.inner_text('body')
             check('approved user sees an empty account (isolation)', '777,50' not in abody and '23,40' not in abody)

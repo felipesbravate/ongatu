@@ -6,13 +6,13 @@ import { useConfirm } from './ConfirmModal.jsx';
 import { pencil } from '../ui/illustrations.js';
 import { Icon } from '../ui/Icon.jsx';
 import { actions, edit, euro, plus, trash, x } from '../ui/icons.js';
-import { EXP_GROUPS, MONTH_NAMES, fmtNum, hasGroups, isCustomType, parseAmount } from './model.js';
+import { EXP_GROUPS, MONTH_NAMES, fmtNum, hasGroups, parseAmount } from './model.js';
 
 const NONE = '__none'; // the Dropdown drops '' values, so "no sub-category" needs a value of its own
 
 const GROUP_TABS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
-// Oct 4: one section per category / sub-category of the board (custom categories and the board's own sub-categories too).
-const combosFor = (model, label) => model.combosOf(label).map((c) => ({ type: c.type, group: c.group, label: c.group || c.kindLabel }));
+// One section per category / sub-category of the board (the board's own sub-categories too).
+const combosFor = (model, label, mi) => model.combosOf(label, mi).map((c) => ({ type: c.type, group: c.group, label: c.group || c.kindLabel }));
 let seq = 0;
 
 // Panel - Year budget (Cost-tracker 232:5852).
@@ -21,13 +21,13 @@ let seq = 0;
 // Editing budget ("{Mon} {year} / Editing budget", `month` = { yearIdx, monthIdx }): the month's items with the figures
 //   it shows now; "Save" stores them as that month's budget.
 // `forMonth` marks the Editing-budget instance, so its ids stay its own while it is closed.
-export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate, onSave, onRename }) {
+export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate, onSave, onRename, onDeleteSub }) {
   const isMonth = forMonth != null ? !!forMonth : !!month;
   const open = isMonth ? !!month : !!pending;
   const my = isMonth && month ? model.DATA[month.yearIdx] : null;
   const [topTab, setTopTab] = useState('expense');
   const [group, setGroup] = useState('Fixed');
-  const [sub, setSub] = useState(''); // the sub-category shown for Income, Savings and custom categories ('' = none)
+  const [sub, setSub] = useState(''); // the sub-category shown for Income and Savings ('' = none)
   const baseLabel = isMonth ? (my ? my.year : null) : (model.DATA.length ? model.DATA[model.DATA.length - 1].year : null);
   const kinds = baseLabel ? model.kindsOf(baseLabel) : [];
   const kindName = (kinds.find((k) => k.type === topTab) || {}).label || topTab;
@@ -37,8 +37,8 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   const [typeModal, setTypeModal] = useState(false);
   const [typeCat, setTypeCat] = useState('');
   const [subModal, setSubModal] = useState(false);
-  const [renaming, setRenaming] = useState(null); // { level: 'category' | 'sub', from, label }
-  const [confirmModal, confirm] = useConfirm(isMonth ? 'month-rename-confirm' : 'budget-rename-confirm');
+  const [renaming, setRenaming] = useState(null); // { from } (sub-categories only; the three categories keep their names)
+  const [confirmModal, confirm] = useConfirm(isMonth ? 'month-rename-confirm' : 'budget-rename-confirm'); // rename and delete
   const mobile = useMobile();
   const [sections, setSections] = useState([]);
   const [status, setStatus] = useState(null);
@@ -48,7 +48,8 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   useEffect(() => {
     if (!open) return;
     setTopTab('expense'); setGroup('Fixed'); setSub(''); setNewGroup(''); setStatus(null);
-    const combos = combosFor(model, baseLabel);
+    const combos = combosFor(model, baseLabel, isMonth ? month.monthIdx : undefined);
+    { const firstExp = combos.find((c) => c.type === 'expense' && c.group); if (firstExp && !combos.some((c) => c.type === 'expense' && c.group === 'Fixed')) setGroup(firstExp.group); }
     const sugg = isMonth ? monthSections(model.monthBudgetRows(my, month.monthIdx), combos) : model.buildBudgetSuggestions();
     setSections(combos.map(({ type, group: g, label }) => {
       const sec = sugg.find((s) => s.type === type && (s.group || null) === (g || null));
@@ -82,10 +83,10 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   // Groups (232:5853, Oct 3): "Create new group" adds an empty group to the shown sub-category; each group's menu renames
   // or deletes it (its types and their figures go with it). An empty group is not saved: only types carry a budget.
   const curIdx = () => sections.findIndex(isSel);
-  // "+ Add sub-category" (Income, Savings, custom categories): new empty sections, the first one shown.
+  // "+ Add sub-category" (every category): new empty sections, the first one shown.
   const addSubs = (groups) => {
     setSections((ss) => [...ss, ...groups.filter((g) => !ss.some((x) => x.type === topTab && x.group === g)).map((g) => ({ type: topTab, group: g, label: g, pre: [], rows: [], blocks: [], empty: true, adding: false }))]);
-    if (groups[0]) setSub(groups[0]);
+    if (groups[0]) { if (topTab === 'expense') setGroup(groups[0]); else setSub(groups[0]); }
   };
   // Rename (Oct 5, Editing budget only): the Rename modal, then a confirmation that says what spreads, then the write.
   const curSubName = topTab === 'expense' ? group : (sub || null);
@@ -95,17 +96,35 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
     const when = `${MONTH_NAMES[month.monthIdx]} ${my ? my.year : ''}`.trim();
     confirm({
       title: `Rename "${r.from}" to "${to}"?`,
-      description: r.level === 'category'
-        ? `${my ? my.year : 'This year'} and every year after it will show "${to}". Your entries and budgets stay as they are.`
-        : `This applies to ${when} and every month after it, later years included. Earlier months keep "${r.from}".`,
+      description: `This applies to ${when} and every month after it, later years included. Earlier months keep "${r.from}".`,
       illustration: pencil, destructive: false, confirmLabel: 'Rename', busyLabel: 'Renaming…',
       onConfirm: async () => {
-        await onRename({ level: r.level, type: topTab, from: r.level === 'sub' ? r.from : null, fromLabel: r.from, to, year: my.year, mi: month.monthIdx });
-        if (r.level === 'sub') {
-          setSections((ss) => ss.map((x) => (x.type === topTab && x.group === r.from ? { ...x, group: to, label: to,
-            pre: x.pre.map((q) => ({ ...q, group: to })), rows: x.rows.map((q) => ({ ...q, group: to })), blocks: x.blocks.map((b) => ({ ...b, rows: b.rows.map((q) => ({ ...q, group: to })) })) } : x)));
-          if (topTab === 'expense') setGroup(to); else setSub(to);
-        }
+        await onRename({ type: topTab, from: r.from, to, year: my.year, mi: month.monthIdx });
+        setSections((ss) => ss.map((x) => (x.type === topTab && x.group === r.from ? { ...x, group: to, label: to,
+          pre: x.pre.map((q) => ({ ...q, group: to })), rows: x.rows.map((q) => ({ ...q, group: to })), blocks: x.blocks.map((b) => ({ ...b, rows: b.rows.map((q) => ({ ...q, group: to })) })) } : x)));
+        if (topTab === 'expense') setGroup(to); else setSub(to);
+      },
+    });
+  };
+  // Delete the shown sub-category (Oct 5, Editing budget only): from this month on, after a confirmation. Expenses keeps
+  // at least one sub-category; a sub-category with entries from this month on is refused (TrackerApp says why).
+  const askDeleteSub = () => {
+    const name = curSubName;
+    if (!name || !month) return;
+    const when = `${MONTH_NAMES[month.monthIdx]} ${my ? my.year : ''}`.trim();
+    // Entries from this month on: no confirmation, TrackerApp refuses straight away and says why.
+    const Y = parseInt(my.year, 10);
+    const logged = model.ENTRIES.some((e) => e.type === topTab && (e.group || null) === name && (parseInt(e.year, 10) > Y || (e.year === my.year && e.monthIndex >= month.monthIdx)));
+    if (logged) { onDeleteSub({ type: topTab, sub: name, year: my.year, mi: month.monthIdx }); return; }
+    confirm({
+      title: `Delete "${name}"?`,
+      description: `It goes from ${when} and every month after it, with its types and planned budget. Earlier months keep it.`,
+      confirmLabel: 'Delete', busyLabel: 'Deleting…',
+      onConfirm: async () => {
+        const ok = await onDeleteSub({ type: topTab, sub: name, year: my.year, mi: month.monthIdx });
+        if (!ok) return;
+        setSections((ss) => ss.filter((x) => !(x.type === topTab && x.group === name)));
+        if (topTab === 'expense') setGroup(expGroups.find((g) => g !== name) || ''); else setSub('');
       },
     });
   };
@@ -148,7 +167,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
           <div className="add-grid budget-filters">
             <div className={'fld' + (topTab === 'expense' || namedSubs.length ? '' : ' budget-kind-only')}>
               <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-kind-trigger'}>Category</label>
-              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-kind'} size="md" emptyOption={false} value={topTab} onChange={(v) => { setTopTab(v); setSub(isCustomType(v) ? ([...new Set(sections.filter((x) => x.type === v && x.group).map((x) => x.group))][0] || '') : ''); setNewGroup(''); }} options={(kinds.length ? kinds.map((k) => ({ value: k.type, label: k.label })) : KINDS.map((k) => ({ value: k.value, label: k.label })))} />
+              <Dropdown id={(isMonth ? 'month-budget' : 'budget') + '-kind'} size="md" emptyOption={false} value={topTab} onChange={(v) => { setTopTab(v); setSub(''); setNewGroup(''); }} options={(kinds.length ? kinds.map((k) => ({ value: k.type, label: k.label })) : KINDS.map((k) => ({ value: k.value, label: k.label })))} />
             </div>
             <div className="fld" id={isMonth ? 'month-budget-group-field' : 'budget-group-field'} hidden={topTab !== 'expense' && !namedSubs.length}>
               <label className="fld-label" htmlFor={(isMonth ? 'month-budget' : 'budget') + '-sub-trigger'}>Sub-category</label>
@@ -167,28 +186,28 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
             )}
             {/* 232:5852 (Oct 3): Income and Save/Invest show "+ Add sub-category" and an Info tooltip beside the Category;
                 their "+ Add type" sits under the list. */}
-            {topTab !== 'expense' && (
+            {/* Oct 5: every category takes new sub-categories, Expenses too. */}
+            {(
               <div className="budget-sub-cta">
                 <ActionLink icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-add-sub'} onClick={() => setSubModal(true)}>Add sub-category</ActionLink>
                 <InfoTooltip text="Sub-categories split a category into groups you track separately." />
               </div>
             )}
-            {/* Oct 5 (no Figma frame yet): rename the category or the shown sub-category, from this month on. */}
-            {isMonth && onRename && (
+            {/* Oct 5 (no Figma frame yet): rename or delete the shown sub-category, from this month on. */}
+            {isMonth && onRename && curSubName && (
               <div className="span-2 budget-rename">
-                <ActionLink icon={edit} id="month-budget-rename-cat" onClick={() => setRenaming({ level: 'category', from: kindName })}>Rename category</ActionLink>
-                {curSubName && <ActionLink icon={edit} id="month-budget-rename-sub" onClick={() => setRenaming({ level: 'sub', from: curSubName })}>Rename sub-category</ActionLink>}
+                <ActionLink icon={edit} id="month-budget-rename-sub" onClick={() => setRenaming({ from: curSubName })}>Rename sub-category</ActionLink>
+                {onDeleteSub && !(topTab === 'expense' && expGroups.length <= 1) && <ActionLink icon={trash} id="month-budget-delete-sub" onClick={askDeleteSub}>Delete sub-category</ActionLink>}
               </div>
             )}
             {hasGroups(topTab) && <div className="span-2"><ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={(isMonth ? 'month-budget' : 'budget') + '-create-group'} onClick={createGroup}>{mobile ? 'Add group' : 'Create new group'}</ActionLink></div>}
           </div>
           <RenameModal open={!!renaming} id={isMonth ? 'month-rename-modal' : 'budget-rename-modal'}
-            title={renaming && renaming.level === 'category' ? 'Rename category' : 'Rename sub-category'}
-            label={renaming && renaming.level === 'category' ? 'Category' : 'Sub-category'} value={renaming ? renaming.from : ''}
-            existing={renaming && renaming.level === 'category' ? kinds.map((k) => k.label).filter((l) => l !== renaming.from) : (topTab === 'expense' ? expGroups : namedSubs).filter((g) => renaming && g !== renaming.from)}
+            title="Rename sub-category" label="Sub-category" value={renaming ? renaming.from : ''}
+            existing={(topTab === 'expense' ? expGroups : namedSubs).filter((g) => renaming && g !== renaming.from)}
             onClose={() => setRenaming(null)} onSave={askRename} />
           {confirmModal}
-          <SubCategoryModal open={subModal} kind={topTab} kindName={kindName} existing={namedSubs} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={({ groups }) => { addSubs(groups); setSubModal(false); }} />
+          <SubCategoryModal open={subModal} kind={topTab} kindName={kindName} existing={topTab === 'expense' ? expGroups : namedSubs} id={(isMonth ? 'month-budget' : 'budget') + '-sub-modal'} onClose={() => setSubModal(false)} onSave={({ groups }) => { addSubs(groups); setSubModal(false); }} />
           <TypeModal open={typeModal} kind={topTab} kindName={kindName} group={topTab === 'expense' ? group : (sub || null)} category={hasGroups(topTab) ? typeCat : undefined} id={(isMonth ? 'month-budget' : 'budget') + '-type-modal'}
             groupsOf={() => (sections.find(isSel) || { blocks: [] }).blocks.map((bk) => bk.category)}
             onClose={() => setTypeModal(false)}
@@ -234,11 +253,11 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
     </>
   );
 }
-const BlockFrag = ({ divider, children }) => <>{divider && <hr className="ds-divider budget-divider" />}{children}</>;
+export const BlockFrag = ({ divider, children }) => <>{divider && <hr className="ds-divider budget-divider" />}{children}</>;
 // A group's header (232:5853): its name (Heading/Large; Heading/Medium on phones) and a Micro Tertiary round button with
 // the Actions icon, 8 apart; the menu (Dropdown-list, Drop-actions) holds "Change group name" and "Delete group".
 // Renaming turns the name into a Tiny input: Enter or leaving it saves, Escape keeps the old name.
-function GroupHeader({ title, onRename, onDelete, onAdd, mobile }) {
+export function GroupHeader({ title, onRename, onDelete, onAdd, mobile, renameLabel }) {
   const [open, setOpen] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const ref = useRef(null);
@@ -257,7 +276,7 @@ function GroupHeader({ title, onRename, onDelete, onAdd, mobile }) {
       <span className="br-actions" ref={ref}>
         <RoundButton icon={actions} size="micro" className="br-more budget-group-more" label={`Actions for ${title}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
         {open && <MenuList className="br-menu group-menu" items={[
-          { key: 'rename', label: mobile ? 'Rename group' : 'Change group name', icon: edit, className: 'group-rename', onSelect: () => { setOpen(false); setRenaming(true); } },
+          { key: 'rename', label: renameLabel || (mobile ? 'Rename group' : 'Change group name'), icon: edit, className: 'group-rename', onSelect: () => { setOpen(false); setRenaming(true); } },
           { key: 'delete', label: 'Delete group', icon: trash, className: 'group-delete', destructive: true, onSelect: () => { setOpen(false); onDelete(); } },
         ]} />}
       </span>
@@ -281,7 +300,7 @@ function RowActions({ item, onRemove }) {
 // A budget row: breackdown-row (DS 124:3667), Entry off, Action on. Default: name, € and the figure as an Action link;
 // Editing (the figure clicked): an Input, Size=Tiny, and 24px right padding. The Action is a Tiny Tertiary Round button
 // with an X in action/destructive that removes the row.
-function BudgetRow({ r, onValue, onRemove, onEditing, mobile }) {
+export function BudgetRow({ r, onValue, onRemove, onEditing, mobile }) {
   const input = useRef(null);
   useEffect(() => { if (r.editing && input.current) { input.current.focus(); input.current.select(); } }, [r.editing]);
   const done = (v) => { onValue(r.key, fmtNum(parseAmount(v))); onEditing(r.key, false); };
