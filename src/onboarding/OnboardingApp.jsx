@@ -154,9 +154,9 @@ function Choose({ onPick }) {
 // and "+ Add type", Dividers between groups; "No types added yet." for an empty group. Nothing on the board yet: the
 // Empty state illustration with "No income added yet". Summary on the right (280).
 const CAT_INFO = {
-  income: { title: 'Income', description: 'Money entering your accounts from salaries, freelance work, or other revenue streams.', empty: 'No income added yet', emptyText: 'Define a specific income to track, and optionally organize it into sub-categories.' },
-  investment: { title: 'Savings and investments', description: 'Money set aside for future goals, emergencies, or assets meant to build wealth.', empty: 'No savings or investments added yet', emptyText: 'Define what you put aside, and optionally organize it into sub-categories.' },
-  expense: { title: 'Expenses', description: 'Money leaving your accounts to pay for living costs, bills, and everyday purchases.', empty: 'No expenses added yet', emptyText: 'Define a specific expense to track, and organize it into sub-categories and groups.' },
+  income: { cta: 'Add income', title: 'Income', description: 'Money entering your accounts from salaries, freelance work, or other revenue streams.', empty: 'No income added yet', emptyText: 'Define a specific income to track, and optionally organize it into sub-categories.' },
+  investment: { cta: 'Add savings/investment', title: 'Savings and investments', description: 'Money set aside for future goals, emergencies, or assets meant to build wealth.', empty: 'No savings or investments added yet', emptyText: 'Define what you put aside, and optionally organize it into sub-categories.' },
+  expense: { cta: 'Add expense', title: 'Expenses', description: 'Money leaving your accounts to pay for living costs, bills, and everyday purchases.', empty: 'No expenses added yet', emptyText: 'Define a specific expense to track, and organize it into sub-categories and groups.' },
 };
 const NO_SUB = 'No sub-category';
 const ALL_GROUPS = 'All groups';
@@ -321,7 +321,8 @@ function Setup({ mode, onStart, busy, error }) {
                 <h4>{needSub ? 'Start with a sub-category' : info.empty}</h4>
                 <p>{needSub ? 'Type a name in Sub-category above, like Fixed or Variable. Then add your types.' : info.emptyText}</p>
               </div>
-              {!needSub && addTypeLink(groupSel || '', 'ob-add-type', 'ob-add-type')}
+              {/* 749:10871 (Oct 6): a Small Primary button with a 16px Plus; the label follows the category. */}
+              {!needSub && <Button size="small" icon={plus} id="ob-add-type" className="ob-add-type" onClick={() => setModal({ kind: 'type', category: groupSel || '' })}>{info.cta}</Button>}
             </div>
           ) : (
             <div className="budget-sections ob-board-groups">
