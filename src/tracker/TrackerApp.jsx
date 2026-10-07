@@ -397,7 +397,7 @@ export default function TrackerApp() {
       <div className={'wrap' + (addingYear ? ' is-adding-year' : '')}>
         <header className="top">
           <h1 className="app-title">{`Hey, ${profile.name}`}</h1>
-          <div className="app-sub">Ready to see where you stand today? Track your spending and savings for the month.</div>
+          <div className="app-sub">Ready to see where you stand today?</div>
         </header>
         <YearNav model={model} yearIdx={yearIdx} monthIdx={monthIdx} onYear={selectYear} onMonth={selectMonth} canSave onAddingChange={setAddingYear}
           onAddYear={(label, currency) => setPendingYear({ label, currency })} onDeleteYear={askDeleteYear} />
