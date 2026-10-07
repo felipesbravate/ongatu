@@ -41,3 +41,8 @@ html[data-theme] .ds-dd-item:not(.is-destructive) svg{color:var(--icon-primary)}
 html[data-theme] :is(.ds-input.is-disabled,.ds-dd.is-disabled) svg,
 html[data-theme] .ds-dd-trigger:disabled svg,
 html[data-theme] :is(.ds-input,.bd-input,.field-with-prefix,.date-dd):has(input:disabled) svg{color:var(--text-muted)}
+
+/* Dark surfaces need readable illustrations and filled destructive-button labels. */
+html[data-theme="dark"] .ds-illustration,
+html[data-theme="dark"] #add-panel .dz-reading-art{color:var(--text-secondary)}
+html[data-theme="dark"] .btn-pill.destructive{color:var(--text-primary)}

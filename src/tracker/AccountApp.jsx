@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
-import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, MobileBottomNav, SideMenu, Toggle, useToast } from '../ui/index.js';
+import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, SideMenu, Toggle, useToast } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
 import { arrowStraightLeft, lock, plus, security, trash, user } from '../ui/icons.js';
 import { api, deleteMe, deleteMyData, getMe, getSignIn, setSignIn, signOut } from './api.js';
@@ -16,6 +16,8 @@ import { useBudgetAlertsStandalone } from './alerts.js';
 import { avatarFromFile, removeAvatar, saveAvatar, saveProfile, useProfile } from './profile.js';
 
 // Side menu labels and icons as in Ongatu 250:3399 (Sept 28).
+import { useRouter } from 'next/navigation';
+import { useAppNavigation } from './AppNavigation.jsx';
 import { useTheme } from '../ui/Theme.jsx';
 import { AppSkeleton } from '../ui/Loading.jsx';
 
@@ -27,6 +29,7 @@ const SECTIONS = [
 const EXPORT_COLLECTIONS = ['years', 'entries', 'budgets', 'budgetDefaults', 'overrides', 'settings'];
 
 export default function AccountApp() {
+  const router = useRouter();
   const [me, setMe] = useState(null);
   const [loadError, setLoadError] = useState(false);
   const profile = useProfile(me);
@@ -56,14 +59,16 @@ export default function AccountApp() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [me]);
 
+  useAppNavigation(me ? profile.image : undefined, () => router.push('/?add=1'));
+
   if (!me) return <AppSkeleton account error={loadError} />;
   return (
     <>
       <div className="app-top-gap" />
-      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { location.href = '/?alert=' + encodeURIComponent([a.year, a.mi, a.group, a.type || 'expense'].join('|')); }} /></AppHeader>
+      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { router.push('/?alert=' + encodeURIComponent([a.year, a.mi, a.group, a.type || 'expense'].join('|'))); }} /></AppHeader>
       <div className="wrap acct-page">
         <header className="acct-head">
-          <ActionLink href="/" size="medium" icon={arrowStraightLeft} id="acct-back">Go to dashboard</ActionLink>
+          <ActionLink href="/" onClick={(event) => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); router.push('/'); } }} size="medium" icon={arrowStraightLeft} id="acct-back">Go to dashboard</ActionLink>
           <h1 className="app-title">Account</h1>
           <div className="app-sub">Manage your personal identity, security preferences, and data privacy controls.</div>
         </header>
@@ -78,7 +83,6 @@ export default function AccountApp() {
           </div>
         </div>
       </div>
-      <MobileBottomNav selection="account" image={profile.image} onAdd={() => { location.href = '/?add=1'; }} />
       {toastEl}
       {confirmModal}
     </>
@@ -205,6 +209,7 @@ function SecurityCard({ showToast }) {
 }
 
 function DataCard({ me, confirm, showToast }) {
+  const router = useRouter();
   const [sure, setSure] = useState(false);
   const [exporting, setExporting] = useState(false);
   const exportData = async () => {
@@ -237,7 +242,7 @@ function DataCard({ me, confirm, showToast }) {
       <div className="acct-card-body acct-data">
         <div className="acct-data-row">
           <div className="acct-meta"><h3>Import</h3><p>Import your data from different platforms or spreadsheet.</p></div>
-          <Button size="small" variant="secondary" id="import-btn" onClick={() => { location.href = '/?add=1'; }}>Import data</Button>
+          <Button size="small" variant="secondary" id="import-btn" onClick={() => { router.push('/?add=1'); }}>Import data</Button>
         </div>
         <Divider />
         <div className="acct-data-row">

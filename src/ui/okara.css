@@ -3611,3 +3611,26 @@
 }
 
 .tracker-last-entry .money-ic{ color:inherit; }
+
+/* A single selection layer persists as Home and Account change. */
+@media (max-width:640px){
+  .ds-mnav-pill{isolation:isolate}
+  .ds-mnav-pill > .ds-mnav-pillbg{
+    inset:auto; left:var(--space-xs); top:50%; width:min(136px, calc(50% - var(--space-xs) - 30px)); height:56px;
+    transform:translateY(-50%); z-index:0; pointer-events:none; view-transition-name:none;
+    transition:left 240ms cubic-bezier(.2,.8,.2,1);
+  }
+  .ds-mnav-pill[data-selection="account"] > .ds-mnav-pillbg{
+    left:calc(100% - var(--space-xs) - min(136px, calc(50% - var(--space-xs) - 30px)));
+  }
+  .ds-mnav-item,.ds-mnav-action{z-index:1}
+  .ds-mnav-item{transition:color 180ms ease}
+  .ds-mnav-label{animation:mnav-label-in 180ms ease-out both}
+  .app-route-content{animation:app-route-in 180ms ease-out}
+}
+@keyframes app-route-in{from{opacity:.35}to{opacity:1}}
+@keyframes mnav-label-in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .ds-mnav-pill > .ds-mnav-pillbg,.ds-mnav-item{transition:none}
+  .app-route-content,.ds-mnav-label{animation:none}
+}

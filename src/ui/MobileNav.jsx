@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { Icon } from './Icon.jsx';
 import { home, plus, user } from './icons.js';
 
@@ -17,16 +18,13 @@ export function MobileNavItem({ type = 'section', icon, image, label, selected, 
   }
   const inner = (
     <>
-      {/* The selected background is its own layer so it can slide between tabs across page loads
-          (cross-document View Transition "mnav-pill", see okara.css). */}
-      {selected && <span className="ds-mnav-pillbg" aria-hidden="true" />}
       {image ? <img className="ds-mnav-img" src={image} alt="" /> : <Icon icon={icon} size={24} />}
       {selected && <span className="ds-mnav-label">{label}</span>}
     </>
   );
   const cls = cx('ds-mnav-item', selected && 'is-selected');
   return href
-    ? <a className={cls} href={href} id={id} aria-label={label} aria-current={selected ? 'page' : undefined}>{inner}</a>
+    ? <Link className={cls} href={href} id={id} aria-label={label} aria-current={selected ? 'page' : undefined}>{inner}</Link>
     : <button type="button" className={cls} id={id} aria-label={label} aria-current={selected ? 'page' : undefined} onClick={onClick}>{inner}</button>;
 }
 
@@ -36,7 +34,8 @@ export function MobileNavItem({ type = 'section', icon, image, label, selected, 
 export function MobileBottomNav({ selection = 'home', onAdd, image, homeHref = '/', accountHref = '/account' }) {
   return (
     <nav className="ds-mnav" id="mobile-nav" aria-label="Main">
-      <div className="ds-mnav-pill">
+      <div className="ds-mnav-pill" data-selection={selection}>
+        <span className="ds-mnav-pillbg" aria-hidden="true" />
         <MobileNavItem icon={home} label="Home" selected={selection === 'home'} href={selection === 'home' ? undefined : homeHref}
           onClick={selection === 'home' ? () => window.scrollTo({ top: 0, behavior: 'smooth' }) : undefined} id="mnav-home" />
         <MobileNavItem type="action" label="Add an entry" onClick={onAdd} id="mnav-add" />

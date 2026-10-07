@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
-import { AppHeader, Button, MobileBottomNav, Toast, useToast } from '../ui/index.js';
+import { AppHeader, Button, Toast, useToast } from '../ui/index.js';
 import { db, getMe, leavePage } from './api.js';
 import { AccountNav, firstNameOf } from './AccountBar.jsx';
 import { AddPanel } from './AddPanel.jsx';
@@ -14,6 +14,7 @@ import { ExpenseStrip, HeroLeft, TrackerCard, TrendChart, YearOverYear } from '.
 import { MONTH_ABBR, addTypeToTaxonomy, budgetDefaultDocId, createModel, currentYearLabel, foldLegacyCustom, parseAmount, yearsFromDocs } from './model.js';
 import { YearNav } from './YearNav.jsx';
 
+import { useAppNavigation } from './AppNavigation.jsx';
 import { AppSkeleton } from '../ui/Loading.jsx';
 
 const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetDefaults'];
@@ -386,6 +387,8 @@ export default function TrackerApp() {
   // The Add button's preset follows the tab.
   const addPreset = () => ({ type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: topTab === 'Income' || topTab === 'Investments' ? null : bd.group });
 
+  useAppNavigation(me ? profile.image : undefined, () => setAddPanel({ open: true, preset: addPreset() }));
+
   if (!me || !gateReady || loaded.size < COLLECTIONS.length) return <AppSkeleton error={loadError} />;
   return (
     <>
@@ -417,8 +420,6 @@ export default function TrackerApp() {
         <YearOverYear model={model} onYear={selectYear} />
         <footer className="note" id="app-footer">Costs Tracker. Your entries are encrypted before they are stored. Documents you upload are read once to extract entries and are never saved.</footer>
       </div>
-      <MobileBottomNav selection="home" image={profile.image}
-        onAdd={() => setAddPanel({ open: true, preset: addPreset() })} />
       {toastEl}
       <Toast id="year-toast" type="neutral" visible={!!yearToast} onClose={hideYearToast}
         action={yearToast ? <Button size="tiny" variant="secondary" className="toast-undo" onClick={yearToast.undo}>Undo</Button> : null}>{yearToast ? yearToast.message : ''}</Toast>

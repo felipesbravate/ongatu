@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Notification, NotificationItem, UserMenu, UserNav, fmtMoney } from '../ui/index.js';
 import { signOut as signOutIcon } from '../ui/icons.js';
@@ -26,6 +27,7 @@ function whenOf(iso) {
 // Account on the Account page does nothing; Account elsewhere and Sign out load another page with the menu open.
 // `alerts` = model.budgetAlerts(); `onOpenAlert(alert)` shows that month and group on the dashboard.
 export function AccountNav({ me, profile, alerts = [], onOpenAlert }) {
+  const router = useRouter();
   const [open, setOpen] = useState(null); // 'notif' | 'user' | null
   const [pending, setPending] = useState([]);
   const [busy, setBusy] = useState({});
@@ -47,7 +49,7 @@ export function AccountNav({ me, profile, alerts = [], onOpenAlert }) {
   };
   const name = (profile && profile.name) || firstNameOf(me.email);
   const items = [
-    { key: 'account', id: 'menu-account', label: 'Account', onSelect: () => { if (location.pathname !== '/account') location.href = '/account'; } },
+    { key: 'account', id: 'menu-account', label: 'Account', onSelect: () => { if (location.pathname !== '/account') router.push('/account'); } },
     ...(me.isAdmin ? [{ key: 'admin', id: 'menu-admin', label: 'Admin', onSelect: () => setDialog('admin') }] : []),
     { key: 'signout', id: 'menu-signout', label: 'Sign out', icon: signOutIcon, onSelect: () => signOut().then(() => { location.href = '/login'; }) },
   ];

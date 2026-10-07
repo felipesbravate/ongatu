@@ -44,7 +44,12 @@ const send = (res, status, body, headers = {}) => { res.writeHead(status, { ...s
 const UI_ORIGIN = process.env.UI_ORIGIN || 'http://127.0.0.1:3300';
 async function proxy(req, res, target) {
   const body = ['GET', 'HEAD'].includes(req.method) ? undefined : await readBody(req);
-  const r = await fetch(UI_ORIGIN + target, { method: req.method, headers: { cookie: req.headers.cookie || '', accept: req.headers.accept || '*/*', 'accept-encoding': 'identity' }, body, redirect: 'manual' });
+  const requestHeaders = { cookie: req.headers.cookie || '', accept: req.headers.accept || '*/*', 'accept-encoding': 'identity' };
+  // Preserve App Router requests so local navigation tests receive RSC, not a new HTML document.
+  for (const key of ['rsc', 'next-router-state-tree', 'next-router-prefetch', 'next-url']) {
+    if (req.headers[key]) requestHeaders[key] = req.headers[key];
+  }
+  const r = await fetch(UI_ORIGIN + target, { method: req.method, headers: requestHeaders, body, redirect: 'manual' });
   const headers = {}; r.headers.forEach((v, k) => { if (!['content-encoding', 'content-length', 'transfer-encoding', 'connection'].includes(k)) headers[k] = v; });
   res.writeHead(r.status, headers); res.end(Buffer.from(await r.arrayBuffer()));
 }

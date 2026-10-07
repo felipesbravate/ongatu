@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Icon } from './Icon.jsx';
 import { checkmark } from './icons.js';
@@ -76,7 +77,7 @@ export function AppHeader({ children, homeHref = '/' }) {
   }, []);
   return (
     <header className="ds-app-header" id="app-header">
-      <a className="ds-app-header-logo" href={homeHref} aria-label="Ongatu, dashboard"><Logo variant="symbol" height={mobile ? (scrolled ? 24 : 32) : 48} /></a>
+      <Link className="ds-app-header-logo" href={homeHref} aria-label="Ongatu, dashboard"><Logo variant="symbol" height={mobile ? (scrolled ? 24 : 32) : 48} /></Link>
       {children}
     </header>
   );
