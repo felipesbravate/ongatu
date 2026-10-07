@@ -34,3 +34,10 @@ html[data-theme] #profile .acct-form .acct-email-row .field{width:100%;flex:1 1 
 html[data-theme] .ds-input.is-disabled svg:not(#z){color:var(--text-muted)}
 html[data-theme] .field input:disabled{opacity:1}
 html[data-theme] .login-tagline{color:var(--brand-indigo)}
+
+/* Control glyphs use icon roles in both themes, including nested/portalled menus. */
+html[data-theme] :is(.ds-user-info,.fld-combo-chev) > svg{color:var(--icon-primary)}
+html[data-theme] .ds-dd-item:not(.is-destructive) svg{color:var(--icon-primary)}
+html[data-theme] :is(.ds-input.is-disabled,.ds-dd.is-disabled) svg,
+html[data-theme] .ds-dd-trigger:disabled svg,
+html[data-theme] :is(.ds-input,.bd-input,.field-with-prefix,.date-dd):has(input:disabled) svg{color:var(--text-muted)}

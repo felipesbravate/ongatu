@@ -775,7 +775,7 @@
   .ds-dd--md .ds-dd-trigger{ height:48px; padding:0 var(--layout-md); }
   .ds-dd--tiny .ds-dd-trigger{ height:32px; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
   .ds-dd-label{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .ds-dd-trigger svg{ flex-shrink:0; color:var(--action-primary); transition:transform .12s ease; }
+  .ds-dd-trigger svg{ flex-shrink:0; color:var(--icon-primary); transition:transform .12s ease; }
   .ds-dd.is-empty .ds-dd-trigger{ color:var(--text-secondary); }
   .ds-dd-trigger:hover{ border-color:var(--border-hover); }
   .ds-dd:not(.is-empty):not(.is-disabled) .ds-dd-trigger{ border-color:var(--border-selected-item); }
@@ -783,7 +783,7 @@
   .ds-dd-trigger:focus-visible{ outline:none; }
   .ds-dd.open .ds-dd-trigger svg{ transform:rotate(180deg); }
   .ds-dd.is-disabled .ds-dd-trigger{ background:var(--surface-secondary); color:var(--text-muted); cursor:not-allowed; border-color:var(--border-default); box-shadow:none; }
-  .ds-dd.is-disabled .ds-dd-trigger svg{ color:var(--action-disable); }
+  .ds-dd.is-disabled .ds-dd-trigger svg{ color:var(--text-muted); }
   .ds-dd-menu{
     position:fixed; z-index:80; box-sizing:border-box; width:max(242px, var(--dd-w, 0px)); max-width:calc(100vw - 16px);
     overflow-y:auto; overscroll-behavior:contain;
@@ -805,9 +805,9 @@
     transition:background-color .12s ease, color .12s ease;
   }
   .ds-dd-item.has-icon{ display:flex; align-items:center; gap:var(--layout-xs); }
-  .ds-dd-item.has-icon svg{ flex-shrink:0; color:var(--surface-tertiary); transition:color .12s ease; }
+  .ds-dd-item.has-icon svg{ flex-shrink:0; color:var(--icon-primary); transition:color .12s ease; }
   .ds-dd-item:hover, .ds-dd-item.is-active{ background:var(--surface-accent-light); color:var(--text-primary); }
-  .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:focus-visible svg{ color:var(--action-primary); }
+  .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:focus-visible svg{ color:var(--icon-primary); }
   button.ds-dd-item{ border:none; background:transparent; font-family:inherit; text-align:left; width:100%; }
   button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); outline:none; }
 
@@ -1217,7 +1217,7 @@
   }
   .bd-input:hover{ border-color:var(--state-border-hover); }
   .bd-input:focus-within{ border-color:var(--border-focus); }
-  .bd-input svg{ display:block; color:var(--ink); flex-shrink:0; }
+  .bd-input svg{ display:block; color:var(--icon-primary); flex-shrink:0; }
   .bd-input input{
     border:none; outline:none; background:transparent; padding:0; width:64px; min-width:0;
     font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:var(--type-value-small-lh); letter-spacing:var(--type-value-small-ls); text-align:right; color:var(--ink);
@@ -1273,7 +1273,7 @@
   .date-dd input[type="date"]::-webkit-calendar-picker-indicator{ position:absolute; inset:0; width:auto; height:auto; opacity:0; cursor:pointer; }
   .date-dd-label{ position:absolute; left:var(--layout-md); right:36px; top:50%; transform:translateY(-50%); pointer-events:none;
     font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .date-dd .date-dd-chevron{ position:absolute; right:var(--layout-md); top:50%; transform:translateY(-50%); width:12px; height:12px; color:var(--action-primary); pointer-events:none; }
+  .date-dd .date-dd-chevron{ position:absolute; right:var(--layout-md); top:50%; transform:translateY(-50%); width:12px; height:12px; color:var(--icon-primary); pointer-events:none; }
   .dz-text{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-tn); }
   .dz-line{ display:flex; align-items:center; justify-content:center; gap:var(--layout-tn); flex-wrap:wrap; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--ink); }
   .dz-line .ds-action-link{ font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); pointer-events:none; }
@@ -1300,7 +1300,7 @@
   .ap-manual .add-actions{ margin-top:calc(var(--layout-xl) - var(--layout-lg)); }
   #doc-actions, #ap-review .add-actions{ gap:var(--layout-tn); }
   #add-panel .field-with-prefix .field-prefix{ left:var(--layout-md); width:23px; height:24px; display:flex; align-items:center; justify-content:center; }
-  #add-panel .field-with-prefix .field-prefix svg{ display:block; color:var(--ink); }
+  #add-panel .field-with-prefix .field-prefix svg{ display:block; color:var(--icon-primary); }
   /* Labels sit 8 above their field in the panel (Cost-tracker 174:15081). "Month and year" is a 200px Dropdown. */
   #add-panel .field label{ margin-bottom:var(--layout-xs); font-size:var(--type-body-small-semibold-size); font-weight:var(--type-body-small-semibold-weight); line-height:var(--type-body-small-semibold-lh); letter-spacing:var(--type-body-small-semibold-ls); }
   #add-panel .field-period .ds-dd, #add-panel .ap-period .ds-dd{ width:200px; max-width:100%; }
@@ -1602,7 +1602,7 @@
   .ds-input.is-disabled, .ds-input.is-disabled:hover, .ds-input.is-disabled:has(input){ background:var(--surface-secondary); border-color:var(--border-default); }
   .ds-input.is-disabled input{ color:var(--text-muted); cursor:not-allowed; }
   .ds-input.is-disabled input::placeholder{ color:var(--text-muted); }
-  .ds-input svg{ color:var(--surface-tertiary); flex-shrink:0; }
+  .ds-input svg{ color:var(--icon-primary); flex-shrink:0; }
   .ds-input.small{ height:40px; padding:var(--layout-xs); }
   .ds-input.tiny{ height:32px; padding:0 var(--layout-xs); }
   .ds-input.tiny input{ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); }
@@ -1795,7 +1795,7 @@
   .date-dd{ border-color:var(--border-default); }
   .date-dd:hover{ border-color:var(--state-border-hover); }
   .date-dd-label{ color:var(--text-secondary); }
-  .date-dd .date-dd-chevron{ width:12px; height:12px; color:var(--action-primary); }
+  .date-dd .date-dd-chevron{ width:12px; height:12px; color:var(--icon-primary); }
   .budget-panel .add-panel-content{ gap:var(--layout-xl); }
   .budget-type-section{ gap:var(--layout-md); }
   .budget-group{ gap:var(--layout-xs); }
@@ -2287,7 +2287,7 @@
   #add-panel .field-period .ds-dd, #add-panel .field-period{ max-width:242px; }
   .date-dd{ display:flex; align-items:center; gap:var(--space-xs); height:auto; min-height:calc(2 * var(--space-sm) + var(--icon-size-xl)); padding:0 calc(var(--space-md) - 1px); border-color:var(--border-selected-item); }
   .date-dd input[type="date"]{ position:absolute; inset:0; width:100%; height:100%; padding:0; border:none; background:transparent; color:transparent; cursor:pointer; outline:none; }
-  .date-dd .date-dd-cal{ flex-shrink:0; color:var(--action-primary); pointer-events:none; }
+  .date-dd .date-dd-cal{ flex-shrink:0; color:var(--icon-primary); pointer-events:none; }
   .date-dd-label{ position:static; transform:none; flex:1; color:var(--text-primary);
     font-size:var(--type-label-large-size); font-weight:var(--type-label-large-weight); line-height:var(--type-label-large-lh); letter-spacing:var(--type-label-large-ls); }
   .date-dd .date-dd-chevron{ position:static; transform:none; }
@@ -2749,9 +2749,9 @@
   .ds-input.tiny, .ds-dd--tiny .ds-dd-trigger{ min-height:calc(2 * var(--space-xs) + var(--icon-size-md)); padding:0 calc(var(--space-xs) - 1px);
     font-size:var(--type-label-tiny-size); font-weight:400; line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
   .ds-input input, .ds-dd-trigger .ds-dd-label{ font:inherit; letter-spacing:inherit; }
-  .ds-input svg{ color:var(--surface-dark); }
-  .ds-dd-trigger svg{ color:var(--action-primary); flex-shrink:0; }
-  .ds-dd-trigger:disabled svg, .ds-dd.is-disabled .ds-dd-trigger svg{ color:var(--action-disable); }
+  .ds-input svg{ color:var(--icon-primary); }
+  .ds-dd-trigger svg{ color:var(--icon-primary); flex-shrink:0; }
+  .ds-dd-trigger:disabled svg, .ds-dd.is-disabled .ds-dd-trigger svg{ color:var(--text-muted); }
 
   /* Dropdown-list: surface/primary, border/secondary, radius/md, pad space/md, Floating (0 0 8 ink 8%). Group: title
      Label/Medium text/primary, space/xs above its items, items space/tn apart, a Divider between groups, blocks
@@ -2765,7 +2765,7 @@
   .ds-dd-menu:not(.is-group) .ds-dd-items{ gap:0; }
   .ds-dd-item, button.ds-dd-item{ padding:var(--space-xs); gap:var(--space-xs); border-radius:var(--radius-sm); color:var(--text-secondary);
     font-size:var(--type-label-small-size); font-weight:400; line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
-  .ds-dd-item.has-icon svg{ color:var(--text-secondary); }
+  .ds-dd-item.has-icon svg{ color:var(--icon-primary); }
   .ds-dd-item:hover, .ds-dd-item.is-active, button.ds-dd-item:hover, button.ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); }
   .ds-dd-item:hover svg, .ds-dd-item.is-active svg, button.ds-dd-item:hover svg, button.ds-dd-item:focus-visible svg{ color:var(--text-primary); }
 
@@ -3088,7 +3088,7 @@
   .ds-user-card{ gap:var(--space-xs); }
   .ds-user-card .ds-menu-items{ width:auto; align-self:stretch; padding:0 4px 0 24px; }
   .ds-user-card .ds-dd-item{ color:var(--text-primary); }
-  .ds-user-card .ds-dd-item svg{ color:var(--surface-dark); }
+  .ds-user-card .ds-dd-item svg{ color:var(--icon-primary); }
 
   /* Year budget 232:5851 / 232:5853 (desktop): labels 8 over their control; groups 16 apart with a Divider; a group =
      header (24: Heading/Large name, Micro Actions button, 8 apart), its rows (24, no gap) and "+ Add type", 12 apart; an
@@ -3235,12 +3235,12 @@
     #add-panel .ds-input.is-value input{ font-size:16px; letter-spacing:0; }
   }
   #add-panel .date-dd-label{ font-size:var(--type-label-medium-size); font-weight:var(--type-label-medium-weight); line-height:var(--type-label-medium-lh); letter-spacing:var(--type-label-medium-ls); color:var(--text-primary); }
-  #add-panel .date-dd.is-phone .date-dd-chevron{ color:var(--action-primary); }
+  #add-panel .date-dd.is-phone .date-dd-chevron{ color:var(--icon-primary); }
 
   /* Files review, desktop (229:18717): the panel is 608 wide with 24 sides; header, Track in (Medium 200) and the rows 24
      apart; rows 16 apart, the buttons 40 under them. Row: date (Label/Small, text/secondary, 42) | Input Tn 140 | Dropdown
      Tiny 140 | Dropdown Tiny 140 | 16px € + Value/Large 14 text/primary on the right; 8 apart. */
-  #add-panel .ds-dd-lead{ flex-shrink:0; color:var(--surface-dark); }
+  #add-panel .ds-dd-lead{ flex-shrink:0; color:var(--icon-primary); }
   #ap-review .is-guess .ds-dd-trigger{ border-color:var(--border-selected-item); }
   #ap-review .rv-value{ display:flex; align-items:center; justify-content:flex-end; gap:0; font-family:var(--font-mono); font-size:var(--type-value-large-size); line-height:normal; font-weight:400; color:var(--text-primary); white-space:nowrap; }
   #ap-review .rv-value svg{ color:var(--text-primary); }
@@ -3310,7 +3310,7 @@
   /* Group (Optional): the custom Dropdown-list 4 under the field. Simple (existing groups) spans the field; Action (a new
      name typed) hugs its rows and starts with '+ Create "…"'. */
   .fld-combo{ position:relative; }
-  .fld-combo-chev{ position:absolute; right:var(--space-md); top:50%; transform:translateY(-50%); display:flex; padding:0; border:0; background:none; cursor:pointer; color:var(--action-primary); pointer-events:auto; }
+  .fld-combo-chev{ position:absolute; right:var(--space-md); top:50%; transform:translateY(-50%); display:flex; padding:0; border:0; background:none; cursor:pointer; color:var(--icon-primary); pointer-events:auto; }
   .fld-combo .ds-dd-menu.fld-combo-menu{ position:absolute; top:calc(100% + 4px); left:0; right:auto; width:100%; max-width:100%; max-height:260px; z-index:5; }
   .fld-combo .ds-dd-menu.fld-combo-menu.is-action{ width:max-content; min-width:171px; }
   .fld-combo-create{ color:var(--text-primary); }
@@ -3362,7 +3362,7 @@
   }
 
   /* Review: the guess marker is surface/tertiary, in the rows and in the note (229:18717, 415:14256). */
-  #ap-review .ds-dd-lead:not(#z), #ap-review .add-status .rv-guess:not(#z){ color:var(--surface-tertiary); }
+  #ap-review .ds-dd-lead:not(#z), #ap-review .add-status .rv-guess:not(#z){ color:var(--text-muted); }
 
   /* Add year: while open the toggle is the Active Tertiary X (229:19777): filled, no border. */
   #year-add-toggle[aria-expanded="true"]:not(.x){ background:var(--action-secondary-active); border-color:transparent; }
@@ -3412,9 +3412,9 @@
 .ds-dd-menu.ds-drop-action:not(#z){ width:200px; min-width:200px; max-width:calc(100vw - 32px); padding:var(--space-sm); gap:var(--space-xs); border:1px solid var(--border-secondary); border-radius:var(--radius-md); background:var(--surface-primary); box-shadow:0 0 8px #16150f14; }
 .ds-drop-action:not(#z) .ds-dd-items{ gap:0; }
 .ds-drop-action:not(#z) .ds-dd-item{ min-width:0; min-height:32px; padding:var(--space-xs); gap:var(--space-xs); border-radius:var(--radius-sm); color:var(--text-primary); font-size:var(--type-label-tiny-size); line-height:var(--type-label-tiny-lh); font-weight:400; letter-spacing:var(--type-label-tiny-ls); }
-.ds-drop-action:not(#z) .ds-dd-item svg{ color:var(--surface-dark); }
+.ds-drop-action:not(#z) .ds-dd-item svg{ color:var(--icon-primary); }
 .ds-drop-action:not(#z) .ds-dd-item:hover, .ds-drop-action:not(#z) .ds-dd-item.is-active, .ds-drop-action:not(#z) .ds-dd-item:focus-visible{ background:var(--surface-accent-light); color:var(--text-primary); outline:none; }
-.ds-drop-action:not(#z) .ds-dd-item:hover svg, .ds-drop-action:not(#z) .ds-dd-item.is-active svg, .ds-drop-action:not(#z) .ds-dd-item:focus-visible svg{ color:var(--action-primary); }
+.ds-drop-action:not(#z) .ds-dd-item:hover svg, .ds-drop-action:not(#z) .ds-dd-item.is-active svg, .ds-drop-action:not(#z) .ds-dd-item:focus-visible svg{ color:var(--icon-primary); }
 .ds-drop-action:not(#z) .ds-dd-item.is-destructive, .ds-drop-action:not(#z) .ds-dd-item.is-destructive svg{ color:var(--action-destructive); }
 @media (max-width:640px){
   .ds-dd-menu.ds-drop-action:not(#z){ padding:var(--space-md); }

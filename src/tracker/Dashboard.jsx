@@ -191,7 +191,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
           </Button>
         </div>
         {lastEntry && <div className="tracker-last-entry" role="status">
-          <span>Last update: {lastEntry.item || lastEntry.description || 'Entry'}</span>
+          <span>Last update: {[lastEntry.item, lastEntry.description].map((part) => part?.trim()).filter(Boolean).join('/') || 'Entry'}</span>
           <span aria-hidden="true">•</span>
           <span>{formatEntryDate(String(lastEntry.date || lastEntry.createdAt || '').slice(0, 10))}</span>
           <Money value={lastEntry.amount} currency={cur} iconSize={16} />
