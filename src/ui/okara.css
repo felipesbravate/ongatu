@@ -3564,3 +3564,50 @@
   .ob-board:not(#z) .budget-group{ gap:var(--space-lg); }
   .ob-board:not(#z) .budget-cat-title{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
 }
+
+/* Okara 832:3325 / 843:3824 / 832:3771 / 843:3935 (Oct 7).
+   The selected surface belongs to the group, so it travels between tabs. */
+.seg-tabs.seg-tabs--sliding{position:relative;isolation:isolate;align-items:center;gap:var(--space-tn);padding:var(--space-tn)}
+.seg-tabs.seg-tabs--sliding button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:36px;padding:var(--space-xs) var(--space-sm);font-family:var(--font-sans);font-size:var(--type-label-tiny-size);font-weight:500;line-height:var(--type-label-tiny-lh);letter-spacing:var(--type-label-tiny-ls);transition:color .2s ease,background-color .12s ease}
+.seg-tabs.seg-tabs--sliding.sub button{height:30px;padding:var(--space-xs) var(--space-sm)}
+.seg-tabs.seg-tabs--sliding button[hidden]{display:none}
+.seg-tabs.seg-tabs--sliding button:hover{background:var(--surface-body);color:var(--text-secondary)}
+.seg-tabs.seg-tabs--sliding button[aria-pressed="true"],.seg-tabs.seg-tabs--sliding button[aria-pressed="true"]:hover,.seg-tabs.seg-tabs--sliding button[aria-pressed="true"]:active{background:transparent;color:var(--text-white)}
+.seg-tabs.seg-tabs--sliding:not([data-positioned]) button[aria-pressed="true"]{background:var(--surface-dark)}
+.seg-tabs.seg-tabs--sliding button:focus-visible{outline:2px solid var(--border-focus);outline-offset:2px}
+.seg-tabs--sliding .seg-indicator{position:absolute;top:0;left:0;pointer-events:none;background:var(--surface-dark);border-radius:var(--radius-sm);z-index:0}
+.seg-tabs--sliding[data-positioned] .seg-indicator{transition:transform .24s cubic-bezier(.16,1,.3,1),width .24s cubic-bezier(.16,1,.3,1),height .24s cubic-bezier(.16,1,.3,1)}
+@media(prefers-reduced-motion:reduce){.seg-tabs--sliding[data-positioned] .seg-indicator,.seg-tabs.seg-tabs--sliding button{transition:none}}
+
+.seg-tabs.seg-tabs--sliding:not(#z) button{letter-spacing:var(--type-label-tiny-ls)}
+/* Preserve label widths on narrow screens; longer groups scroll instead of overlapping. */
+.seg-tabs.seg-tabs--sliding{max-width:100%;overflow-x:auto;scrollbar-width:thin}
+.seg-tabs.seg-tabs--sliding button{flex:0 0 auto}
+.seg-tabs.seg-tabs--sliding button:focus-visible{outline-offset:-2px}
+
+/* Okara 146:5252: outlined counters and contiguous tooltip entry rows. */
+.note-count:not(.is-icon){
+  min-width:22px; border:1px solid var(--border-default); background:transparent;
+  color:var(--text-primary); font-family:var(--font-mono); font-size:10px;
+  font-weight:500; line-height:normal; letter-spacing:-.4px;
+}
+.note-count:not(.is-icon):hover{ background:var(--action-secondary-hover); border-color:var(--border-hover); }
+.note-count:not(.is-icon):active, .note-count:not(.is-icon).is-open{
+  background:var(--badge-counter-pressed-background); border-color:var(--badge-counter-pressed-border);
+  color:var(--badge-counter-pressed-text);
+}
+.note-count.is-icon:active, .note-count.is-icon.is-open{ background:var(--surface-dark); color:var(--text-white); }
+#note-tip.is-empty{ width:320px; }
+#note-tip .tip-entries{ display:flex; flex-direction:column; gap:0; }
+#note-tip .tip-item{ margin:0; }
+.tracker-last-entry{
+  display:flex; align-items:center; flex-wrap:wrap; gap:4px; color:var(--link-disable);
+  font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight);
+  line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls);
+}
+.tracker-last-entry .money{
+  font-family:var(--font-mono); font-size:var(--type-value-medium-size);
+  font-weight:var(--type-value-medium-weight); letter-spacing:var(--type-value-medium-ls);
+}
+
+.tracker-last-entry .money-ic{ color:inherit; }

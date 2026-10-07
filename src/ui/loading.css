@@ -1,0 +1,21 @@
+.skeleton{display:block;flex-shrink:0;width:70%;height:var(--lh-body-lg-medium);border-radius:var(--radius-sm);background:var(--surface-secondary);animation:skeleton-pulse 1.8s ease-in-out infinite}
+.skeleton--title{width:55%;height:calc(var(--space-xl) + var(--space-md))}
+.skeleton--label{width:32%;height:var(--lh-body-md)}
+.skeleton--field{width:100%;height:calc(var(--space-2xl) + var(--space-md));border-radius:var(--radius-full)}
+.skeleton--avatar{width:var(--space-2xl);height:var(--space-2xl);border-radius:var(--radius-full)}
+.skeleton--value{width:22%;height:var(--space-xl)}
+.skeleton--tab{width:var(--space-3xl);height:calc(var(--space-xl) + var(--space-md));border-radius:var(--radius-full)}
+.skeleton-stack{display:flex;flex-direction:column;gap:var(--space-lg)}
+.loading-heading{margin-block:var(--space-lg) var(--space-2xl)}
+.loading-tabs{display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-bottom:var(--space-2xl)}
+.loading-card{display:flex;flex-direction:column;gap:var(--space-lg);padding:var(--space-lg);border-radius:var(--radius-card);background:var(--surface-primary);min-width:0}
+.loading-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);min-height:calc(var(--space-xl) + var(--space-md))}
+.loading-row .skeleton:first-child{width:48%}
+.loading-row:nth-child(even) .skeleton:first-child{width:36%}
+.loading-status{font-family:var(--font-sans);font-size:var(--type-body-medium-medium-size);font-weight:var(--type-body-medium-medium-weight);line-height:var(--type-body-medium-medium-lh);letter-spacing:var(--type-body-medium-medium-ls);color:var(--text-secondary);margin:0}
+.login-card.is-loading{position:relative}
+.login-card.is-loading > :not(.login-loading-overlay){visibility:hidden;pointer-events:none}
+.login-loading-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-lg);padding:inherit;background:var(--surface-primary);border-radius:inherit}
+@keyframes skeleton-pulse{0%,100%{opacity:1}50%{opacity:var(--opacity-disabled)}}
+@media(prefers-reduced-motion:reduce){.skeleton{animation:none}}
+@media(max-width:640px){.loading-page .skeleton--title{width:72%}.loading-tabs{gap:var(--space-xs)}.loading-page .loading-card{width:100%;box-sizing:border-box}}

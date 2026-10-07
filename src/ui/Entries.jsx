@@ -8,10 +8,10 @@ import { Money } from './Money.jsx';
 // variant: undefined | 'icon' | 'estimate' (grey) | 'removed' (red).
 export function EntryCounter({ variant, open, className, children, ...rest }) {
   const cls = ['note-count', variant === 'icon' && 'is-icon', variant === 'estimate' && 'is-estimate', variant === 'removed' && 'is-removed', open && 'is-open', className].filter(Boolean).join(' ');
-  return <span className={cls} {...rest}>{variant === 'icon' ? <Icon icon={chart} size={10} /> : children}</span>;
+  return <span className={cls} {...rest}>{variant === 'icon' ? <Icon icon={chart} size={12} /> : children}</span>;
 }
 
-// Tooltip entry item (DS 144:4426, Oct 3): 24 high, 8 apart: 12px Dot | name (Body/Large/SemiBold, white) + date
+// Tooltip entry item (DS 144:4426, Oct 3): 24 high, with no row gap: 12px Dot | name (Body/Large/SemiBold, white) + date
 // (Body/Large/Medium, muted) 8 apart | 16px € + Value/Medium (4 apart) and the Micro round X, 8 apart.
 export function TooltipEntryItem({ name, date, amount, currency, estimate, prefix, onRemove, removeTitle, extra, sub }) {
   return (
@@ -46,7 +46,7 @@ export function EntriesTooltip({ visible, style, footnote, children, tipRef, bud
           <hr className="tip-head-divider" />
         </>
       )}
-      {children}
+      {hasLines && <div className="tip-entries">{children}</div>}
       {empty && <div className="tip-empty">There's no entries yet.</div>}
       {footnote && <div className="tip-foot">{footnote}</div>}
     </div>

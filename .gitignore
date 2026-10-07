@@ -18,3 +18,7 @@ coverage/
 # Local scratch
 Claude outputs/
 test-decrypt.*
+
+design-inspiration/
+
+.next-dev/

@@ -14,12 +14,17 @@ import { ExpenseStrip, HeroLeft, TrackerCard, TrendChart, YearOverYear } from '.
 import { MONTH_ABBR, addTypeToTaxonomy, budgetDefaultDocId, createModel, currentYearLabel, foldLegacyCustom, parseAmount, yearsFromDocs } from './model.js';
 import { YearNav } from './YearNav.jsx';
 
+import { AppSkeleton } from '../ui/Loading.jsx';
+
 const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetDefaults'];
 const docsOf = (snap) => snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 const copy = (o) => JSON.parse(JSON.stringify(o));
 
 export default function TrackerApp() {
   const [me, setMe] = useState(null);
+  const [loaded, setLoaded] = useState(() => new Set());
+  const [loadError, setLoadError] = useState(false);
+  const [gateReady, setGateReady] = useState(false);
   const [data, setData] = useState({ years: [], entries: [], overrides: [], budgets: [], budgetDefaults: [] });
   // Oct 5: boards from the custom-categories build read with those categories folded into Expenses.
   const fdata = useMemo(() => foldLegacyCustom(data), [data]);
@@ -57,15 +62,16 @@ export default function TrackerApp() {
     const decide = () => {
       if (gone || years === null || settings === null) return;
       if (!years && !settings) { gone = true; leavePage('/welcome'); return; }
+      setGateReady(true);
       // Onboarded but every year deleted: create the current year once, so entries have a home.
       if (!years && settings && !autoYearTried.current) {
         autoYearTried.current = true;
         db.collection('years').add({ year: currentYearLabel(), currency: 'EUR', createdAt: new Date().toISOString() }).catch(() => {});
       }
     };
-    const offY = db.collection('years').onSnapshot((snap) => { years = snap.docs.length > 0; decide(); });
-    const offS = db.collection('settings').onSnapshot((snap) => { settings = snap.docs.some((d) => d.id === 'onboarding'); decide(); });
-    return () => { offY(); offS(); };
+    const offY = db.collection('years').onSnapshot((snap) => { years = snap.docs.length > 0; decide(); }, () => setLoadError(true));
+    const offS = db.collection('settings').onSnapshot((snap) => { settings = snap.docs.some((d) => d.id === 'onboarding'); decide(); }, () => setLoadError(true));
+    return () => { gone = true; offY(); offS(); };
   }, []);
 
   // ---- data ----
@@ -82,8 +88,9 @@ export default function TrackerApp() {
         // A notification's "View" from another page: /?alert=<year>|<month>|<group> opens that month and group.
         if (q.get('alert')) { pendingAlert.current = q.get('alert'); history.replaceState(null, '', location.pathname); }
       }
-    }).catch(() => {});
+    }).catch(() => setLoadError(true));
     const offs = COLLECTIONS.map((name) => db.collection(name).onSnapshot((snap) => {
+      setLoaded((previous) => new Set(previous).add(name));
       const docs = docsOf(snap);
       if (name !== 'years') { setData((d) => ({ ...d, [name]: docs })); return; }
       // Years: keep looking at the same year when the list changes; jump to a year that was just added.
@@ -107,7 +114,7 @@ export default function TrackerApp() {
       }
       setData((d) => ({ ...d, years: docs }));
       setView(next);
-    }, (err) => console.error(name + ' subscription error', err)));
+    }, (err) => { console.error(name + ' subscription error', err); setLoadError(true); }));
     return () => offs.forEach((off) => off());
   }, []);
 
@@ -379,7 +386,7 @@ export default function TrackerApp() {
   // The Add button's preset follows the tab.
   const addPreset = () => ({ type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense', group: topTab === 'Income' || topTab === 'Investments' ? null : bd.group });
 
-  if (!me) return null;
+  if (!me || !gateReady || loaded.size < COLLECTIONS.length) return <AppSkeleton error={loadError} />;
   return (
     <>
       <div className="app-top-gap" />

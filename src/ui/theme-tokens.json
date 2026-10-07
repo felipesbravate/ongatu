@@ -1,0 +1,617 @@
+{
+  "modes": [
+    {
+      "name": "Light",
+      "modeId": "4:0"
+    },
+    {
+      "name": "Dark",
+      "modeId": "863:0"
+    }
+  ],
+  "colors": [
+    [
+      "surface/primary",
+      "#ffffffff",
+      "#1f201aff"
+    ],
+    [
+      "surface/secondary",
+      "#efeee5ff",
+      "#2a2b24ff"
+    ],
+    [
+      "text/primary",
+      "#16150fff",
+      "#f4f3eaff"
+    ],
+    [
+      "text/secondary",
+      "#747167ff",
+      "#c6c4b8ff"
+    ],
+    [
+      "text/muted",
+      "#969284ff",
+      "#a6a395ff"
+    ],
+    [
+      "border/default",
+      "#cbcac5ff",
+      "#55564bff"
+    ],
+    [
+      "action/primary",
+      "#16150fff",
+      "#42d98fff"
+    ],
+    [
+      "action/secondary",
+      "#ffffffff",
+      "#1f201aff"
+    ],
+    [
+      "surface/accent",
+      "#4f46e5ff",
+      "#4f46e5ff"
+    ],
+    [
+      "data/lime",
+      "#cdd936ff",
+      "#d3df61ff"
+    ],
+    [
+      "data/purple",
+      "#4b0fa5ff",
+      "#b18affff"
+    ],
+    [
+      "data/light-blue",
+      "#1dc0bbff",
+      "#63dbd5ff"
+    ],
+    [
+      "data/blue",
+      "#2285bbff",
+      "#6cbfefff"
+    ],
+    [
+      "data/pink",
+      "#e3029fff",
+      "#ff80cdff"
+    ],
+    [
+      "status/success",
+      "#0a6d42ff",
+      "#7de0a9ff"
+    ],
+    [
+      "status/fail",
+      "#a12a2fff",
+      "#ff9ea7ff"
+    ],
+    [
+      "action/primary-hover",
+      "#32312cff",
+      "#7be9b4ff"
+    ],
+    [
+      "action/primary-press",
+      "#1f1e19ff",
+      "#13d075ff"
+    ],
+    [
+      "action/secondary-hover",
+      "#e4e3daff",
+      "#2a2b24ff"
+    ],
+    [
+      "action/secondary-press",
+      "#cbcac5ff",
+      "#35362eff"
+    ],
+    [
+      "border/hover",
+      "#acaca1ff",
+      "#7d7e70ff"
+    ],
+    [
+      "border/focus",
+      "#4f46e5ff",
+      "#c2bcffff"
+    ],
+    [
+      "text/white",
+      "#ffffffff",
+      "#ffffffff"
+    ],
+    [
+      "surface/tertiary",
+      "#747167ff",
+      "#35362eff"
+    ],
+    [
+      "action/accent",
+      "#4f46e5ff",
+      "#13d075ff"
+    ],
+    [
+      "status/warning",
+      "#7a5703ff",
+      "#f3d17cff"
+    ],
+    [
+      "action/accent-hover",
+      "#908af6ff",
+      "#908af6ff"
+    ],
+    [
+      "text/accent",
+      "#4f46e5ff",
+      "#c2bcffff"
+    ],
+    [
+      "border/dark",
+      "#16150fff",
+      "#7d7e70ff"
+    ],
+    [
+      "surface/dark",
+      "#16150fff",
+      "#16150fff"
+    ],
+    [
+      "data/orange",
+      "#ffba3aff",
+      "#ffca70ff"
+    ],
+    [
+      "surface/success",
+      "#e3f4ecff",
+      "#18382bff"
+    ],
+    [
+      "surface/fail",
+      "#ffc4c6ff",
+      "#43242aff"
+    ],
+    [
+      "surface/warning",
+      "#ffe9b7ff",
+      "#3d331cff"
+    ],
+    [
+      "action/disable",
+      "#969284ff",
+      "#77786bff"
+    ],
+    [
+      "link/default",
+      "#4f46e5ff",
+      "#c2bcffff"
+    ],
+    [
+      "link/hover",
+      "#080095ff",
+      "#d6d1ffff"
+    ],
+    [
+      "link/press",
+      "#1f17a7ff",
+      "#aba2ffff"
+    ],
+    [
+      "action/destructive",
+      "#bd0007ff",
+      "#bd0007ff"
+    ],
+    [
+      "surface/accent-light",
+      "#f5f5ffff",
+      "#292445ff"
+    ],
+    [
+      "surface/body",
+      "#f9f9f7ff",
+      "#161713ff"
+    ],
+    [
+      "action/secondary-active",
+      "#e4e3daff",
+      "#35362eff"
+    ],
+    [
+      "action/accent-disable",
+      "#756dffff",
+      "#aaa2deff"
+    ],
+    [
+      "text/accent-light",
+      "#756dffff",
+      "#aaa2deff"
+    ],
+    [
+      "link/disable",
+      "#756dffff",
+      "#aaa2deff"
+    ],
+    [
+      "action/accent-press",
+      "#1f17a7ff",
+      "#1f17a7ff"
+    ],
+    [
+      "surface/accent-dark",
+      "#080095ff",
+      "#292445ff"
+    ],
+    [
+      "surface/accent-deep",
+      "#06006cff",
+      "#1f1a38ff"
+    ],
+    [
+      "border/destructive",
+      "#bd0007ff",
+      "#ff9ea7ff"
+    ],
+    [
+      "border/secondary",
+      "#efeee5ff",
+      "#3c3d34ff"
+    ],
+    [
+      "border/tertiary",
+      "#32312cff",
+      "#7d7e70ff"
+    ],
+    [
+      "border/selected-item",
+      "#908af6ff",
+      "#c2bcffff"
+    ],
+    [
+      "surface/primary-transparent",
+      "#ffffff00",
+      "#1f201a00"
+    ],
+    [
+      "surface/body-transparent",
+      "#f9f9f700",
+      "#13141000"
+    ],
+    [
+      "border/warning",
+      "#debba0ff",
+      "#f3d17cff"
+    ],
+    [
+      "border/danger",
+      "#e58d90ff",
+      "#ff9ea7ff"
+    ],
+    [
+      "surface/mobile-nav-bg",
+      "#ffffffff",
+      "#2a2b24ff"
+    ],
+    [
+      "action/tertiary-hover",
+      "#efeee5ff",
+      "#2a2b24ff"
+    ],
+    [
+      "action/tertiary-press",
+      "#cbcac5ff",
+      "#35362eff"
+    ],
+    [
+      "action/tertiary-active",
+      "#e4e3daff",
+      "#35362eff"
+    ],
+    [
+      "text/on-primary",
+      "#ffffffff",
+      "#16150fff"
+    ],
+    [
+      "icon/primary",
+      "#16150fff",
+      "#f4f3eaff"
+    ],
+    [
+      "surface/track",
+      "#cac9c0ff",
+      "#3c3d34ff"
+    ],
+    [
+      "brand/indigo",
+      "#4f46e5ff",
+      "#c2bcffff"
+    ],
+    [
+      "brand/mint",
+      "#13d075ff",
+      "#42d98fff"
+    ],
+    [
+      "brand/mint-light",
+      "#7be9b4ff",
+      "#204334ff"
+    ],
+    [
+      "status/green-pale",
+      "#e3f4ecff",
+      "#18382bff"
+    ],
+    [
+      "status/green-deep",
+      "#0a6d42ff",
+      "#7de0a9ff"
+    ],
+    [
+      "status/red-deep",
+      "#bd0007ff",
+      "#ff9ea7ff"
+    ],
+    [
+      "data/red-orange",
+      "#e2583aff",
+      "#ff9877ff"
+    ],
+    [
+      "effect/shadow-86-82-59-160",
+      "#16150f29",
+      "#16150f29"
+    ],
+    [
+      "effect/shadow-86-82-59-80",
+      "#16150f14",
+      "#16150f14"
+    ],
+    [
+      "surface/page",
+      "#eef5f4ff",
+      "#161713ff"
+    ],
+    [
+      "surface/cover",
+      "#f7f6f1ff",
+      "#161713ff"
+    ],
+    [
+      "icon/round-control",
+      "#16150fff",
+      "#f4f3eaff"
+    ],
+    [
+      "icon/round-primary",
+      "#f9f9f7ff",
+      "#16150fff"
+    ],
+    [
+      "icon/round-control-override-1",
+      "#969284ff",
+      "#f4f3eaff"
+    ],
+    [
+      "badge/counter-pressed-background",
+      "#1f1e19ff",
+      "#000000ff"
+    ],
+    [
+      "badge/counter-pressed-text",
+      "#ffffffff",
+      "#ffffffff"
+    ],
+    [
+      "badge/counter-pressed-border",
+      "#16150fff",
+      "#000000ff"
+    ],
+    [
+      "surface/mobile-nav-buttom-bg",
+      "#f5f5ffff",
+      "#3c3d34ff"
+    ],
+    [
+      "surface/mobile-nav-buttom-icon",
+      "#4f46e5ff",
+      "#42d98fff"
+    ],
+    [
+      "surface/gradient",
+      {
+        "color": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:3:6"
+        },
+        "opacity": 0
+      },
+      {
+        "color": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:863:1650"
+        },
+        "opacity": 0
+      }
+    ]
+  ],
+  "effects": [
+    {
+      "name": "Floating",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 12,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.08235294371843338,
+            "b": 0.05882352963089943,
+            "a": 0.1599999964237213
+          },
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": false
+        }
+      ]
+    },
+    {
+      "name": "Panel",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 64,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.08235294371843338,
+            "b": 0.05882352963089943,
+            "a": 0.23999999463558197
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": false
+        }
+      ]
+    },
+    {
+      "name": "Nav shadow",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 12,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.08235294371843338,
+            "b": 0.05882352963089943,
+            "a": 0.11999999731779099
+          },
+          "offset": {
+            "x": 0,
+            "y": 3
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": false
+        }
+      ]
+    },
+    {
+      "name": "Mobile nav",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 8,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.08235294371843338,
+            "b": 0.05882352963089943,
+            "a": 0.07999999821186066
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": false
+        },
+        {
+          "type": "BACKGROUND_BLUR",
+          "visible": true,
+          "radius": 2,
+          "boundVariables": {},
+          "blurType": "NORMAL"
+        }
+      ]
+    },
+    {
+      "name": "Card",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 20,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.08235294371843338,
+            "b": 0.05882352963089943,
+            "a": 0.03999999910593033
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": false
+        }
+      ]
+    }
+  ],
+  "paints": [
+    {
+      "name": "Card body/Dark",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.12156862765550613,
+                "g": 0.125490203499794,
+                "b": 0.10196078568696976,
+                "a": 1
+              },
+              "position": 0,
+              "boundVariables": {}
+            },
+            {
+              "color": {
+                "r": 0.1432819664478302,
+                "g": 0.1486440747976303,
+                "b": 0.1164715513586998,
+                "a": 1
+              },
+              "position": 1,
+              "boundVariables": {}
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.9237326979637146,
+              0.0870005264878273,
+              -0.00536660710349679
+            ],
+            [
+              -0.8097721934318542,
+              0.9237326979637146,
+              0.4430197775363922
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

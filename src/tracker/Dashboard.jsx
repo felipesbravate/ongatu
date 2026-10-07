@@ -19,6 +19,8 @@ export function spendParts(model, y, c) {
 }
 const partValue = (c, key) => c.byGroup[key] || 0;
 import { Icon } from '../ui/Icon.jsx';
+import { Money } from '../ui/Money.jsx';
+import { latestEntry } from './latest-entry.js';
 
 const tok = (name) => (typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(name).trim());
 
@@ -120,6 +122,14 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   const mobile = useMobile();
   const groupTabs = [...GROUP_ORDER.filter((g) => expSubs.includes(g)), ...expSubs.filter((g) => !GROUP_ORDER.includes(g))].map((g) => ({ value: g, label: g }));
   const topTabs = TOP_TABS;
+  const [lastEntryScope, setLastEntryScope] = useState(null);
+  const scopeKey = `${y.year}|${monthIdx}|${topTab}`;
+  const selectedGroup = lastEntryScope?.key === scopeKey && lastEntryScope.group === effType ? effType : null;
+  const lastEntry = latestEntry(model.ENTRIES, {
+    year: y.year, monthIndex: monthIdx,
+    type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense',
+    group: selectedGroup,
+  });
   const color = GROUP_COLOR[effType] || 'var(--data-lime)';
   // What a row's "Add entry" adds to: the tab's kind, sub-category and the row's group.
   const rowTarget = (block, it) => (effType === 'Income' || effType === 'Investments'
@@ -173,13 +183,19 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         <div className="bd-controllers">
           <div className="bd-tabs-stack">
             <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
-              onChange={(v) => (v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null))} />
-            <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
+              onChange={(v) => { setLastEntryScope(null); v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
+            <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => { setLastEntryScope({ key: scopeKey, group: v }); onTab(v, v); }} />
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
             {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : 'Add expense'}
           </Button>
         </div>
+        {lastEntry && <div className="tracker-last-entry" role="status">
+          <span>Last update: {lastEntry.item || lastEntry.description || 'Entry'}</span>
+          <span aria-hidden="true">•</span>
+          <span>{formatEntryDate(String(lastEntry.date || lastEntry.createdAt || '').slice(0, 10))}</span>
+          <Money value={lastEntry.amount} currency={cur} iconSize={16} />
+        </div>}
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
             : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
@@ -288,7 +304,11 @@ function ItemTip({ tip, actions }) {
   (row.importedCells || []).forEach((e) => lines.push(<TooltipEntryItem key={'c' + e.id} name="From your spreadsheet" amount={e.amount} currency={cur} onRemove={() => actions.deleteEntry(e.id)} removeTitle="Delete this value" />));
   const anyEstimateNote = (row.noteEntries || []).some((n) => n.isEstimate);
   (row.noteEntries || []).forEach((n, i) => lines.push(<TooltipEntryItem key={'n' + i} sub name={n.text} date={n.date || ''} amount={n.amount} currency={cur} estimate={n.isEstimate} prefix={n.isEstimate ? '~' : ''} />));
-  (row.entries || []).forEach((e) => lines.push(<TooltipEntryItem key={'e' + e.id} name={e.description || 'Manual entry'} date={formatEntryDate(e.date) || ''} amount={e.amount} currency={cur} onRemove={() => actions.deleteEntry(e.id)} removeTitle="Delete" />));
+  // Show dated entries oldest first without changing the shared row's entry order.
+  const chronologicalEntries = (row.entries || []).slice().sort((a, b) =>
+    String(a.date || a.createdAt || '').slice(0, 10).localeCompare(String(b.date || b.createdAt || '').slice(0, 10))
+    || String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+  chronologicalEntries.forEach((e) => lines.push(<TooltipEntryItem key={'e' + e.id} name={e.description || 'Manual entry'} date={formatEntryDate(e.date) || ''} amount={e.amount} currency={cur} onRemove={() => actions.deleteEntry(e.id)} removeTitle="Delete" />));
   const foot = anyEstimateNote ? "~ estimated (split evenly) — the sheet didn't record this one's exact amount"
     : (row.isEstimate && !row.deleted && !(row.estimateSource === 'budget' && row.budget != null)) ? '≈ projected from recent months — nothing recorded yet. Add a real entry to replace it, or delete it.' : null;
   const budgetLabel = row.type === 'income' ? 'Estimated' : 'Budget set';

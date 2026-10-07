@@ -8,17 +8,33 @@ import { arrowStraightLeft } from '../ui/icons.js';
 import { Icon } from '../ui/Icon.jsx';
 import '../ui/okara.css';
 
+import { LoginSkeletonContent } from '../ui/Loading.jsx';
+
 const CODE_LENGTH = 6; // Supabase Auth -> Email -> Email OTP Length = 6 (Oct 4; was 8)
 
 function Shell({ children }) {
+  const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
+  useEffect(() => {
+    const reset = () => { submitting.current = false; setBusy(false); };
+    window.addEventListener('pageshow', reset);
+    return () => window.removeEventListener('pageshow', reset);
+  }, []);
+  const onSubmit = (event) => {
+    if (submitting.current) { event.preventDefault(); return; }
+    submitting.current = true;
+    setBusy(true);
+  };
   return (
-    <main className="login-page">
+    <main className="login-page" onSubmit={onSubmit}>
       <div className="login-content">
         <header className="login-header">
           <Logo variant="vertical" height={104} />
           <p className="login-tagline">Take charge of your money</p>
         </header>
-        <section className="login-card">{children}</section>
+        <section className={"login-card" + (busy ? " is-loading" : "")} aria-busy={busy}>{children}
+          {busy && <div className="login-loading-overlay"><LoginSkeletonContent /><p className="loading-status" role="status">Continuing securely…</p></div>}
+        </section>
       </div>
     </main>
   );

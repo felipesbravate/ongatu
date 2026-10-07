@@ -26,6 +26,8 @@ const Contain = ({ height, width, children }) => <div style={{ position: 'relati
 function Controlled({ initial, children }) { const [v, setV] = useState(initial); return children(v, setV); }
 
 export const CASES = [
+  { id: 'segments-motion', render: () => <Controlled initial="income">{(v, s) => <Segments aria-label="Tracker category" options={[{ value: 'income', label: 'Incomes' }, { value: 'save', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }]} value={v} onChange={s} />}</Controlled> },
+  { id: 'sub-segments-motion', render: () => <Controlled initial="1">{(v, s) => <Segments sub aria-label="Sub-category" options={Array.from({ length: 6 }, (_, i) => ({ value: String(i + 1), label: 'Label' }))} value={v} onChange={s} />}</Controlled> },
   // ---- parity with the legacy dashboard ----
   { id: 'segments', legacy: { state: 'dashboard', selector: '#breakdown-top-seg' },
     render: () => <Controlled initial="Expenses">{(v, s) => <Segments id="breakdown-top-seg" options={TOP} value={v} onChange={s} />}</Controlled> },

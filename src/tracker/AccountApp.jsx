@@ -16,6 +16,9 @@ import { useBudgetAlertsStandalone } from './alerts.js';
 import { avatarFromFile, removeAvatar, saveAvatar, saveProfile, useProfile } from './profile.js';
 
 // Side menu labels and icons as in Ongatu 250:3399 (Sept 28).
+import { useTheme } from '../ui/Theme.jsx';
+import { AppSkeleton } from '../ui/Loading.jsx';
+
 const SECTIONS = [
   { id: 'profile', label: 'Personal information', icon: user },
   { id: 'security', label: 'Security', icon: lock },
@@ -25,6 +28,7 @@ const EXPORT_COLLECTIONS = ['years', 'entries', 'budgets', 'budgetDefaults', 'ov
 
 export default function AccountApp() {
   const [me, setMe] = useState(null);
+  const [loadError, setLoadError] = useState(false);
   const profile = useProfile(me);
   const [confirmModal, confirm] = useConfirm();
   const [toastEl, showToast] = useToast();
@@ -36,7 +40,7 @@ export default function AccountApp() {
       if (m.status === 'pending') location.href = '/pending';
       else if (m.status === 'blocked') location.href = '/blocked';
       else setMe(m);
-    }).catch(() => {});
+    }).catch(() => setLoadError(true));
   }, []);
 
   // The menu follows the card in view; clicking an item scrolls to its card.
@@ -52,7 +56,7 @@ export default function AccountApp() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [me]);
 
-  if (!me) return null;
+  if (!me) return <AppSkeleton account error={loadError} />;
   return (
     <>
       <div className="app-top-gap" />
@@ -82,6 +86,7 @@ export default function AccountApp() {
 }
 
 function ProfileCard({ me, profile, confirm, showToast }) {
+  const { theme, setTheme } = useTheme();
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
   const [saving, setSaving] = useState(false);
@@ -111,7 +116,7 @@ function ProfileCard({ me, profile, confirm, showToast }) {
   };
   return (
     <section className="acct-card" id="profile" aria-labelledby="profile-title">
-      <div className="acct-card-head"><h2 id="profile-title">Personal information</h2><p>Edit your personal information.</p></div>
+      <div className="acct-card-head"><h2 id="profile-title">Personal preferences</h2><p>Edit your personal information and other preferences.</p></div>
       <div className="acct-card-body">
         <div className="acct-avatar-row">
           <Avatar large name={profile.name} image={profile.image} />
@@ -123,16 +128,17 @@ function ProfileCard({ me, profile, confirm, showToast }) {
           </div>
         </div>
         <div className="acct-form">
+          <div className="acct-row acct-email-row">
+            <Field label="Email" htmlFor="email"><Input id="email" icon={lock} iconSize="md" value={me.email} disabled readOnly /></Field>
+          </div>
           <div className="acct-row">
             <Field label="First name" htmlFor="first-name"><Input id="first-name" value={first} onChange={(e) => setFirst(e.target.value)} autoComplete="given-name" placeholder="First name" /></Field>
             <Field label="Last name" htmlFor="last-name"><Input id="last-name" value={last} onChange={(e) => setLast(e.target.value)} autoComplete="family-name" placeholder="Last name" /></Field>
           </div>
-          <div className="acct-row">
-            <Field label="Email" htmlFor="email"><Input id="email" icon={lock} iconSize="md" value={me.email} disabled readOnly /></Field>
-          </div>
+
         </div>
       </div>
-      <div className="acct-actions"><Button id="profile-save" onClick={save} disabled={saving}>Save changes</Button></div>
+      <div className="acct-actions acct-preferences-actions"><div className="acct-theme-toggle"><Toggle id="toggle-dark-mode" label="Dark mode" on={theme === 'dark'} onChange={(on) => setTheme(on ? 'dark' : 'light')} /><label htmlFor="toggle-dark-mode">Dark mode</label></div><Button id="profile-save" onClick={save} disabled={saving}>Save changes</Button></div>
     </section>
   );
 }

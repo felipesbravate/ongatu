@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 export default {
+  // Keep production checks from overwriting a running development server's chunks.
+  distDir: process.env.NODE_ENV === 'development' ? '.next-dev' : '.next',
   poweredByHeader: false,
   devIndicators: false,
   reactStrictMode: true,

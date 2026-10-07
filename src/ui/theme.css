@@ -1,0 +1,36 @@
+/* Named Okara styles and Color roles apply across the web app. */
+html[data-theme] :is(.card,.balance-card,.mini-kpi,.ticker-item,.acct-card,.ob-card,.login-card,.loading-card){box-shadow:var(--card-shadow)}
+html[data-theme="dark"] :is(.card,.balance-card,.mini-kpi,.ticker-item,.acct-card,.ob-card,.login-card,.loading-card){box-shadow:none;background-color:var(--surface-primary);background-image:var(--card-body-dark);background-size:100% 100%}
+html[data-theme] .acct-preferences-actions{justify-content:space-between;gap:var(--space-md);align-items:center}
+.acct-theme-toggle{display:flex;align-items:center;gap:var(--space-xs);color:var(--text-primary);font-family:var(--font-sans);font-size:var(--type-body-small-medium-size);font-weight:var(--type-body-small-medium-weight);line-height:var(--type-body-medium-medium-lh);letter-spacing:var(--type-body-small-medium-ls)}
+.acct-theme-toggle label{cursor:pointer}
+html[data-theme] .acct-email-row{width:calc(50% - var(--space-md)/2);max-width:100%}
+html[data-theme] .acct-card-head h2{font-size:var(--type-heading-xl-size);line-height:var(--type-heading-xl-lh)}
+html[data-theme] .acct-card-head p{font-size:var(--type-body-large-medium-size);line-height:var(--type-body-large-medium-lh)}
+html[data-theme] .btn-pill:not(.ghost):not(.secondary):not(.tertiary):not(.destructive):not(.is-destructive){color:var(--text-on-primary)}
+html[data-theme] .round-btn.primary{color:var(--icon-round-primary)}
+html[data-theme] .round-btn:not(.primary):not(.is-destructive){color:var(--icon-round-control)}
+html[data-theme] .ds-input svg,html[data-theme] .ds-dd-trigger svg,html[data-theme] .ds-user-card .ds-dd-item svg,html[data-theme] .balance-card .balance-euro:not(#z){color:var(--icon-primary)}
+html[data-theme] .ds-mnav-pillbg{background:var(--surface-mobile-nav-buttom-bg)}
+html[data-theme] .ds-mnav-item.is-selected{color:var(--surface-mobile-nav-buttom-icon)}
+html[data-theme] .ds-mnav-item:not(.is-selected){color:var(--icon-primary)}
+html[data-theme] .ds-toggle{background:var(--surface-secondary);border-color:var(--border-default)}
+html[data-theme] .ds-toggle.is-on{background:var(--brand-mint-light);border-color:var(--brand-mint)}
+html[data-theme] .ds-toggle-knob{background:var(--surface-dark)}
+@media(max-width:640px){
+  html[data-theme] .acct-email-row{width:100%}
+  html[data-theme] .ds-mnav{background:linear-gradient(to bottom,var(--surface-primary-transparent),var(--surface-primary));box-shadow:none}
+  html[data-theme] .ds-mnav-pill{background:var(--surface-mobile-nav-bg);border:1px solid var(--border-secondary);box-shadow:none}
+  @supports (backdrop-filter:blur(4px)) or (-webkit-backdrop-filter:blur(4px)){
+    html[data-theme] .ds-mnav-pill{background:color-mix(in srgb,var(--surface-mobile-nav-bg) 10%,transparent);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+  }
+}
+
+html[data-theme] .btn-pill.ghost:not(.is-destructive),html[data-theme] .btn-pill.tertiary{color:var(--text-primary)}
+html[data-theme] .btn-pill svg{color:currentColor}
+html[data-theme] .ds-menu-item svg{color:var(--text-secondary)}
+html[data-theme] .ds-menu-item.is-selected svg,html[data-theme] .ds-menu-item:hover svg{color:var(--icon-primary)}
+html[data-theme] #profile .acct-form .acct-email-row .field{width:100%;flex:1 1 auto}
+html[data-theme] .ds-input.is-disabled svg:not(#z){color:var(--text-muted)}
+html[data-theme] .field input:disabled{opacity:1}
+html[data-theme] .login-tagline{color:var(--brand-indigo)}
