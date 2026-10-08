@@ -1,0 +1,124 @@
+/* ==========================================================================================================
+   Sign in and Create account, Oct 9 (Ongatu 568:3988: email 568:3989, password 430:5487, code 430:5508;
+   Create account 568:5262 / 713:18301; phones 866:14705 / 866:14539 / 866:14588 and their dark variants).
+   This file is the last word on these pages: it is loaded after okara.css and every rule is scoped to .login-page.
+
+   Page: "Color/surface/signin-gradient-light" (dark: signin-gradient-dark), content centred on the page.
+   Header: logo 131 x 104, 8 above the tagline (12/14, text/accent), 40 above the card.
+   Card: surface/primary, radius 16, no stroke, Card shadow (0 0 20 #16150F0A), padding 40.
+     Title Heading/XL 20/20 centred, 24 above the user block / field; the field 40 above the CTA.
+     User block: 48 avatar, 12, "Hello, X!" 16/20 + the email 14/16 in text/accent-light.
+     CTA: the Primary button, full width; 12 below it the link (16/20) and the notes (14/16 text/secondary).
+   Create account - Name (568:5262): header 4, 24 to the card; card padding 24, 24 between blocks, fields 12 apart
+     (label 4 above the input), Back (Tertiary, 16px arrow, 14/20) and Continue share the row.
+   Phones: no card, the column 342 wide (24 sides) centred on the page; logo 120 x 96, 12 above the tagline (14/16),
+     80 to the form; title 24/24, 24 to the field, field 24 to the button; labels 16/20, 12 above the input
+     (8 in Create account); inputs on surface/primary.
+   ========================================================================================================== */
+html .login-page{
+  --login-gradient:linear-gradient(148.15deg, #f7f7ff 25%, var(--surface-accent-light) 46%, var(--surface-body) 64%, var(--surface-accent-light) 75%);
+  min-height:100vh; min-height:100dvh; box-sizing:border-box; padding:40px 16px;
+  display:flex; justify-content:center; align-items:center;
+  background:var(--login-gradient); background-attachment:fixed;
+}
+html[data-theme="dark"] .login-page{
+  --login-gradient:linear-gradient(148.15deg, #1b1a37 25%, #20221b 44%, #2f2f3c 86%, #272634 100%);
+}
+body:has(.login-page):not(#z){ background:var(--surface-body); }
+
+html .login-page .login-content{ width:480px; max-width:100%; gap:40px; margin:auto 0; }
+html .login-page .login-header{ gap:8px; padding:0 16px; }
+html .login-page .login-header .ds-logo{ width:131px; height:104px; }
+html[data-theme] .login-page .login-tagline,
+html .login-page .login-tagline{
+  color:var(--text-accent); font-size:12px; font-weight:400; line-height:14px; letter-spacing:-0.24px;
+}
+
+html .login-page .login-card{
+  border:none; border-radius:16px; padding:40px; gap:24px;
+  background-color:var(--surface-primary); box-shadow:0 0 20px rgba(22,21,15,0.04);
+}
+html .login-page .login-head{ gap:24px; }
+html .login-page .login-title{ font-size:20px; font-weight:400; line-height:20px; letter-spacing:0; }
+html .login-page .login-form, html .login-page .login-body{ gap:40px; }
+html .login-page .login-field{ gap:8px; }
+html .login-page .login-label{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; text-transform:none; }
+html .login-page .login-wide:not(#z){ width:100%; max-width:none; }
+
+/* User block */
+html .login-page .login-user{ gap:12px; }
+html .login-page .login-user-text{ display:flex; flex-direction:column; gap:0; }
+html .login-page .login-avatar{ width:48px; height:48px; min-width:48px; background:var(--surface-accent); color:var(--text-white, #fff); font-size:20px; line-height:24px; }
+html .login-page .login-hello{ color:var(--text-primary); font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+html .login-page .login-email{ color:var(--text-accent-light); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+
+/* "Check your inbox": title 4 above the line; the line 14/16 text/secondary with the email 16/20 text/primary. */
+html .login-page.is-newcode .login-head{ gap:4px; }
+html .login-page .login-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+html .login-page .login-sub strong{ font-weight:400; color:var(--text-primary); font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+
+/* Code boxes: 48 x 48, 8 apart; the field hugs them and sits centred. */
+html .login-page .login-code-field:not(#z){ align-self:center; width:auto; max-width:100%; }
+html .login-page .login-code:not(#z){ width:auto; gap:8px; }
+html .login-page .login-code .login-code-box:not(#z){ flex:0 1 48px; width:48px; min-width:0; height:48px; min-height:48px; padding:0; }
+
+/* CTA column: button, 12, link + notes (2 apart). */
+html .login-page .login-cta-col{ display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; }
+html .login-page .login-link,
+html .login-page .login-resend .ds-action-link{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+html .login-page .login-resend, html .login-page .login-resend-row{ gap:2px; }
+html .login-page .login-note,
+html .login-page .login-resend.is-small .login-note{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+
+/* Create account - Name (568:5262). */
+html .login-page.is-new .login-content{ gap:24px; }
+html .login-page.is-new .login-header{ gap:4px; }
+html .login-page.is-new .login-card{ padding:24px; gap:24px; }
+html .login-page.is-new .login-head{ gap:12px; }
+html .login-page.is-new .login-body{ gap:24px; }
+html .login-page.is-new .login-form--tight{ gap:12px; }
+html .login-page.is-new .login-field{ gap:4px; }
+html .login-page .login-cta{ gap:8px; width:100%; }
+html .login-page .login-cta .btn-pill.tertiary{ display:inline-flex; align-items:center; justify-content:center; gap:2px; padding:8px 12px; font-size:14px; line-height:20px; letter-spacing:-0.28px; }
+html .login-page .login-only-mobile{ display:none; }
+
+@media (max-width:640px){
+  html .login-page{
+    --login-gradient:linear-gradient(114.8deg, #f7f7ff 25%, var(--surface-accent-light) 46%, var(--surface-body) 64%, var(--surface-accent-light) 75%);
+    padding:24px;
+  }
+  html[data-theme="dark"] .login-page{
+    --login-gradient:linear-gradient(114.8deg, #1b1a37 25%, #20221b 44%, #2f2f3c 86%, #272634 100%);
+  }
+  body:has(.login-page):not(#z){ background:var(--surface-body); }
+  html .login-page .login-content,
+  html .login-page.is-new .login-content{ width:342px; gap:80px; }
+  html .login-page .login-header,
+  html .login-page.is-new .login-header{ gap:12px; padding:0 24px; }
+  html .login-page .login-header .ds-logo{ width:120px; height:96px; }
+  html[data-theme] .login-page .login-tagline,
+  html .login-page .login-tagline{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html[data-theme] .login-page .login-card,
+  html .login-page .login-card,
+  html .login-page.is-new .login-card{ padding:0; gap:24px; background:transparent; background-image:none; box-shadow:none; border-radius:0; }
+  html .login-page .login-title{ font-size:24px; line-height:24px; }
+  html .login-page .login-form, html .login-page .login-body, html .login-page.is-new .login-body{ gap:24px; }
+  html .login-page .login-field{ gap:12px; }
+  html .login-page.is-new .login-field, html .login-page.is-new .login-form--tight{ gap:8px; }
+  html .login-page .login-label{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .login-page .ds-input{ background:var(--surface-primary); }
+  html .login-page .login-head, html .login-page.is-new .login-head{ gap:24px; }
+  html .login-page.is-newcode .login-head{ gap:8px; }
+  html .login-page .login-sub:not(#z), html .login-page .login-sub strong{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .login-page .login-code:not(#z){ gap:12px; }
+  html .login-page .login-cta-col{ gap:16px; }
+  html .login-page .login-resend, html .login-page .login-resend-row{ gap:4px; }
+  html .login-page .login-note,
+  html .login-page .login-resend.is-small .login-note{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .login-page .login-only-desktop{ display:none; }
+  html .login-page .login-only-mobile{ display:inline; }
+  html .login-page #login-back{ display:none; }
+}
+@media (max-width:640px){ .login-page .login-loading-overlay{ background:transparent; } }
+/* 430:5508 / 713:18301: while the minute runs, "Re-send code" keeps link/default with no underline (it only works after). */
+html .login-page .login-resend .ds-action-link:disabled{ color:var(--link-default); text-decoration:none; opacity:1; }

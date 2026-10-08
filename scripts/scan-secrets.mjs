@@ -19,7 +19,7 @@ const RULES = [
   ['Sheet export shape', /MONTHLY_COSTS_DATA\s*=\s*\{\s*"?years"?\s*:\s*\[\s*\{/],
 ];
 const EMAIL = /[A-Za-z0-9._%+-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,}/g;
-const OK_EMAIL = /(@example\.(com|org|test)|@users\.noreply\.github\.com|noreply@anthropic\.com|you@example\.com)$/i;
+const OK_EMAIL = /(@example\.(com|org|test)|@users\.noreply\.github\.com|noreply@anthropic\.com|you@example\.com|you@email\.com)$/i;
 
 // True only when Git itself confirms the file is ignored (exit 0). Any other outcome
 // (not ignored, not a Git repo, git missing) counts as NOT ignored, so we fail closed.

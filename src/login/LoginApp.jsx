@@ -7,12 +7,13 @@ import { ActionLink, Avatar, Button, Input, Logo } from '../ui/index.js';
 import { arrowStraightLeft } from '../ui/icons.js';
 import { Icon } from '../ui/Icon.jsx';
 import '../ui/okara.css';
+import './login.css';
 
 import { LoginSkeletonContent } from '../ui/Loading.jsx';
 
 const CODE_LENGTH = 6; // Supabase Auth -> Email -> Email OTP Length = 6 (Oct 4; was 8)
 
-function Shell({ children }) {
+function Shell({ step = 'email', children }) {
   const [busy, setBusy] = useState(false);
   const submitting = useRef(false);
   useEffect(() => {
@@ -26,7 +27,7 @@ function Shell({ children }) {
     setBusy(true);
   };
   return (
-    <main className="login-page" onSubmit={onSubmit}>
+    <main className={`login-page is-${step}`} onSubmit={onSubmit}>
       <div className="login-content">
         <header className="login-header">
           <Logo variant="vertical" height={104} />
@@ -110,7 +111,7 @@ function Resend({ form, sent, small }) {
 export default function LoginApp({ step, email, kind, name, message, sent }) {
   if (step === 'password') {
     return (
-      <Shell>
+      <Shell step="password">
         <div className="login-head"><h1 className="login-title">Sign in</h1><Greeting name={name} email={email} /></div>
         <form method="post" action="/auth/password" id="pw-form" className="login-form">
           <div className="login-field">
@@ -129,9 +130,10 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
   }
   if (step === 'new') {
     return (
-      <Shell>
+      <Shell step="new">
         <div className="login-head">
-          <h1 className="login-title">Create account</h1>
+          {/* 568:5262 (desktop) "Create account"; 866:14539 (phone) "Create an account", with no Back button. */}
+          <h1 className="login-title"><span className="login-only-desktop">Create account</span><span className="login-only-mobile">Create an account</span></h1>
         </div>
         <div className="login-body">
           <form method="post" action="/auth/signup" id="signup-form" className="login-form login-form--tight">
@@ -146,7 +148,7 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
             </div>
           </form>
           <div className="login-cta">
-            <a className="btn-pill tertiary" href="/login" id="login-back"><Icon icon={arrowStraightLeft} size="xl" /><span>Back</span></a>
+            <a className="btn-pill tertiary" href="/login" id="login-back"><Icon icon={arrowStraightLeft} size={16} /><span>Back</span></a>
             <Button type="submit" form="signup-form" id="signup-submit">Continue</Button>
           </div>
         </div>
@@ -156,7 +158,7 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
   if (step === 'code') {
     const isNew = kind === 'new';
     return (
-      <Shell>
+      <Shell step={isNew ? 'newcode' : 'code'}>
         <div className="login-head">
           {isNew
             ? <><h1 className="login-title">Check your inbox</h1><p className="login-sub">We sent your sign-in code to <strong>{email}</strong>. It can take a minute to arrive.</p></>
@@ -164,13 +166,13 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
         </div>
         <form method="post" action="/auth/verify" id="code-form" className="login-form">
           <div className="login-field login-code-field">
-            <Label htmlFor="code-0"><span id="code-label">{isNew ? 'Enter the 6-digit code' : 'Enter the 6-digit code sent to your email'}</span></Label>
+            <Label htmlFor="code-0"><span id="code-label">Enter the 6-digit code sent to your email</span></Label>
             <CodeBoxes />
             <Message text={message || (sent ? 'We sent you a new code.' : null)} ok={!message && sent} />
           </div>
           <div className="login-cta-col">
-            <Button type="submit" id="code-submit" className="login-wide">{isNew ? 'Continue' : 'Sign in'}</Button>
-            <Resend form="resend-form" sent={sent} small={isNew} />
+            <Button type="submit" id="code-submit" className="login-wide">Sign in</Button>
+            <Resend form="resend-form" sent={sent} />
           </div>
         </form>
         <form method="post" action="/auth/login" id="resend-form"><input type="hidden" name="email" value={email} /><input type="hidden" name="send_code" value="1" /><input type="hidden" name="from" value={isNew ? 'new' : ''} /></form>
@@ -183,7 +185,7 @@ export default function LoginApp({ step, email, kind, name, message, sent }) {
       <form method="post" action="/auth/login" id="email-form" className="login-form">
         <div className="login-field">
           <Label htmlFor="login-email">Enter your email</Label>
-          <Input id="login-email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" autoFocus maxLength={254} />
+          <Input id="login-email" name="email" type="email" required autoComplete="email" placeholder="you@email.com" autoFocus maxLength={254} />
           <Message text={message} />
         </div>
         <Button type="submit" id="email-submit" className="login-wide">Continue</Button>

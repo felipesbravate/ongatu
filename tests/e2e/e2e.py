@@ -1,7 +1,7 @@
 """End-to-end test against scripts/dev-mock-server.mjs (real UI, real API/vault/CSP code, fake sign-in).
 Run:  python3 tests/e2e/e2e.py      (starts and stops its own server on port 3199)
 Needs: python playwright + a chromium (set CHROMIUM_PATH if not at /opt/pw-browsers/chromium)."""
-import asyncio, base64, json, os, subprocess, sys, time, urllib.request
+import asyncio, base64, json, os, re, subprocess, sys, time, urllib.request
 from playwright.async_api import async_playwright
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -92,16 +92,17 @@ async def main():
             await sp.goto(BASE + '/login'); await sp.wait_for_selector('#email-submit')
             lg = await sp.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), card = document.querySelector('.login-card'), logo = document.querySelector('.login-header .ds-logo');
                 return { title: document.querySelector('.login-title').textContent, tagline: document.querySelector('.login-tagline').textContent, logo: [Math.round(r(logo).width), Math.round(r(logo).height), logo.dataset.variant],
-                         card: [r(card).width, cs(card).padding, cs(card).borderRadius, cs(card).borderTopColor], top: r(logo).top, gap: r(card).top - r(document.querySelector('.login-tagline')).bottom,
+                         card: [r(card).width, cs(card).padding, cs(card).borderRadius, cs(card).borderTopWidth, cs(card).boxShadow], centre: Math.round((r(document.querySelector('.login-content')).top + r(document.querySelector('.login-content')).bottom) / 2 - innerHeight / 2), gap: r(card).top - r(document.querySelector('.login-tagline')).bottom,
+                         bg: cs(document.querySelector('.login-page')).backgroundImage.slice(0, 15),
                          label: document.querySelector('.login-label').textContent }; }""")
-            check('sign in (568:4059, Oct 2): vertical logo 131 x 104, 80 from the top, tagline, 480 card with space/2xl (40) padding, no stroke, space/2xl below the header, sentence-case label',
-                  lg['title'] == 'Sign in or create an account' and lg['tagline'] == 'Take charge of your money' and lg['logo'] == [131, 104, 'vertical'] and lg['top'] == 80
-                  and lg['card'][:3] == [480, '40px', '16px'] and abs(lg['gap'] - 40) < 1 and lg['label'] == 'Enter your email', lg)
+            check('sign in (568:3989, Oct 9): the sign-in gradient, content centred, logo 131 x 104, tagline, 480 card (padding 40, radius 16, no stroke, Card shadow), 40 below the header',
+                  lg['title'] == 'Sign in or create an account' and lg['tagline'] == 'Take charge of your money' and lg['logo'] == [131, 104, 'vertical'] and abs(lg['centre']) <= 1
+                  and lg['card'][:4] == [480, '40px', '16px', '0px'] and '20px' in lg['card'][4] and lg['bg'] == 'linear-gradient' and abs(lg['gap'] - 40) < 1 and lg['label'] == 'Enter your email', lg)
             lp = await b.new_page(viewport={'width': 390, 'height': 844}); await lp.goto(BASE + '/login'); await lp.wait_for_selector('#email-submit')
             lm = await lp.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), card = document.querySelector('.login-card'), logo = document.querySelector('.login-header .ds-logo');
-                return { top: Math.round(r(logo).top), card: [Math.round(r(card).left), Math.round(r(card).width), cs(card).padding, cs(card).borderTopWidth], gap: Math.round(r(card).top - r(document.querySelector('.login-tagline')).bottom), scrollW: document.documentElement.scrollWidth }; }""")
-            check('sign in on a phone (369:11424, Oct 2): logo 138 from the top, card 342 wide at 24, no padding, no border, 80 below the tagline',
-                  lm == {'top': 138, 'card': [24, 342, '0px', '0px'], 'gap': 80, 'scrollW': 390}, lm)
+                return { logo: [Math.round(r(logo).width), Math.round(r(logo).height)], card: [Math.round(r(card).left), Math.round(r(card).width), cs(card).padding, cs(card).borderTopWidth], gap: Math.round(r(card).top - r(document.querySelector('.login-tagline')).bottom), scrollW: document.documentElement.scrollWidth }; }""")
+            check('sign in on a phone (866:14705, Oct 9): logo 120 x 96, no card (342 wide at 24, no padding, no border), 80 below the tagline',
+                  lm == {'logo': [120, 96], 'card': [24, 342, '0px', '0px'], 'gap': 80, 'scrollW': 390}, lm)
             await lp.close()
             await sp.fill('#login-email', 'newbie@example.com'); await sp.click('#email-submit'); await sp.wait_for_selector('#signup-submit')
             check('a new address gets "Create account": name, the address filled in, no "we sent" line yet (342:7702)',
@@ -645,7 +646,12 @@ async def main():
             check('a newly approved account starts at the onboarding (397:4392): tour card 1, steps Account done and Tour on going',
                   await ann.inner_text('.ob-card-title') == 'Every cent in one place' and await ann.locator('.ds-step.is-done').count() == 1 and 'Tour' in await ann.inner_text('.ds-step.is-current'))
             # Set up your board (401:4464 / 749:10871, Oct 6): the categories selector (827:2047), fixed categories
+            await ann.click('#ob-next'); await ann.wait_for_timeout(500)
+            check('tour card 2 (399:4485, Oct 9): the new title, Back + Next sharing the row',
+                  await ann.inner_text('#ob-tour-title') == 'Your data is fully encrypted and accessible only by you' and await ann.locator('.ob-tour-cta #ob-back').count() == 1 and await ann.locator('.ob-tour-cta #ob-next').count() == 1)
             await ann.click('#ob-skip'); await ann.click('#ob-template'); await ann.wait_for_selector('.ob-setup')
+            heads = await ann.eval_on_selector_all('.ob-col-summary .ob-col-title', 'els => els.map(e => e.textContent)')
+            check('set up (401:4464, Oct 9): "Start tracking from" and "Summary" boxes, the new note', heads == ['Start tracking from', 'Summary'] and await ann.inner_text('.ob-summary-note') == 'You can rename or add categories later.', heads)
             cs = await ann.evaluate("""() => { const r = (s) => { const b = document.querySelector(s).getBoundingClientRect(); return [Math.round(b.width), Math.round(b.height)]; };
               return [r('.ds-cat-sel'), r('.ds-cat-sel-bg'), [...document.querySelectorAll('.ds-cat-item')].map(e => [e.id, e.getAttribute('aria-selected'), getComputedStyle(e.querySelector('.ds-cat-item-title')).fontSize])]; }""")
             check('categories selector (827:2047): 640x96, the pill 2px wider and 104 high, the three items, Income selected, 14px titles',
@@ -708,6 +714,9 @@ async def main():
             check('"Mark as read" takes the link away', await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').locator('.ds-notif-mark').count() == n_mk - 1)
             await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').get_by_role('button', name='View').first.click(); await pg.wait_for_timeout(400)
             check('View opens the Variable expenses of that month', await pg.locator('#notif-panel').count() == 0 and 'Groceries' in await pg.inner_text('.breakdown-card'))
+            le = await pg.evaluate("() => { const e = document.querySelector('.bd-tabs-stack .tracker-last-entry'); return e && [e.querySelector('.tle-text').textContent, [...e.querySelectorAll('.tle-num')].map(n => n.textContent), !!e.querySelector('.tle-dot'), getComputedStyle(e.querySelector('.tle-text')).fontSize, getComputedStyle(e.querySelector('.tle-num')).fontSize]; }")
+            check('Latest line (581:19517, Oct 9): inside the selectors, "Latest: <item>/<description>, <Mon D>", the Dot, then € and the figure in mono (14 / 12)',
+                  bool(le) and re.fullmatch(r'Latest: Groceries/[^,]+, [A-Z][a-z]{2} \d{1,2}', le[0]) and le[1][0] == '€' and re.fullmatch(r'[\d.]+,\d\d', le[1][1]) and le[2] and le[3:] == ['14px', '12px'], le)
             await pg.locator('.bd-row, .meter-row', has_text='Groceries').first.locator('.note-count').click(); await pg.wait_for_timeout(250)
             head = await pg.inner_text('#note-tip .tip-head')
             check('Entries tooltip starts with "Budget set" and the budget', 'Budget set' in head and '10,00' in head, head)

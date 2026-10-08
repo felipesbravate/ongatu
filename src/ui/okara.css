@@ -3681,17 +3681,19 @@
 #note-tip.is-empty{ width:320px; }
 #note-tip .tip-entries{ display:flex; flex-direction:column; gap:0; }
 #note-tip .tip-item{ margin:0; }
+/* Latest entry (581:19517 / 787:15242): same sizes on every width, inside Selectors (gap 8). */
+.bd-tabs-stack:has(.tracker-last-entry){ gap:8px; }
 .tracker-last-entry{
-  display:flex; align-items:center; flex-wrap:wrap; gap:4px; color:var(--link-disable);
-  font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight);
-  line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls);
+  display:flex; align-items:center; flex-wrap:wrap; gap:4px; color:var(--link-disable); min-width:0;
 }
-.tracker-last-entry .money{
-  font-family:var(--font-mono); font-size:var(--type-value-medium-size);
-  font-weight:var(--type-value-medium-weight); letter-spacing:var(--type-value-medium-ls);
+.tracker-last-entry .tle-text{
+  font-family:var(--font-sans, inherit); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px;
 }
-
-.tracker-last-entry .money-ic{ color:inherit; }
+.tracker-last-entry .tle-dot{ width:10px; height:10px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
+.tracker-last-entry .tle-dot i{ width:3.33px; height:3.33px; border-radius:50%; background:currentColor; }
+.tracker-last-entry .tle-num{
+  font-family:var(--font-mono); font-size:12px; font-weight:400; line-height:normal; letter-spacing:-0.48px;
+}
 
 /* A single selection layer persists as Home and Account change. */
 @media (max-width:640px){

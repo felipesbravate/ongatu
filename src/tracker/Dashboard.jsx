@@ -185,17 +185,12 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
             <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
               onChange={(v) => { setLastEntryScope(null); v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
             <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => { setLastEntryScope({ key: scopeKey, group: v }); onTab(v, v); }} />
+            {lastEntry && <LatestEntry entry={lastEntry} currency={cur} />}
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
             {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : 'Add expense'}
           </Button>
         </div>
-        {lastEntry && <div className="tracker-last-entry" role="status">
-          <span>Last update: {[lastEntry.item, lastEntry.description].map((part) => part?.trim()).filter(Boolean).join('/') || 'Entry'}</span>
-          <span aria-hidden="true">•</span>
-          <span>{formatEntryDate(String(lastEntry.date || lastEntry.createdAt || '').slice(0, 10))}</span>
-          <Money value={lastEntry.amount} currency={cur} iconSize={16} />
-        </div>}
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
             : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
@@ -314,6 +309,21 @@ function ItemTip({ tip, actions }) {
   const budgetLabel = row.type === 'income' ? 'Estimated' : 'Budget set';
   if (pos) last.current = { style: pos, lines, foot, budget: row.budget, budgetLabel, cur };
   return <EntriesTooltip tipRef={ref} visible={!!pos} style={pos || { left: '0px', top: '0px' }} footnote={foot} budget={row.budget} budgetLabel={budgetLabel} currency={cur}>{lines}</EntriesTooltip>;
+}
+// "Latest" line (Tracker card 581:19517 / 787:15242): route, date · Dot · € and the figure in mono.
+function LatestEntry({ entry, currency }) {
+  const route = [entry.item, entry.description].map((part) => part?.trim()).filter(Boolean).join('/') || 'Entry';
+  const date = formatEntryDate(String(entry.date || entry.createdAt || '').slice(0, 10));
+  const neg = entry.amount < 0;
+  return (
+    <div className="tracker-last-entry" role="status">
+      <span className="tle-text">{`Latest: ${route}${date ? `, ${date}` : ''}`}</span>
+      <span className="tle-dot" aria-hidden="true"><i /></span>
+      {currency === 'EUR'
+        ? <><span className="tle-num">{neg ? '-€' : '€'}</span><span className="tle-num">{fmtFigure(Math.abs(entry.amount))}</span></>
+        : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currency === 'SEK' ? 'kr' : currency}`}</span>}
+    </div>
+  );
 }
 function formatEntryDate(iso) {
   const m = iso && iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);

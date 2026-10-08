@@ -6,7 +6,8 @@
 // settings/onboarding, so the dashboard never sends this account here again.
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
-import { ActionLink, Button, CategorySelector, Divider, Dropdown, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
+import './onboarding.css';
+import { ActionLink, Button, CategorySelector, Dropdown, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
 import { arrowStraightRight, edit, euro, plus, trash } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
@@ -56,8 +57,8 @@ function Header({ name }) {
 // ---------- 02 Tour ----------
 const TOUR = [
   { title: 'Every cent in one place', text: 'Track your income, expenses, and savings month by month. See exactly where you stand in seconds.' },
-  { title: 'Your data is safe and stays yours', text: 'Your data is fully encrypted and accessible only by you. AI is strictly used to categorize your receipts, nothing else. Export or erase your account whenever you want.' },
-  { title: 'Built for how your brain works', text: 'Forget rigid budgeting templates. Create your own sub-categories, groups and types that match exactly how you think about your money, from daily coffee runs to long-term investments.' },
+  { title: 'Your data is fully encrypted and accessible only by you', text: 'AI is strictly used to categorize your receipts, nothing else. Export or erase your account whenever you want.' },
+  { title: 'Built to match exactly how you think about your money', text: 'Forget rigid budgeting templates. Create custom groups and types, from daily coffee runs to long-term investments.' },
 ];
 function MiniDashboard() {
   const rows = [['Income', '3.900,00', 'var(--data-purple)', 72], ['Expenses', '1.160,00', 'var(--data-pink)', 44], ['Savings', '1.500,00', 'var(--data-light-blue)', 55]];
@@ -107,7 +108,7 @@ function Tour({ card, setCard, onDone }) {
     </div>
   );
   return (
-    <section className="ob-card ob-tour" aria-labelledby="ob-tour-title">
+    <section className={'ob-card ob-tour' + (card === TOUR.length - 1 ? ' is-last' : '')} aria-labelledby="ob-tour-title">
       <div className="ob-tour-content">
         <div className="ob-tour-top">
           <ActionLink id="ob-skip" className="ob-skip" onClick={onDone}>Skip</ActionLink>
@@ -118,7 +119,14 @@ function Tour({ card, setCard, onDone }) {
         </div>
         <Pager count={TOUR.length} current={card} onGo={setCard} />
       </div>
-      <Button id="ob-next" className={card < TOUR.length - 1 ? 'ob-full' : 'ob-wide'} onClick={() => (card < TOUR.length - 1 ? setCard(card + 1) : onDone())}>{card < TOUR.length - 1 ? 'Next' : 'Go to setup'}</Button>
+      {/* Oct 9 (399:4424 / 399:4485 / 564:7633): card 1 Next (full width); card 2 Back (Tertiary) + Next sharing the
+          row, 10 apart; card 3 Go to setup (320; full width on phones). */}
+      {card === 1
+        ? <div className="ob-tour-cta">
+            <Button variant="tertiary" id="ob-back" onClick={() => setCard(card - 1)}>Back</Button>
+            <Button id="ob-next" onClick={() => setCard(card + 1)}>Next</Button>
+          </div>
+        : <Button id="ob-next" className={card < TOUR.length - 1 ? 'ob-full' : 'ob-wide'} onClick={() => (card < TOUR.length - 1 ? setCard(card + 1) : onDone())}>{card < TOUR.length - 1 ? 'Next' : 'Go to setup'}</Button>}
     </section>
   );
 }
@@ -139,7 +147,7 @@ function Choose({ onPick }) {
         </button>
         <button type="button" className="ob-option" id="ob-empty" onClick={() => onPick('empty')}>
           <span className="ob-option-art"><Illustration art={illustrations.pencil} width={60} /></span>
-          <span className="ob-option-text"><span className="ob-option-title">Build your own board</span><span className="ob-option-desc">Start from Income, Savings and Expenses, and add your own types one at a time.</span></span>
+          <span className="ob-option-text"><span className="ob-option-title">Build your own board</span><span className="ob-option-desc">Create your own tracking categories from zero, one at a time.</span></span>
           <span className="ds-action-link medium ob-option-link">Organise your own<Icon icon={arrowStraightRight} size={12} /></span>
         </button>
       </div>
@@ -154,8 +162,8 @@ function Choose({ onPick }) {
 // and "+ Add type", Dividers between groups; "No types added yet." for an empty group. Nothing on the board yet: the
 // Empty state illustration with "No income added yet". Summary on the right (280).
 const CAT_INFO = {
-  income: { cta: 'Add income', title: 'Income', description: 'Money entering your accounts from salaries, freelance work, or other revenue streams.', empty: 'No income added yet', emptyText: 'Define a specific income to track, and optionally organize it into sub-categories.' },
-  investment: { cta: 'Add savings/investment', title: 'Savings and investments', description: 'Money set aside for future goals, emergencies, or assets meant to build wealth.', empty: 'No savings or investments added yet', emptyText: 'Define what you put aside, and optionally organize it into sub-categories.' },
+  income: { cta: 'Add income', title: 'Income', description: 'Money entering your accounts from salaries, freelance work, or other revenue streams.', empty: 'No income added yet', emptyText: 'Define a specific income to track, and optionally organize it into sub-categories and groups.' },
+  investment: { cta: 'Add savings/investment', title: 'Savings and investments', description: 'Money set aside for future goals, emergencies, or assets meant to build wealth.', empty: 'No savings or investments added yet', emptyText: 'Define what you put aside, and optionally organize it into sub-categories and groups.' },
   expense: { cta: 'Add expense', title: 'Expenses', description: 'Money leaving your accounts to pay for living costs, bills, and everyday purchases.', empty: 'No expenses added yet', emptyText: 'Define a specific expense to track, and organize it into sub-categories and groups.' },
 };
 const NO_SUB = 'No sub-category';
@@ -271,7 +279,7 @@ function Setup({ mode, onStart, busy, error }) {
   const rowsFor = (list) => (
     <div className="budget-items">
       {list.map((t, i) => (
-        <BudgetRow key={(t.category || '') + '|' + t.item} r={rowOf(t, i)} mobile={mobile}
+        <BudgetRow key={(t.category || '') + '|' + t.item} r={rowOf(t, i)} mobile={false /* 853:10147: the Actions menu on phones too */}
           onValue={(_, v) => patchType(t, (x) => ({ ...x, budget: parseAmount(v) }))}
           onEditing={(_, on) => setEditing(on ? t : null)} onRemove={() => removeType(t)} />
       ))}
@@ -287,7 +295,45 @@ function Setup({ mode, onStart, busy, error }) {
   const months = MONTH_NAMES.map((m, i) => ({ value: String(i), label: m, selectedLabel: m.slice(0, 3) })).filter((o) => Number(year) < nowYear || Number(o.value) <= new Date().getMonth());
   const subOptions = [...(sel === 'expense' ? [] : [NO_SUB]), ...subsOf(sel)];
 
+  // 401:4464 / 749:10871 (Oct 9): the right column is two titled boxes, "Start tracking from" (Year, Month) and
+  // "Summary" (counts, note, Start tracking). Phones (853:10147): both sit below the card.
+  const aside = (
+    <div className="ob-col ob-col-summary">
+      <div className="ob-aside-sec">
+        <h3 className="ob-col-title">Start tracking from</h3>
+        <div className="ob-summary ob-from-box">
+          <div className="ob-from-row">
+            <Dropdown id="ob-year" size="tiny" emptyOption={false} value={year} onChange={(v) => { setYear(v); if (Number(v) === nowYear && Number(month) > new Date().getMonth()) setMonth(String(new Date().getMonth())); }} options={years.map((y) => ({ value: y, label: y }))} ariaLabel="Year" />
+            <Dropdown id="ob-month" size="tiny" emptyOption={false} value={month} onChange={setMonth} options={months} ariaLabel="Month" />
+          </div>
+        </div>
+      </div>
+      <div className="ob-aside-sec">
+        <h3 className="ob-col-title">Summary</h3>
+        <div className="ob-summary">
+          <div className="ob-summary-list">
+            {board.kinds.map((k) => (
+              <div key={k} className="ob-sum-cat">
+                <div className="ob-sum-row"><span className="ob-sum-name">{label(k)}</span><span className="ob-sum-count">{typeCount(typesOf(k).length)}</span></div>
+                {subsOf(k).length > 0 && (
+                  <div className="ob-sum-subs">
+                    {subsOf(k).map((g) => { const n = typesOf(k).filter((t) => t.group === g).length; return <div key={g} className="ob-sum-row ob-sum-sub"><span>{g}</span><span className="ob-sum-count">{n} item{n === 1 ? '' : 's'}</span></div>; })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="ob-summary-cta">
+            <p className="ob-summary-note">You can rename or add categories later.</p>
+            {error && <p className="ob-error" role="alert">{error}</p>}
+            <Button id="ob-start" className="ob-full" disabled={busy || board.types.length === 0} onClick={() => onStart(board, { year, month: Number(month) })}>Start tracking</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   return (
+    <>
     <section className="ob-card ob-setup ob-board" aria-labelledby="ob-setup-title">
       <div className="ob-card-head">
         <h2 className="ob-card-title" id="ob-setup-title">Set up your board</h2>
@@ -299,8 +345,8 @@ function Setup({ mode, onStart, busy, error }) {
           <div className="ob-board-top">
             <CategorySelector id="ob-cat" value={sel} onChange={pickKind} options={KINDS3.map((k) => ({ value: k, title: CAT_INFO[k].title, description: CAT_INFO[k].description }))} />
             <div className={'ob-board-fields' + (grouped ? '' : ' is-single')}>
-              <PickField id="ob-sub" label={sel === 'expense' ? 'Sub-category' : 'Sub-category (Optional)'} value={sub || ''} options={subOptions}
-                placeholder="Select sub-category" listLabel="Show the sub-categories" onPick={pickSub} />
+              <PickField id="ob-sub" label="Sub-category" value={sub || ''} options={subOptions}
+                placeholder={subsOf(sel).length ? 'Select or type to create a sub-category' : 'Type to create a sub-category'} listLabel="Show the sub-categories" onPick={pickSub} />
               {grouped && (
                 <PickField id="ob-group" label="Group (Optional)" value={groupSel} options={[...(groupSel ? [ALL_GROUPS] : []), ...groupNames]}
                   placeholder={groupNames.length ? 'Select or type to create a group' : 'Type to create a group'} listLabel="Show the groups" onPick={pickGroup} />
@@ -316,7 +362,7 @@ function Setup({ mode, onStart, busy, error }) {
           </div>
           {isEmpty ? (
             <div className="ob-board-empty">
-              {illustrations.emptyState && <Illustration art={illustrations.emptyState} width={136} />}
+              {illustrations.emptyState && <Illustration art={illustrations.emptyState} width={mobile ? 120 : 136} />}
               <div className="ob-board-empty-text">
                 <h4>{needSub ? 'Start with a sub-category' : info.empty}</h4>
                 <p>{needSub ? 'Type a name in Sub-category above, like Fixed or Variable. Then add your types.' : info.emptyText}</p>
@@ -347,34 +393,7 @@ function Setup({ mode, onStart, busy, error }) {
             </div>
           )}
         </div>
-        <div className="ob-col ob-col-summary">
-          <h3 className="ob-col-title">Summary</h3>
-          <div className="ob-summary">
-            <div className="ob-summary-content">
-              <div className="ob-from">
-                <span className="fld-label">Start tracking from</span>
-                <div className="ob-from-row">
-                  <Dropdown id="ob-year" size="tiny" emptyOption={false} value={year} onChange={(v) => { setYear(v); if (Number(v) === nowYear && Number(month) > new Date().getMonth()) setMonth(String(new Date().getMonth())); }} options={years.map((y) => ({ value: y, label: y }))} ariaLabel="Year" />
-                  <Dropdown id="ob-month" size="tiny" emptyOption={false} value={month} onChange={setMonth} options={months} ariaLabel="Month" />
-                </div>
-              </div>
-              <Divider />
-              <div className="ob-summary-list">
-                {board.kinds.map((k) => (
-                  <div key={k} className="ob-sum-cat">
-                    <div className="ob-sum-row"><span className="ob-sum-name">{label(k)}</span><span className="ob-sum-count">{typeCount(typesOf(k).length)}</span></div>
-                    {subsOf(k).map((g) => { const n = typesOf(k).filter((t) => t.group === g).length; return <div key={g} className="ob-sum-row ob-sum-sub"><span>{g}</span><span className="ob-sum-count">{n} item{n === 1 ? '' : 's'}</span></div>; })}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="ob-summary-cta">
-              <p className="ob-summary-note">You can add, rename or delete sub-categories later.</p>
-              {error && <p className="ob-error" role="alert">{error}</p>}
-              <Button id="ob-start" className="ob-full" disabled={busy || board.types.length === 0} onClick={() => onStart(board, { year, month: Number(month) })}>Start tracking</Button>
-            </div>
-          </div>
-        </div>
+        {!mobile && aside}
       </div>
       <TypeModal open={!!modal} kind={sel} kindName={label(sel)} group={sub || null} category={grouped ? (modal ? modal.category : '') : undefined}
         groups={subsOf(sel)} groupsOf={() => groupNames} onClose={() => setModal(null)}
@@ -384,6 +403,8 @@ function Setup({ mode, onStart, busy, error }) {
         onClose={() => setRenaming(null)} onSave={applyRename} />
       {confirmModal}
     </section>
+    {mobile && aside}
+    </>
   );
 }
 
@@ -440,6 +461,23 @@ export default function OnboardingApp() {
   };
 
   const showSteps = step !== 'welcome';
+  const mobile = useMobile();
+  // Phones (853:19308, Oct 9): "You're all set" is its own page, not a modal over the board: the Success illustration
+  // (160) over the title (24/24) and text (16/20), 48 sides, and Go to your board (320) at the bottom.
+  if (step === 'welcome' && mobile) {
+    return (
+      <main className="ob-page ob-welcome-page" id="ob-welcome">
+        <div className="ob-welcome-body">
+          <Illustration art={illustrations.success} width={160} />
+          <div className="ob-welcome-text">
+            <h1 className="ob-welcome-title">{`You're all set${name ? `, ${name}` : ''}!`}</h1>
+            <p className="ob-welcome-desc">Your board is ready. Start tracking your finances and hitting your goals.</p>
+          </div>
+        </div>
+        <Button id="ob-go" className="ob-welcome-go" onClick={() => leavePage('/')}>Go to your board</Button>
+      </main>
+    );
+  }
   return (
     <main className={'ob-page' + (step === 'setup' || step === 'welcome' ? ' is-wide' : step === 'choose' ? ' is-mid' : '')}>
       {me && (
@@ -451,7 +489,7 @@ export default function OnboardingApp() {
           {(step === 'setup' || step === 'welcome') && mode && <Setup mode={mode} onStart={start} busy={busy} error={error} />}
         </div>
       )}
-      <Modal open={step === 'welcome'} id="ob-welcome" illustration={illustrations.success} illustrationWidth={160} onClose={() => leavePage('/')}
+      <Modal open={step === 'welcome' && !mobile} id="ob-welcome" illustration={illustrations.success} illustrationWidth={160} onClose={() => leavePage('/')}
         title={`You're all set${name ? `, ${name}` : ''}!`} description="Your board is ready. Start tracking your finances and hitting your goals."
         primary={{ label: 'Go to your board', onClick: () => leavePage('/'), id: 'ob-go' }} />
     </main>

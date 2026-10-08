@@ -1,0 +1,146 @@
+/* ==========================================================================================================
+   Onboarding and setup, Oct 9. Desktop: Ongatu 568:5086 (tour 399:4424 / 399:4485 / 564:7633, choose 400:4509,
+   set up 401:4464 / 749:10871, welcome 404:4571). Phones: 875:15369 (tour cards 853:12195 / 853:15622 / 853:12343,
+   set up 853:10147 / 853:19053, welcome 853:19308) and their dark variants.
+   From the tour on, the page is surface/body (the sign-in pages keep their gradient).
+   Loaded after okara.css; every rule is scoped to html .ob-page:not(#z) so it wins over the older layers.
+   ========================================================================================================== */
+html .ob-page:not(#z){ background:var(--surface-body); background-image:none; }
+html body:has(.ob-page):not(#z){ background:var(--surface-body); }
+
+/* Page: header (44 symbol, Display/Title, 4, Body/Large/Medium), Step progress, card; 40 apart. */
+html .ob-page:not(#z) .ob-content{ gap:40px; }
+html .ob-page:not(#z) .ob-header{ gap:4px; }
+html .ob-page:not(#z) .ob-card{ border-radius:20px; padding:40px; gap:40px; }
+html .ob-page:not(#z) .ob-card-head{ gap:4px; }
+html .ob-page:not(#z) .ob-card-title{ font-size:20px; line-height:20px; letter-spacing:0; }
+html .ob-page:not(#z) .ob-card-text{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+
+/* ---- Tour: card 24/40/40/40 (card 3: 40 all round, no Skip, 16 above the art), 40 between content and the CTA;
+   content 24 apart (Skip 16 above the art); title 20/20, 8, text 14/16. ---- */
+html .ob-page:not(#z) .ob-tour{ padding:24px 40px 40px; gap:40px; }
+html .ob-page:not(#z) .ob-tour.is-last{ padding-top:40px; }
+html .ob-page:not(#z) .ob-tour-content{ gap:24px; }
+html .ob-page:not(#z) .ob-tour-top{ gap:16px; }
+html .ob-page:not(#z) .ob-slide{ gap:24px; }
+html .ob-page:not(#z) .ob-tour-text{ width:100%; gap:8px; }
+html .ob-page:not(#z) .ob-tour.is-last .ob-skip{ display:none; }
+html .ob-page:not(#z) .ob-tour.is-last .ob-tour-top{ padding-top:16px; }
+html .ob-page:not(#z) .ob-tour-cta{ width:100%; display:flex; gap:10px; }
+html .ob-page:not(#z) .ob-tour-cta > .btn-pill{ flex:1 1 0; min-width:0; justify-content:center; }
+html .ob-page:not(#z) .ob-tour .ob-full{ width:100%; }
+html .ob-page:not(#z) .ob-tour .ob-wide{ width:320px; max-width:100%; }
+
+/* ---- Choose: head 4, options 16 apart; option padding 24, radius 16, 12 apart; title 16/20, 4, text 12/14. ---- */
+html .ob-page:not(#z) .ob-choose{ gap:40px; }
+html .ob-page:not(#z) .ob-options{ gap:16px; }
+html .ob-page:not(#z) .ob-option{ padding:23px; border-radius:16px; gap:12px; }
+html .ob-page:not(#z) .ob-option-text{ gap:4px; }
+html .ob-page:not(#z) .ob-option-title{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+html .ob-page:not(#z) .ob-option-desc{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+
+/* ---- Set up your board: card 1024 (body 640 | 24 | 280). ---- */
+html .ob-page.is-wide:not(#z) .ob-content{ width:1024px; max-width:100%; }
+html .ob-page:not(#z) .ob-setup{ gap:40px; }
+html .ob-page:not(#z) .ob-setup-cols{ gap:24px; }
+html .ob-page:not(#z) .ob-col-title{ font-size:16px; line-height:20px; letter-spacing:-0.32px; padding:0; }
+html .ob-page:not(#z) .ob-board .ob-col-board{ flex:1 1 640px; gap:16px; }
+html .ob-page:not(#z) .ob-board-top{ gap:16px; }
+html .ob-page:not(#z) .ob-board-fields{ gap:16px; }
+html .ob-page:not(#z) .ob-board-fields .fld{ gap:8px; }
+html .ob-page:not(#z) .ob-board .ob-board-top + *{ margin-top:24px; } /* 16 (column gap) + 24 = the 40 under the selectors */
+html .ob-page:not(#z) .ob-board .ob-board-groups{ gap:16px; }
+html .ob-page:not(#z) .ob-board .budget-group{ gap:12px; }
+html .ob-page:not(#z) .ob-board .budget-cat-title{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+html .ob-page:not(#z) .ob-board .budget-items{ gap:0; }
+html .ob-page:not(#z) .ob-board .budget-row{ min-height:24px; }
+html .ob-page:not(#z) .ob-board .budget-row .br-name{ font-size:16px; line-height:20px; letter-spacing:-0.32px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-board .budget-group-empty{ color:var(--text-secondary); font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+
+/* Empty board (749:10871): Empty state illustration, 24, title + text (8 apart), 24, Small Primary button. */
+html .ob-page:not(#z) .ob-board-empty{ gap:24px; width:400px; max-width:100%; }
+html .ob-page:not(#z) .ob-board-empty-text{ gap:8px; }
+
+/* Right column: "Start tracking from" and "Summary", each a 16/20 title 16 above a surface/secondary box
+   (radius 20, padding 16); 24 between them. */
+html .ob-page:not(#z) .ob-col-summary{ width:280px; flex:0 0 280px; gap:24px; }
+html .ob-page:not(#z) .ob-aside-sec{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+html .ob-page:not(#z) .ob-summary{ background:var(--surface-secondary); border-radius:20px; padding:16px; gap:40px; }
+html .ob-page:not(#z) .ob-from-row{ gap:8px; }
+html .ob-page:not(#z) .ob-summary .ds-dd-trigger, html .ob-page:not(#z) .ob-summary .ds-dd{ background:var(--surface-primary); }
+html .ob-page:not(#z) .ob-summary-list{ gap:12px; }
+html .ob-page:not(#z) .ob-sum-cat{ gap:12px; }
+html .ob-page:not(#z) .ob-sum-row{ gap:8px; font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-sum-count{ font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-sum-subs{ display:flex; flex-direction:column; gap:4px; padding-left:8px; }
+html .ob-page:not(#z) .ob-sum-sub{ padding-left:0; margin:0; gap:16px; font-size:12px; line-height:14px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-sum-sub + .ob-sum-sub{ margin-top:0; }
+html .ob-page:not(#z) .ob-summary-cta{ gap:12px; }
+html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-muted); }
+
+/* ================================ Phones ================================ */
+@media (max-width:640px){
+  html .ob-page:not(#z){ padding:24px 16px 40px; }
+  html .ob-page:not(#z) .ob-content{ gap:24px; width:100%; }
+  html .ob-page:not(#z) .ob-header{ gap:8px; }
+  html .ob-page:not(#z) .ob-card{ padding:16px; gap:24px; }
+  html .ob-page:not(#z) .ob-card-head{ gap:8px; }
+  html .ob-page:not(#z) .ob-card-title{ font-size:20px; line-height:24px; }
+
+  /* Tour cards (853:12195 / 853:15622 / 853:12343): padding 16, 48 to the CTA; title 24/24, 12, text 16/20.
+     Every card keeps Skip on phones. */
+  html .ob-page:not(#z) .ob-tour, html .ob-page:not(#z) .ob-tour.is-last{ padding:16px; gap:48px; }
+  html .ob-page:not(#z) .ob-tour.is-last .ob-skip{ display:inline-flex; }
+  html .ob-page:not(#z) .ob-tour.is-last .ob-tour-top{ padding-top:0; }
+  html .ob-page:not(#z) .ob-tour-text{ gap:12px; }
+  html .ob-page:not(#z) .ob-tour .ob-card-title{ font-size:24px; line-height:24px; }
+  html .ob-page:not(#z) .ob-tour .ob-card-text{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .ob-page:not(#z) .ob-tour .ob-wide{ width:100%; }
+
+  html .ob-page:not(#z) .ob-options{ flex-direction:column; }
+  html .ob-page:not(#z) .ob-option{ height:auto; }
+
+  /* Set up (853:10147): categories stacked, 40 to the fields (16 apart, labels 16/20), the groups indented 16,
+     24 apart (header 24 above the rows, rows 4 apart). */
+  html .ob-page:not(#z) .ob-setup{ gap:24px; }
+  html .ob-page:not(#z) .ob-setup-cols{ flex-direction:column; }
+  html .ob-page:not(#z) .ob-board .ob-col-board{ flex:1 1 auto; width:100%; gap:24px; }
+  html .ob-page:not(#z) .ob-col-board > .ob-col-title{ display:none; }
+  html .ob-page:not(#z) .ob-board-top{ gap:40px; }
+  html .ob-page:not(#z) .ob-board-fields{ grid-template-columns:minmax(0, 1fr); gap:16px; }
+  html .ob-page:not(#z) .ob-board .ob-board-top + *{ margin-top:16px; }
+  html .ob-page:not(#z) .ob-board .ob-board-groups{ gap:24px; padding:0 16px; }
+  html .ob-page:not(#z) .ob-board .budget-group{ gap:24px; }
+  html .ob-page:not(#z) .ob-board .budget-items{ gap:4px; }
+  html .ob-page:not(#z) .ob-board-empty{ width:100%; }
+
+  /* Below the card: the two boxes, 16 apart; title 20/24, 8 above the box. */
+  html .ob-page:not(#z) .ob-col-summary{ width:100%; flex:none; gap:16px; }
+  html .ob-page:not(#z) .ob-aside-sec{ gap:8px; }
+  html .ob-page:not(#z) .ob-col-summary .ob-col-title{ font-size:20px; line-height:24px; letter-spacing:0; }
+  html .ob-page:not(#z) .ob-summary-list{ padding:4px; }
+  html .ob-page:not(#z) .ob-summary-cta{ gap:16px; }
+
+  /* Welcome page (853:19308). */
+  html .ob-welcome-page:not(#z){ min-height:100vh; min-height:100dvh; box-sizing:border-box; padding:40px 48px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:48px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-body{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; text-align:center; width:100%; }
+  html .ob-welcome-page:not(#z) .ob-welcome-text{ display:flex; flex-direction:column; gap:12px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-title{ margin:0; color:var(--text-primary); font-size:24px; font-weight:400; line-height:24px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-desc{ margin:0; color:var(--text-secondary); font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-go{ width:320px; max-width:100%; justify-content:center; }
+}
+/* 401:4464: the budget figure is Value 14 (mono), in link/default. */
+@media (min-width:641px){ html .ob-page:not(#z) .ob-board .budget-row .br-amount{ font-size:14px; } }
+
+/* Welcome modal on desktop (404:4571): 480 wide, radius 16, 24 at the bottom; header 64 (the 48 X button, 8 padding),
+   16; body padding 0 40, 40 between the content and the button; Success 160, 24, title 20/20, 8, text 14/16. */
+@media (min-width:641px){
+  html dialog#ob-welcome.ds-modal:not(#z){ width:480px; max-width:calc(100vw - 32px); padding:0 0 24px; gap:16px; border-radius:16px; }
+  html dialog#ob-welcome:not(#z) .ds-modal-header{ padding:8px; min-height:64px; box-sizing:border-box; }
+  html dialog#ob-welcome:not(#z) .ds-modal-body{ padding:0 40px; gap:40px; }
+  html dialog#ob-welcome:not(#z) .ds-modal-content{ padding:0; gap:24px; }
+  html dialog#ob-welcome:not(#z) .ds-modal-text{ gap:8px; }
+  html dialog#ob-welcome:not(#z) .ds-modal-title{ font-size:20px; line-height:20px; letter-spacing:0; }
+  html dialog#ob-welcome:not(#z) .ds-modal-description{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html dialog#ob-welcome:not(#z) .ds-modal-actions{ padding:0; margin:0; }
+}
