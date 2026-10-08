@@ -65,7 +65,7 @@ async def main():
             check('MSF tab: its group and type', 'Monthly' in await pg.inner_text('#itemslist') and 'Donation' in await pg.inner_text('#itemslist'))
             await pg.click('#tracker-add-btn'); await pg.wait_for_selector('#add-panel.open'); await pg.wait_for_timeout(300)
             check('Add entry opens on Expenses / MSF', await pg.inner_text('#entry-kind-trigger') == 'Expenses' and await pg.inner_text('#entry-sub-trigger') == 'MSF')
-            await pg.fill('#entry-desc', 'MSF'); await pg.click('#entry-item-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Donation")')
+            await pg.fill('#entry-desc', 'MSF'); await pg.click('#entry-item-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Donation")')
             await pg.fill('#entry-amount', '25'); await pg.click('#entry-submit'); await pg.wait_for_timeout(1200)
             await pg.click('#add-panel .panel-close'); await pg.wait_for_timeout(500)
             bal = (await pg.inner_text('#balance-value')).replace('\n', ' ')
@@ -75,7 +75,7 @@ async def main():
 
             await pg.click('#tracker-menu-btn'); await pg.click('#adjust-budget'); await pg.wait_for_selector('#month-budget-panel.open'); await pg.wait_for_timeout(400)
             check('month budget: no "Rename category", Expenses has "+ Add sub-category"', await pg.locator('#month-budget-rename-cat').count() == 0 and await pg.locator('#month-budget-add-sub').is_visible())
-            await pg.click('#month-budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("MSF")'); await pg.wait_for_timeout(300)
+            await pg.click('#month-budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("MSF")'); await pg.wait_for_timeout(300)
             sec = await pg.locator('#month-budget-sections .budget-type-section:not([hidden])').inner_text()
             check('month budget: MSF and its type', 'Donation' in sec, sec)
             # Rename a sub-category from this month on: Rename modal -> confirmation -> toast; an earlier month keeps the name
@@ -94,7 +94,7 @@ async def main():
             await pg.click('#month-budget-delete-sub'); await pg.wait_for_timeout(1000)
             toast = await pg.inner_text('#ds-toast')
             check('deleting a sub-category with entries is refused straight away (no confirmation), and says why', 'still has 1 entry' in toast and await pg.locator('#month-rename-confirm[open]').count() == 0 and await pg.inner_text('#month-budget-sub-trigger') == 'Doctors', toast)
-            await pg.click('#month-budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Variable")'); await pg.wait_for_timeout(300)
+            await pg.click('#month-budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Variable")'); await pg.wait_for_timeout(300)
             await pg.click('#month-budget-delete-sub'); await pg.wait_for_selector('#month-rename-confirm[open]')
             await pg.wait_for_timeout(300); await shot(pg, 'month-delete-confirm')
             desc = await pg.inner_text('#month-rename-confirm .ds-modal-description')

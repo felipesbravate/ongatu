@@ -29,7 +29,7 @@ const deps = {
   appOrigin: ORIGIN, limiter: new RateLimiter(60, 60_000), dailyReadCap: Number(process.env.DAILY_READ_CAP || 50),
 };
 deps.accounts = memoryAccounts(deps.profiles);
-const MIME = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html' };
+const MIME = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
 const cookieUser = (h) => { const m = /(?:^|; )mock_user=([^;]+)/.exec(h.cookie || ''); if (!m) return null; const email = decodeURIComponent(m[1]).toLowerCase(); return { id: 'u-' + Buffer.from(email).toString('hex').slice(0, 24), email, name: deps.accounts.names.get(email) || null }; };
 const cookieOf = (h, name) => { const m = new RegExp('(?:^|; )' + name + '=([^;]+)').exec(h.cookie || ''); return m ? decodeURIComponent(m[1]) : null; };
 const setC = (name, value) => `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=900`;
@@ -108,7 +108,8 @@ export const server = createServer(async (req, res) => {
     if (path === '/__test/state' && process.env.MOCK_TEST_ENDPOINTS === '1') {
       return send(res, 200, JSON.stringify({ aiCalls: state.aiCalls.map((c) => ({ prompt: c.prompt.slice(0, 4000), images: (c.images || []).length })), rows: [...stores.docMap.values()], keys: [...stores.keyMap.keys()] }), { 'content-type': 'application/json' });
     }
-    const file = normalize(join(root, 'public', path));
+    let decoded; try { decoded = decodeURIComponent(path); } catch { return send(res, 400, 'Bad path'); }
+    const file = normalize(join(root, 'public', decoded)); // icon/illustration files have spaces in their names
     if (!file.startsWith(join(root, 'public') + '/')) return send(res, 404, 'Not found');
     try { return send(res, 200, await readFile(file), { 'content-type': MIME[extname(file)] || 'application/octet-stream' }); }
     catch { return send(res, 404, 'Not found'); }

@@ -41,6 +41,7 @@ export default function TrackerApp() {
     return cur ? { yearIdx: cur.yearIdx, monthIdx: cur.monthIndex } : { yearIdx: 0, monthIdx: m.defaultMonth(m.DATA[0]) };
   });
   const viewRef = useRef(view); viewRef.current = view;
+  const pendingViewRef = useRef(null); pendingViewRef.current = null; // a view set but not yet drawn (see the years snapshot)
   const [bd, setBd] = useState({ type: 'Fixed', group: 'Fixed' });
   const [tip, setTip] = useState(null);
   const [confirmModal, confirm] = useConfirm();
@@ -54,6 +55,7 @@ export default function TrackerApp() {
   const [toastEl, showToast] = useToast();
   const yearToastTimer = useRef(null);
   const yearsHydrated = useRef(false);
+  const lastYearsRef = useRef(null);
   const autoYearTried = useRef(false);
 
   // ---- onboarding gate ----
@@ -95,10 +97,13 @@ export default function TrackerApp() {
       const docs = docsOf(snap);
       if (name !== 'years') { setData((d) => ({ ...d, [name]: docs })); return; }
       // Years: keep looking at the same year when the list changes; jump to a year that was just added.
-      const prevData = modelRef.current.DATA;
+      // The list can arrive twice before React redraws (the onboarding check subscribes to years too), so compare
+      // with the last list this callback saw, not with the rendered model (still the placeholder at that point).
+      const prevData = lastYearsRef.current || modelRef.current.DATA;
       const newData = yearsFromDocs(foldLegacyCustom({ years: docs }).years);
+      lastYearsRef.current = newData;
       const tmp = createModel({ data: newData, entries: modelRef.current.ENTRIES, overrides: modelRef.current.OVERRIDES, budgets: modelRef.current.BUDGETS, budgetDefaults: modelRef.current.BUDGET_DEFAULTS });
-      const v = viewRef.current;
+      const v = pendingViewRef.current || viewRef.current;
       const currentLabel = prevData[v.yearIdx] ? prevData[v.yearIdx].year : null;
       let next = v;
       if (!yearsHydrated.current) {
@@ -114,6 +119,7 @@ export default function TrackerApp() {
         else { const yi = Math.max(0, Math.min(v.yearIdx, newData.length - 1)); next = { yearIdx: yi, monthIdx: tmp.defaultMonth(newData[yi]) }; }
       }
       setData((d) => ({ ...d, years: docs }));
+      pendingViewRef.current = next;
       setView(next);
     }, (err) => { console.error(name + ' subscription error', err); setLoadError(true); }));
     return () => offs.forEach((off) => off());

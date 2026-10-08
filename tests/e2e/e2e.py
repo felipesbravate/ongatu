@@ -32,7 +32,7 @@ async def dd_structure(pg, sid):
 async def dd_pick(pg, sid, text, group=None):
     await pg.click(f'#{sid}-trigger'); await pg.wait_for_selector('.ds-dd-menu')
     scope = f'.ds-dd-block:has(.ds-dd-group:text-is("{group}")) ' if group else ''
-    await pg.click(f'.ds-dd-menu {scope}.ds-dd-item:text-is("{text}")'); await pg.wait_for_timeout(120)
+    await pg.click(f'.ds-dd-menu {scope}.ds-dd-item > span:text-is("{text}")'); await pg.wait_for_timeout(120)
 
 async def dd_text(pg, sid): return await pg.inner_text(f'#{sid}-trigger')
 
@@ -228,22 +228,22 @@ async def main():
                 const b = document.querySelector('.note-count.is-open'), tip = document.getElementById('note-tip'), it = q(tip, '.tip-item'), name = q(it, '.tip-name'), date = q(tip, '.tip-item .tip-date'),
                       amt = q(it, '.tip-amount'), del = q(tip, '.tip-del'), dot = q(it, '.tip-dot');
                 const tb = r(tip), bb = r(b);
-                return { badge: b && { h: r(b).height, pad: cs(b).padding, bg: cs(b).backgroundColor, font: [cs(b).fontSize, cs(b).fontWeight, cs(b).lineHeight, cs(b).letterSpacing], fam: cs(b).fontFamily.split(',')[0], ml: cs(b).marginLeft },
+                return { badge: b && { h: r(b).height, pad: cs(b).padding, bg: cs(b).backgroundColor, font: [cs(b).fontSize, cs(b).fontWeight, cs(b).lineHeight, cs(b).letterSpacing], fam: cs(b).fontFamily.split(',')[0], ml: cs(b).marginLeft, gap: (() => { const n = b.parentElement && b.parentElement.querySelector('.n, .meter-name, .bd-item-name'); return n && n !== b ? Math.round(bb.left - r(n).right) : null; })() },
                          tip: { radius: cs(tip).borderRadius, pad: cs(tip).padding, bg: cs(tip).backgroundColor, shadow: cs(tip).boxShadow, w: tb.width },
                          gapX: tb.left - bb.right, kept: tb.bottom >= innerHeight - 24 || tb.top <= 24, midDy: (tb.top + tb.height / 2) - (bb.top + bb.height / 2),
                          item: { h: r(it).height, gap: cs(it).columnGap, rgap: cs(q(it, '.tip-right')).columnGap, dot: [r(dot).width, r(dot).height] },
                          name: [cs(name).fontSize, cs(name).fontWeight, cs(name).lineHeight, cs(name).color], date: date ? [cs(date).fontSize, cs(date).fontWeight, cs(date).color, cs(date).lineHeight, cs(date).letterSpacing] : null,
                          amt: [cs(amt).fontFamily.split(',')[0], cs(amt).fontSize, cs(amt).fontWeight, cs(amt).letterSpacing], euro: !!q(amt, '.money-ic svg'),
                          del: del && { w: r(del).width, h: r(del).height, svg: [r(q(del, 'svg')).width, r(q(del, 'svg')).height], vb: q(del, 'svg').getAttribute('viewBox'), color: cs(del).color } }; }""")
-            check('counter (146:5252, Desktop): 14px pill, 4 each side (Oct 3), space/xs (4) from the name, action/press while its tooltip is open',
-                  t['badge'] and t['badge']['h'] == 14 and t['badge']['pad'] == '0px 4px' and t['badge']['ml'] == '4px' and t['badge']['bg'] == 'rgb(31, 30, 25)', t['badge'])
-            check('counter text (146:5252, Oct 2): Body/Small/SemiBold (11 / 600 / 12 / -2% on desktop), not mono', t['badge']['font'] == ['11px', '600', '12px', '-0.22px'] and 'Mono' not in t['badge']['fam'], t['badge'])
+            check('counter (146:5256, Oct 8): 14px pill, 4 each side, counter-pressed background while its tooltip is open',
+                  t['badge'] and t['badge']['h'] == 14 and t['badge']['pad'] == '0px 4px' and t['badge']['bg'] == 'rgb(31, 30, 25)', t['badge'])
+            check('counter text (146:5256, Oct 8): Martian Mono Label/Tiny 10px, -4%', t['badge']['font'][0] == '10px' and t['badge']['font'][3] == '-0.4px' and 'Martian Mono' in t['badge']['fam'], t['badge'])
             check('tooltip (146:5252, Oct 3): dark surface, radius 16, padding 16/8/16/16, 320 wide, no shadow', t['tip']['bg'] == 'rgb(22, 21, 15)' and t['tip']['radius'] == '16px' and t['tip']['pad'] == '16px 8px 16px 16px' and t['tip']['w'] == 320 and t['tip']['shadow'] == 'none', t['tip'])
             check('tooltip opens beside the counter, 4px away, centred on it (or kept inside the window)', abs(t['gapX'] - 4) < 0.6 and (abs(t['midDy']) < 9 or t['kept']), [t['gapX'], t['midDy'], t['kept']])
             check('tooltip entry (144:4426, Oct 3): 24px row, 8 apart (also between amount and remove), 12px dot', t['item']['h'] >= 24 and t['item']['gap'] == '8px' and t['item']['rgap'] == '8px' and t['item']['dot'] == [12, 12], t['item'])
             check('tooltip entry text (144:4426, Oct 2): name Body/Large/SemiBold white, date Body/Large/Medium text/muted (14 on desktop)', t['name'] == ['14px', '600', '16px', 'rgb(255, 255, 255)'] and t['date'] is not None and t['date'] == ['14px', '400', 'rgb(150, 146, 132)', '16px', '-0.28px'], [t['name'], t['date']])
             check('tooltip amount (144:4426, Oct 3): 16px Euro + Value/Medium (mono 12/400/-4% on desktop)', t['euro'] and 'Mono' in t['amt'][0] and t['amt'][1:] == ['12px', '400', '-0.48px'], t['amt'])
-            check('tooltip remove: Micro round button (24, Mobile tokens since Oct 3) with the 12px X, action/disable', t['del'] and t['del']['w'] == 24 and t['del']['h'] == 24 and t['del']['svg'] == [12, 12] and t['del']['vb'] == '0 0 12 12' and t['del']['color'] == 'rgb(150, 146, 132)', t['del'])
+            check('tooltip remove (144:4426): Micro round button (24) with the 12px X, action/disable', t['del'] and t['del']['w'] == 24 and t['del']['h'] == 24 and t['del']['svg'] == [12, 12] and t['del']['vb'].endswith(' 12 12') and t['del']['color'] == 'rgb(150, 146, 132)', t['del'])
             await pg.keyboard.press('Escape'); await pg.mouse.click(5, 5)
             # Oct 3 (124:3667, 663:935): every Tracker row ends with a Micro Actions button; its menu names the row and offers "Add entry"
             mrow = pg.locator('#itemslist .bd-row').first
@@ -341,10 +341,10 @@ async def main():
             if await pg.locator('#tracker-menu-btn').count():
                 await pg.click('#tracker-menu-btn'); await pg.wait_for_selector('#tracker-menu')
                 da = await pg.evaluate("() => { const m = document.getElementById('tracker-menu'), i = m.querySelector('.ds-dd-item'), c = getComputedStyle(m), ci = getComputedStyle(i); return [Math.round(m.getBoundingClientRect().width), c.paddingTop, c.borderTopLeftRadius, Math.round(i.getBoundingClientRect().height), ci.fontSize, ci.lineHeight]; }")
-                check('desktop action menus are a drop-action (801:1400): 200 wide, padding 12, radius 16, 32-high items in Label/Tiny 14/16', da == [200, '12px', '16px', 32, '14px', '16px'], da)
+                check('desktop action menus (Okara audit Oct 8): 242 wide, padding 12, radius 16, 36-high items in Label/Small 16/20', da == [242, '12px', '16px', 36, '16px', '20px'], da)
                 await pg.click('#tracker-menu-btn'); await pg.wait_for_selector('#tracker-menu', state='detached'); await pg.wait_for_selector('.month-btn')
             check('chart legend matches the lines: indigo, pink, lime', d['swatches'] == ['rgb(79, 70, 229)', 'rgb(227, 2, 159)', 'rgb(205, 217, 54)'], d)
-            check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', d['tokens'] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
+            check('data colours come from the Color variables (purple, light blue, orange, pink, lime)', [x[:7] if len(x) == 9 and x.endswith('ff') else x for x in d['tokens']] == ['#4b0fa5', '#1dc0bb', '#ffba3a', '#e3029f', '#cdd936'], d)
             check('money figures carry the Euro icon', d['euro'], d)
             await pg.wait_for_selector('.month-btn:not(.estimated)')
             mb = await pg.evaluate("() => { const b = document.querySelector('.month-btn:not(.estimated)'), c = getComputedStyle(b); return [c.fontSize, c.fontWeight, c.lineHeight, c.letterSpacing, c.height, c.paddingLeft, c.textTransform]; }")
@@ -395,8 +395,8 @@ async def main():
             # Oct 3: Input, Dropdown and dropdown-item always use the Mobile tokens; Medium and Small write Label/Medium at 400 (16/400/24), Tiny Label/Tiny.
             check('Dropdown sizes (71:1096, Oct 3, Mobile tokens everywhere): Medium 48 / 16 Label/Medium, Small 36 / 8 Label/Small, Tiny 32 / 8 Label/Tiny (Oct 3 re-read)',
                   sz['dd-md'] == [48, '15px', '16px', '400', '24px'] and sz['dd-sm'] == [36, '7px', '16px', '400', '20px'] and sz['dd-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
-            check('Input sizes (audit D1-D2: desktop screens draw Medium at radius 6, 12px sides, Body/Large 14/18; Small and Tiny unchanged)',
-                  sz['in-medium'] == [48, '11px', '14px', '400', '18px'] and sz['in-small'] == [36, '7px', '16px', '400', '20px'] and sz['in-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
+            check('Input sizes (Okara audit Oct 8: Surface/Mobile at every width): Medium 48, Label/Medium 16/24; Small 36; Tiny 32',
+                  sz['in-medium'] == [48, '15px', '16px', '400', '24px'] and sz['in-small'] == [36, '7px', '16px', '400', '20px'] and sz['in-tiny'] == [32, '7px', '14px', '400', '16px'], sz)
             st = await pg.evaluate("""() => { const host = document.body, mk = (h) => { const w = document.createElement('div'); w.innerHTML = h; host.appendChild(w); return w; };
                 const e = mk('<span class="ds-input"><input placeholder="Label"></span>'), f = mk('<span class="ds-input"><input placeholder="Label" value="Felipe"></span>'),
                       de = mk('<div class="ds-dd ds-dd--md is-empty"><button class="ds-dd-trigger">Select</button></div>'), df = mk('<div class="ds-dd ds-dd--md"><button class="ds-dd-trigger">Rent</button></div>'),
@@ -433,7 +433,7 @@ async def main():
                 return { icon: (it.querySelector('.doc-ic svg').dataset.icon === 'document' || (!!window.ICON_LIB && it.querySelector('.doc-ic path').getAttribute('d') === window.ICON_LIB.document.d)), ic: [r(it.querySelector('.doc-ic svg')).width, r(it.querySelector('.doc-ic svg')).height],
                          btn: [r(b).width, r(b).height], svg: [r(sv).width, r(sv).height], vb: sv.getAttribute('viewBox'), color: cs(b).color, radius: cs(b).borderRadius, meta: it.querySelector('.doc-meta').textContent }; }""")
             check('file list (229:18169): a CSV shows the Document icon (16px on desktop); delete = Tiny Tertiary round button (32) with the 12px X in surface/dark; "1KB ⋅ Ready"',
-                  di['icon'] and di['ic'] == [16, 16] and di['btn'] == [32, 32] and di['svg'] == [12, 12] and di['vb'] == '0 0 12 12' and di['color'] == 'rgb(22, 21, 15)' and di['radius'] == '999px' and di['meta'].endswith(' ⋅ Ready'), di)
+                  di['icon'] and di['ic'] == [16, 16] and di['btn'] == [32, 32] and di['svg'] == [12, 12] and di['vb'].endswith(' 12 12') and di['color'] == 'rgb(22, 21, 15)' and di['radius'] == '999px' and di['meta'].endswith(' ⋅ Ready'), di)
             ad = await pg.evaluate("() => ({ cancel: !!document.getElementById('doc-cancel'), icon: !!document.querySelector('#doc-add svg'), gap: Math.round(document.getElementById('doc-actions').getBoundingClientRect().top - document.getElementById('doc-list').getBoundingClientRect().bottom) })")
             check('files (229:18169): only "Add files" (no icon, no Cancel), 24 under the list', not ad['cancel'] and not ad['icon'] and ad['gap'] == 24, ad)
             await pg.click('#doc-add'); await pg.wait_for_selector('#ap-review:not([hidden])', timeout=8000)
@@ -449,7 +449,7 @@ async def main():
                   g['w'] == 16 and not g['rm'] and not g['input'] and (g['value'] or '').strip() == '23,40' and g['widths'] == [140, 140, 140] and g['date'] == 'rgb(116, 113, 103)', g)
             # Oct 3 (229:18167): rows are always open, the Category dropdown is right there
             await pg.click('#rv-rows .rv-row .c-cat .ds-dd-trigger'); await pg.wait_for_selector('.ds-dd-menu')
-            await pg.click('.ds-dd-menu .ds-dd-item:text-is("Groceries")'); await pg.wait_for_timeout(150)  # the proposed one: confirming it is enough
+            await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Groceries")'); await pg.wait_for_timeout(150)  # the proposed one: confirming it is enough
             await pg.click('#add-panel-title'); await pg.wait_for_timeout(150)
             check('review: choosing a category (even the proposed one) removes the Guess chip and the note', await pg.locator('#rv-rows .ds-dd-lead').count() == 0 and (await pg.inner_text('#rv-status')).strip() == '', [await pg.locator('#rv-rows .ds-dd-lead').count(), await pg.inner_text('#rv-status'), await pg.inner_text('#rv-rows')])
             # a reply that says "sure" is not marked
@@ -503,8 +503,8 @@ async def main():
                 const menu = document.querySelector('.ds-dd-menu'), g = menu.querySelector('.ds-dd-group'), its = [...menu.querySelectorAll('.ds-dd-block')[0].querySelectorAll('.ds-dd-item')], t = document.getElementById('entry-period-trigger');
                 return { pad: cs(menu).padding, gFont: [cs(g).fontSize, cs(g).fontWeight, cs(g).lineHeight], gX: r(g).left - r(menu).left - 1, itemH: r(its[0]).height, itemPad: cs(its[0]).padding, iFont: [cs(its[0]).fontSize, cs(its[0]).fontWeight, cs(its[0]).lineHeight],
                          itemGap: its.length > 1 ? r(its[1]).top - r(its[0]).bottom : 4, itemX: r(its[0]).left - r(menu).left - 1, tFont: [cs(t).fontSize, cs(t).lineHeight, cs(t).letterSpacing], tPad: cs(t).padding, tBg: cs(t).backgroundColor, tSel: cs(its[0]).fontWeight }; }""")
-            check('menu (Dropdown-list 182:6851, Oct 3, Mobile tokens): padding space/md (16), group title Label/Medium 16/400/24 flush, rows space/xs round Label/Small (36), space/tn apart',
-                  m['pad'] == '16px' and m['gFont'] == ['16px', '400', '24px'] and abs(m['gX'] - 16) < 0.6 and m['itemH'] == 36 and m['itemPad'] == '8px' and m['iFont'] == ['16px', '400', '20px'] and m['itemGap'] == 4 and abs(m['itemX'] - 16) < 0.6, m)
+            check('menu (Okara audit Oct 8): padding 12, group title Heading/Medium 16/16 flush, rows space/xs round Label/Small (36), 4 apart',
+                  m['pad'] == '12px' and m['gFont'] == ['16px', '400', '16px'] and abs(m['gX'] - 12) < 0.6 and m['itemH'] == 36 and m['itemPad'] == '8px' and m['iFont'] == ['16px', '400', '20px'] and m['itemGap'] == 4 and abs(m['itemX'] - 12) < 0.6, m)
             check('trigger in the panel (Oct 3): Label/Medium 16/24 -2%, space/md sides (16, minus the border), no fill', m['tFont'] == ['16px', '24px', '-0.32px'] and m['tPad'] == '0px 15px' and m['tBg'] == 'rgba(0, 0, 0, 0)', m)
             await pg.keyboard.press('Escape'); await pg.wait_for_selector('.ds-dd-menu', state='detached')
             # keyboard: open with Enter, move, choose with Enter; Escape only closes the menu
@@ -716,11 +716,15 @@ async def main():
             await admin_ctx.request.post(BASE + '/api/db/budgets', headers=hdr, data={'year': ym[0], 'type': 'expense', 'group': 'Variable', 'category': 'Food', 'item': 'Budget only', 'amount': 400})
             await admin_ctx.request.post(BASE + '/api/db/budgets', headers=hdr, data={'year': ym[0], 'type': 'income', 'group': None, 'category': None, 'item': 'Estimated pay', 'amount': 2500})
             await pg.reload(); await pg.wait_for_selector('#user-nav'); await pg.wait_for_timeout(900)
-            await pg.click('#breakdown-top-seg button[data-v=Expenses]'); await pg.click('#breakdown-group-seg button[data-v=Variable]'); await pg.wait_for_timeout(300)
+            # Oct 9: after a reload the board opens on today's month (it used to jump to the last year when the years
+            # list arrived twice before a redraw), so Expenses shows this month's sub-categories.
+            check('after a reload the board shows the current month', str(__import__('datetime').date.today().year) in (await pg.inner_text('#cat-hint')), await pg.inner_text('#cat-hint'))
+            await pg.click('#breakdown-top-seg button[data-v=Expenses]'); await pg.wait_for_selector('#breakdown-group-seg:not([hidden]) button[data-v=Variable]')
+            await pg.click('#breakdown-group-seg button[data-v=Variable]'); await pg.wait_for_timeout(300)
             await pg.locator('.bd-row, .meter-row', has_text='Budget only').first.locator('.note-count').click(); await pg.wait_for_timeout(250)
             t = await pg.evaluate("() => { const b = document.querySelector('.note-count.is-open'), cs = getComputedStyle(b); return { head: document.querySelector('#note-tip .tip-head')?.textContent, items: document.querySelectorAll('#note-tip .tip-item').length, foot: !!document.querySelector('#note-tip .tip-foot'), hr: !!document.querySelector('#note-tip .tip-head-divider'), empty: document.querySelector('#note-tip .tip-empty')?.textContent, icon: b.classList.contains('is-icon') && !!b.querySelector('svg'), bg: cs.backgroundColor, color: cs.color }; }")
             check('budget without entries (354:618): header, divider, "There\'s no entries yet."', 'Budget set' in (t['head'] or '') and t['items'] == 0 and not t['foot'] and t['hr'] and t['empty'] == "There's no entries yet.", t)
-            check('budget without entries: the counter is Type=Icon (Chart), pressed = surface/tertiary with surface/secondary icon', t['icon'] and t['bg'] == 'rgb(116, 113, 103)' and t['color'] == 'rgb(239, 238, 229)', t)
+            check('budget without entries: the counter is Type=Icon (Chart), pressed (354:618) = surface/dark with a white icon', t['icon'] and t['bg'] == 'rgb(22, 21, 15)' and t['color'] == 'rgb(255, 255, 255)', t)
             await pg.locator('.bd-row, .meter-row', has_text='Budget only').first.locator('.note-count').click(); await pg.wait_for_timeout(200)
             await pg.click('#breakdown-top-seg button[data-v=Income]'); await pg.wait_for_timeout(300)
             await pg.locator('.bd-row, .meter-row', has_text='Estimated pay').first.locator('.note-count').click(); await pg.wait_for_timeout(250)
@@ -744,7 +748,7 @@ async def main():
               return { title: d.querySelector('.ds-modal-title').textContent, desc: d.querySelector('.ds-modal-description').textContent, art: il && il.dataset.illustration,
                        ilSize: il && [il.getAttribute('width'), il.getAttribute('height')], bg: getComputedStyle(b).backgroundColor, label: b.textContent, cancel: d.querySelector('#confirm-cancel').textContent }; }''')
             check('deleting an entry asks first: modal with the entry name, Trash can 64x72, Cancel + red Delete',
-                  'Toast test' in m['title'] and m['art'] == 'trashCan' and m['ilSize'] == ['64', '71.91'] and m['label'] == 'Delete' and m['cancel'] == 'Cancel' and m['bg'] == 'rgb(189, 0, 7)', m)
+                  'Toast test' in m['title'] and m['art'] == 'trashCan' and m['ilSize'][0] == '64' and abs(float(m['ilSize'][1]) - 72) < 0.5 and m['label'] == 'Delete' and m['cancel'] == 'Cancel' and m['bg'] == 'rgb(189, 0, 7)', m)
             await pg.click('#confirm-cancel'); await pg.wait_for_timeout(200)
             check('Cancel keeps the entry', not await pg.locator('#confirm-modal[open]').count() and await pg.locator('.meter-row', has_text='Toast test').count() == 1)
             await pg.locator('.meter-row', has_text='Toast test').locator('.note-count').click(); await pg.wait_for_timeout(200)

@@ -147,8 +147,8 @@ async def s_month_hover(pg): await pg.locator('.month-btn').nth(3).hover(); awai
 async def s_btn_hover(pg): await pg.locator('#tracker-add-btn').hover(); await settle(pg)
 
 async def s_panel(pg): await open_panel(pg); await settle(pg)
-async def s_panel_income(pg): await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await settle(pg)
-async def s_panel_invest(pg): await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Savings and investments")'); await settle(pg)
+async def s_panel_income(pg): await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Income")'); await settle(pg)
+async def s_panel_invest(pg): await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Savings and investments")'); await settle(pg)
 async def s_panel_filled(pg):
     await open_panel(pg)
     for sid, v in (('entry-cat', 'Habitation'), ('entry-item', 'Electricity')):
@@ -167,13 +167,13 @@ async def s_review_edit(pg):
     await s_review(pg); await pg.click('#rv-rows .rv-row .c-cat .rv-link'); await pg.wait_for_selector('#rv-rows .rv-row.is-editing'); await settle(pg)
 async def s_review_bad_date(pg):
     await s_review(pg); await pg.click('#rv-period-trigger')
-    await pg.click('.ds-dd-menu .ds-dd-block:has(.ds-dd-group:text-is("2026")) .ds-dd-item:text-is("August")'); await settle(pg)
+    await pg.click('.ds-dd-menu .ds-dd-block:has(.ds-dd-group:text-is("2026")) .ds-dd-item > span:text-is("August")'); await settle(pg)
 async def s_account(pg):
     await pg.goto(BASE + '/account'); await pg.wait_for_selector('.acct-card'); await pg.wait_for_timeout(600)
     await pg.add_style_tag(content=CALM); await pg.evaluate('document.fonts.ready')
 
 async def s_toast(pg):
-    await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await pg.wait_for_timeout(100)
+    await open_panel(pg); await pg.click('#entry-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Income")'); await pg.wait_for_timeout(100)
     opts = await pg.evaluate("[...document.querySelectorAll('#entry-item option')].map(o => o.value).filter(Boolean)")
     await pg.evaluate("v => { const s = document.getElementById('entry-item'); s.value = v; s.dispatchEvent(new Event('change', {bubbles:true})); }", opts[0])
     await pg.fill('#entry-desc', 'Side project'); await pg.fill('#entry-amount', '250'); await pg.click('#entry-submit')
@@ -184,9 +184,9 @@ async def budget(pg):
     await pg.wait_for_selector('#budget-panel.open, #budget-panel[aria-hidden="false"], #budget-panel:not([hidden])', timeout=5000); await settle(pg)
 async def s_budget(pg): await budget(pg)
 async def s_budget_income(pg):
-    await budget(pg); await pg.click('#budget-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Income")'); await settle(pg)
+    await budget(pg); await pg.click('#budget-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Income")'); await settle(pg)
 async def s_budget_variable(pg):
-    await budget(pg); await pg.click('#budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item:text-is("Variable")'); await settle(pg)
+    await budget(pg); await pg.click('#budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Variable")'); await settle(pg)
 async def s_budget_hover(pg):
     await budget(pg); await pg.locator('#budget-sections .budget-type-section:not([hidden]) .br-amount').first.hover(); await settle(pg)
 async def s_budget_edit(pg):
