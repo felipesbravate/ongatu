@@ -8,8 +8,8 @@ html[data-theme] .acct-email-row{width:calc(50% - var(--space-md)/2);max-width:1
 html[data-theme] .acct-card-head h2{font-size:var(--type-heading-xl-size);line-height:var(--type-heading-xl-lh)}
 html[data-theme] .acct-card-head p{font-size:var(--type-body-large-medium-size);line-height:var(--type-body-large-medium-lh)}
 html[data-theme] .btn-pill:not(.ghost):not(.secondary):not(.tertiary):not(.destructive):not(.is-destructive){color:var(--text-on-primary)}
-html[data-theme] .round-btn.primary{color:var(--icon-round-primary)}
-html[data-theme] .round-btn:not(.primary):not(.is-destructive){color:var(--icon-round-control)}
+html[data-theme] .round-btn.primary{color:var(--icon-light)}
+html[data-theme] .round-btn:not(.primary):not(.is-destructive){color:var(--icon-primary)}
 html[data-theme] .ds-input svg,html[data-theme] .ds-dd-trigger svg,html[data-theme] .ds-user-card .ds-dd-item svg,html[data-theme] .balance-card .balance-euro:not(#z){color:var(--icon-primary)}
 html[data-theme] .ds-mnav-pillbg{background:var(--surface-mobile-nav-buttom-bg)}
 html[data-theme] .ds-mnav-item.is-selected{color:var(--surface-mobile-nav-buttom-icon)}
@@ -28,21 +28,65 @@ html[data-theme] .ds-toggle-knob{background:var(--surface-dark)}
 
 html[data-theme] .btn-pill.ghost:not(.is-destructive),html[data-theme] .btn-pill.tertiary{color:var(--text-primary)}
 html[data-theme] .btn-pill svg{color:currentColor}
-html[data-theme] .ds-menu-item svg{color:var(--text-secondary)}
+html[data-theme] .ds-menu-item svg{color:var(--icon-secondary)}
 html[data-theme] .ds-menu-item.is-selected svg,html[data-theme] .ds-menu-item:hover svg{color:var(--icon-primary)}
 html[data-theme] #profile .acct-form .acct-email-row .field{width:100%;flex:1 1 auto}
-html[data-theme] .ds-input.is-disabled svg:not(#z){color:var(--text-muted)}
+html[data-theme] .ds-input.is-disabled svg:not(#z){color:var(--icon-muted)}
 html[data-theme] .field input:disabled{opacity:1}
 html[data-theme] .login-tagline{color:var(--brand-indigo)}
 
 /* Control glyphs use icon roles in both themes, including nested/portalled menus. */
 html[data-theme] :is(.ds-user-info,.fld-combo-chev) > svg{color:var(--icon-primary)}
-html[data-theme] .ds-dd-item:not(.is-destructive) svg{color:var(--icon-primary)}
+html[data-theme] .ds-dd-item:not(.is-destructive) svg{color:var(--icon-secondary)}
+html[data-theme] :is(.ds-drop-action,.ds-user-card) .ds-dd-item:not(.is-destructive) svg,
+html[data-theme] .ds-dd-item:is(:hover,:focus-visible,.is-active):not(.is-destructive) svg{color:var(--icon-primary)}
 html[data-theme] :is(.ds-input.is-disabled,.ds-dd.is-disabled) svg,
 html[data-theme] .ds-dd-trigger:disabled svg,
-html[data-theme] :is(.ds-input,.bd-input,.field-with-prefix,.date-dd):has(input:disabled) svg{color:var(--text-muted)}
+html[data-theme] :is(.ds-input,.bd-input,.field-with-prefix,.date-dd):has(input:disabled) svg{color:var(--icon-muted)}
 
 /* Dark surfaces need readable illustrations and filled destructive-button labels. */
 html[data-theme="dark"] .ds-illustration,
 html[data-theme="dark"] #add-panel .dz-reading-art{color:var(--text-secondary)}
 html[data-theme="dark"] .btn-pill.destructive{color:var(--text-primary)}
+
+/* Okara component audit, 8 October 2026. Variables retain their Figma names. */
+html[data-theme] .btn-pill:not(.small):not(.tiny):not(.micro){min-height:48px;font-size:var(--type-label-medium-size);line-height:var(--type-label-medium-lh)}
+html[data-theme] .btn-pill.small{min-height:36px;padding:7px 15px;font-size:var(--type-label-small-size);line-height:var(--type-label-small-lh)}
+html[data-theme] .btn-pill.tiny{min-height:32px;padding:7px 11px;font-size:var(--type-label-tiny-size);line-height:var(--type-label-tiny-lh)}
+html[data-theme] .btn-pill.micro{min-height:22px;padding:3px 7px;font-size:var(--type-label-nano-size);line-height:var(--type-label-nano-lh)}
+html[data-theme] .round-btn.small{width:36px;height:36px;min-width:36px;min-height:36px}
+html[data-theme] .round-btn.secondary{border-color:var(--border-dark)}
+html[data-theme] .round-btn.secondary:is(:hover,:active,.is-active){border-color:var(--border-hover)}
+html[data-theme] .round-btn.secondary:disabled{border-color:var(--border-default)}
+html[data-theme] .ds-action-link.medium{font-size:var(--type-label-small-size);line-height:var(--type-label-small-lh);letter-spacing:var(--type-label-small-ls)}
+html[data-theme] .ds-action-link:disabled{text-decoration:underline}
+html[data-theme] .ds-input:not(#z),html[data-theme] .ds-dd-trigger{border-radius:var(--radius-sm)}
+html[data-theme] .ds-input:not(.small):not(.tiny):not(#z){min-height:48px;padding:0 15px;font-size:var(--type-label-medium-size);line-height:var(--type-label-medium-lh)}
+html[data-theme] .ds-input:not(.small):not(.tiny) input:not(#z){font-size:inherit;line-height:inherit;letter-spacing:inherit}
+html[data-theme] .ds-input.small{height:auto;min-height:36px}
+html[data-theme] .ds-dd--sm .ds-dd-trigger{min-height:36px}
+html[data-theme] .ds-dd-menu:not(#z){min-width:min(242px,calc(100vw - 16px));padding:var(--space-sm);border-color:var(--border-default);box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160)}
+html[data-theme] .ds-dd-menu.is-group{gap:var(--space-md)}
+html[data-theme] .ds-dd-menu .ds-dd-items{gap:var(--space-tn)}
+html[data-theme] .ds-drop-action:not(#z){width:242px}
+html[data-theme] .ds-drop-action:not(#z) .ds-dd-item{min-height:36px;font-size:var(--type-label-small-size);line-height:var(--type-label-small-lh);letter-spacing:var(--type-label-small-ls)}
+html[data-theme] .ds-dd-group{font-size:var(--type-heading-medium-size);line-height:var(--type-heading-medium-lh);letter-spacing:var(--type-heading-medium-ls)}
+html[data-theme] .ds-dd-desc{white-space:normal}
+html[data-theme] .ds-menu-item{font-size:var(--type-body-large-medium-size);font-weight:var(--type-body-large-medium-weight);line-height:var(--type-body-large-medium-lh);letter-spacing:var(--type-body-large-medium-ls)}
+.ds-menu-counter{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:24px;min-height:20px;padding:2px 4px;border:1px solid var(--border-default);border-radius:var(--radius-sm);color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--type-value-small-size);font-weight:var(--type-value-small-weight);line-height:1;letter-spacing:var(--type-value-small-ls);white-space:nowrap}
+.ds-menu-counter.is-unread{color:var(--text-notification);border-color:var(--border-notification)}
+.ds-menu-item .ds-menu-counter,.ds-dd-item .ds-menu-counter{flex:0 0 auto;margin-left:auto}
+html[data-theme] .meter-row .meter-top{height:auto;min-height:20px;margin-bottom:var(--space-xs)}
+html[data-theme] .meter-row .meter-track{height:6px;margin-top:0}
+html[data-theme] .meter-fill{min-width:6px;background:var(--seg-color,var(--data-purple))}
+html[data-theme] .bd-row .bd-item-name{display:flex;align-items:center;gap:var(--space-md);padding-right:var(--space-md)}
+html[data-theme] .bd-row .bd-item-name .note-count{margin-left:0}
+html[data-theme] .bd-row:has(.bd-edit-input){height:auto;min-height:32px}
+html[data-theme] .bd-row .bd-edit-input{flex:0 0 112px;width:112px}
+html[data-theme] .bd-edit-input input{font-family:var(--font-mono);text-align:right;letter-spacing:var(--type-value-medium-ls)}
+html[data-theme] .note-count:not(.is-open):not(.is-estimate):not(.is-removed):not(.is-icon):not(:hover){color:var(--text-secondary)}
+html[data-theme] .round-btn.tip-del{color:var(--text-white)}
+html[data-theme] .round-btn.ds-toast-close{color:var(--icon-muted)}
+html[data-theme] .ds-progress-fill{min-width:8px}
+html[data-theme] .btn-pill.tertiary:hover:not(:disabled){background:var(--action-tertiary-hover)}
+html[data-theme] .btn-pill.tertiary:active:not(:disabled){background:var(--action-tertiary-press)}

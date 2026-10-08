@@ -21,12 +21,10 @@ export function FieldGroup({ label, className, children }) {
   );
 }
 
-// Input (DS 71:1093). size: 'medium' (default, 48 high) | 'small' (40) | 'tiny' (32); every size writes 14px Medium.
-// Empty shows the placeholder in text/secondary; Filled (has a value) turns the border border/selected-item; Focus
-// border/focus; Disable fills surface/secondary with text/muted. `icon` = an optional icon before the text (20px at
-// Medium, 12px smaller). The placeholder defaults to " " so an empty field without one still reads as Empty.
-// `ref` (React 19: a plain prop) reaches the <input>.
-// Oct 3 (71:1093): the leading icon is 20px at Medium and Small, 16px at Tiny. iconSize overrides it (the Amount field draws its € at 16, like the Value text beside it).
+// Input field (Okara 918:1064): Medium 48px, Small 36px, Tiny 32px.
+// All sizes use Surface/Mobile. Leading icons are 20px (Medium/Small) or 16px (Tiny).
+// The empty, filled, focus and disabled states follow the semantic text, border and icon roles.
+// React 19 forwards a ref in rest to the native input.
 export function Input({ icon, iconSize, size = 'medium', className, placeholder = ' ', ...rest }) {
   return (
     <span className={['ds-input', size !== 'medium' && size, rest.disabled && 'is-disabled', icon && 'has-icon', className].filter(Boolean).join(' ')}>

@@ -1,5 +1,7 @@
 import { Icon } from './Icon.jsx';
 import { Money } from './Money.jsx';
+import { Input } from './Field.jsx';
+import { euro } from './icons.js';
 
 // Card (DS): white surface, no border, 24px padding. Optional uppercase title and hint.
 export function Card({ title, hint, hintId, className, children, ...rest }) {
@@ -41,8 +43,8 @@ export function ExpenseCard({ name, initial, badgeColor, value, currency, delta,
 }
 
 // Meter (DS): name + amount over a rounded track. state: undefined | 'estimate' | 'removed'. `counter` sits after the name.
-export function Meter({ name, amount, max, currency, color, state, counter, euroSize }) {
-  const pct = Math.max(0, Math.min(1, amount / max));
+export function Meter({ name, amount, max, currency, color, state, counter, euroSize = 16 }) {
+  const pct = Math.max(0, Math.min(1, (max > 0 ? amount / max : 0)));
   return (
     <div className={'meter-row' + (state === 'estimate' ? ' is-estimate' : state === 'removed' ? ' is-removed' : '')}>
       <div className="meter-top">
@@ -57,18 +59,25 @@ export function Meter({ name, amount, max, currency, color, state, counter, euro
 // Breakdown row (DS 124:3667, Default): name (+ counter) and the right-aligned Value.
 // `actions` = the row's Micro Tertiary round button with the Actions icon and its menu (124:3667, Oct 3: every variant).
 // `onAmount` makes the figure the row's Medium Action link (581:19517: link/default).
-export function BreakdownRow({ name, amount, currency, state, counter, euroSize, actions, onAmount, amountLabel }) {
+export function BreakdownRow({ name, amount, currency, state, counter, euroSize, actions, onAmount, amountLabel, editing, editValue, onEditChange, onCommit, onCancel }) {
   const fig = <>{state === 'estimate' ? '≈' : ''}<Money value={amount} currency={currency} iconSize={euroSize} /></>;
   return (
     <div className={'bd-row' + (state === 'estimate' ? ' is-estimate' : state === 'removed' ? ' is-removed' : '')}>
       <span className="bd-item-name">{name}{counter}</span>
-      {onAmount
+      {editing ? <Input size="tiny" className="bd-edit-input" icon={currency === 'EUR' || !currency ? euro : undefined}
+        inputMode="decimal" aria-label={amountLabel || `Amount for ${name}`} value={editValue ?? ''}
+        onChange={(e) => onEditChange?.(e.target.value)} autoFocus
+        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onCommit?.(); } if (e.key === 'Escape') { e.preventDefault(); onCancel?.(); } }} /> : onAmount
         ? <button type="button" className="n bd-amount-link" aria-label={amountLabel} onClick={onAmount}>{fig}</button>
         : <span className="n">{fig}</span>}
       {actions}
     </div>
   );
 }
+
+// Current Figma names; existing call sites keep their compatible exports.
+export const AmountMeter = Meter;
+export const TypeRow = BreakdownRow;
 
 // progress-bar (DS 238:676): 8px surface/secondary track, a green gradient fill. `value` 0..1.
 export function ProgressBar({ value, className, ...rest }) {

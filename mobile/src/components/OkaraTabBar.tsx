@@ -40,7 +40,7 @@ export function OkaraTabBar({ state, navigation }: BottomTabBarProps) {
           return (
             <Pressable key={route.key} onPress={press} style={s.slot} accessibilityRole="tab" accessibilityState={{ selected }} accessibilityLabel={meta.label} hitSlop={4}>
               <Icon name={meta.icon} size={24} fill={selected ? C.surfaceAccent : C.textPrimary} />
-              {selected && <Animated.View entering={FadeIn.duration(150).delay(80)}><T v="LabelDefaultSemiBold" c={C.textAccent}>{meta.label}</T></Animated.View>}
+              {selected && <Animated.View entering={FadeIn.duration(150).delay(80)}><T v="LabelSmall" c={C.textAccent}>{meta.label}</T></Animated.View>}
             </Pressable>
           );
         })}

@@ -8,7 +8,7 @@ import { useMobile } from './useMobile.js';
 const cx = (...c) => c.filter(Boolean).join(' ');
 
 // logo_ongatu (DS 277:670). Variant Full (Horizontal: symbol + ONGATU, 482x147.4), Vertical (below) or Symbol (147.4x147.4). Drawn in the raw
-// brand colours the component uses (brand/indigo #4f46e5, brand/mint #13d075; no Color variable is bound).
+// logo/indigo and logo/mint color roles, including their Dark mode values.
 // `height` sets the size; the width follows.
 const SYMBOL = [
   ['M147.38 56.603L140.83 50.0504L123.76 67.1273L80.23 23.5796L97.25 6.55267L90.7 0L73.68 17.0269L66.85 10.1941L60.3 16.7468L67.13 23.5796L23.6 67.1273L16.77 60.2945L10.22 66.8472L17.05 73.68L0 90.7469L6.55 97.2996L23.62 80.2227L67.15 123.77L50.08 140.847L56.63 147.4L73.7 130.323L80.58 137.206L87.13 130.653L80.25 123.77L123.78 80.2227L130.61 87.0554L137.16 80.5028L130.33 73.67L147.4 56.593L147.38 56.603ZM73.69 117.218L30.16 73.67L73.69 30.1223L117.22 73.67L73.69 117.218Z', 'indigo'],

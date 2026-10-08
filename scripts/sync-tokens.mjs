@@ -77,7 +77,8 @@ export const PINNED_MOBILE = [
   '.ds-app-header',                              // Product header 728:1445, App header 285:600
   '.ds-avatar',                                  // avatar 221:1044
   '.btn-pill', '.round-btn', '.ds-action-link',  // Button 41:119, Round button 52:629, Action link 607:1368 (Oct 3)
-  '.ds-input.small', '.ds-input.tiny',           // Small and Tiny inputs stay Mobile (review rows 229:18717 draw Input Tn at 32 / Label/Tiny)
+  '.ds-input', '.ds-input.small', '.ds-input.tiny', // Input field 918:1064 explicitly uses Mobile in every size
+  '.bd-row', '.ds-menu-counter',                 // type-row 907:1761 and menu-item-counter 936:953
   '.ds-side-menu', '.ds-steps', '.ds-list-sel', '.meter-row', // Oct 4 audit: Side menu, Step progress, list-selector, Meter render Mobile in the Ongatu frames; Input does not
 ];
 const rootCss = css.slice(0, css.indexOf('/* @tokens-mobile:start */'));

@@ -94,9 +94,9 @@ test('components pinned to the Mobile mode redeclare every Mobile Surface value 
   assert.ok(block.length > 100, 'the @tokens-pinned block is missing: run node scripts/sync-tokens.mjs');
   for (const sel of ['.seg-tabs', '.year-add-pill', '.year-tabs', '.year-btn', '.ds-dd', '.ds-dd-menu', '.ds-dd-item',
     '.ds-notif', '.ds-notif-panel', '.ds-notif-page', '.ds-notif-item', '.ds-app-header', '.ds-avatar',
-    '.ds-side-menu', '.ds-steps', '.ds-list-sel', '.meter-row']) assert.ok(block.includes(sel), `${sel} is not pinned to Mobile`);
-  // Oct 4 audit (D1): the Ongatu frames render Input with the page's mode, so Input is not pinned.
-  assert.ok(!/[\s,]\.ds-input[\s,{]/.test(block), '.ds-input must follow the page mode');
+    '.ds-side-menu', '.ds-steps', '.ds-list-sel', '.meter-row', '.ds-input', '.bd-row', '.ds-menu-counter']) assert.ok(block.includes(sel), `${sel} is not pinned to Mobile`);
+  // Oct 8: rebuilt Input field 918:1064 explicitly binds Surface/Mobile, including Medium.
+  assert.ok(/[\s,]\.ds-input[\s,{]/.test(block), '.ds-input must use the new component mode');
   const pinned = {};
   for (const m of block.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) pinned[m[1]] = m[2].trim();
   for (const [name, v] of Object.entries(figma.Surface)) assert.equal(pinned[cssName('Surface', name)], v.Mobile + 'px', `${name} not pinned to its Mobile value`);

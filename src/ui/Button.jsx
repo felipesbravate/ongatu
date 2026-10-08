@@ -36,8 +36,8 @@ export function RoundButton({ icon, size = 'medium', iconSize, variant, active, 
   );
 }
 
-// Action link (DS 607:1368, Oct 2): no padding, gap space/tn, link/default. size: small (default, Label/Tiny) |
-// medium (Label/Large 18) | tiny (Label/Micro). `icon` leads, `trailing` follows; both 12px (icon-size/sm).
+// Action link (DS 920:1492, Oct 8): no padding, gap space/tn, link/default. size: small (default, Label/Tiny) |
+// medium (Label/Small 16) | tiny (Label/Micro). `icon` leads, `trailing` follows; both 12px (icon-size/sm).
 // With `href` it is a link (<a>), otherwise a button.
 export function ActionLink({ icon, trailing, size, iconSize, className, children, type = 'button', href, ...rest }) {
   const cls = cx('ds-action-link', size && size !== 'small' && size, className);

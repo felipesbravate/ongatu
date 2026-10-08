@@ -12,7 +12,7 @@ export default function Profile() {
     <View style={{ flex: 1, paddingTop: insets.top + 48, paddingHorizontal: space.md, gap: space.lg }}>
       <T v="DisplayTitle" accessibilityRole="header">Profile</T>
       <View style={{ backgroundColor: C.surfacePrimary, borderRadius: radius.md, padding: space.md, gap: space.xs }}>
-        <T v="LabelDefaultMedium" c={C.textSecondary}>SIGNED IN AS</T>
+        <T v="LabelSmall" c={C.textSecondary}>SIGNED IN AS</T>
         <T v="BodyLargeMedium">{me?.email ?? '…'}</T>
       </View>
       <Pressable onPress={signOut} accessibilityRole="button" style={({ pressed }) => ({ height: 48, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center', backgroundColor: pressed ? C.actionSecondaryPress : C.surfaceSecondary })}>

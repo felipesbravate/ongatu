@@ -8,8 +8,10 @@ import {
   ActionLink, BreakdownRow, Button, Card, Divider, Dropdown, EntriesTooltip, EntryCounter, ExpenseCard, Field, FieldGroup,
   KpiCard, Label, Meter, MonthSelector, PanelHeader, RoundButton, Segments, Toast, TooltipEntryItem, YearAddButton, YearTab,
   Avatar, MenuList, Notification, NotificationItem, ProgressBar, UserMenu, UserNav, Modal, Illustration, illustrations,
-  Logo, Toggle, Checkbox, AppHeader, Input, SideMenu,
+  Logo, Toggle, Checkbox, AppHeader, Input, SideMenu, MenuItemCounter,
 } from '../index.js';
+import * as iconLibrary from '../icons.js';
+import { Icon } from '../Icon.jsx';
 import { actions, arrowStraightDown, arrowStraightUp, bell, edit, lock, minus, plus, reload, signOut, upload, user, x } from '../icons.js';
 
 const TOP = [{ value: 'Income', label: 'Income' }, { value: 'Investments', label: 'Savings/Investments' }, { value: 'Expenses', label: 'Expenses' }];
@@ -25,7 +27,34 @@ const Contain = ({ height, width, children }) => <div style={{ position: 'relati
 
 function Controlled({ initial, children }) { const [v, setV] = useState(initial); return children(v, setV); }
 
+function UpdatedControls() {
+  const [amount, setAmount] = useState(49.9);
+  const [draft, setDraft] = useState('49.90');
+  const [editing, setEditing] = useState(false);
+  const [category, setCategory] = useState('');
+  const commit = () => { const n = Number(draft.replace(',', '.')); if (draft.trim() && Number.isFinite(n)) { setAmount(n); setEditing(false); } };
+  return <Card title="Updated controls">
+    <div style={{ display: 'grid', gap: 16 }}>
+      <Logo variant="full" height={40} />
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
+        {['medium','small','tiny','micro'].map(size => <Button key={size} size={size} icon={plus}>{size}</Button>)}
+      </div>
+      <Field label="Category" htmlFor="audit-category-trigger"><Dropdown id="audit-category" size="sm" value={category} onChange={setCategory} icon={plus} options={[{value:'services',label:'Services',icon:plus},{value:'other',label:'Other',icon:edit}]} /></Field>
+      <Input size="small" icon={lock} placeholder="Small input" aria-label="Small input" />
+      <Input size="tiny" icon={lock} disabled placeholder="Disabled input" aria-label="Disabled input" />
+      <div style={{ display:'flex',gap:8 }}><MenuItemCounter>10</MenuItemCounter><MenuItemCounter unread>3</MenuItemCounter></div>
+      <Meter name="Services" amount={amount} max={100} currency="EUR" />
+      <BreakdownRow name="Medium" amount={amount} currency="EUR" counter={<EntryCounter>2</EntryCounter>}
+        onAmount={() => { setDraft(String(amount)); setEditing(true); }} amountLabel="Edit Medium amount" editing={editing} editValue={draft}
+        onEditChange={setDraft} onCommit={commit} onCancel={() => setEditing(false)}
+        actions={editing ? <RoundButton size="micro" icon={x} label="Cancel editing" onClick={() => setEditing(false)} /> : null} />
+      {editing && <ActionLink onClick={commit}>Save amount</ActionLink>}
+    </div>
+  </Card>;
+}
+
 export const CASES = [
+  { id: 'okara-october-update', render: () => <UpdatedControls /> },
   { id: 'segments-motion', render: () => <Controlled initial="income">{(v, s) => <Segments aria-label="Tracker category" options={[{ value: 'income', label: 'Incomes' }, { value: 'save', label: 'Save/Invest' }, { value: 'expense', label: 'Expenses' }]} value={v} onChange={s} />}</Controlled> },
   { id: 'sub-segments-motion', render: () => <Controlled initial="1">{(v, s) => <Segments sub aria-label="Sub-category" options={Array.from({ length: 6 }, (_, i) => ({ value: String(i + 1), label: 'Label' }))} value={v} onChange={s} />}</Controlled> },
   // ---- parity with the legacy dashboard ----
@@ -119,7 +148,7 @@ export const CASES = [
       <Button size="small">Small</Button><Button size="small" variant="secondary">Small</Button><Button size="small" variant="tertiary">Small</Button>
       <Button size="tiny">Tiny</Button><Button size="tiny" variant="secondary">Tiny</Button><Button disabled>Disabled</Button>
     </div>) },
-  { id: 'round-buttons', render: () => (
+  { id: 'round-buttons-basic', render: () => (
     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
       <RoundButton icon={x} label="Close" /><RoundButton icon={x} size="micro" label="Remove" />
     </div>) },
@@ -214,6 +243,13 @@ export const CASES = [
           description="All the entries and data of this year will be permanently deleted."
           secondary={{ label: 'Cancel', onClick: () => s(false) }} primary={{ label: 'Delete', destructive: true, onClick: () => s(false) }} />
       </div>)}</Controlled>) },
+  { id: 'icons', render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, width: 'min(100%, 960px)', color: 'var(--text-secondary)' }}>
+      {Object.values(iconLibrary).map(icon => <div key={icon.name} style={{ display: 'grid', gap: 8 }}>
+        <span style={{ fontSize: 11 }}>{icon.name}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>{Object.keys(icon.sizes).map(size => <Icon key={size} icon={icon} size={Number(size)} />)}</div>
+      </div>)}
+    </div>) },
   // Okara Illustrations: every drawing of the Figma Illustrations file, 64 wide, with its code name.
   { id: 'illustrations', render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 96px)', gap: 16 }}>

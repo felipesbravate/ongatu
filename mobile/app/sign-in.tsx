@@ -38,7 +38,7 @@ export default function SignIn() {
           <T v="HeadingXL" style={{ textAlign: 'center' }}>{step === 'email' ? 'Sign in or create an account' : 'Check your email'}</T>
           {step === 'code' && <T v="BodyMediumRegular" c={C.textSecondary} style={{ textAlign: 'center' }}>We sent a 6-digit code to {email}.</T>}
           <View style={{ gap: space.xs }}>
-            <T v="LabelDefaultMedium" c={C.textSecondary}>{step === 'email' ? 'ENTER YOUR EMAIL' : 'ENTER THE CODE'}</T>
+            <T v="LabelSmall" c={C.textSecondary}>{step === 'email' ? 'ENTER YOUR EMAIL' : 'ENTER THE CODE'}</T>
             <TextInput
               key={step} autoFocus style={s.input} placeholder={step === 'email' ? 'you@example.com' : '123456'} placeholderTextColor={C.textMuted}
               value={step === 'email' ? email : code} onChangeText={step === 'email' ? setEmail : setCode}

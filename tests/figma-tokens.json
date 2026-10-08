@@ -1,230 +1,192 @@
 {
-  "_note": "Snapshot of the Okara Design System Variables (Figma file 7glNMA9d7iVJFf2CvyrzAb), read Sept 25, 2026 (Typography collection added the same day: DM Sans + Martian Mono). Values are hex or numbers; {\"alias\": name} points at a variable in Primitives. To update: re-read Figma, write this file, run `node scripts/sync-tokens.mjs` (rewrites the token block in src/ui/okara.css), then `npm test`. Sept 25: every SemiBold text style set to Medium (500) except Display/Title (page titles), which stays SemiBold. Sept 26: + neutral/stone-50, border/secondary (Divider, dropdown list, notification panel, user card), border/tertiary (divider in the Entries tooltip). Later Sept 26: + neutral/stone-500; text/muted and action/disable now stone-500; + border/selected-item (brand/indigo-light: the border of a filled Input or Dropdown). Sept 28: + space/nav-padding-y 6, space/control-gap 10, space/tags-indent 56, radius/card 20, data/green-light, neutral/surface-transparent, neutral/off-white-transparent, surface/primary-transparent, surface/body-transparent (native-app cleanup). Later Sept 28: text styles re-read (Headings 600 and tracking 0, Heading/Large 20/24, Value/Large 16). Sept 29: Spacing and Radius moved into a new Surface collection with two modes, Mobile and Desktop (Desktop smaller); text styles now bind their size and line height to Surface size/* and lh/* variables. Surface entries are {Mobile, Desktop}; text styles carry sizeVar/lhVar (lhVar null = auto) and the Mobile values. Oct 2: + border/warning, border/danger (raw hex), Surface icon-size/*; Headings L/M/S now Medium -2%; Body/Small/SemiBold 600; Label/Default/* and Label/Tiny/* replaced by Label/Large|Medium|Small|Tiny|Micro|Nano (Large and Nano have a fixed size: sizeVar null). Oct 3: + brand/indigo-bright, surface/mobile-nav (surface/primary at 88%, written as #ffffffe0); Heading/XL and Label/Large now Medium (500); + Display/Title-mobile (size/value-xl, lh/display-title). Oct 3 (late): action/secondary-press -> stone-300, action/secondary-active -> stone-100, new action/tertiary-hover/press/active. Oct 4: + Surface icon-size/2xl (32 Mobile, 24 Desktop; Euro Size=32px).",
+  "_note": "Okara Design System snapshot, 8 October 2026. File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.json; inventory and source values are in tests/figma-audit.json. Legacy text-style names remain for compatible call sites. Figma Medium (500) maps to 400 by the existing app convention. Regenerate with scripts/sync-tokens.mjs, sync-theme.mjs and sync-tokens-native.mjs.",
   "Primitives": {
-    "neutral/page": "#eef5f4",
-    "neutral/surface": "#ffffff",
-    "neutral/surface-secondary": "#efeee5",
-    "neutral/ink": "#16150f",
-    "neutral/ink-medium": "#747167",
-    "neutral/ink-muted": "#928e80",
-    "neutral/border": "#16150f",
-    "brand/indigo": "#4f46e5",
-    "brand/indigo-800": "#1f17a7",
-    "brand/indigo-900": "#080095",
-    "brand/indigo-950": "#06006c",
-    "brand/indigo-mid": "#756dff",
-    "brand/indigo-light": "#908af6",
-    "brand/indigo-pale": "#f5f5ff",
-    "brand/mint": "#13d075",
-    "brand/mint-deep": "#00904b",
-    "data/green": "#17a768",
-    "data/lime": "#cdd936",
-    "data/red-orange": "#e2583a",
-    "data/red": "#a12a2f",
-    "data/ochre": "#a89412",
-    "brand/mint-light": "#7be9b4",
-    "data/purple-vivid": "#4b0fa5",
-    "data/cyan": "#1dc0bb",
-    "data/blue": "#2285bb",
-    "data/pink": "#e3029f",
-    "status/green-deep": "#0a6d42",
-    "neutral/charcoal-800": "#32312c",
-    "neutral/charcoal-900": "#1f1e19",
-    "neutral/stone-50": "#efeee5",
-    "neutral/stone-100": "#e4e3da",
-    "status/red-deep": "#bd0007",
-    "neutral/stone-150": "#deddd4",
-    "neutral/stone-300": "#cbcac5",
-    "neutral/stone-325": "#cac9c0",
-    "neutral/stone-350": "#acaca1",
-    "status/ochre-deep": "#7a5703",
-    "data/orange": "#ffba3a",
-    "status/green-pale": "#e3f4ec",
-    "status/red-pale": "#ffc4c6",
-    "neutral/stone-400": "#aaa698",
-    "neutral/stone-500": "#969284",
-    "status/yellow-pale": "#ffe9b7",
-    "neutral/off-white": "#f9f9f7",
-    "data/green-light": "#76c8a4",
+    "neutral/page": "#eef5f4ff",
+    "neutral/surface": "#ffffffff",
+    "neutral/surface-secondary": "#efeee5ff",
+    "neutral/ink": "#16150fff",
+    "neutral/ink-medium": "#747167ff",
+    "neutral/ink-muted": "#928e80ff",
+    "neutral/border": "#16150fff",
+    "brand/indigo": "#4f46e5ff",
+    "brand/mint": "#13d075ff",
+    "brand/mint-deep": "#00904bff",
+    "data/green": "#17a768ff",
+    "data/red-orange": "#e2583aff",
+    "data/red": "#a12a2fff",
+    "data/ochre": "#a89412ff",
+    "neutral/stone-400": "#aaa698ff",
+    "neutral/stone-300": "#cbcac5ff",
+    "brand/mint-light": "#7be9b4ff",
+    "data/purple-vivid": "#4b0fa5ff",
+    "data/cyan": "#1dc0bbff",
+    "data/blue": "#2285bbff",
+    "data/pink": "#e3029fff",
+    "status/green-deep": "#0a6d42ff",
+    "neutral/charcoal-800": "#32312cff",
+    "neutral/charcoal-900": "#1f1e19ff",
+    "neutral/stone-100": "#e4e3daff",
+    "neutral/stone-150": "#deddd4ff",
+    "neutral/stone-350": "#acaca1ff",
+    "status/ochre-deep": "#7a5703ff",
+    "brand/indigo-light": "#908af6ff",
+    "data/orange": "#ffba3aff",
+    "status/green-pale": "#e3f4ecff",
+    "status/red-pale": "#fd8a8dff",
+    "status/yellow-pale": "#ffe9b7ff",
+    "brand/indigo-900": "#080095ff",
+    "brand/indigo-800": "#1f17a7ff",
+    "brand/indigo-pale": "#f5f5ffff",
+    "neutral/off-white": "#f9f9f7ff",
+    "neutral/stone-325": "#cac9c0ff",
+    "brand/indigo-mid": "#756dffff",
+    "status/red-deep": "#bd0007ff",
+    "data/lime": "#cdd936ff",
+    "brand/indigo-950": "#06006cff",
+    "neutral/stone-50": "#efeee5ff",
+    "neutral/stone-500": "#969284ff",
+    "data/green-light": "#76c8a4ff",
     "neutral/surface-transparent": "#ffffff00",
     "neutral/off-white-transparent": "#f9f9f700",
-    "brand/indigo-bright": "#c2bcff"
+    "brand/indigo-bright": "#c2bcffff",
+    "dark/body": "#161713ff",
+    "dark/primary": "#1f201aff",
+    "dark/secondary": "#2a2b24ff",
+    "dark/tertiary": "#35362eff",
+    "dark/text": "#f4f3eaff",
+    "dark/secondaryText": "#c6c4b8ff",
+    "dark/muted": "#a6a395ff",
+    "dark/border": "#55564bff",
+    "dark/hoverBorder": "#7d7e70ff",
+    "dark/subtleBorder": "#3c3d34ff",
+    "dark/primaryAction": "#f4f3eaff",
+    "dark/primaryHover": "#deddcfff",
+    "dark/primaryPress": "#c8c6b7ff",
+    "dark/disabled": "#77786bff",
+    "dark/accentText": "#c2bcffff",
+    "dark/accentHover": "#d6d1ffff",
+    "dark/accentPress": "#aba2ffff",
+    "dark/accentMuted": "#aaa2deff",
+    "dark/accentSurface": "#292445ff",
+    "dark/accentDeep": "#1f1a38ff",
+    "dark/success": "#7de0a9ff",
+    "dark/successSurface": "#18382bff",
+    "dark/danger": "#ff9ea7ff",
+    "dark/dangerSurface": "#43242aff",
+    "dark/warning": "#f3d17cff",
+    "dark/warningSurface": "#3d331cff",
+    "dark/purple": "#b18affff",
+    "dark/blue": "#6cbfefff",
+    "dark/cyan": "#63dbd5ff",
+    "dark/pink": "#ff80cdff",
+    "dark/orange": "#ffca70ff",
+    "dark/lime": "#d3df61ff",
+    "dark/mint": "#42d98fff",
+    "dark/mintSurface": "#204334ff",
+    "dark/redOrange": "#ff9877ff",
+    "dark/inverse": "#16150fff",
+    "dark/primary-transparent": "#1f201a00",
+    "dark/body-transparent": "#13141000",
+    "dark/Color": "#ffffffff",
+    "brand/mint-press": "#12b86bff",
+    "brand/mint-ink": "#007a40ff",
+    "brand/mint-ink-hover": "#006535ff",
+    "brand/mint-ink-press": "#004f2aff",
+    "brand/mint-muted": "#568b70ff",
+    "dark/mint-muted": "#729d85ff",
+    "neutral/black": "#000000ff",
+    "status/red-medium": "#d74c51ff",
+    "notification/orange": "#ea6b39ff",
+    "notification/orange-light": "#f48c63ff",
+    "notification/orange-pale": "#f9af92ff"
   },
   "Color": {
-    "surface/primary": {
-      "alias": "neutral/surface"
-    },
-    "surface/secondary": {
-      "alias": "neutral/surface-secondary"
-    },
-    "text/primary": {
-      "alias": "neutral/ink"
-    },
-    "text/secondary": {
-      "alias": "neutral/ink-medium"
-    },
-    "text/muted": {
-      "alias": "neutral/stone-500"
-    },
-    "border/default": {
-      "alias": "neutral/stone-300"
-    },
-    "border/secondary": {
-      "alias": "neutral/stone-50"
-    },
-    "action/primary": {
-      "alias": "neutral/ink"
-    },
-    "action/primary-hover": {
-      "alias": "neutral/charcoal-800"
-    },
-    "action/primary-press": {
-      "alias": "neutral/charcoal-900"
-    },
-    "action/secondary": {
-      "alias": "neutral/surface"
-    },
-    "action/secondary-hover": {
-      "alias": "neutral/stone-100"
-    },
-    "action/secondary-press": {
-      "alias": "neutral/stone-300"
-    },
-    "action/secondary-active": {
-      "alias": "neutral/stone-100"
-    },
-    "action/tertiary-hover": {
-      "alias": "neutral/stone-50"
-    },
-    "action/tertiary-press": {
-      "alias": "neutral/stone-300"
-    },
-    "action/tertiary-active": {
-      "alias": "neutral/stone-100"
-    },
-    "action/disable": {
-      "alias": "neutral/stone-500"
-    },
-    "action/accent": {
-      "alias": "brand/indigo"
-    },
-    "action/accent-hover": {
-      "alias": "brand/indigo-light"
-    },
-    "action/accent-press": {
-      "alias": "brand/indigo-800"
-    },
-    "action/accent-disable": {
-      "alias": "brand/indigo-mid"
-    },
-    "action/destructive": {
-      "alias": "status/red-deep"
-    },
-    "link/default": {
-      "alias": "brand/indigo"
-    },
-    "link/hover": {
-      "alias": "brand/indigo-900"
-    },
-    "link/press": {
-      "alias": "brand/indigo-800"
-    },
-    "link/disable": {
-      "alias": "brand/indigo-mid"
-    },
-    "data/purple": {
-      "alias": "data/purple-vivid"
-    },
-    "data/blue": {
-      "alias": "data/blue"
-    },
-    "data/light-blue": {
-      "alias": "data/cyan"
-    },
-    "data/pink": {
-      "alias": "data/pink"
-    },
-    "data/lime": {
-      "alias": "data/lime"
-    },
-    "border/hover": {
-      "alias": "neutral/stone-350"
-    },
-    "border/tertiary": {
-      "alias": "neutral/charcoal-800"
-    },
-    "border/focus": {
-      "alias": "brand/indigo"
-    },
-    "border/selected-item": {
-      "alias": "brand/indigo-light"
-    },
-    "border/dark": {
-      "alias": "neutral/ink"
-    },
-    "border/destructive": {
-      "alias": "status/red-deep"
-    },
-    "text/white": {
-      "alias": "neutral/surface"
-    },
-    "text/accent": {
-      "alias": "brand/indigo"
-    },
-    "text/accent-light": {
-      "alias": "brand/indigo-mid"
-    },
-    "surface/tertiary": {
-      "alias": "neutral/ink-medium"
-    },
-    "surface/body": {
-      "alias": "neutral/off-white"
-    },
-    "surface/accent": {
-      "alias": "brand/indigo"
-    },
-    "surface/accent-dark": {
-      "alias": "brand/indigo-900"
-    },
-    "surface/accent-deep": {
-      "alias": "brand/indigo-950"
-    },
-    "surface/accent-light": {
-      "alias": "brand/indigo-pale"
-    },
-    "surface/dark": {
-      "alias": "neutral/ink"
-    },
-    "surface/success": {
-      "alias": "status/green-pale"
-    },
-    "surface/fail": {
-      "alias": "status/red-pale"
-    },
-    "surface/warning": {
-      "alias": "status/yellow-pale"
-    },
-    "data/orange": {
-      "alias": "data/orange"
-    },
-    "status/success": {
-      "alias": "status/green-deep"
-    },
-    "status/fail": {
-      "alias": "data/red"
-    },
-    "status/warning": {
-      "alias": "status/ochre-deep"
-    },
-    "surface/primary-transparent": {
-      "alias": "neutral/surface-transparent"
-    },
-    "surface/body-transparent": {
-      "alias": "neutral/off-white-transparent"
-    },
-    "border/warning": "#debba0",
-    "border/danger": "#e58d90",
-    "surface/mobile-nav": "#ffffffe0"
+    "surface/primary": "#ffffffff",
+    "surface/secondary": "#efeee5ff",
+    "text/primary": "#16150fff",
+    "text/secondary": "#747167ff",
+    "text/muted": "#969284ff",
+    "border/default": "#cbcac5ff",
+    "action/primary": "#16150fff",
+    "action/secondary": "#ffffffff",
+    "surface/accent": "#4f46e5ff",
+    "data/lime": "#cdd936ff",
+    "data/purple": "#4b0fa5ff",
+    "data/light-blue": "#1dc0bbff",
+    "data/blue": "#2285bbff",
+    "data/pink": "#e3029fff",
+    "status/success": "#0a6d42ff",
+    "status/fail": "#a12a2fff",
+    "action/primary-hover": "#32312cff",
+    "action/primary-press": "#1f1e19ff",
+    "action/secondary-hover": "#e4e3daff",
+    "action/secondary-press": "#cbcac5ff",
+    "border/hover": "#acaca1ff",
+    "border/focus": "#4f46e5ff",
+    "text/white": "#ffffffff",
+    "surface/tertiary": "#747167ff",
+    "action/accent": "#4f46e5ff",
+    "status/warning": "#7a5703ff",
+    "action/accent-hover": "#908af6ff",
+    "text/accent": "#4f46e5ff",
+    "border/dark": "#16150fff",
+    "surface/dark": "#16150fff",
+    "data/orange": "#ffba3aff",
+    "surface/success": "#e3f4ecff",
+    "surface/fail": "#fd8a8dff",
+    "surface/warning": "#ffe9b7ff",
+    "action/disable": "#969284ff",
+    "link/default": "#4f46e5ff",
+    "link/hover": "#080095ff",
+    "link/press": "#1f17a7ff",
+    "action/destructive": "#bd0007ff",
+    "surface/accent-light": "#f5f5ffff",
+    "surface/body": "#f9f9f7ff",
+    "action/secondary-active": "#e4e3daff",
+    "action/accent-disable": "#756dffff",
+    "text/accent-light": "#756dffff",
+    "link/disable": "#756dffff",
+    "action/accent-press": "#1f17a7ff",
+    "surface/accent-dark": "#080095ff",
+    "surface/accent-deep": "#06006cff",
+    "border/destructive": "#bd0007ff",
+    "border/secondary": "#efeee5ff",
+    "border/tertiary": "#32312cff",
+    "border/selected-item": "#908af6ff",
+    "surface/primary-transparent": "#ffffff00",
+    "surface/body-transparent": "#f9f9f700",
+    "border/warning": "#debba0ff",
+    "border/danger": "#e58d90ff",
+    "surface/mobile-nav-bg": "#ffffffff",
+    "action/tertiary-hover": "#efeee5ff",
+    "action/tertiary-press": "#cbcac5ff",
+    "action/tertiary-active": "#e4e3daff",
+    "text/on-primary": "#ffffffff",
+    "icon/primary": "#16150fff",
+    "surface/track": "#cac9c0ff",
+    "brand/indigo": "#4f46e5ff",
+    "brand/mint": "#13d075ff",
+    "brand/mint-light": "#7be9b4ff",
+    "status/green-pale": "#e3f4ecff",
+    "status/green-deep": "#0a6d42ff",
+    "status/red-deep": "#bd0007ff",
+    "data/red-orange": "#e2583aff",
+    "effect/shadow-86-82-59-160": "#16150f29",
+    "effect/shadow-86-82-59-80": "#16150f14",
+    "surface/page": "#eef5f4ff",
+    "surface/cover": "#f7f6f1ff",
+    "icon/muted": "#969284ff",
+    "badge/counter-pressed-background": "#1f1e19ff",
+    "badge/counter-pressed-text": "#ffffffff",
+    "badge/counter-pressed-border": "#16150fff",
+    "surface/mobile-nav-buttom-bg": "#f5f5ffff",
+    "surface/mobile-nav-buttom-icon": "#4f46e5ff",
+    "logo/indigo": "#4f46e5ff",
+    "logo/mint": "#13d075ff",
+    "icon/secondary": "#747167ff",
+    "icon/light": "#ffffffff",
+    "text/notification": "#ea6b39ff",
+    "border/notification": "#f48c63ff"
   },
   "Opacity": {
     "opacity/disabled": 0.4,
@@ -351,10 +313,6 @@
       "Mobile": 8,
       "Desktop": 4
     },
-    "space/sm": {
-      "Mobile": 12,
-      "Desktop": 8
-    },
     "space/md": {
       "Mobile": 16,
       "Desktop": 12
@@ -370,6 +328,10 @@
     "space/2xl": {
       "Mobile": 48,
       "Desktop": 40
+    },
+    "space/sm": {
+      "Mobile": 12,
+      "Desktop": 8
     },
     "space/3xl": {
       "Mobile": 80,
@@ -387,10 +349,6 @@
       "Mobile": 56,
       "Desktop": 48
     },
-    "radius/ty": {
-      "Mobile": 4,
-      "Desktop": 4
-    },
     "radius/sm": {
       "Mobile": 8,
       "Desktop": 8
@@ -407,13 +365,13 @@
       "Mobile": 999,
       "Desktop": 999
     },
+    "radius/ty": {
+      "Mobile": 4,
+      "Desktop": 4
+    },
     "radius/card": {
       "Mobile": 20,
       "Desktop": 20
-    },
-    "icon-size/2xl": {
-      "Mobile": 32,
-      "Desktop": 24
     },
     "icon-size/xl": {
       "Mobile": 24,
@@ -434,233 +392,189 @@
     "icon-size/tn": {
       "Mobile": 10,
       "Desktop": 10
+    },
+    "icon-size/2xl": {
+      "Mobile": 32,
+      "Desktop": 24
+    },
+    "size/label-large": {
+      "Mobile": 18,
+      "Desktop": 16
+    },
+    "lh/label-large": {
+      "Mobile": 20,
+      "Desktop": 20
     }
   },
   "TextStyles": {
     "Display/Title": {
-      "family": "sans",
-      "weight": 600,
-      "sizeVar": "size/display-title",
-      "lhVar": "lh/display-title",
-      "letterSpacing": 0,
       "size": 40,
-      "lineHeight": 48
+      "weight": 600,
+      "letterSpacing": 0,
+      "sizeVar": "size/display-title",
+      "lhVar": "lh/display-title"
     },
     "Display/Title-mobile": {
-      "family": "sans",
-      "weight": 600,
-      "sizeVar": "size/value-xl",
-      "lhVar": "lh/display-title",
-      "letterSpacing": 0,
       "size": 32,
-      "lineHeight": 48
+      "weight": 600,
+      "letterSpacing": 0,
+      "sizeVar": "size/value-xl",
+      "lhVar": "lh/display-title"
     },
     "Value/XL": {
-      "family": "mono",
-      "weight": 500,
-      "sizeVar": "size/value-xl",
-      "lhVar": null,
-      "letterSpacing": 0,
       "size": 32,
-      "lineHeight": null
+      "weight": 500,
+      "letterSpacing": 0,
+      "sizeVar": "size/value-xl"
     },
     "Value/Large": {
-      "family": "mono",
-      "weight": 500,
-      "sizeVar": "size/value-lg",
-      "lhVar": null,
-      "letterSpacing": 0,
       "size": 16,
-      "lineHeight": null
+      "weight": 500,
+      "letterSpacing": 0,
+      "sizeVar": "size/value-lg"
     },
     "Value/Medium": {
-      "family": "mono",
-      "weight": 500,
-      "sizeVar": "size/value-md",
-      "lhVar": null,
-      "letterSpacing": -4,
       "size": 14,
-      "lineHeight": null
+      "weight": 500,
+      "letterSpacing": -4,
+      "sizeVar": "size/value-md"
     },
     "Value/Small": {
-      "family": "mono",
-      "weight": 500,
-      "sizeVar": "size/value-sm",
-      "lhVar": null,
-      "letterSpacing": -4,
       "size": 12,
-      "lineHeight": null
+      "weight": 500,
+      "letterSpacing": -4,
+      "sizeVar": "size/value-sm"
     },
     "Heading/XL": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/heading-xl",
-      "lhVar": "lh/heading-xl",
-      "letterSpacing": 0,
       "size": 24,
-      "lineHeight": 24
+      "weight": 500,
+      "letterSpacing": 0,
+      "sizeVar": "size/heading-xl",
+      "lhVar": "lh/heading-xl"
     },
     "Heading/Large": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/heading-lg",
-      "lhVar": "lh/heading-lg",
-      "letterSpacing": -2,
       "size": 20,
-      "lineHeight": 24
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/heading-lg",
+      "lhVar": "lh/heading-lg"
     },
     "Heading/Medium": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/heading-md",
-      "lhVar": "lh/heading-md",
-      "letterSpacing": -2,
       "size": 16,
-      "lineHeight": 16
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/heading-md",
+      "lhVar": "lh/heading-md"
     },
     "Heading/Small": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/heading-sm",
-      "lhVar": "lh/heading-sm",
-      "letterSpacing": -2,
       "size": 14,
-      "lineHeight": 14
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/heading-sm",
+      "lhVar": "lh/heading-sm"
     },
     "Body/Large/Medium": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-medium",
-      "letterSpacing": -2,
       "size": 16,
-      "lineHeight": 20
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-lg",
+      "lhVar": "lh/body-lg-medium"
     },
     "Body/Large/SemiBold": {
-      "family": "sans",
-      "weight": 600,
-      "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-semibold",
-      "letterSpacing": -2,
       "size": 16,
-      "lineHeight": 20
+      "weight": 600,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-lg",
+      "lhVar": "lh/body-lg-semibold"
     },
     "Body/Medium/Regular": {
-      "family": "sans",
-      "weight": 400,
-      "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md",
-      "letterSpacing": -2,
       "size": 14,
-      "lineHeight": 16
+      "weight": 400,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-md",
+      "lhVar": "lh/body-md"
     },
     "Body/Medium/Medium": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md",
-      "letterSpacing": -2,
       "size": 14,
-      "lineHeight": 16
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-md",
+      "lhVar": "lh/body-md"
     },
     "Body/Medium/SemiBold": {
-      "family": "sans",
-      "weight": 600,
-      "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md",
-      "letterSpacing": -2,
       "size": 14,
-      "lineHeight": 16
+      "weight": 600,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-md",
+      "lhVar": "lh/body-md"
     },
     "Body/Small/Regular": {
-      "family": "sans",
-      "weight": 400,
-      "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-sm",
-      "letterSpacing": -2,
       "size": 12,
-      "lineHeight": 14
+      "weight": 400,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-sm",
+      "lhVar": "lh/body-sm"
     },
     "Body/Small/Medium": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-sm",
-      "letterSpacing": -2,
       "size": 12,
-      "lineHeight": 14
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-sm",
+      "lhVar": "lh/body-sm"
     },
     "Body/Small/SemiBold": {
-      "family": "sans",
-      "weight": 600,
-      "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-sm",
-      "letterSpacing": -2,
       "size": 12,
-      "lineHeight": 14
+      "weight": 600,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-sm",
+      "lhVar": "lh/body-sm"
     },
     "Badge/SemiBolt": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/badge",
-      "lhVar": "lh/badge",
-      "letterSpacing": -2,
       "size": 8,
-      "lineHeight": 8
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/badge",
+      "lhVar": "lh/badge"
     },
     "Label/Large": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": null,
-      "lhVar": "lh/body-lg-semibold",
-      "letterSpacing": -2,
       "size": 18,
-      "lineHeight": 20
+      "weight": 500,
+      "letterSpacing": -2,
+      "lhVar": "lh/body-lg-semibold"
     },
     "Label/Medium": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-lg",
-      "lhVar": "lh/heading-lg",
-      "letterSpacing": -2,
       "size": 16,
-      "lineHeight": 24
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-lg",
+      "lhVar": "lh/heading-lg"
     },
     "Label/Small": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-medium",
-      "letterSpacing": -2,
       "size": 16,
-      "lineHeight": 20
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-lg",
+      "lhVar": "lh/body-lg-medium"
     },
     "Label/Tiny": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md",
-      "letterSpacing": -2,
       "size": 14,
-      "lineHeight": 16
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-md",
+      "lhVar": "lh/body-md"
     },
     "Label/Micro": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-md",
-      "letterSpacing": -2,
       "size": 12,
-      "lineHeight": 16
+      "weight": 500,
+      "letterSpacing": -2,
+      "sizeVar": "size/body-sm",
+      "lhVar": "lh/body-md"
     },
     "Label/Nano": {
-      "family": "sans",
-      "weight": 500,
-      "sizeVar": null,
-      "lhVar": "lh/body-sm",
-      "letterSpacing": -2,
       "size": 10,
-      "lineHeight": 14
+      "weight": 500,
+      "letterSpacing": -2,
+      "lhVar": "lh/body-sm"
     }
   }
 }

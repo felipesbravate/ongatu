@@ -53,7 +53,7 @@
     [
       "surface/accent",
       "#4f46e5ff",
-      "#4f46e5ff"
+      "#756dffff"
     ],
     [
       "data/lime",
@@ -172,7 +172,7 @@
     ],
     [
       "surface/fail",
-      "#ffc4c6ff",
+      "#fd8a8dff",
       "#43242aff"
     ],
     [
@@ -203,7 +203,7 @@
     [
       "action/destructive",
       "#bd0007ff",
-      "#bd0007ff"
+      "#d74c51ff"
     ],
     [
       "surface/accent-light",
@@ -381,19 +381,9 @@
       "#161713ff"
     ],
     [
-      "icon/round-control",
-      "#16150fff",
-      "#f4f3eaff"
-    ],
-    [
-      "icon/round-primary",
-      "#f9f9f7ff",
-      "#16150fff"
-    ],
-    [
-      "icon/round-control-override-1",
+      "icon/muted",
       "#969284ff",
-      "#f4f3eaff"
+      "#a6a395ff"
     ],
     [
       "badge/counter-pressed-background",
@@ -436,6 +426,36 @@
         },
         "opacity": 0
       }
+    ],
+    [
+      "logo/indigo",
+      "#4f46e5ff",
+      "#756dffff"
+    ],
+    [
+      "logo/mint",
+      "#13d075ff",
+      "#42d98fff"
+    ],
+    [
+      "icon/secondary",
+      "#747167ff",
+      "#c6c4b8ff"
+    ],
+    [
+      "icon/light",
+      "#ffffffff",
+      "#16150fff"
+    ],
+    [
+      "text/notification",
+      "#ea6b39ff",
+      "#f48c63ff"
+    ],
+    [
+      "border/notification",
+      "#f48c63ff",
+      "#f9af92ff"
     ]
   ],
   "effects": [

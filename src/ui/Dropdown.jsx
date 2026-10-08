@@ -111,9 +111,9 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
               {b.opts.map((o) => {
                 const i = ++k;
                 return (
-                  <div key={o.value} className={'ds-dd-item' + (i === active ? ' is-active' : '')} role="option" aria-selected={o === chosen ? 'true' : 'false'}
+                  <div key={o.value} className={'ds-dd-item' + (i === active ? ' is-active' : '') + (o.icon ? ' has-icon' : '')} role="option" aria-selected={o === chosen ? 'true' : 'false'}
                     onMouseDown={(e) => e.preventDefault()} onClick={() => choose(o)}
-                    onMouseMove={() => { if (i !== active) { byMouse.current = true; setActive(i); } }}>{o.label}</div>
+                    onMouseMove={() => { if (i !== active) { byMouse.current = true; setActive(i); } }}>{o.icon && <Icon icon={o.icon} size={16} />}<span>{o.label}</span></div>
                 );
               })}
             </div>
@@ -139,7 +139,7 @@ export function Dropdown({ id, value, onChange, onChoose, options, placeholder =
         onMouseDown={() => triggerRef.current && triggerRef.current.focus()} onClick={() => (open ? close() : openMenu())} onKeyDown={onKeyDown}>
         {icon && <Icon icon={icon} size={iconSize || (size === 'tiny' ? 'md' : 'lg')} className="ds-dd-lead" />}
         <span className="ds-dd-label">{label}</span>
-        <span style={{ display: 'inline-flex' }}><Icon icon={chevronDown} size={12} /></span>
+        <span className="ds-dd-chevron" style={{ display: 'inline-flex' }}><Icon icon={chevronDown} size={12} /></span>
       </button>
       {menu}
     </div>

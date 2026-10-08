@@ -1,19 +1,10 @@
-import Svg, { Path } from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import { color as C } from '@/theme/tokens';
+import { iconAssets } from './iconAssets';
 
-// Drawings from the Okara Icons page (Figma 85:1268), in the 20px frame coordinates (same data as src/ui/icons.js).
-const D = {
-  home: 'M 10 1.883 L 17 6.939 L 17 16.117 C 17 17.221 16.105 18.117 15 18.117 L 5 18.117 C 3.895 18.117 3 17.221 3 16.117 L 3 6.939 L 10 1.883 Z M 5 7.961 L 5 16.117 L 15 16.117 L 15 7.961 L 10 4.35 L 5 7.961 Z M 8 12.117 L 12 12.117 L 12 16.117 L 11 16.117 L 11 13.117 L 9 13.117 L 9 16.117 L 8 16.117 L 8 12.117 Z',
-  user: 'M 10 16 C 13.314 16 16 13.314 16 10 C 16 6.686 13.314 4 10 4 C 6.686 4 4 6.686 4 10 C 4 13.314 6.686 16 10 16 Z M 10 18 C 14.418 18 18 14.418 18 10 C 18 5.582 14.418 2 10 2 C 5.582 2 2 5.582 2 10 C 2 14.418 5.582 18 10 18 Z M 5.669 15.5 C 6.861 16.44 8.365 17 10 17 C 11.635 17 13.139 16.44 14.331 15.5 C 13.139 14.56 11.635 14 10 14 C 8.365 14 6.861 14.56 5.669 15.5 Z M 4.922 16.182 C 4.89 16.155 4.858 16.129 4.826 16.102 C 4.603 15.913 4.391 15.712 4.19 15.5 C 4.391 15.288 4.603 15.087 4.826 14.898 C 4.858 14.871 4.89 14.845 4.922 14.818 C 6.303 13.682 8.072 13 10 13 C 11.928 13 13.697 13.682 15.078 14.818 C 15.11 14.845 15.142 14.871 15.174 14.898 C 15.397 15.087 15.609 15.288 15.81 15.5 C 15.609 15.712 15.397 15.913 15.174 16.102 C 15.142 16.129 15.11 16.155 15.078 16.182 C 13.697 17.318 11.928 18 10 18 C 8.072 18 6.303 17.318 4.922 16.182 Z M 10 11 C 11.105 11 12 10.105 12 9 C 12 7.895 11.105 7 10 7 C 8.895 7 8 7.895 8 9 C 8 10.105 8.895 11 10 11 Z M 10 12 C 11.657 12 13 10.657 13 9 C 13 7.343 11.657 6 10 6 C 8.343 6 7 7.343 7 9 C 7 10.657 8.343 12 10 12 Z',
-  plus: 'M 9 9 L 9 4 L 11 4 L 11 9 L 16 9 L 16 11 L 11 11 L 11 16 L 9 16 L 9 11 L 4 11 L 4 9 L 9 9 Z',
-  arrowUp: 'M 9.293 2.293 C 9.683 1.902 10.317 1.902 10.707 2.293 L 16.414 8 L 15 9.414 L 11 5.414 L 11 18 L 9 18 L 9 5.414 L 5 9.414 L 3.586 8 L 9.293 2.293 Z',
-} as const;
-export type IconName = keyof typeof D;
-
-export function Icon({ name, size = 20, fill = C.textPrimary }: { name: IconName; size?: 10 | 12 | 20 | 24; fill?: string }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 20 20" accessible={false}>
-      <Path d={D[name]} fill={fill} fillRule="evenodd" />
-    </Svg>
-  );
+export type IconName = keyof typeof iconAssets;
+export function Icon({ name, size = 20, fill = C.textPrimary }: { name: IconName; size?: 10 | 12 | 16 | 20 | 24; fill?: string }) {
+  const asset = iconAssets[name];
+  const xml = asset.xml.replace(/viewBox="[^"]+"/, `viewBox="${asset.sizes[size].viewBox}"`);
+  return <SvgXml xml={xml} width={size} height={size} color={fill} accessible={false} />;
 }

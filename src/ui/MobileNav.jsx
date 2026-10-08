@@ -39,7 +39,7 @@ export function MobileBottomNav({ selection = 'home', onAdd, image, homeHref = '
         <MobileNavItem icon={home} label="Home" selected={selection === 'home'} href={selection === 'home' ? undefined : homeHref}
           onClick={selection === 'home' ? () => window.scrollTo({ top: 0, behavior: 'smooth' }) : undefined} id="mnav-home" />
         <MobileNavItem type="action" label="Add an entry" onClick={onAdd} id="mnav-add" />
-        <MobileNavItem icon={user} image={image} label="Account" selected={selection === 'account'} href={selection === 'account' ? undefined : accountHref}
+        <MobileNavItem icon={user} image={image} label="Profile" selected={selection === 'account'} href={selection === 'account' ? undefined : accountHref}
           onClick={selection === 'account' ? () => window.scrollTo({ top: 0, behavior: 'smooth' }) : undefined} id="mnav-account" />
       </div>
     </nav>

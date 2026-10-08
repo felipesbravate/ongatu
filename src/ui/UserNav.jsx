@@ -3,6 +3,7 @@ import { Children, Fragment, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ActionLink, Button, RoundButton } from './Button.jsx';
 import { Icon } from './Icon.jsx';
+import { MenuItemCounter } from './SideMenu.jsx';
 import { arrowStraightLeft, bell, chevronDown } from './icons.js';
 import { useMobile } from './useMobile.js';
 
@@ -49,7 +50,7 @@ export function MenuList({ items, bare, className, description, ...rest }) {
       <div className="ds-dd-items">
         {items.map((it) => (
           <button key={it.key || it.label} id={it.id} type="button" role="menuitem" className={cx('ds-dd-item', it.icon && 'has-icon', it.destructive && 'is-destructive', it.className)} onClick={it.onSelect}>
-            {it.icon && <Icon icon={it.icon} size="md" />}<span>{it.label}</span>
+            {it.icon && <Icon icon={it.icon} size="md" />}<span>{it.label}</span>{it.count != null && <MenuItemCounter unread={it.unread}>{it.count}</MenuItemCounter>}
           </button>
         ))}
       </div>

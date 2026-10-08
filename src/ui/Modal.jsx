@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { Button, RoundButton } from './Button.jsx';
 import { x } from './icons.js';
+import { SvgArtwork } from './SvgArtwork.jsx';
 
 // An Okara illustration (src/ui/illustrations.js), `width` wide (64 in the Modal) with the height of its own
 // proportions (Trash can 178x200 -> 64x72, as in the Cost-tracker delete modal). Drawn in surface/dark.
@@ -10,7 +11,7 @@ export function Illustration({ art, width = 64, className }) {
   const height = Math.round((width * art.height / art.width) * 100) / 100;
   return (
     <svg className={['ds-illustration', className].filter(Boolean).join(' ')} viewBox={art.viewBox} width={width} height={height} aria-hidden="true" data-illustration={art.name}>
-      {art.paths.map((d, i) => <path key={i} d={d} fill="currentColor" />)}
+      <SvgArtwork {...art} />
     </svg>
   );
 }
