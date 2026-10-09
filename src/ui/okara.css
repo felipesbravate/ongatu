@@ -3740,26 +3740,40 @@
   html .dropzone:hover:not(.is-over){ border-color:var(--border-default); }
 }
 
-/* Entries tooltip (Okara 146:5252) and its Tooltip entry item (144:4426), Oct 9 — the same sizes on every screen.
-   Tooltip: surface/dark, radius 16, padding 16/8/16/16. Header: "Budget set" DM Sans SemiBold 14/16 text/muted, 10,
-   Euro 16 + Value 14 text/muted (0 apart); Divider in badge/counter-divider, 16 above and below.
-   Item (24 high, 8 apart): Dot 12 (4px action/disable), Item 16/20 Medium text/white, 8, date 14/16 Medium text/muted;
-   Euro 12 + Value 12 text/white (4 apart), 8, Round button Micro Tertiary with a 12px X in icon/round-control-override-1.
-   Empty: "There's no entries yet." 14/16 Medium text/white. (Figma Medium = CSS 400 here; SemiBold = 600.) */
-:root{ --tip-divider:#32312c; --tip-x:#969284; }
-html[data-theme="dark"]{ --tip-x:#f4f3ea; }
-html #note-tip .tip-name{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; color:var(--text-white); }
-html #note-tip .tip-date{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; color:var(--text-muted); }
-html #note-tip .tip-left{ gap:8px; align-items:center; }
-html #note-tip .tip-right{ gap:8px; }
-html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:12px; font-weight:400; line-height:normal; letter-spacing:-0.48px; color:var(--text-white); }
+/* Entries tooltip (Okara 146:5252) and Tooltip entry item (144:4426), Oct 9 — bound to the Surface variables, so
+   Desktop (965:2384 / 965:2704) and Mobile get their own sizes, and to the badge/counter colours, which are the same
+   in Light and Dark (965:2537 / 965:2690).
+   Tooltip: surface/dark, radius/md, padding space/md space/xs space/md space/md, space/md between header, divider, list.
+   Header: Body/Medium/SemiBold counter-text-secondary, 10, Euro 16 + Value/Medium counter-text-secondary.
+   Item (24 high, space/xs apart): Dot 12 (action/disable); Label/Small counter-text, space/xs, Label/Tiny
+   counter-text-secondary; Euro 12 (counter-pressed-icon) 4 Value/Small counter-text, space/xs, Round button Micro
+   (always the Mobile size, 24) with a 12px X in counter-close-icon. Empty: Body/Medium/Medium text/white.
+   Desktop: 14/16 · 12/14 · value 11 · header 12/14 + 12 · padding 12/4/12/12, 12 apart, items 4 apart.
+   Mobile:  16/20 · 14/16 · value 12 · header 14/16 + 14 · padding 16/8/16/16, 16 apart, items 8 apart. */
+:root{ --badge-counter-text:#ffffff; --badge-counter-text-secondary:#aaa698; --badge-counter-divider:#32312c; --badge-counter-close-icon:#aaa698; --badge-counter-pressed-icon:#ffffff; }
+html #note-tip{ padding:var(--space-md) var(--space-xs) var(--space-md) var(--space-md); border-radius:16px; background:var(--surface-dark); }
+html #note-tip .tip-entries{ gap:0; }
+html #note-tip .tip-item{ gap:var(--space-xs); min-height:24px; }
+html #note-tip .tip-left{ gap:var(--space-xs); align-items:center; }
+html #note-tip .tip-right{ gap:var(--space-xs); }
+html #note-tip .tip-dot::before{ background:var(--action-disable); }
+html #note-tip .tip-name{ font-size:var(--size-body-lg); font-weight:400; line-height:var(--lh-body-lg-medium); letter-spacing:-0.02em; color:var(--badge-counter-text); }
+html #note-tip .tip-item.sub .tip-name{ font-weight:400; }
+html #note-tip .tip-date{ font-size:var(--size-body-md); font-weight:400; line-height:var(--lh-body-md); letter-spacing:-0.02em; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:400; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text); }
 html #note-tip .tip-amount .money{ gap:4px; align-items:center; }
-html #note-tip .tip-amount .money-ic, html #note-tip .tip-amount .money-ic svg{ color:var(--text-white); }
-html #note-tip .tip-del{ color:var(--tip-x); }
+html #note-tip .tip-amount .money-ic, html #note-tip .tip-amount .money-ic svg{ color:var(--badge-counter-pressed-icon); }
+html #note-tip .tip-del, html #note-tip .tip-del svg{ color:var(--badge-counter-close-icon); }
 html #note-tip .tip-head{ gap:10px; padding-right:0; }
-html #note-tip .tip-head-label{ font-size:14px; font-weight:600; line-height:16px; letter-spacing:-0.28px; color:var(--text-muted); }
-html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:14px; font-weight:400; line-height:normal; letter-spacing:-0.56px; color:var(--text-muted); }
+html #note-tip .tip-head-label{ font-size:var(--size-body-md); font-weight:600; line-height:var(--lh-body-md); letter-spacing:-0.02em; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:400; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-amount .money{ gap:0; align-items:center; }
-html #note-tip .tip-head-amount .money-ic{ color:var(--text-muted); }
-html #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--tip-divider); margin:16px 0; }
-html #note-tip .tip-empty{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; color:var(--text-white); }
+html #note-tip .tip-head-amount .money-ic, html #note-tip .tip-head-amount .money-ic svg{ color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--badge-counter-divider); margin:var(--space-md) 0; }
+html #note-tip .tip-empty{ font-size:var(--size-body-md); font-weight:400; line-height:var(--lh-body-md); letter-spacing:-0.02em; color:var(--text-white); }
+/* Entry counter (146:5252), Oct 9: 14 high, padding 0 space/tn: 2 on desktop, 4 on phones (set in px: the Tracker rows pin the Mobile spacing); the number in text/secondary;
+   Pressed: badge/counter-pressed-background (+ border) with the number or the Chart icon in counter-pressed-text/icon. */
+html .note-count:not(.is-icon){ padding:0 2px; color:var(--text-secondary); }
+@media (max-width:640px){ html .note-count:not(.is-icon){ padding:0 4px; } }
+html .note-count:not(.is-icon):active, html .note-count:not(.is-icon).is-open{ color:var(--badge-counter-pressed-text); }
+html .note-count.is-icon:active, html .note-count.is-icon.is-open{ background:var(--badge-counter-pressed-background); color:var(--badge-counter-pressed-icon); }
