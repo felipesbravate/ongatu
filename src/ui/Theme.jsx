@@ -25,8 +25,11 @@ export function ThemeProvider({ initialTheme, children }) {
     update(value);
   };
   // The status bar of the Home Screen app follows the theme shown, including a manual switch (Oct 9).
+  // A meta of its own, first in <head> (the first matching theme-color wins), so React's own tags are never touched.
   useEffect(() => {
-    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.removeAttribute('media'); m.setAttribute('content', SURFACE_BODY[theme]); });
+    let m = document.getElementById('ongatu-theme-color');
+    if (!m) { m = document.createElement('meta'); m.id = 'ongatu-theme-color'; m.name = 'theme-color'; document.head.prepend(m); }
+    m.content = SURFACE_BODY[theme];
   }, [theme]);
   return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 }
