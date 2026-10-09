@@ -122,13 +122,11 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   const mobile = useMobile();
   const groupTabs = [...GROUP_ORDER.filter((g) => expSubs.includes(g)), ...expSubs.filter((g) => !GROUP_ORDER.includes(g))].map((g) => ({ value: g, label: g }));
   const topTabs = TOP_TABS;
-  const [lastEntryScope, setLastEntryScope] = useState(null);
-  const scopeKey = `${y.year}|${monthIdx}|${topTab}`;
-  const selectedGroup = lastEntryScope?.key === scopeKey && lastEntryScope.group === effType ? effType : null;
   const lastEntry = latestEntry(model.ENTRIES, {
     year: y.year, monthIndex: monthIdx,
     type: topTab === 'Income' ? 'income' : topTab === 'Investments' ? 'investment' : 'expense',
-    group: selectedGroup,
+    // Oct 9 (Felipe): Expenses shows one sub-category at a time (Fixed first), so the line follows the one shown.
+    group: topTab === 'Expenses' ? effType : null,
   });
   const color = GROUP_COLOR[effType] || 'var(--data-lime)';
   // What a row's "Add entry" adds to: the tab's kind, sub-category and the row's group.
@@ -183,8 +181,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         <div className="bd-controllers">
           <div className="bd-tabs-stack">
             <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
-              onChange={(v) => { setLastEntryScope(null); v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
-            <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => { setLastEntryScope({ key: scopeKey, group: v }); onTab(v, v); }} />
+              onChange={(v) => { v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
+            <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
             {lastEntry && <LatestEntry entry={lastEntry} currency={cur} />}
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
@@ -317,7 +315,8 @@ function LatestEntry({ entry, currency }) {
   const neg = entry.amount < 0;
   return (
     <div className="tracker-last-entry" role="status">
-      <span className="tle-text">{`Latest: ${route}${date ? `, ${date}` : ''}`}</span>
+      {/* Oct 9: one line, whatever the length: the route shortens with an ellipsis; the date, Dot and figure stay. */}
+      <span className="tle-text" title={`Latest: ${route}${date ? `, ${date}` : ''}`}><span className="tle-route">{`Latest: ${route}`}</span>{date && <span className="tle-date">{`, ${date}`}</span>}</span>
       <span className="tle-dot" aria-hidden="true"><i /></span>
       {currency === 'EUR'
         ? <><span className="tle-num">{neg ? '-€' : '€'}</span><span className="tle-num">{fmtFigure(Math.abs(entry.amount))}</span></>

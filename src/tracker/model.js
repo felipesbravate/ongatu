@@ -519,20 +519,26 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
   function buildBreakdown(y, mi, type) {
     const yi = DATA.indexOf(y);
     const TX = taxonomyForYear(y.year);
+    // Oct 9 (Felipe): a type removed in "Adjust month's budget" leaves that month's Tracker. A month with its own
+    // budget shows the types in that budget, plus any type that still has something recorded (an entry, a value).
+    const monthPlan = budgetApplies(y, mi) && hasMonthBudget(y.year, mi) ? budgetsFor(y.year, mi) : null;
+    const planned = (t, g, c, item) => !monthPlan || monthPlan.some((b) => b.type === t && sameGroup(b.group, g) && (b.category || null) === (c || null) && b.item === item);
+    const hasData = (r) => r.deleted || r.entries.length > 0 || r.importedCells.length > 0 || r.noteEntries.length > 0 || Math.abs(r.amount || 0) > 0.004;
+    const keep = (r) => planned(r.type, r.group, r.category, r.item) || hasData(r);
     if (type === 'Income' || type === 'Investments') {
       const t = type === 'Income' ? 'income' : 'investment';
       const flatOrder = (t === 'income' ? TX.incomes : TX.investments) || [];
       const subTx = (t === 'income' ? TX.incomeSubs : TX.investmentSubs) || {};
       const flatRows = () => {
-        const rows = listItemsForMonth(yi, mi, t, null).map((r) => itemRowFor(yi, mi, t, null, r, y));
-        flatOrder.forEach((item) => { if (!rows.some((r) => r.item === item)) rows.push(zeroRow(t, null, null, item, y, mi)); });
+        const rows = listItemsForMonth(yi, mi, t, null).map((r) => itemRowFor(yi, mi, t, null, r, y)).filter(keep);
+        flatOrder.forEach((item) => { if (planned(t, null, null, item) && !rows.some((r) => r.item === item)) rows.push(zeroRow(t, null, null, item, y, mi)); });
         return inOrder(rows, flatOrder, (r) => r.item);
       };
       const named = subsOf(t, y.year, mi).filter(Boolean);
       if (!named.length) return { flat: true, rows: flatRows() };
       const blocks = named.map((g) => {
-        const rows = listItemsForMonth(yi, mi, t, g).map((r) => itemRowFor(yi, mi, t, g, r, y));
-        (subTx[g] || []).forEach((item) => { if (!rows.some((r) => r.item === item)) rows.push(zeroRow(t, g, null, item, y, mi)); });
+        const rows = listItemsForMonth(yi, mi, t, g).map((r) => itemRowFor(yi, mi, t, g, r, y)).filter(keep);
+        (subTx[g] || []).forEach((item) => { if (planned(t, g, null, item) && !rows.some((r) => r.item === item)) rows.push(zeroRow(t, g, null, item, y, mi)); });
         const items = inOrder(rows, subTx[g] || [], (r) => r.item);
         return { category: g, group: g, amount: items.reduce((a, r) => a + r.amount, 0), items };
       });
@@ -546,14 +552,17 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     const catOf = (name) => { if (!catMap.has(name)) catMap.set(name, { category: name, amount: 0, items: [] }); return catMap.get(name); };
     listItemsForMonth(yi, mi, kind, grp).forEach((r) => {
       const row = itemRowFor(yi, mi, kind, grp, r, y);
+      if (!keep(row)) return;
       const cat = catOf(row.category || 'Other');
       cat.amount += row.amount;
       cat.items.push(row);
     });
     const groupTx = (TX.expenses || {})[type] || {};
     Object.entries(groupTx).forEach(([category, items]) => {
+      const missing = items.filter((item) => planned(kind, grp, category || null, item));
+      if (monthPlan && !missing.length && !catMap.has(category || 'Other')) return; // every type of this group was removed
       const cat = catOf(category || 'Other');
-      items.forEach((item) => { if (!cat.items.some((i) => i.item === item)) cat.items.push(zeroRow(kind, grp, category || null, item, y, mi)); });
+      missing.forEach((item) => { if (!cat.items.some((i) => i.item === item)) cat.items.push(zeroRow(kind, grp, category || null, item, y, mi)); });
     });
     // Categories and their items always in the order the user set (the year's taxonomy), never by amount; anything
     // not in it (e.g. an old entry's item) comes after, in the order it was found.

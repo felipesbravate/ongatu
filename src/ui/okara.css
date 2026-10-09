@@ -3682,13 +3682,16 @@
 #note-tip .tip-entries{ display:flex; flex-direction:column; gap:0; }
 #note-tip .tip-item{ margin:0; }
 /* Latest entry (581:19517 / 787:15242): same sizes on every width, inside Selectors (gap 8). */
-.bd-tabs-stack:has(.tracker-last-entry){ gap:8px; }
+.bd-tabs-stack:has(.tracker-last-entry){ gap:8px; min-width:0; max-width:100%; }
 .tracker-last-entry{
-  display:flex; align-items:center; flex-wrap:wrap; gap:4px; color:var(--link-disable); min-width:0;
+  display:flex; align-items:center; flex-wrap:nowrap; gap:4px; color:var(--link-disable); min-width:0; max-width:100%; white-space:nowrap;
 }
 .tracker-last-entry .tle-text{
+  display:flex; min-width:0; flex:0 1 auto;
   font-family:var(--font-sans, inherit); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px;
 }
+.tracker-last-entry .tle-route{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.tracker-last-entry .tle-date, .tracker-last-entry .tle-num{ flex:none; }
 .tracker-last-entry .tle-dot{ width:10px; height:10px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
 .tracker-last-entry .tle-dot i{ width:3.33px; height:3.33px; border-radius:50%; background:currentColor; }
 .tracker-last-entry .tle-num{

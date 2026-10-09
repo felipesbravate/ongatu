@@ -29,6 +29,7 @@ export function trackerCsp(nonce, o = {}) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     'font-src https://fonts.gstatic.com',
     "img-src 'self' data: blob:",
+    "manifest-src 'self'",
     `connect-src 'self'${o.dev ? ' ws:' : ''}`,
     "worker-src 'self' blob:",
     "base-uri 'none'",
