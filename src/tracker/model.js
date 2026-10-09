@@ -693,7 +693,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
   return {
     DATA, ENTRIES, OVERRIDES, BUDGETS, BUDGET_DEFAULTS, canAdjustMonthBudget, monthBudgetRows,
     entriesFor, entriesForYear, currentYearMonthIndex, monthHasData, isFutureMonth, defaultMonth,
-    computeMonth, buildBreakdown, buildBudgetSuggestions, yearIncome, yearExpense, budgetAlerts,
+    computeMonth, buildBreakdown, buildBudgetSuggestions, yearIncome, yearExpense, budgetAlerts, budgetsFor,
     taxonomyForYear, catOptions, typeOptsForYear, typeOpts, kindsOf, subsOf, combosOf,
     resolveDate, isOpenNextMonthDate, periodYears, periodExists, periodOptions, defaultPeriodKey, entryDateBounds, promptYearLabel,
   };

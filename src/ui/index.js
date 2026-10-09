@@ -7,7 +7,7 @@ export { Segments } from './Segments.jsx';
 export { YearAddButton, YearTab, MonthSelector } from './Nav.jsx';
 export { Label } from './Label.jsx';
 export { EntryCounter, TooltipEntryItem, EntriesTooltip } from './Entries.jsx';
-export { Card, Divider, KpiCard, ExpenseCard, Meter, AmountMeter, BreakdownRow, TypeRow, ProgressBar } from './Data.jsx';
+export { Card, Divider, KpiCard, ExpenseCard, TrendLine, TONE_COLOR, Meter, AmountMeter, BreakdownRow, TypeRow, ProgressBar } from './Data.jsx';
 export { Avatar, MenuList, UserMenu, Notification, NotificationItem, UserNav, useDismiss } from './UserNav.jsx';
 export { Toast, useToast } from './Toast.jsx';
 export { Dropdown } from './Dropdown.jsx';

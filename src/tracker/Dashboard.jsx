@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 
@@ -19,6 +19,7 @@ export function spendParts(model, y, c) {
 }
 const partValue = (c, key) => c.byGroup[key] || 0;
 import { Icon } from '../ui/Icon.jsx';
+import { cardIndicators } from './indicators.js';
 import { Money } from '../ui/Money.jsx';
 import { latestEntry } from './latest-entry.js';
 
@@ -29,14 +30,12 @@ export function HeroLeft({ model, y, monthIdx }) {
   const cur = y.currency;
   const c = model.computeMonth(y, monthIdx);
   const prev = monthIdx > 0 ? model.computeMonth(y, monthIdx - 1) : null;
-  // (the month-on-month balance change moved off the card on Oct 2: both layouts show "↑ details")
+  // Oct 9: each card's details line compares the month with the right reference (src/tracker/indicators.js).
+  const ind = cardIndicators(model, y, monthIdx);
   const tiles = [
-    // Ongatu 211:18753 (Sept 28): "Incomes", and a static "↑ details" line under Incomes and Expenses (no action, per Felipe).
-    { label: 'Incomes', value: c.income, color: 'var(--kpi-income)', indicator: arrowStraightUp, detail: 'details' },
-    { label: 'Expenses', value: c.expenseTotal, color: 'var(--kpi-expense)', indicator: arrowStraightUp, detail: 'details' },
-    // The Savings rate card folded into this tile (Cost-tracker 2:2, Sept 22).
-    { label: 'Savings/Investments', value: c.invest, color: 'var(--kpi-invest)',
-      detail: c.income > 0 ? `${Math.round(Math.max(0, Math.min(1, c.invest / c.income)) * 100)}% rate - ${fmtMoneyShort(c.invest, cur)} saved of ${fmtMoneyShort(c.income, cur)} Incomes` : 'No income recorded' },
+    { label: 'Incomes', value: c.income, color: 'var(--kpi-income)', trend: ind.income },
+    { label: 'Expenses', value: c.expenseTotal, color: 'var(--kpi-expense)', trend: ind.expense },
+    { label: 'Savings/Investments', value: c.invest, color: 'var(--kpi-invest)', trend: ind.invest },
   ];
   // Phones (Ongatu 342:7993, Sept 28): "Incomes", "Savings & Investments", and the rate as "↑ 8% rate of monthly Incomes".
   const mobile = useMobile();
@@ -61,11 +60,11 @@ export function HeroLeft({ model, y, monthIdx }) {
         </div>
         {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
             phones (342:7993) keep the month change. */}
-        <span className="balance-details" id="balance-delta"><Icon icon={arrowStraightUp} size={12} /><span>details</span></span>
+        <TrendLine trend={ind.balance} className="balance-details" id="balance-delta" />
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
       </div>
       <div className="mini-grid" id="mini-kpis">
-        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} detail={t.detail} indicator={t.indicator} euroSize={16} />)}
+        {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} trend={t.trend} euroSize={16} />)}
       </div>
       <div className="card alloc-card">
         <h2>Expense allocation</h2>
@@ -345,16 +344,15 @@ function formatEntryDate(iso) {
 export function ExpenseStrip({ model, y, monthIdx }) {
   const cur = y.currency;
   const c = model.computeMonth(y, monthIdx);
-  const prev = monthIdx > 0 ? model.computeMonth(y, monthIdx - 1) : null;
+  const ind = cardIndicators(model, y, monthIdx);
+  const DIR = { up: arrowStraightUp, down: arrowStraightDown, flat: minus };
   return (
     <div className="ticker-strip" id="ticker-strip">
       {spendParts(model, y, c).map(({ key: g, label, badge }) => {
-        const v = partValue(c, g);
-        const d = prev ? v - partValue(prev, g) : null;
-        const delta = d === null ? null
-          : Math.abs(d) < 0.005 ? { icon: minus, text: 'same as last month', color: 'var(--text-secondary)' }
-          : { icon: d < 0 ? arrowStraightDown : arrowStraightUp, text: `${fmtMoneyShort(Math.abs(d), cur)} vs last month`, color: d < 0 ? 'var(--good)' : 'var(--critical)' };
-        return <ExpenseCard key={g} name={label} initial={label[0]} badgeColor={badge} value={v} currency={cur} delta={delta} />;
+        // Same rule as the Expenses card; a finished month reads "vs last month" (Ongatu 901:11367).
+        const t = ind.group(g, 'last month');
+        const delta = { icon: DIR[t.dir] || null, text: t.text, color: TONE_COLOR[t.tone], flat: t.dir === 'flat' };
+        return <ExpenseCard key={g} name={label} initial={label[0]} badgeColor={badge} value={partValue(c, g)} currency={cur} delta={delta} />;
       })}
     </div>
   );

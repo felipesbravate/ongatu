@@ -3777,3 +3777,40 @@ html .note-count:not(.is-icon){ padding:0 2px; color:var(--text-secondary); }
 @media (max-width:640px){ html .note-count:not(.is-icon){ padding:0 4px; } }
 html .note-count:not(.is-icon):active, html .note-count:not(.is-icon).is-open{ color:var(--badge-counter-pressed-text); }
 html .note-count.is-icon:active, html .note-count.is-icon.is-open{ background:var(--badge-counter-pressed-background); color:var(--badge-counter-pressed-icon); }
+
+/* ---- Oct 9: the cards' comparison lines (src/tracker/indicators.js, TrendLine in src/ui/Data.jsx) ----
+   Head in text/secondary, then a dot and the arrow + comparison in the tone colour (status/success, status/fail,
+   text/secondary); a "same as" Minus sits in surface/tertiary. The line wraps under the head on narrow tiles. */
+html .is-trend{ display:flex; flex-wrap:wrap; align-items:center; column-gap:4px; row-gap:2px; color:var(--text-secondary); }
+html .is-trend .trend-change{ display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+html .mini-kpi .detail.is-trend svg, html .balance-details.is-trend svg{ color:currentColor; }
+html .is-trend svg.trend-flat, html .ticker-item .ti-delta svg.trend-flat{ color:var(--surface-tertiary); }
+
+/* ---- Oct 9: phones get the Expense cards as a carousel (Ongatu 901:11367), between the Tracker and "at a glance"
+   (901:11300 order: balance, KPIs, Tracker, cards, at a glance, allocation, trend). Cards 200 wide, 16 apart,
+   padding 16 24, radius 16, 12 inside; the row runs to the right edge of the screen and fades out over 62px. */
+@media (max-width:640px){
+  html .ticker-strip:not(#z){
+    display:flex; order:4; gap:16px; overflow-x:auto; scroll-snap-type:x proximity; scrollbar-width:none;
+    margin-right:calc(-1 * var(--layout-md)); padding-right:var(--layout-md);
+    -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 62px), transparent);
+            mask-image:linear-gradient(90deg, #000 calc(100% - 62px), transparent);
+  }
+  html .ticker-strip::-webkit-scrollbar{ display:none; }
+  html .glance-card:not(#z){ order:5; }
+  html .alloc-card:not(#z){ order:6; }
+  html .hero-chart:not(#z){ order:7; }
+  html .ticker-strip .ticker-item:not(#z){
+    flex:0 0 200px; width:200px; box-sizing:border-box; scroll-snap-align:start;
+    display:flex; flex-direction:column; gap:12px; padding:16px 24px; border-radius:16px; background:var(--surface-primary); margin:0;
+  }
+  html .ticker-strip .ticker-item > *:not(#z){ margin:0; }
+  html .ticker-strip .ti-top{ display:flex; align-items:center; gap:8px; }
+  html .ticker-strip .ti-dot:not(#z){ width:20px; height:20px; min-width:20px; font-size:12px; line-height:16px; color:#fff; }
+  html .ticker-strip .ti-name:not(#z){ font-size:16px; font-weight:400; line-height:16px; letter-spacing:-0.32px; color:var(--text-primary); }
+  html .ticker-strip .ti-val:not(#z){ font-family:var(--font-mono); font-size:16px; font-weight:400; line-height:16px; letter-spacing:0; }
+  html .ticker-strip .ti-delta:not(#z){ gap:4px; font-size:12px; line-height:14px; letter-spacing:-0.48px; white-space:nowrap; }
+}
+html .mini-kpi{ min-width:0; }
+html .is-trend .trend-change{ white-space:normal; }
+html .is-trend .trend-change svg{ flex-shrink:0; }

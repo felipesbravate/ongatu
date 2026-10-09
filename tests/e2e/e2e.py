@@ -285,14 +285,17 @@ async def main():
             mp = await admin_ctx.new_page(); await mp.set_viewport_size({'width': 390, 'height': 844})
             await mp.goto(BASE + '/'); await mp.wait_for_selector('#user-nav'); await mp.wait_for_timeout(900)
             mo = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = s => q(s).getBoundingClientRect(), vis = s => !!q(s) && getComputedStyle(q(s)).display !== 'none';
-                const cards = ['.balance-card', '.mini-grid', '.breakdown-card', '.alloc-card', '.hero-chart', '.glance-card'].map(s => Math.round(r(s).top));
+                const cards = ['.balance-card', '.mini-grid', '.breakdown-card', '.ticker-strip', '.glance-card', '.alloc-card', '.hero-chart'].map(s => Math.round(r(s).top));
+                const ti = q('.ticker-strip .ticker-item'), st = q('.ticker-strip');
                 return { header: [r('#app-header').height, Math.round(r('.ds-app-header-logo svg').width)], user: vis('.ds-user'), bell: vis('#notif-btn'), add: vis('#tracker-add-btn'), nav: vis('#mobile-nav'),
-                         ticker: vis('.ticker-strip'), side: Math.round(r('.balance-card').left), title: getComputedStyle(q('.app-title')).fontSize, cards, scrollW: document.documentElement.scrollWidth,
+                         ticker: vis('.ticker-strip'), strip: ti ? [Math.round(ti.getBoundingClientRect().width), getComputedStyle(st).columnGap, getComputedStyle(ti).padding, getComputedStyle(ti).borderRadius, getComputedStyle(st).overflowX, Math.round(st.getBoundingClientRect().right)] : null, side: Math.round(r('.balance-card').left), title: getComputedStyle(q('.app-title')).fontSize, cards, scrollW: document.documentElement.scrollWidth,
                          pill: [Math.round(r('.ds-mnav-pill').width), Math.round(r('#mnav-home').height)], home: q('#mnav-home').getAttribute('aria-current'), seg: [...document.querySelectorAll('#breakdown-top-seg button')].map(b => b.textContent) }; }""")
             check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 32px title (Display/Title-mobile, Oct 3); no sideways scroll',
                   mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '32px' and mo['scrollW'] <= 390, mo)
-            check('phone: Balance, KPIs, Tracker, Expense allocation, chart, At a glance, in that order; no Expense cards; Add is in the bottom nav',
-                  mo['cards'] == sorted(mo['cards']) and not mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
+            check('phone (901:11300, Oct 9): Balance, KPIs, Tracker, Expense cards, At a glance, allocation, chart, in that order; Add is in the bottom nav',
+                  mo['cards'] == sorted(mo['cards']) and mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
+            check('phone Expense cards (901:11367): a sideways row of 200-wide cards, 16 apart, padding 16 24, radius 16, running to the screen edge',
+                  mo['strip'] == [200, '16px', '16px 24px', '16px', 'auto', 390], mo['strip'])
             check('phone: bottom nav (378:673) full-width 366 pill (12px from the edges), 56 high items, Home selected', mo['pill'] == [366, 56] and mo['home'] == 'page', mo)
             await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
             st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
@@ -363,8 +366,8 @@ async def main():
                          delta: d ? { h: cs(d).height, r: cs(d).borderRadius, pad: cs(d).paddingLeft, font: fig(d), svg: d.querySelector('svg') ? [d.querySelector('svg').getBoundingClientRect().width, d.querySelector('svg').getBoundingClientRect().height] : null, cls: d.className, bg: cs(d).backgroundColor, label: d.getAttribute('aria-label') } : null };
             }""")
             check('Savings rate card is gone (no gauge, no second row); At a glance sits under Expense allocation', not n['gauge'] and not n['row2'] and 'Savings rate' not in n['h2s'] and n['glance'], n)
-            check('Savings/Investments tile carries the rate: Value/Small (11/400/-4% on desktop), text/secondary, right under the value (the card gap); Incomes and Expenses carry "↑ details" (Sept 28)',
-                  n['detail'] is not None and (n['detail'] == 'No income recorded' or (' rate - ' in n['detail'] and ' saved of ' in n['detail'])) and not n['noDetail'] and n['detailStyle'] == [True, '11px', '400', '-0.44px', 'rgb(116, 113, 103)', '0px'], n)
+            check('Savings/Investments tile carries the rate ("X% of incomes", Oct 9): Value/Small (11/400/-4% on desktop), text/secondary, right under the value; every tile has a comparison line',
+                  n['detail'] is not None and ('% of incomes' in n['detail'] or n['detail'] in ('Projected from budget', 'No incomes yet this month')) and not n['noDetail'] and n['detailStyle'] == [True, '11px', '400', '-0.44px', 'rgb(116, 113, 103)', '0px'], n)
             check('KPI and Expense card names (Oct 2): Heading/Medium (14/400/14 -2% on desktop), sentence case', n['label'] == ['14px', '400', '14px', '-0.28px'] and n['name'] == ['14px', '400', '14px', '-0.28px'], n)
             check('Label chip (211:859, Oct 2): Label/Tiny, 24 high, space/xs sides (4 on desktop), radius/full', n['tag'] == ['12px', '400', '14px', '-0.24px', '24px', '4px', '999px'], n['tag'])
             check('Segments container radius is 8', n['segR'] == '8px', n['segR'])
