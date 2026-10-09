@@ -19,7 +19,7 @@ export function TooltipEntryItem({ name, date, amount, currency, estimate, prefi
       <span className="tip-dot" />
       <span className="tip-left"><span className="tip-name">{name}</span>{date ? <span className="tip-date">{date}</span> : null}</span>
       <span className="tip-right">
-        {amount != null && <span className={'tip-amount' + (estimate ? ' is-estimate' : '')}>{prefix || ''}<Money value={amount} currency={currency} iconSize={16} /></span>}
+        {amount != null && <span className={'tip-amount' + (estimate ? ' is-estimate' : '')}>{prefix || ''}<Money value={amount} currency={currency} iconSize={12} /></span>}
         {extra}
         {onRemove && (
           <button type="button" className="round-btn micro tip-del" title={removeTitle} onClick={(e) => { e.stopPropagation(); onRemove(); }}>

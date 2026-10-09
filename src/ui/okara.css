@@ -3739,3 +3739,27 @@
   html .ds-action-link:disabled:hover{ color:var(--link-disable); }
   html .dropzone:hover:not(.is-over){ border-color:var(--border-default); }
 }
+
+/* Entries tooltip (Okara 146:5252) and its Tooltip entry item (144:4426), Oct 9 — the same sizes on every screen.
+   Tooltip: surface/dark, radius 16, padding 16/8/16/16. Header: "Budget set" DM Sans SemiBold 14/16 text/muted, 10,
+   Euro 16 + Value 14 text/muted (0 apart); Divider in badge/counter-divider, 16 above and below.
+   Item (24 high, 8 apart): Dot 12 (4px action/disable), Item 16/20 Medium text/white, 8, date 14/16 Medium text/muted;
+   Euro 12 + Value 12 text/white (4 apart), 8, Round button Micro Tertiary with a 12px X in icon/round-control-override-1.
+   Empty: "There's no entries yet." 14/16 Medium text/white. (Figma Medium = CSS 400 here; SemiBold = 600.) */
+:root{ --tip-divider:#32312c; --tip-x:#969284; }
+html[data-theme="dark"]{ --tip-x:#f4f3ea; }
+html #note-tip .tip-name{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; color:var(--text-white); }
+html #note-tip .tip-date{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; color:var(--text-muted); }
+html #note-tip .tip-left{ gap:8px; align-items:center; }
+html #note-tip .tip-right{ gap:8px; }
+html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:12px; font-weight:400; line-height:normal; letter-spacing:-0.48px; color:var(--text-white); }
+html #note-tip .tip-amount .money{ gap:4px; align-items:center; }
+html #note-tip .tip-amount .money-ic, html #note-tip .tip-amount .money-ic svg{ color:var(--text-white); }
+html #note-tip .tip-del{ color:var(--tip-x); }
+html #note-tip .tip-head{ gap:10px; padding-right:0; }
+html #note-tip .tip-head-label{ font-size:14px; font-weight:600; line-height:16px; letter-spacing:-0.28px; color:var(--text-muted); }
+html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:14px; font-weight:400; line-height:normal; letter-spacing:-0.56px; color:var(--text-muted); }
+html #note-tip .tip-head-amount .money{ gap:0; align-items:center; }
+html #note-tip .tip-head-amount .money-ic{ color:var(--text-muted); }
+html #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--tip-divider); margin:16px 0; }
+html #note-tip .tip-empty{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; color:var(--text-white); }
