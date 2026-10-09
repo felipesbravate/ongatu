@@ -24,12 +24,28 @@ export function Illustration({ art, width = 64, className }) {
 // primary/secondary = { label, onClick, disabled, id }; primary.destructive paints it action/destructive (the
 // override on the Cost-tracker delete modal, 258:10267).
 // Opens as a native <dialog> (focus trap, Escape closes, page behind inert).
-export function Modal({ open, onClose, title, description, illustration, illustrationWidth = 64, primary, secondary, id, children }) {
+// Closing plays the exit (desktop: fade + 8px down; phones: the sheet slides back down, Oct 9) before the dialog
+// closes; while it plays the modal keeps the content it had open, so callers that clear it on close don't blank it.
+const MODAL_EXIT_MS = 200;
+export function Modal(props) {
+  const { open, onClose, id } = props;
   const ref = useRef(null);
+  const shown = useRef(props);
+  if (open) shown.current = props;
+  const { title, description, illustration, illustrationWidth = 64, primary, secondary, children } = open ? props : shown.current;
   useEffect(() => {
     const d = ref.current; if (!d) return;
-    if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
+    if (open) {
+      d.classList.remove('is-closing');
+      if (!d.open) d.showModal();
+      return;
+    }
+    if (!d.open) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { d.close(); return; }
+    d.classList.add('is-closing');
+    const t = setTimeout(() => { d.classList.remove('is-closing'); d.close(); }, MODAL_EXIT_MS);
+    return () => clearTimeout(t);
   }, [open]);
   const titleId = id ? `${id}-title` : undefined;
   return (

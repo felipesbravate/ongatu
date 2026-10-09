@@ -1607,6 +1607,10 @@
   .ds-modal[open]{ display:flex; animation:ds-modal-in .2s cubic-bezier(.2,0,0,1); }
   .ds-modal::backdrop{ background:rgba(22,21,15,.32); animation:ds-fade-in .2s cubic-bezier(.2,0,0,1); }
   @keyframes ds-modal-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  /* Closing (Oct 9): the entrance played backwards; Modal.jsx closes the dialog when it ends (200ms). */
+  .ds-modal.is-closing{ animation:ds-modal-out .2s cubic-bezier(.4,0,1,1) both; pointer-events:none; }
+  .ds-modal.is-closing::backdrop{ animation:ds-fade-out .2s cubic-bezier(.4,0,1,1) both; }
+  @keyframes ds-modal-out{ from{ opacity:1; transform:none; } to{ opacity:0; transform:translateY(8px); } }
   .ds-modal-header{ display:flex; justify-content:flex-end; align-items:center; gap:var(--layout-xs); }
   .ds-modal-content{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-sm); padding:0 var(--layout-lg); text-align:center; }
   .ds-modal-title-block{ display:flex; flex-direction:column; align-items:center; gap:var(--layout-md); width:100%; }
@@ -1618,7 +1622,7 @@
      overflow it evenly (they span the card as before), so they don't shrink here either. */
   .ds-modal-actions{ display:flex; justify-content:center; align-items:center; gap:var(--layout-md); padding:0 var(--layout-2xl); }
   .ds-modal-actions .btn-pill{ width:240px; min-width:0; flex:0 0 240px; justify-content:center; }
-  @media (prefers-reduced-motion: reduce){ .ds-modal[open], .ds-modal::backdrop{ animation:none; } }
+  @media (prefers-reduced-motion: reduce){ .ds-modal[open], .ds-modal::backdrop, .ds-modal.is-closing, .ds-modal.is-closing::backdrop{ animation:none; } }
 
   /* ---- logo_ongatu (277:670): raw brand colours, as the component paints them. ---- */
   .ds-logo{ display:block; flex-shrink:0; }
@@ -1940,6 +1944,10 @@
     .panel-nav{ margin:0; padding:0; }
     .panel-close .panel-close-x{ display:none; }
     .panel-close .panel-close-back{ display:block; }
+    /* Phones (Oct 9): no left border; the panel slides in to the left and out to the right -- it waits off the
+       right edge when closed. The close transition (ease-in) mirrors the open one (ease-out), both 200ms. */
+    .add-panel, #add-panel{ border-left:0; transform:translateX(100%); transition:transform .2s cubic-bezier(.4,0,1,1), visibility 0s linear .2s; }
+    .add-panel.open, #add-panel.open{ transform:translateX(0); transition:transform .2s cubic-bezier(.2,0,0,1), visibility 0s; }
     .add-panel .seg-tabs{ display:flex; width:100%; box-sizing:border-box; }
     .add-panel .seg-tabs button{ flex:1 1 0; min-width:0; }
     .add-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
@@ -2015,6 +2023,8 @@
     /* Modal, Surface=Mobile (DS 443:1484; Ongatu 420:6020): a bottom sheet, full width, top corners radius/md. */
     .ds-modal{ width:100%; max-width:100%; margin:auto 0 0; padding:0 0 var(--layout-lg); border-radius:var(--radius-md) var(--radius-md) 0 0; gap:var(--layout-lg); max-height:calc(100dvh - 48px); overflow:auto; }
     .ds-modal[open]{ animation:ds-sheet-in .25s cubic-bezier(.2,0,0,1); }
+    /* Closing slides the sheet back down to the bottom (Oct 9). */
+    .ds-modal.is-closing{ animation:ds-sheet-out .2s cubic-bezier(.4,0,1,1) both; }
     .ds-modal-header{ padding:var(--layout-xs); }
     .ds-modal-header .round-btn{ width:40px; height:40px; }
     .ds-modal-content{ padding:0 var(--layout-md); gap:var(--layout-lg); }
@@ -2025,6 +2035,7 @@
     .ds-modal-actions .btn-pill.ghost{ border-color:transparent; }
   }
   @keyframes ds-sheet-in{ from{ transform:translateY(100%); } to{ transform:none; } }
+  @keyframes ds-sheet-out{ from{ transform:none; } to{ transform:translateY(100%); } }
 
   /* ==========================================================================================================
      Sept 29: responsive components. The Okara Surface collection now has a Mobile and a Desktop mode (Desktop is
