@@ -144,3 +144,26 @@ html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter
   html dialog#ob-welcome:not(#z) .ds-modal-description{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
   html dialog#ob-welcome:not(#z) .ds-modal-actions{ padding:0; margin:0; }
 }
+
+/* ---- Oct 9: "Import a file" (no frame yet: built from the onboarding cards, the Add panel's drop area and Label/Small).
+   Choose (400:4509): three options in the 720 card, 202 wide each: 24 above the art, 16 on the sides and below, the
+   ".xlsx or .csv" Label 12 from the top right corner; the import card is the mid width with the drop area, the error, two tips and a
+   back link; the board shows what was found in a surface/secondary note under its title. ---- */
+html .ob-page:not(#z) .ob-option{ position:relative; }
+html .ob-page:not(#z) .ob-option-tag{ position:absolute; top:11px; right:11px; }
+@media (min-width:641px){
+  html .ob-page:not(#z) .ob-option{ padding:23px 15px 15px; }
+  html .ob-page:not(#z) .ob-option .ob-option-link{ white-space:nowrap; font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+}
+html .ob-page:not(#z) .ob-import{ gap:24px; }
+html .ob-page:not(#z) .ob-dropzone{ width:100%; box-sizing:border-box; min-height:160px; display:flex; align-items:center; justify-content:center; }
+html .ob-page:not(#z) .ob-import-tips{ margin:0; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px; color:var(--text-secondary); font-size:14px; line-height:20px; letter-spacing:-0.28px; }
+html .ob-page:not(#z) .ob-import-tips strong{ font-weight:400; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-import-back{ display:flex; }
+html .ob-page:not(#z) .ob-import-note{ margin-top:16px; padding:12px 16px; border-radius:12px; background:var(--surface-secondary); display:flex; flex-direction:column; gap:4px; }
+html .ob-page:not(#z) .ob-import-note p{ margin:0; font-size:14px; line-height:20px; letter-spacing:-0.28px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-import-note strong{ font-weight:600; }
+html .ob-page:not(#z) .ob-import-note .ob-import-note-sub{ color:var(--text-secondary); font-size:12px; line-height:16px; letter-spacing:-0.24px; }
+@media (max-width:640px){
+  html .ob-page:not(#z) .ob-dropzone{ min-height:140px; }
+}

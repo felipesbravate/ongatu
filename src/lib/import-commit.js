@@ -4,7 +4,8 @@
 
 export const MAX_IMPORT_BATCH = 500;
 const TYPES = ['expense', 'income', 'investment'];
-const GROUPS = ['Fixed', 'Variable', 'Extra', 'Additional'];
+// Expenses sub-categories are the user's own since Oct 5 (onboarding import, Oct 9): any short name is accepted;
+// Income and Savings may carry an optional sub-category too.
 const str = (v, max = 200) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
 
 /**
@@ -19,7 +20,8 @@ export function validateImportEntry(e) {
   const d = m && new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
   if (!m || !d || d.getUTCMonth() !== +m[2] - 1 || +m[1] < 1900 || +m[1] > 2100) problems.push('date');
   if (!TYPES.includes(e.type)) problems.push('type');
-  if (e.type === 'expense' && (!GROUPS.includes(e.group) || !str(e.category))) problems.push('category');
+  if (e.type === 'expense' && (!str(e.group, 60) || !str(e.category))) problems.push('category');
+  if (e.type !== 'expense' && e.group != null && !str(e.group, 60)) problems.push('group');
   if (!str(e.item)) problems.push('item');
   if (!str(e.description)) problems.push('description');
   const amount = typeof e.amount === 'number' ? Math.round(e.amount * 100) / 100 : NaN;
@@ -30,7 +32,7 @@ export function validateImportEntry(e) {
     ok: true,
     doc: {
       year: e.date.slice(0, 4), monthIndex: Number(e.date.slice(5, 7)) - 1,
-      type: e.type, group: expense ? e.group : null, category: expense ? e.category.trim() : null,
+      type: e.type, group: expense || e.group ? e.group.trim() : null, category: expense ? e.category.trim() : null,
       item: e.item.trim(), description: e.description.trim(), amount, date: e.date,
       createdAt: new Date().toISOString(), source: 'import',
     },

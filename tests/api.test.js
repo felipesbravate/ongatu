@@ -186,7 +186,7 @@ test('import commit: validates every row, creates missing years, saves in bulk, 
   const good = { date: '2024-03-14', type: 'expense', group: 'Variable', category: 'Food', item: 'Supermarket', description: 'Mercadona', amount: 12.345, extra: 'dropped' };
   const inc = { date: '2025-01-31', type: 'income', group: 'X', category: 'Y', item: 'Salary', description: 'Nomina', amount: 2000 };
   await call('POST', '/api/db/years', boss, { year: '2025', currency: 'EUR' });
-  const bad = await call('POST', '/api/import/commit', boss, { entries: [good, { ...good, date: '2024-02-30' }, { ...good, amount: -1, type: 'expense', group: 'Nope' }] });
+  const bad = await call('POST', '/api/import/commit', boss, { entries: [good, { ...good, date: '2024-02-30' }, { ...good, amount: -1, type: 'expense', group: '' }] });
   assert.equal(bad.status, 400);
   assert.deepEqual(bad.body.rows, [{ index: 1, problems: ['date'] }, { index: 2, problems: ['category', 'amount'] }]);
   assert.equal((await call('GET', '/api/db/entries', boss)).body.docs.length, 0, 'nothing saved when any row is invalid');
@@ -197,7 +197,7 @@ test('import commit: validates every row, creates missing years, saves in bulk, 
   const g = docs.find((d) => d.item === 'Supermarket');
   assert.deepEqual([g.year, g.monthIndex, g.amount, g.source, g.extra], ['2024', 2, 12.35, 'import', undefined]);
   const i = docs.find((d) => d.item === 'Salary');
-  assert.deepEqual([i.group, i.category], [null, null]);
+  assert.deepEqual([i.group, i.category], ['X', null]);
   assert.deepEqual((await call('GET', '/api/db/years', boss)).body.docs.map((d) => d.data.year).sort(), ['2024', '2025']);
   assert.equal((await call('POST', '/api/import/commit', boss, { entries: [] })).status, 400);
   assert.equal((await call('POST', '/api/import/commit', boss, { entries: Array(501).fill(good) })).status, 400);

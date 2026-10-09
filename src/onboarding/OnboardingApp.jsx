@@ -7,12 +7,14 @@
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
 import './onboarding.css';
-import { ActionLink, Button, CategorySelector, Dropdown, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
+import { ActionLink, Button, CategorySelector, Dropdown, Label, Logo, Modal, illustrations, useMobile } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
-import { arrowStraightRight, edit, euro, plus, trash } from '../ui/icons.js';
+import { arrowStraightLeft, arrowStraightRight, edit, euro, plus, trash, upload } from '../ui/icons.js';
 import { Illustration } from '../ui/Modal.jsx';
 import { Pager, StepProgress, Tag } from '../ui/Selectors.jsx';
-import { db, getMe, leavePage } from '../tracker/api.js';
+import { api, db, getMe, leavePage } from '../tracker/api.js';
+import { readFile, analyzeWorkbook } from '../../public/legacy/importer.js';
+import { boardFromFile, entriesForBoard } from './board-from-file.js';
 import { CATS, EXP_GROUPS, MONTH_NAMES, addGroupToTaxonomy, addSubToTaxonomy, addTypeToTaxonomy, budgetDefaultDocId, fmtNum, hasGroups, parseAmount } from '../tracker/model.js';
 import { Combo, RenameModal, TypeModal, kindLabel } from '../tracker/TaxonomyModals.jsx';
 import { BlockFrag, BudgetRow, GroupHeader } from '../tracker/BudgetPanel.jsx';
@@ -150,8 +152,94 @@ function Choose({ onPick }) {
           <span className="ob-option-text"><span className="ob-option-title">Build your own board</span><span className="ob-option-desc">Create your own tracking categories from zero, one at a time.</span></span>
           <span className="ds-action-link medium ob-option-link"><span className="ds-al-label">Organise your own</span><Icon icon={arrowStraightRight} size={12} /></span>
         </button>
+        {/* 400:4509 (Oct 9): Import a file: Cloud Upload 2 (80 x 48) and a positive Label ".xlsx or .csv" in the top right. */}
+        <button type="button" className="ob-option" id="ob-import" onClick={() => onPick('import')}>
+          <Label type="positive" className="ob-option-tag">.xlsx or .csv</Label>
+          <span className="ob-option-art"><Illustration art={illustrations.cloudUpload2} width={80} /></span>
+          <span className="ob-option-text"><span className="ob-option-title">Import a file</span><span className="ob-option-desc">Bring a spreadsheet or bank export. We suggest categories, you confirm.</span></span>
+          <span className="ds-action-link medium ob-option-link"><span className="ds-al-label">Import your file</span><Icon icon={arrowStraightRight} size={12} /></span>
+        </button>
       </div>
     </section>
+  );
+}
+
+// ---------- 03b Import a file (Oct 9) ----------
+// The file is read here in the browser by the import engine (public/legacy/importer.js) and sorted into the three
+// categories by board-from-file.js; nothing is sent anywhere until "Start tracking". The result opens in "Set up your
+// board" (401:4464) with the file's types and monthly budgets, ready to edit.
+const ACCEPT = '.csv,.tsv,.txt,.xlsx';
+function ImportFile({ onDone, onBack }) {
+  const [over, setOver] = useState(false);
+  const [busy, setBusy] = useState(null); // file name being read
+  const [error, setError] = useState(null);
+  const fileRef = useRef(null);
+  const mobile = useMobile();
+  const read = async (files) => {
+    const f = files && files[0];
+    if (!f || busy) return;
+    setError(null); setBusy(f.name);
+    try {
+      if (f.size > 15 * 1024 * 1024) throw new Error('This file is over 15 MB. Export a shorter period and try again.');
+      const book = await readFile(f.name, await f.arrayBuffer());
+      const res = boardFromFile(analyzeWorkbook(book, { fileName: f.name }));
+      if (!res.rows.length) {
+        const why = res.skipped.currency ? 'Its amounts are not in euros. Ongatu works in EUR for now.' : 'No amounts with a date were found. Check that it has a date (or a column per month) and an amount.';
+        throw new Error(why);
+      }
+      onDone({ ...res, fileName: f.name });
+    } catch (e) {
+      setError(e && e.message ? e.message : 'This file could not be read.');
+    } finally { setBusy(null); if (fileRef.current) fileRef.current.value = ''; }
+  };
+  return (
+    <section className="ob-card ob-import" aria-labelledby="ob-import-title">
+      <div className="ob-card-head">
+        <h2 className="ob-card-title" id="ob-import-title">Import a file</h2>
+        <p className="ob-card-text">We sort it into Income, Savings and investments, and Expenses. You review the board before anything is saved.</p>
+      </div>
+      <input ref={fileRef} type="file" accept={ACCEPT} hidden id="ob-import-file" onChange={(e) => read(e.target.files)} />
+      <div className={'dropzone ob-dropzone' + (over ? ' is-over' : '') + (busy ? ' is-busy' : '')} id="ob-dropzone" tabIndex={0} role="button" aria-label="Upload a CSV or Excel file"
+        onClick={() => fileRef.current && fileRef.current.click()}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileRef.current && fileRef.current.click(); } }}
+        onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
+        onDrop={(e) => { e.preventDefault(); setOver(false); read(e.dataTransfer && e.dataTransfer.files); }}>
+        <div className="dz-text">
+          {busy
+            ? <div className="dz-line" role="status">Reading {busy}…</div>
+            : <div className="dz-line"><span className={'ds-action-link ' + (mobile ? 'small' : 'medium')}><Icon icon={upload} size={mobile ? 16 : 20} /><span className="ds-al-label">Click to upload</span></span><span>or drag and drop your file here</span></div>}
+          <div className="dz-hint">CSV or Excel (.xlsx), amounts in euros.</div>
+        </div>
+      </div>
+      {error && <p className="ob-error" role="alert" id="ob-import-error">{error}</p>}
+      <ul className="ob-import-tips">
+        <li><strong>Bank or card exports</strong> with a date, a description and an amount. A category column, if there is one, is used too.</li>
+        <li><strong>Budget sheets</strong> with a column per month, like Income, Fixed expenses or Savings sections.</li>
+      </ul>
+      <div className="ob-import-back"><ActionLink size="tiny" icon={arrowStraightLeft} id="ob-import-back" onClick={onBack}>Choose another way to start</ActionLink></div>
+    </section>
+  );
+}
+
+const MONTH3 = MONTH_NAMES.map((m) => m.slice(0, 3));
+const ymLabel = (ym) => (ym ? `${MONTH3[Number(ym.slice(5, 7)) - 1]} ${ym.slice(0, 4)}` : '');
+const fmtCount = (n) => `${n.toLocaleString('de-DE')} entr${n === 1 ? 'y' : 'ies'}`;
+/** The file's entries that will be saved: their type is still on the board and they fall on or after the start. */
+function importedEntries(imported, board, year, month) {
+  const from = `${year}-${String(Number(month) + 1).padStart(2, '0')}`;
+  return entriesForBoard(imported.rows, board).filter((e) => e.date.slice(0, 7) >= from);
+}
+const importedKept = (imported, board, year, month) => importedEntries(imported, board, year, month).length;
+// What was found in the file, above the board: the file, the period, what will be added and what was left out.
+function ImportNote({ imported, kept }) {
+  const { fileName, first, last, months, skipped, warnings } = imported;
+  const left = skipped.currency + skipped.negative + skipped.other;
+  return (
+    <div className="ob-import-note" id="ob-import-note" role="status">
+      <p><strong>{fileName}</strong> · {first === last ? ymLabel(first) : `${ymLabel(first)} – ${ymLabel(last)}`} ({months} month{months === 1 ? '' : 's'}). {fmtCount(kept)} will be added to your dashboard; types you delete are left out.</p>
+      {left > 0 && <p className="ob-import-note-sub">{fmtCount(left)} skipped{skipped.currency ? `: ${skipped.currency} not in euros` : ''}{skipped.negative ? `${skipped.currency ? ',' : ':'} ${skipped.negative} negative in a budget sheet` : ''}.</p>}
+      {warnings.filter((w) => w.code !== 'nothing_found').slice(0, 2).map((w) => <p key={w.code + w.message} className="ob-import-note-sub">{w.message}</p>)}
+    </div>
   );
 }
 
@@ -184,17 +272,18 @@ function PickField({ id, label, value, options, placeholder, onPick, listLabel }
   );
 }
 
-function Setup({ mode, onStart, busy, error }) {
-  const [board, setBoard] = useState(() => (mode === 'template' ? templateBoard() : emptyBoard()));
+function Setup({ mode, onStart, busy, error, imported, saving }) {
+  const [board, setBoard] = useState(() => (mode === 'import' && imported ? imported.board : mode === 'template' ? templateBoard() : emptyBoard()));
   const [sel, setSel] = useState('income');
-  const [subSel, setSubSel] = useState(() => ({ income: '', investment: '', expense: mode === 'template' ? EXP_GROUPS[0] : '' }));
+  const [subSel, setSubSel] = useState(() => ({ income: '', investment: '', expense: mode === 'template' ? EXP_GROUPS[0] : mode === 'import' && imported ? ((imported.board.types.find((t) => t.type === 'expense') || {}).group || EXP_GROUPS[0]) : '' }));
   const [groupSel, setGroupSel] = useState(''); // '' = every group of the shown sub-category
   const [modal, setModal] = useState(null); // { kind: 'type', category } | null
   const [renaming, setRenaming] = useState(null); // { kind, from } — a sub-category
   const [confirmModal, confirm] = useConfirm();
   const mobile = useMobile();
-  const [year, setYear] = useState(String(nowYear));
-  const [month, setMonth] = useState(String(new Date().getMonth()));
+  // An imported file starts tracking from its first month.
+  const [year, setYear] = useState(imported && imported.first ? imported.first.slice(0, 4) : String(nowYear));
+  const [month, setMonth] = useState(imported && imported.first ? String(Number(imported.first.slice(5, 7)) - 1) : String(new Date().getMonth()));
 
   const label = (k) => kindLabel(k);
   const subsOf = (k) => board.subs[k] || [];
@@ -291,7 +380,7 @@ function Setup({ mode, onStart, busy, error }) {
   const isEmpty = !viewTypes.length && !shownGroups.length;
   const needSub = sel === 'expense' && !sub;
   const info = CAT_INFO[sel];
-  const years = Array.from({ length: 6 }, (_, i) => String(nowYear - i));
+  const years = [...new Set([...Array.from({ length: 6 }, (_, i) => String(nowYear - i)), ...(imported ? imported.years.filter((y) => Number(y) <= nowYear) : [])])].sort().reverse();
   const months = MONTH_NAMES.map((m, i) => ({ value: String(i), label: m, selectedLabel: m.slice(0, 3) })).filter((o) => Number(year) < nowYear || Number(o.value) <= new Date().getMonth());
   const subOptions = [...(sel === 'expense' ? [] : [NO_SUB]), ...subsOf(sel)];
 
@@ -324,9 +413,9 @@ function Setup({ mode, onStart, busy, error }) {
             ))}
           </div>
           <div className="ob-summary-cta">
-            <p className="ob-summary-note">You can rename or add categories later.</p>
+            <p className="ob-summary-note">{mode === 'import' && imported ? `${fmtCount(importedKept(imported, board, year, month))} from your file will be added. You can rename or add categories later.` : 'You can rename or add categories later.'}</p>
             {error && <p className="ob-error" role="alert">{error}</p>}
-            <Button id="ob-start" className="ob-full" disabled={busy || board.types.length === 0} onClick={() => onStart(board, { year, month: Number(month) })}>Start tracking</Button>
+            <Button id="ob-start" className="ob-full" disabled={busy || board.types.length === 0} onClick={() => onStart(board, { year, month: Number(month) })}>{saving ? `Adding ${Math.min(saving.done + 500, saving.total).toLocaleString('de-DE')} of ${saving.total.toLocaleString('de-DE')}…` : 'Start tracking'}</Button>
           </div>
         </div>
       </div>
@@ -337,7 +426,8 @@ function Setup({ mode, onStart, busy, error }) {
     <section className="ob-card ob-setup ob-board" aria-labelledby="ob-setup-title">
       <div className="ob-card-head">
         <h2 className="ob-card-title" id="ob-setup-title">Set up your board</h2>
-        <p className="ob-card-text">{mode === 'template' ? 'Keep what fits and add your own. Nothing is locked in.' : 'Start with a category, then add your own types. Organize them only if you need to.'}</p>
+        <p className="ob-card-text">{mode === 'template' ? 'Keep what fits and add your own. Nothing is locked in.' : mode === 'import' ? 'We sorted your file into the three categories. Rename, move or delete anything before you start.' : 'Start with a category, then add your own types. Organize them only if you need to.'}</p>
+        {mode === 'import' && imported && <ImportNote imported={imported} kept={importedKept(imported, board, year, month)} />}
       </div>
       <div className="ob-setup-cols">
         <div className="ob-col ob-col-board">
@@ -414,7 +504,9 @@ export default function OnboardingApp() {
   const [step, setStep] = useState('tour');
   const [card, setCard] = useState(0);
   const [mode, setMode] = useState(null);
+  const [imported, setImported] = useState(null); // board-from-file result + fileName
   const [busy, setBusy] = useState(false);
+  const [saving, setSaving] = useState(null); // { done, total } while the imported entries are saved
   const [error, setError] = useState(null);
   // /welcome?preview=1: walk the whole flow on any account without saving anything (for testing the design).
   const preview = typeof window !== 'undefined' && new URLSearchParams(location.search).get('preview') === '1';
@@ -436,7 +528,7 @@ export default function OnboardingApp() {
     return () => { offY(); offS(); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const progress = step === 'tour' ? (card + 1) / (TOUR.length + 1) : step === 'choose' ? 1 / 3 : 2 / 3;
+  const progress = step === 'tour' ? (card + 1) / (TOUR.length + 1) : step === 'choose' ? 1 / 3 : step === 'import' ? 1 / 2 : 2 / 3;
   const current = step === 'tour' ? 1 : 2;
 
   const start = async (board, { year, month }) => {
@@ -444,18 +536,29 @@ export default function OnboardingApp() {
     setBusy(true); setError(null); setDone(true);
     try {
       const now = new Date().toISOString();
-      await db.collection('years').add({ year, currency: 'EUR', createdAt: now, taxonomy: taxonomyOfBoard(board) });
-      for (const t of board.types) {
-        const amount = Math.round((t.budget || 0) * 100) / 100;
-        if (!(amount > 0)) continue;
-        const group = t.group || null, category = t.category || null;
-        await db.collection('budgets').add({ year, type: t.type, group, category, item: t.item, amount, createdAt: now });
-        await db.doc('budgetDefaults/' + budgetDefaultDocId(t.type, group, category, t.item)).set({ type: t.type, group, category, item: t.item, amount, updatedAt: now });
+      const taxonomy = taxonomyOfBoard(board);
+      // An imported file: a year for each year of its entries from the start on (same board), then the entries.
+      const entries = mode === 'import' && imported ? importedEntries(imported, board, year, month) : [];
+      const yearsToMake = [...new Set([year, ...entries.map((e) => e.date.slice(0, 4))])].sort();
+      for (const y of yearsToMake) {
+        await db.collection('years').add({ year: y, currency: 'EUR', createdAt: now, taxonomy, ...(entries.length ? { source: 'import' } : {}) });
+        for (const t of board.types) {
+          const amount = Math.round((t.budget || 0) * 100) / 100;
+          if (!(amount > 0)) continue;
+          const group = t.group || null, category = t.category || null;
+          await db.collection('budgets').add({ year: y, type: t.type, group, category, item: t.item, amount, createdAt: now });
+          if (y === year) await db.doc('budgetDefaults/' + budgetDefaultDocId(t.type, group, category, t.item)).set({ type: t.type, group, category, item: t.item, amount, updatedAt: now });
+        }
       }
-      await db.doc('settings/onboarding').set({ done: true, startYear: year, startMonth: month, template: mode, at: now });
+      for (let i = 0; i < entries.length; i += 500) {
+        setSaving({ done: i, total: entries.length });
+        await api('POST', '/api/import/commit', { entries: entries.slice(i, i + 500) });
+      }
+      setSaving(null);
+      await db.doc('settings/onboarding').set({ done: true, startYear: year, startMonth: month, template: mode, at: now, ...(entries.length ? { importedFrom: imported.fileName, imported: entries.length } : {}) });
       setStep('welcome');
     } catch (e) {
-      setDone(false);
+      setDone(false); setSaving(null);
       setError('Could not save your board: ' + (e && e.message ? e.message : 'unknown error'));
     } finally { setBusy(false); }
   };
@@ -479,14 +582,15 @@ export default function OnboardingApp() {
     );
   }
   return (
-    <main className={'ob-page' + (step === 'setup' || step === 'welcome' ? ' is-wide' : step === 'choose' ? ' is-mid' : '')}>
+    <main className={'ob-page' + (step === 'setup' || step === 'welcome' ? ' is-wide' : step === 'choose' || step === 'import' ? ' is-mid' : '')}>
       {me && (
         <div className="ob-content">
           <Header name={name} />
           {showSteps && <StepProgress steps={STEPS.map((label) => ({ label, progress }))} current={current} />}
           {step === 'tour' && <Tour card={card} setCard={setCard} onDone={() => setStep('choose')} />}
-          {step === 'choose' && <Choose onPick={(m) => { setMode(m); setStep('setup'); }} />}
-          {(step === 'setup' || step === 'welcome') && mode && <Setup mode={mode} onStart={start} busy={busy} error={error} />}
+          {step === 'choose' && <Choose onPick={(m) => { setMode(m); setStep(m === 'import' ? 'import' : 'setup'); }} />}
+          {step === 'import' && <ImportFile onBack={() => setStep('choose')} onDone={(r) => { setImported(r); setStep('setup'); }} />}
+          {(step === 'setup' || step === 'welcome') && mode && <Setup mode={mode} onStart={start} busy={busy} error={error} imported={mode === 'import' ? imported : null} saving={saving} />}
         </div>
       )}
       <Modal open={step === 'welcome' && !mobile} id="ob-welcome" illustration={illustrations.success} illustrationWidth={160} onClose={() => leavePage('/')}

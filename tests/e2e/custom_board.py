@@ -51,6 +51,10 @@ async def main():
             check('setup: Expenses sub-category added (MSF after a rename) with its group and type; a default deleted (Extra)',
                   'Donation' in await pg.inner_text('.ob-board .budget-group[data-category="Monthly"]') and 'Extra' not in await pg.inner_text('.ob-summary-list'))
             await pg.click('#ob-cat-investment'); await pick(pg, 'ob-sub', 'Funds', create=True)
+            await pg.wait_for_selector('#ob-rename-sub')
+            for _ in range(20):
+                if await pg.input_value('#ob-sub') == 'Funds': break
+                await pg.wait_for_timeout(100)  # the new sub-category is shown before Add type (was flaky)
             await pg.click('#ob-add-type'); await pg.wait_for_selector('#type-modal[open]')
             await pg.fill('#type-modal-item-0', 'ETF'); await pg.click('#type-modal-save'); await pg.wait_for_timeout(300)
             summ = await pg.inner_text('.ob-summary-list')
