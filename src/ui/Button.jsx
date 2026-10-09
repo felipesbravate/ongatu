@@ -41,9 +41,10 @@ export function RoundButton({ icon, size = 'medium', iconSize, variant, active, 
 // With `href` it is a link (<a>), otherwise a button.
 export function ActionLink({ icon, trailing, size, iconSize, className, children, type = 'button', href, ...rest }) {
   const cls = cx('ds-action-link', size && size !== 'small' && size, className);
-  // Action link 607:1368 (Oct 3): Medium and Small carry a 16px icon, Tiny 12px.
+  // Action link 607:1368 (Oct 3): Medium and Small carry a 16px icon, Tiny 12px. Oct 9 (920:1492): the hover/press
+  // underline sits under the label only, never the icons, so the label has its own span.
   const is = iconSize || (size === 'tiny' ? 'sm' : 'md');
-  const inner = <>{icon && <Icon icon={icon} size={is} />}{children}{trailing && <Icon icon={trailing} size={is} />}</>;
+  const inner = <>{icon && <Icon icon={icon} size={is} />}<span className="ds-al-label">{children}</span>{trailing && <Icon icon={trailing} size={is} />}</>;
   if (href) return <a href={href} className={cls} {...rest}>{inner}</a>;
   return <button type={type} className={cls} {...rest}>{inner}</button>;
 }

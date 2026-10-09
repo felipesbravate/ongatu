@@ -3720,3 +3720,22 @@
   .ds-mnav-pill > .ds-mnav-pillbg,.ds-mnav-item{transition:none}
   .app-route-content,.ds-mnav-label{animation:none}
 }
+
+/* Action link states (Okara 920:1492, Oct 9). Hover and Press draw a 1px underline in the state colour under the
+   label only (not the icons). On touch screens there is no hover: a tap must not leave
+   the link (or the upload box's link) stuck in its hover colour and underline, so hover only applies where a pointer
+   can hover; Press shows while the finger is down. */
+.ds-action-link::after, .ds-action-link:hover::after, .ds-action-link:active::after, .dropzone:hover .ds-action-link::after{ content:none; }
+.ds-action-link .ds-al-label{ position:relative; display:inline-block; }
+/* The label box is its line height (Medium 20, Small/Tiny 16); the underline sits at y 20 of it in every size. */
+.ds-action-link .ds-al-label::after{ content:''; position:absolute; left:0; right:0; top:calc(100% + 4px); height:1px; background:currentColor; opacity:0; pointer-events:none; }
+.ds-action-link.medium .ds-al-label::after{ top:100%; }
+@media (hover:hover){
+  .ds-action-link:not(:disabled):hover .ds-al-label::after, .dropzone:hover .ds-action-link .ds-al-label::after{ opacity:1; }
+}
+.ds-action-link:not(:disabled):active .ds-al-label::after{ opacity:1; }
+@media (hover:none){
+  html .ds-action-link:hover:not(:active), html .dropzone:hover .ds-action-link, html #add-panel .dropzone:hover .dz-line .ds-action-link{ color:var(--link-default); }
+  html .ds-action-link:disabled:hover{ color:var(--link-disable); }
+  html .dropzone:hover:not(.is-over){ border-color:var(--border-default); }
+}

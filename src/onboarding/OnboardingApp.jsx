@@ -143,12 +143,12 @@ function Choose({ onPick }) {
         <button type="button" className="ob-option" id="ob-template" onClick={() => onPick('template')}>
           <span className="ob-option-art"><Illustration art={illustrations.laptop} width={75} /></span>
           <span className="ob-option-text"><span className="ob-option-title">Start from a template</span><span className="ob-option-desc">Ready-made categories for income, bills and savings. Keep what fits.</span></span>
-          <span className="ds-action-link medium ob-option-link">Start with the template<Icon icon={arrowStraightRight} size={12} /></span>
+          <span className="ds-action-link medium ob-option-link"><span className="ds-al-label">Start with the template</span><Icon icon={arrowStraightRight} size={12} /></span>
         </button>
         <button type="button" className="ob-option" id="ob-empty" onClick={() => onPick('empty')}>
           <span className="ob-option-art"><Illustration art={illustrations.pencil} width={60} /></span>
           <span className="ob-option-text"><span className="ob-option-title">Build your own board</span><span className="ob-option-desc">Create your own tracking categories from zero, one at a time.</span></span>
-          <span className="ds-action-link medium ob-option-link">Organise your own<Icon icon={arrowStraightRight} size={12} /></span>
+          <span className="ds-action-link medium ob-option-link"><span className="ds-al-label">Organise your own</span><Icon icon={arrowStraightRight} size={12} /></span>
         </button>
       </div>
     </section>
