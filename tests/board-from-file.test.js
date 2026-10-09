@@ -100,3 +100,52 @@ test('helpers', () => {
   assert.equal(matchRule('Something else'), null);
   assert.equal(prettyName('COMPRA TARJETA ZYX CLOUDHOST 9921'), 'Zyx Cloudhost');
 });
+
+// Oct 9 (Felipe's test with a downloaded budget template): one block per section, each repeating the month header;
+// no figures in the type rows; summary rows (with values) on top; a copyright year; instruction sheets of text only.
+const M = 'JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC,Total,Avg';
+const blank = (label) => `${label},,,,,,,,,,,,,,`;
+const TEMPLATE = [
+  'Personal Budget Spreadsheet,,,,,,,,,,,,,,',
+  'https://example.com/template,,,,,,,,,,,,,,© 2008-2019 Example LLC',
+  'Starting Balance,1500,,,,,,,,,,,,,',
+  `,${M}`,
+  'Total Income,0,0,0,0,0,0,0,0,0,0,0,0,0,0',
+  'NET,0,0,0,0,0,0,0,0,0,0,0,0,0,0',
+  'Projected End Balance,1500,1500,1500,1500,1500,1500,1500,1500,1500,1500,1500,1500,,',
+  `INCOME,${M}`, blank('Wages & Tips'), blank('Dividends'), blank('Other'), 'Total INCOME,0,0,0,0,0,0,0,0,0,0,0,0,0,0',
+  `HOME EXPENSES,${M}`, blank('Mortgage/Rent'), blank('Electricity'), blank('Furnishings/Appliances'), blank('Other'), 'Total HOME EXPENSES,0,0,0,0,0,0,0,0,0,0,0,0,0,0',
+  `TRANSPORTATION,${M}`, blank('Fuel'), blank('Student Loans'), 'Total TRANSPORTATION,0,0,0,0,0,0,0,0,0,0,0,0,0,0',
+  `CHARITY/GIFTS,${M}`, blank('Gifts Given'),
+  `SAVINGS,${M}`, blank('Emergency Fund'), blank('Retirement Fund'),
+].join('\n');
+
+test('a blank budget template becomes the board: sections are groups, every named row is a type', async () => {
+  const book = await readFile('budget.csv', enc(TEMPLATE));
+  book.sheets.push({ name: 'Help', rows: [['HELP'], ['Step 1:', 'Define Budget Categories'], ['© 2010-2019 Example']] });
+  const a = analyzeWorkbook(book, { fileName: 'budget.xlsx' });
+  assert.deepEqual(a.warnings, [], 'no warning for the text-only Help sheet, no year asked for');
+  assert.equal(a.candidates.length, 0, 'summary rows (Projected End Balance, NET, totals) are not entries');
+  const r = boardFromFile(a);
+  assert.equal(r.rows.length, 0); assert.equal(r.months, 0); assert.deepEqual(r.years, []);
+  const b = r.board;
+  const t = (item, cat) => b.types.find((x) => x.item === item && (cat === undefined || x.category === cat));
+  assert.deepEqual(['Wages & Tips', 'Dividends', 'Other'].map((i) => t(i, null).type), ['income', 'income', 'income']);
+  assert.deepEqual(['type', 'group', 'category', 'budget'].map((k) => t('Mortgage/Rent')[k]), ['expense', 'Fixed', 'Home', 0]);
+  assert.deepEqual(['group', 'category'].map((k) => t('Electricity')[k]), ['Fixed', 'Home']);
+  assert.deepEqual(['group', 'category'].map((k) => t('Furnishings/Appliances')[k]), ['Variable', 'Home']);
+  assert.deepEqual(['group', 'category'].map((k) => t('Fuel')[k]), ['Variable', 'Transportation']);
+  assert.equal(t('Student Loans').group, 'Fixed');
+  assert.deepEqual(['group', 'category'].map((k) => t('Gifts Given')[k]), ['Extra', 'Charity/gifts']);
+  assert.deepEqual([t('Emergency Fund').type, t('Retirement Fund').type], ['investment', 'investment']);
+  assert.ok(!b.types.some((x) => /balance|total|net/i.test(x.item)));
+});
+
+test('the same template with figures keeps its structure and imports the months', async () => {
+  const filled = TEMPLATE.replace(blank('Mortgage/Rent'), 'Mortgage/Rent,900,900,,,,,,,,,,,,').replace(',© 2008-2019 Example LLC', ',Budget 2025');
+  const r = await run('budget.csv', filled);
+  assert.deepEqual(r.years, ['2025']); assert.equal(r.rows.length, 2);
+  const rent = r.board.types.find((x) => x.item === 'Mortgage/Rent');
+  assert.deepEqual([rent.group, rent.category, rent.budget], ['Fixed', 'Home', 900]);
+  assert.ok(r.board.types.find((x) => x.item === 'Electricity' && x.budget === 0));
+});

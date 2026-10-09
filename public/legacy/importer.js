@@ -378,6 +378,9 @@ export function parseTransactions(rows, src) {
 
 // ---------------------------------------------------------------- monthly grid (budget sheet)
 const TOTAL_RE = /^(total|totals|subtotal|sub-total|sum|suma|soma|balance|saldo|net|neto|liquido|resultado)\b|\btotal$/;
+// Summary lines of budget templates, wherever the word sits (Oct 9: "Projected End Balance", "Starting Balance").
+const SUMMARY_RE = /\b(balance|saldo|projected|proyectado|projetado|net income|net worth|cash flow|flujo de caja|grand total|average|avg|promedio)\b/;
+const isSummary = (label) => { const h = norm(label); return TOTAL_RE.test(h) || SUMMARY_RE.test(h); };
 const TYPE_WORDS = {
   income: ['income', 'incomes', 'ingresos', 'ingreso', 'receitas', 'receita', 'entradas', 'renda', 'rendimentos', 'inkomster', 'earnings'],
   investment: ['savings', 'investments', 'investment', 'investiments', 'investments/savings', 'savings/investments', 'ahorro', 'ahorros', 'inversiones', 'inversion', 'investimentos', 'poupanca', 'sparande', 'estalvi'],
@@ -400,6 +403,8 @@ function sectionOf(label) {
   }
   return null;
 }
+// A year written in a copyright line, a link or a range ("© 2008-2019 Vertex42") is not the budget's year (Oct 9).
+const notAYearCell = (c) => typeof c === 'string' && (/©|\(c\)|copyright|https?:|www\./i.test(c) || /\b(19|20)\d{2}\s*[-–]\s*(19|20)\d{2}\b/.test(c));
 function yearOf(sheetName, rows, headerRow, monthCols) {
   const fromName = String(sheetName).match(/\b(19|20)\d{2}\b/);
   if (fromName) return fromName[0];
@@ -408,6 +413,7 @@ function yearOf(sheetName, rows, headerRow, monthCols) {
     if (m) return m[1] || '20' + m[2];
   }
   for (let r = 0; r <= headerRow; r++) for (const c of rows[r] || []) {
+    if (notAYearCell(c)) continue;
     if (typeof c === 'number' && Number.isInteger(c) && c >= 1990 && c <= 2100) return String(c);
     const y = typeof c === 'string' && c.match(/\b(19|20)\d{2}\b/);
     if (y) return y[0];
@@ -419,25 +425,42 @@ function yearOf(sheetName, rows, headerRow, monthCols) {
 export function parseGrid(rows, src, det) {
   const warnings = [];
   const year = yearOf(src.sheet, rows, det.headerRow, det.monthCols);
-  if (!year) warnings.push({ code: 'no_year', message: `“${src.sheet}”: couldn't tell which year this sheet is. Pick the year in the review.` });
   const firstMonthCol = Math.min(...det.monthCols.values());
   const labelCols = Array.from({ length: firstMonthCol }, (_, i) => i);
   const monthCells = [...det.monthCols.entries()];
   const decimal = inferDecimal(rows.slice(det.headerRow + 1).flatMap((r) => monthCells.map(([, c]) => r[c])));
+  // Templates that repeat the month header over each block ("INCOME | JAN … DEC", "HOME EXPENSES | JAN … DEC"): each
+  // such row opens a section, and every labelled row inside it is a type, with figures or not (Oct 9).
+  const isHeaderRow = (row) => new Set((row || []).map(monthOf).filter((m) => m >= 0)).size >= 6;
+  const sectioned = rows.slice(det.headerRow + 1).filter(isHeaderRow).length >= 1;
   let ctx = { type: null, group: null }, heading = null;
   const fill = labelCols.map(() => null); // forward-filled label columns (merged "Category" cells)
-  const candidates = [];
+  const candidates = [], items = [];
+  const itemSeen = new Set();
+  const addItem = (it) => { const k = [it.type, it.group, it.fileCategory, it.fileItem].join('|'); if (!itemSeen.has(k)) { itemSeen.add(k); items.push(it); } };
   for (let r = det.headerRow + 1; r < rows.length; r++) {
     const row = rows[r] || [];
     const labels = labelCols.map((c) => (row[c] == null ? '' : String(row[c]).trim()));
     if (!labels.some(Boolean)) continue;
+    if (sectioned && isHeaderRow(row)) {
+      // A block header: "INCOME" / "Fixed expenses" set the bucket; anything else ("HOME EXPENSES", "TRANSPORTATION")
+      // is an Expenses group named after it.
+      const label = labels.filter(Boolean).join(' ');
+      const s = sectionOf(label);
+      const incomeLike = /\b(income|incomes|ingresos?|receitas?|earnings|salar(y|ies))\b/.test(norm(label));
+      const savingsLike = /\b(savings?|investments?|ahorros?|inversion(es)?|investimentos?|poupanca)\b/.test(norm(label));
+      ctx = s || (incomeLike ? { type: 'income', group: null } : savingsLike ? { type: 'investment', group: null } : { type: 'expense', group: null });
+      heading = s ? null : (ctx.type === 'expense' ? sectionName(label) : null);
+      fill.fill(null);
+      continue;
+    }
     let sectionHere = false;
-    labels.forEach((l) => { const s = l && sectionOf(l); if (s) { ctx = s.group || s.type !== 'expense' ? s : { type: 'expense', group: ctx.type === 'expense' ? ctx.group : null }; heading = null; sectionHere = true; } });
-    if (labels.some((l) => l && TOTAL_RE.test(norm(l)))) continue;
+    if (!sectioned) labels.forEach((l) => { const s = l && sectionOf(l); if (s) { ctx = s.group || s.type !== 'expense' ? s : { type: 'expense', group: ctx.type === 'expense' ? ctx.group : null }; heading = null; sectionHere = true; } });
+    if (labels.some((l) => l && isSummary(l))) continue;
     const values = monthCells.map(([mi, c]) => [mi, parseAmount(row[c], decimal)]);
     const plain = labels.map((l) => (l && !sectionOf(l) ? l : ''));
     plain.forEach((l, i) => { if (l) fill[i] = l; });
-    if (!values.some(([, v]) => v)) {
+    if (!values.some(([, v]) => v) && !sectioned) {
       // heading without numbers ("Habitation"): the category for the rows under it
       const last = plain.filter(Boolean).pop();
       if (last && !sectionHere) { heading = last; plain.forEach((l, i) => { if (l) fill[i] = null; }); fill[plain.lastIndexOf(last)] = last; }
@@ -449,6 +472,8 @@ export function parseGrid(rows, src, det) {
     let category = null;
     for (let i = itemCol - 1; i >= 0; i--) if (fill[i] && fill[i] !== item) { category = fill[i]; break; }
     if (!category && heading && heading !== item) category = heading;
+    // Every type of the sheet, figures or not: the board keeps the rows a blank template only names.
+    addItem({ type: ctx.type, group: ctx.type === 'expense' ? ctx.group : null, fileCategory: category, fileItem: item, source: { file: src.file, sheet: src.sheet, row: r + 1, shape: 'grid' } });
     for (const [mi, v] of values) {
       if (!v) continue;
       const flags = [];
@@ -462,24 +487,34 @@ export function parseGrid(rows, src, det) {
       });
     }
   }
-  return { candidates, warnings, year };
+  if (!year && candidates.length) warnings.push({ code: 'no_year', message: `“${src.sheet}”: couldn't tell which year this sheet is. Pick the year in the review.` });
+  return { candidates, warnings, year: candidates.length ? year : null, items };
+}
+/** "HOME EXPENSES" -> "Home", "CHARITY/GIFTS" -> "Charity/gifts", "Daily living" stays. */
+function sectionName(label) {
+  let t = String(label).trim().replace(/\s+(expenses?|costs?|gastos?|despesas?)$/i, '');
+  if (t === t.toUpperCase()) t = t.charAt(0) + t.slice(1).toLowerCase();
+  return t;
 }
 
 // ---------------------------------------------------------------- workbook
 /** @param {{sheets:{name:string, rows:any[][]}[]}} book @param {{fileName:string}} opt */
 export function analyzeWorkbook(book, opt) {
-  const candidates = [], warnings = [], sheets = [];
+  const candidates = [], warnings = [], sheets = [], items = [];
   for (const s of book.sheets) {
     const det = detectShape(s.rows);
     if (det.shape === 'empty') { sheets.push({ name: s.name, shape: 'empty', rows: 0, year: null }); continue; }
     const src = { sheet: s.name, file: opt.fileName };
     const res = det.shape === 'grid' ? parseGrid(s.rows, src, /** @type {any} */ (det)) : parseTransactions(s.rows, src);
-    sheets.push({ name: s.name, shape: det.shape, rows: res.candidates.length, year: res.year || null });
-    candidates.push(...res.candidates); warnings.push(...res.warnings);
+    // A sheet of text only (instructions, a licence) is not a failed import: no warning for it (Oct 9).
+    const numbers = s.rows.reduce((n, r) => n + (r || []).filter((c) => typeof c === 'number').length, 0);
+    const quiet = det.shape === 'transactions' && !res.candidates.length && numbers < 3;
+    sheets.push({ name: s.name, shape: quiet ? 'text' : det.shape, rows: res.candidates.length, year: res.year || null, items: (res.items || []).length });
+    candidates.push(...res.candidates); if (!quiet) warnings.push(...res.warnings); items.push(...(res.items || []));
   }
-  if (!candidates.length) warnings.push({ code: 'nothing_found', message: 'No amounts with a date were found in this file.' });
+  if (!candidates.length && !items.length) warnings.push({ code: 'nothing_found', message: 'No amounts with a date were found in this file.' });
   candidates.forEach((c, i) => { c.key = `${opt.fileName}#${i}`; });
-  return { candidates, sheets, warnings };
+  return { candidates, sheets, warnings, items };
 }
 
 // ---------------------------------------------------------------- duplicates

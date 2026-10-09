@@ -38,11 +38,11 @@ const RULES = [
   [['gas', 'naturgy', 'butano'], 'expense', 'Fixed', 'Habitation', 'Gas'],
   [['internet', 'fibra', 'movistar', 'vodafone', 'orange', 'digi', 'jazztel', 'o2', 'lowi', 'simyo', 'masmovil', 'pepephone', 'phone', 'mobile', 'movil', 'telefono', 'telefone'], 'expense', 'Fixed', 'Habitation', 'Internet and phone'],
   [['insurance', 'seguro', 'seguros', 'assegurança', 'mapfre', 'axa', 'allianz', 'sanitas', 'adeslas', 'dkv', 'mutua', 'generali', 'linea directa'], 'expense', 'Fixed', 'Insurances', 'Insurance'],
-  [['netflix', 'spotify', 'hbo', 'max', 'disney', 'prime video', 'amazon prime', 'apple com', 'icloud', 'youtube', 'filmin', 'dazn', 'subscription', 'suscripcion', 'assinatura', 'patreon', 'chatgpt', 'openai', 'claude', 'anthropic', 'adobe', 'figma', 'notion'], 'expense', 'Fixed', 'Subscriptions', 'Subscriptions'],
-  [['gym', 'gimnasio', 'gimnas', 'academia', 'basic fit', 'dir', 'holmes place', 'crossfit', 'padel'], 'expense', 'Fixed', 'Health', 'Gym and sports'],
+  [['netflix', 'spotify', 'cable', 'satellite', 'tv license', 'newspaper', 'newspapers', 'magazine', 'magazines', 'membership', 'memberships', 'dues', 'hbo', 'max', 'disney', 'prime video', 'amazon prime', 'apple com', 'icloud', 'youtube', 'filmin', 'dazn', 'subscription', 'suscripcion', 'assinatura', 'patreon', 'chatgpt', 'openai', 'claude', 'anthropic', 'adobe', 'figma', 'notion'], 'expense', 'Fixed', 'Subscriptions', 'Subscriptions'],
+  [['gym', 'gimnasio', 'gimnas', 'health club', 'academia', 'basic fit', 'dir', 'holmes place', 'crossfit', 'padel'], 'expense', 'Fixed', 'Health', 'Gym and sports'],
   [['bank fee', 'bank fees', 'comision', 'comisiones', 'tarifa', 'maintenance fee'], 'expense', 'Fixed', 'Bank', 'Fees'],
   [['tax', 'taxes', 'impuesto', 'impuestos', 'hacienda', 'aeat', 'ibi', 'irpf', 'imposto', 'iptu', 'ipva'], 'expense', 'Fixed', 'Bank', 'Taxes'],
-  [['loan', 'prestamo', 'emprestimo', 'credito', 'financing', 'cetelem'], 'expense', 'Fixed', 'Bank', 'Loans'],
+  [['loan', 'loans', 'student loan', 'student loans', 'debt', 'credit card', 'vehicle payment', 'vehicle payments', 'car payment', 'car payments', 'alimony', 'child support', 'prestamo', 'prestamos', 'emprestimo', 'credito', 'financing', 'cetelem'], 'expense', 'Fixed', 'Bank', 'Loans'],
   [['school', 'college', 'tuition', 'university', 'universidad', 'escola', 'escuela', 'colegio', 'course', 'courses', 'curso', 'cursos', 'udemy', 'coursera'], 'expense', 'Fixed', 'Education', 'Education'],
   // Expenses: Variable
   [['groceries', 'grocery', 'supermarket', 'supermercado', 'mercadona', 'carrefour', 'lidl', 'aldi', 'dia', 'eroski', 'caprabo', 'bonpreu', 'condis', 'consum', 'alcampo', 'hipercor', 'ametller', 'mercado', 'market', 'pingo doce', 'continente', 'pao de acucar'], 'expense', 'Variable', 'Food', 'Groceries'],
@@ -136,7 +136,7 @@ export function classify(candidates, opt = {}) {
     if (c.flags.includes('currency')) { skipped.currency++; continue; }
     if (c.flags.includes('negative')) { skipped.negative++; continue; }
     if (!c.date && c.flags.includes('no_year') && c.source && c.source.month != null) c.date = `${fallbackYear}-${String(c.source.month + 1).padStart(2, '0')}-01`;
-    if (!c.date || !(c.amount > 0)) { skipped.other++; continue; }
+    if (!c.structure && (!c.date || !(c.amount > 0))) { skipped.other++; continue; }
     let bucket = c.type, sub = c.group || null, group = null, item = null;
     const shape = c.source && c.source.shape;
 
@@ -189,19 +189,30 @@ export function classify(candidates, opt = {}) {
  * board = { kinds, subs: { [type]: [sub] }, groups: {}, types: [{ type, group, category, item, budget }] }
  * @param {any[]} rows
  */
-export function boardOf(rows) {
+export function boardOf(rows, structure = []) {
   const months = new Set(rows.map((r) => ymOf(r.date)));
   const n = Math.max(1, months.size);
   /** @type {Map<string, any>} */ const types = new Map();
+  const keyOf = (r) => [r.type, r.group || '', r.category || '', r.item].join('␟');
+  const make = (r) => ({ type: r.type, group: r.group || null, category: r.category || null, item: r.item, total: 0, key: 'f' + types.size });
+  // Every type a sheet names first, in the sheet's order (rows with no figures yet stay on the board with no budget,
+  // Oct 9); then the figures add up into them.
+  structure.forEach((r) => { const k = keyOf(r); if (!types.has(k)) types.set(k, make(r)); });
   rows.forEach((r) => {
-    const k = [r.type, r.group || '', r.category || '', r.item].join('␟');
-    const t = types.get(k) || { type: r.type, group: r.group || null, category: r.category || null, item: r.item, total: 0, key: 'f' + types.size };
+    const k = keyOf(r);
+    const t = types.get(k) || make(r);
     t.total += r.amount; types.set(k, t); r.typeKey = t.key;
   });
   const order = { income: 0, investment: 1, expense: 2 };
   const subOrder = (s) => { const i = DEFAULT_SUBS.indexOf(s); return i < 0 ? 99 : i; };
-  const list = [...types.values()]
-    .sort((a, b) => order[a.type] - order[b.type] || subOrder(a.group) - subOrder(b.group) || String(a.category || '').localeCompare(String(b.category || '')) || b.total - a.total)
+  const all = [...types.values()];
+  all.forEach((t, i) => { t.at = i; });
+  const firstAt = new Map();
+  all.forEach((t) => { const g = t.type + '|' + (t.group || '') + '|' + (t.category || ''); if (!firstAt.has(g)) firstAt.set(g, t.at); });
+  const groupAt = (t) => firstAt.get(t.type + '|' + (t.group || '') + '|' + (t.category || ''));
+  const list = all
+    // Groups and types keep the file's order (a budget sheet's own order; for a bank export, first seen).
+    .sort((a, b) => order[a.type] - order[b.type] || subOrder(a.group) - subOrder(b.group) || groupAt(a) - groupAt(b) || a.at - b.at)
     .map((t) => ({ type: t.type, group: t.group, category: t.category, item: t.item, budget: Math.round(t.total / n), key: t.key }));
   const expenseSubs = [...new Set(list.filter((t) => t.type === 'expense').map((t) => t.group))];
   // The four default sub-categories always show, in their order, then any of the file's own.
@@ -217,7 +228,9 @@ export function boardOf(rows) {
  */
 export function boardFromFile(analysis, opt = {}) {
   const { rows, skipped } = classify(analysis.candidates || [], opt);
-  const board = boardOf(rows);
+  // The sheet's rows without figures are sorted the same way (amount 0, no date) and only add types.
+  const structure = classify((analysis.items || []).map((it) => ({ ...it, structure: true, amount: 0, date: null, description: it.fileItem, flags: [] })), opt).rows;
+  const board = boardOf(rows, structure);
   const yms = [...new Set(rows.map((r) => ymOf(r.date)))].sort();
   const years = [...new Set(yms.map((m) => m.slice(0, 4)))];
   const count = (k) => rows.filter((r) => r.type === k).length;

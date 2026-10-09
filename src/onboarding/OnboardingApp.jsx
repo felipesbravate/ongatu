@@ -183,7 +183,7 @@ function ImportFile({ onDone, onBack }) {
       if (f.size > 15 * 1024 * 1024) throw new Error('This file is over 15 MB. Export a shorter period and try again.');
       const book = await readFile(f.name, await f.arrayBuffer());
       const res = boardFromFile(analyzeWorkbook(book, { fileName: f.name }));
-      if (!res.rows.length) {
+      if (!res.board.types.length) {
         const why = res.skipped.currency ? 'Its amounts are not in euros. Ongatu works in EUR for now.' : 'No amounts with a date were found. Check that it has a date (or a column per month) and an amount.';
         throw new Error(why);
       }
@@ -236,7 +236,9 @@ function ImportNote({ imported, kept }) {
   const left = skipped.currency + skipped.negative + skipped.other;
   return (
     <div className="ob-import-note" id="ob-import-note" role="status">
-      <p><strong>{fileName}</strong> · {first === last ? ymLabel(first) : `${ymLabel(first)} – ${ymLabel(last)}`} ({months} month{months === 1 ? '' : 's'}). {fmtCount(kept)} will be added to your dashboard; types you delete are left out.</p>
+      {months
+        ? <p><strong>{fileName}</strong> · {first === last ? ymLabel(first) : `${ymLabel(first)} – ${ymLabel(last)}`} ({months} month{months === 1 ? '' : 's'}). {fmtCount(kept)} will be added to your dashboard; types you delete are left out.</p>
+        : <p><strong>{fileName}</strong> has no figures yet, so we took its categories only. Add budgets here or later.</p>}
       {left > 0 && <p className="ob-import-note-sub">{fmtCount(left)} skipped{skipped.currency ? `: ${skipped.currency} not in euros` : ''}{skipped.negative ? `${skipped.currency ? ',' : ':'} ${skipped.negative} negative in a budget sheet` : ''}.</p>}
       {warnings.filter((w) => w.code !== 'nothing_found').slice(0, 2).map((w) => <p key={w.code + w.message} className="ob-import-note-sub">{w.message}</p>)}
     </div>
@@ -413,7 +415,7 @@ function Setup({ mode, onStart, busy, error, imported, saving }) {
             ))}
           </div>
           <div className="ob-summary-cta">
-            <p className="ob-summary-note">{mode === 'import' && imported ? `${fmtCount(importedKept(imported, board, year, month))} from your file will be added. You can rename or add categories later.` : 'You can rename or add categories later.'}</p>
+            <p className="ob-summary-note">{mode === 'import' && imported && imported.months ? `${fmtCount(importedKept(imported, board, year, month))} from your file will be added. You can rename or add categories later.` : 'You can rename or add categories later.'}</p>
             {error && <p className="ob-error" role="alert">{error}</p>}
             <Button id="ob-start" className="ob-full" disabled={busy || board.types.length === 0} onClick={() => onStart(board, { year, month: Number(month) })}>{saving ? `Adding ${Math.min(saving.done + 500, saving.total).toLocaleString('de-DE')} of ${saving.total.toLocaleString('de-DE')}…` : 'Start tracking'}</Button>
           </div>
