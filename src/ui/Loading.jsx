@@ -11,6 +11,22 @@ export function LoginSkeletonContent() {
   return <div className="skeleton-stack" aria-hidden="true"><Skeleton kind="title" /><Skeleton kind="field" /><Skeleton kind="field" /></div>;
 }
 
+// A spinning ring (Oct 9): 32px, 3px track in surface/secondary, the turning quarter in surface/accent.
+export function Spinner({ size = 32, className }) {
+  return <span className={['ds-spinner', className].filter(Boolean).join(' ')} style={{ width: size, height: size }} aria-hidden="true" />;
+}
+
+// Sign in / Create account while the page loads (Oct 9, Felipe): the logo and tagline where the page puts them, and a
+// spinner instead of a skeleton (a skeleton of the form, or of the dashboard, read as content that never came).
+export function LoginLoading() {
+  return <main className="login-page is-loading-page" aria-busy="true">
+    <div className="login-content">
+      <header className="login-header"><Logo variant="vertical" height={104} /><p className="login-tagline">Take charge of your money</p></header>
+      <div className="login-spinner"><Spinner /><p className="loading-status" role="status">Loading sign-in…</p></div>
+    </div>
+  </main>;
+}
+
 export function LoginSkeleton() {
   return <main className="login-page" aria-busy="true">
     <div className="login-content">

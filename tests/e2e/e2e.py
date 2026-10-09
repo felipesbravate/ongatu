@@ -89,6 +89,12 @@ async def main():
             # 0. sign-in steps (Ongatu 325:10734 ...): email -> Create account (new address) -> 6-digit code
             sp = await admin_ctx.new_page(); sp_errs = []
             sp.on('pageerror', lambda e: sp_errs.append(str(e))); sp.on('console', lambda m: sp_errs.append(m.text) if m.type == 'error' and not any(x in m.text for x in IGNORE) else None)
+            # Oct 9: signed out, "/" goes straight to /login on the server (no dashboard skeleton first); while the
+            # page loads it shows a spinner, not a skeleton.
+            await sp.goto(BASE + '/'); await sp.wait_for_selector('#email-submit')
+            navs = await sp.evaluate("performance.getEntriesByType('navigation').map(e => new URL(e.name).pathname)")
+            raw = await (await admin_ctx.request.get(BASE + '/login')).text()
+            check('signed out: "/" lands on /login with no dashboard on the way; the loading state is a spinner', sp.url.endswith('/login') and navs == ['/login'] and 'ds-spinner' in raw and 'skeleton' not in raw and 'Loading your dashboard' not in raw, (sp.url, navs))
             await sp.goto(BASE + '/login'); await sp.wait_for_selector('#email-submit')
             lg = await sp.evaluate("""() => { const cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(), card = document.querySelector('.login-card'), logo = document.querySelector('.login-header .ds-logo');
                 return { title: document.querySelector('.login-title').textContent, tagline: document.querySelector('.login-tagline').textContent, logo: [Math.round(r(logo).width), Math.round(r(logo).height), logo.dataset.variant],

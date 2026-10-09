@@ -9,7 +9,7 @@ import { Icon } from '../ui/Icon.jsx';
 import '../ui/okara.css';
 import './login.css';
 
-import { LoginSkeletonContent } from '../ui/Loading.jsx';
+import { Spinner } from '../ui/Loading.jsx';
 
 const CODE_LENGTH = 6; // Supabase Auth -> Email -> Email OTP Length = 6 (Oct 4; was 8)
 
@@ -34,7 +34,7 @@ function Shell({ step = 'email', children }) {
           <p className="login-tagline">Take charge of your money</p>
         </header>
         <section className={"login-card" + (busy ? " is-loading" : "")} aria-busy={busy}>{children}
-          {busy && <div className="login-loading-overlay"><LoginSkeletonContent /><p className="loading-status" role="status">Continuing securely…</p></div>}
+          {busy && <div className="login-loading-overlay"><Spinner /><p className="loading-status" role="status">Continuing securely…</p></div>}
         </section>
       </div>
     </main>

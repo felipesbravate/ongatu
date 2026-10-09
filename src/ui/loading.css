@@ -19,3 +19,9 @@
 @keyframes skeleton-pulse{0%,100%{opacity:1}50%{opacity:var(--opacity-disabled)}}
 @media(prefers-reduced-motion:reduce){.skeleton{animation:none}}
 @media(max-width:640px){.loading-page .skeleton--title{width:72%}.loading-tabs{gap:var(--space-xs)}.loading-page .loading-card{width:100%;box-sizing:border-box}}
+/* Oct 9: spinner for Sign in / Create account (the page loading, and "Continuing securely…" after a step is sent). */
+.ds-spinner{display:block;flex-shrink:0;box-sizing:border-box;border-radius:50%;border:3px solid var(--surface-secondary);border-top-color:var(--surface-accent);animation:ds-spin .8s linear infinite}
+@keyframes ds-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.ds-spinner{animation-duration:2.4s}}
+.login-spinner{display:flex;flex-direction:column;align-items:center;gap:var(--space-md);min-height:160px;justify-content:center;text-align:center}
+.login-loading-overlay{align-items:center;text-align:center}
