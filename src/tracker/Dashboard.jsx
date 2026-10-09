@@ -160,10 +160,20 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
   const [tall, setTall] = useState(false);
+  // The card's natural height, measured the same way whether it is clipped or not: the bottom of its last in-flow child
+  // plus its bottom padding. (Oct 9: scrollHeight drops the bottom padding of a clipped box in Safari/WebKit, so a card
+  // 557-580px tall flipped between collapsed and open forever: React error #185 on iPhones.)
   useLayoutEffect(() => {
     const el = cardRef.current;
     if (!mobile || !el) { setTall(false); return; }
-    setTall(el.scrollHeight > 555 + 1);
+    let bottom = 0;
+    for (const c of el.children) {
+      const pos = getComputedStyle(c).position;
+      if (pos === 'absolute' || pos === 'fixed' || c.classList.contains('ds-expander')) continue;
+      bottom = Math.max(bottom, c.offsetTop + c.offsetHeight);
+    }
+    const natural = bottom + (parseFloat(getComputedStyle(el).paddingBottom) || 0);
+    setTall(natural > 555 + 1);
   });
   useEffect(() => { setExpanded(false); }, [breakdownType, monthIdx, y.year]);
   const collapsed = mobile && tall && !expanded;
