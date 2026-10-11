@@ -8,6 +8,7 @@ import { dirname, extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { handle, memoryAccounts, memoryProfiles, memoryUsage, pageAccess } from '../src/lib/api.js';
 import { Vault, memoryStores } from '../src/lib/vault.js';
+import { boardVaultStores, memoryBoards } from '../src/lib/boards.js';
 import { RateLimiter, parseAdminEmails } from '../src/lib/security.js';
 import { securityHeaders } from '../src/lib/headers.js';
 import { EMAIL_COOKIE, LOGIN_CTX_COOKIE, LOGIN_NAME_COOKIE, cleanCode, cleanEmail, cleanName, encodeCtx, greetingName } from '../src/lib/otp-login.js';
@@ -18,9 +19,15 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = Number(process.env.PORT || 3100);
 const ORIGIN = process.env.APP_ORIGIN || `http://127.0.0.1:${PORT}`;
 const stores = memoryStores();
-export const state = { aiCalls: [], stores };
+const boards = memoryBoards();
+const master = { active: 'v1', keys: { v1: randomBytes(32) } };
+const boardStores = boardVaultStores(boards);
+// Shared boards (Oct 11); emails "sent" for invite links land in state.outbox.
+export const state = { aiCalls: [], stores, boards, outbox: [] };
 const deps = {
-  vault: new Vault({ master: { active: 'v1', keys: { v1: randomBytes(32) } }, keys: stores.keys, docs: stores.docs }),
+  vault: new Vault({ master, keys: stores.keys, docs: stores.docs }),
+  boards, boardVault: new Vault({ master, keys: boardStores.keys, docs: boardStores.docs }),
+  mailer: { async send(m) { state.outbox.push(m); } },
   profiles: memoryProfiles(), usage: memoryUsage(),
   ai: { async complete(a) { state.aiCalls.push(a); if (a.prompt.includes('CERTAIN SHOP')) return '[{"type":"expense","group":"Variable","category":"Food","item":"Groceries","certainty":"sure","description":"Mock certain shop","amount":23.4,"date":"2026-09-01"}]'; return process.env.MOCK_AI_REPLY || '[{"type":"expense","group":"Variable","category":"Food","item":"Groceries","description":"Mock supermarket","amount":23.4,"date":"2026-09-01"}]'; } },
   admins: parseAdminEmails(process.env.ADMIN_EMAILS || 'admin@example.com'),

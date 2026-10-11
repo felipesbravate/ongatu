@@ -6,6 +6,7 @@ import { loadMasterKeys } from '../lib/keyring.js';
 import { RateLimiter, parseAdminEmails } from '../lib/security.js';
 import { supabaseStores } from '../lib/supabase-stores.js';
 import { Vault } from '../lib/vault.js';
+import { boardVaultStores, mailerFromEnv } from '../lib/boards.js';
 import { supabaseAccounts } from './accounts.js';
 
 function need(name) {
@@ -19,8 +20,15 @@ export function getDeps() {
   if (cached) return cached;
   const sb = createClient(need('SUPABASE_URL'), need('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false, autoRefreshToken: false } });
   const stores = supabaseStores(sb);
+  const master = loadMasterKeys(process.env);
+  const boardStores = boardVaultStores(stores.boards);
   cached = {
-    vault: new Vault({ master: loadMasterKeys(process.env), keys: stores.keys, docs: stores.docs }),
+    vault: new Vault({ master, keys: stores.keys, docs: stores.docs }),
+    // Shared boards (Oct 11): their own keys and documents, same master key. Needs supabase/migrations/0002.
+    boards: stores.boards,
+    boardVault: new Vault({ master, keys: boardStores.keys, docs: boardStores.docs }),
+    // Optional "notify by email" for invite links (RESEND_API_KEY + MAIL_FROM); without it the app copies/shares the link.
+    mailer: mailerFromEnv(process.env),
     profiles: stores.profiles,
     accounts: supabaseAccounts(sb, { url: need('SUPABASE_URL'), anonKey: need('SUPABASE_ANON_KEY'), profiles: stores.profiles }),
     usage: stores.usage,

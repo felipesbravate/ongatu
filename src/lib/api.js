@@ -3,10 +3,11 @@
 //   handle(req, deps) -> { status, body }
 // req  : { method, path (no query), headers (lower-case keys), body (parsed JSON or undefined), user ({id,email}|null),
 //          authKind ('cookie' default | 'bearer' for the native app) }
-// deps : { vault, profiles, usage, ai, admins, appOrigin, limiter, dailyReadCap, accounts? }
+// deps : { vault, profiles, usage, ai, admins, appOrigin, limiter, dailyReadCap, accounts?, boards?, boardVault?, mailer? }
 import { effectiveStatus, newAccountStatus, passesCsrf, safeError } from './security.js';
 import { VaultError } from './vault.js';
 import { validateImportBatch } from './import-commit.js';
+import { handleBoards, leaveAllBoards } from './boards.js';
 
 const json = (/** @type {number} */ status, /** @type {any} */ body) => ({ status, body });
 
@@ -52,6 +53,10 @@ export async function handle(req, deps) {
 
     if (method === 'GET' && path === '/api/me') return json(200, { email: user.email, status, isAdmin, name: user.name || null });
     if (status !== 'approved') return json(403, { error: { code: status === 'blocked' ? 'blocked' : 'pending', message: status === 'blocked' ? 'Account blocked' : 'Waiting for approval' } });
+
+    // ---- shared boards and invite links (src/lib/boards.js) ----
+    const boardRes = await handleBoards(req, deps, { user });
+    if (boardRes) return boardRes;
 
     // ---- document store ----
     const m = path.match(/^\/api\/db\/([A-Za-z]+)(?:\/([^/]+))?$/);
@@ -138,6 +143,7 @@ export async function handle(req, deps) {
     // ---- account erase (crypto-shredding): data and key go; with account support the login is deleted too
     // (profile, key and documents cascade), otherwise the account is blocked ----
     if (method === 'DELETE' && path === '/api/me') {
+      await leaveAllBoards(deps, user.id); // shared boards stay with their other members
       await deps.vault.eraseUser(user.id);
       profileCache(deps).delete(user.id);
       if (deps.accounts) { await deps.accounts.deleteUser(user); return json(200, { erased: true, deleted: true }); }
