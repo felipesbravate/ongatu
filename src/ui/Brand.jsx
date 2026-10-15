@@ -40,7 +40,7 @@ export function Logo({ variant = 'symbol', height = 48, className, title = 'Onga
   );
 }
 
-// Toggle (DS 298:637): 38x24 pill. Off: surface/secondary, border/default, 22px surface/tertiary knob on the left.
+// Toggle (DS 862:4892): 40x24 pill. Off: surface/secondary, border/default, 22px surface/dark knob on the left.
 // On: brand/mint-light, brand/mint border, surface/dark knob on the right. A switch for screen readers.
 export function Toggle({ on, onChange, label, id, disabled }) {
   return (

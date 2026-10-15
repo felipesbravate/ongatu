@@ -196,7 +196,8 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
                 onDrop={(e) => { e.preventDefault(); setOver(false); setDocStatus(null); reader.add(e.dataTransfer && e.dataTransfer.files); }}>
                 <div className="dz-text">
-                  <div className="dz-line"><span className={'ds-action-link ' + (mobile ? 'small' : 'medium')}><Icon icon={upload} size={mobile ? 16 : 20} /><span className="ds-al-label">Click to upload</span></span><span>or drag and drop your file here</span></div>
+                  {/* 229:18166: "Click to upload" (Medium link, 16px icon) + "or drag and drop…"; phones (369:13388): "Upload your file". */}
+                  <div className="dz-line"><span className={'ds-action-link ' + (mobile ? 'small' : 'medium')}><Icon icon={upload} size={16} /><span className="ds-al-label">{mobile ? 'Upload your file' : 'Click to upload'}</span></span>{!mobile && <span>or drag and drop your file here</span>}</div>
                   <div className="dz-hint" id="dz-hint">{reader.ready && reader.imgCaps() ? 'JPG, PNG, PDF or CSV. Add as many as you like.' : 'PDF or CSV. Add as many as you like.'}</div>
                 </div>
               </div>
@@ -260,7 +261,8 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
               </div>
               <div className="fld">
                 <label className="fld-label" htmlFor="entry-amount">Amount</label>
-                <Input id="entry-amount" icon={euro} iconSize={mobile ? 'lg' : 'md'} size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
+                {/* 229:18166 (Oct 12): no € prefix, the 0,00 placeholder in Value/Large. */}
+                <Input id="entry-amount" size="medium" type="text" placeholder="0,00" inputMode="decimal" autoComplete="off" value={amount} className="is-value" onChange={(e) => setAmount(e.target.value)}
                   onBlur={(e) => { if (e.target.value.trim()) setAmount(fmtNum(parseAmount(e.target.value))); }} />
               </div>
               <div className="fld">
@@ -276,7 +278,7 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
                 </div>
               </div>
               <div className="span-2">
-                <ActionLink size="medium" icon={plus} id="entry-add-type" onClick={() => setTypeModal(true)}>Add type</ActionLink>
+                <ActionLink size="medium" icon={plus} id="entry-add-type" onClick={() => setTypeModal(true)}>Add item</ActionLink>
               </div>
             </div>
             <TypeModal open={typeModal} kind={entryType} kindName={kindName} group={isExp ? entryGroup : (subVal || null)} groupsOf={() => groupNames.filter(Boolean)} onClose={() => setTypeModal(false)} id="entry-type-modal"

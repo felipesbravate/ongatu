@@ -263,7 +263,7 @@
     [
       "border/tertiary",
       "#32312cff",
-      "#7d7e70ff"
+      "#efeee5ff"
     ],
     [
       "border/selected-item",
@@ -456,6 +456,41 @@
       "border/notification",
       "#f48c63ff",
       "#f9af92ff"
+    ],
+    [
+      "badge/counter-text",
+      "#ffffffff",
+      "#ffffffff"
+    ],
+    [
+      "badge/counter-text-secondary",
+      "#aaa698ff",
+      "#aaa698ff"
+    ],
+    [
+      "badge/counter-pressed-icon",
+      "#ffffffff",
+      "#ffffffff"
+    ],
+    [
+      "badge/counter-close-icon",
+      "#aaa698ff",
+      "#aaa698ff"
+    ],
+    [
+      "badge/counter-divider",
+      "#32312cff",
+      "#32312cff"
+    ],
+    [
+      "surface/modal",
+      "#1f1e19e0",
+      "#32312ce0"
+    ],
+    [
+      "icon/round-control",
+      "#16150fff",
+      "#deddcfff"
     ]
   ],
   "effects": [

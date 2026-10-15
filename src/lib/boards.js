@@ -29,6 +29,8 @@ const MAX_ACTIVE_INVITES = 20;
 const INVITE_DAYS = { min: 1, max: 30, default: 7 };
 const INVITE_USES = { min: 1, max: 20, default: 1 };
 const MAX_EMAILS_PER_INVITE = 5;
+const MAX_EMAILS_PER_REQUEST = 10;
+const ACCEPTED_DAYS = 30; // "<name> accepted your invitation" stays listed this long
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const TOKEN_RE = /^[A-Za-z0-9_-]{43}$/; // 32 random bytes, base64url
@@ -110,6 +112,20 @@ export async function handleBoards(req, deps, { user }) {
     return { userId: m.user_id, email: p ? p.email : null, name: m.display_name || null, role: m.role, joinedAt: m.created_at, you: m.user_id === user.id };
   };
   const coOwnerCount = async (/** @type {string} */ boardId) => (await B.members.list(boardId)).filter((x) => x.role === 'co_owner').length;
+  /** Join a board through an invite. Someone already on the board keeps their role (an invite never demotes, nor
+   * promotes, a member). */
+  const admit = async (/** @type {any} */ inv) => {
+    const name = await boardName(inv.board_id);
+    const existing = await B.members.get(inv.board_id, user.id);
+    if (existing) return json(200, { boardId: inv.board_id, boardName: name, role: existing.role, alreadyMember: true });
+    if (!inviteOpen(inv)) return err(410, 'gone', 'This invite link has expired or was already used');
+    if ((await B.members.forUser(user.id)).length >= MAX_BOARDS_PER_USER) return err(409, 'limit', `You can be on up to ${MAX_BOARDS_PER_USER} shared boards`);
+    if ((await B.members.list(inv.board_id)).length >= MAX_MEMBERS) return err(409, 'limit', `A board can have up to ${MAX_MEMBERS} members`);
+    // Taking a use is atomic in the store (two people opening a single-use link at once: only one gets in).
+    if (!(await B.invites.use(inv.id, now()))) return err(410, 'gone', 'This invite link has expired or was already used');
+    await B.members.put({ board_id: inv.board_id, user_id: user.id, role: inv.role, display_name: displayName(), invited_by: inv.created_by, created_at: now() });
+    return json(201, { boardId: inv.board_id, boardName: name, role: inv.role, alreadyMember: false });
+  };
   /** Crypto-shredding: documents and key, then invites, members and the board row. */
   const destroy = async (/** @type {string} */ boardId) => {
     await V.eraseUser(boardSpace(boardId));
@@ -202,7 +218,7 @@ export async function handleBoards(req, deps, { user }) {
       const { res } = await membership(boardId, 'co_owner'); if (res) return res;
       if (method === 'GET') {
         const t = Date.now();
-        const list = (await B.invites.list(boardId)).filter((i) => !i.revoked_at && Date.parse(i.expires_at) > t && i.uses < i.max_uses);
+        const list = (await B.invites.list(boardId)).filter((i) => !i.revoked_at && !i.declined_at && Date.parse(i.expires_at) > t && i.uses < i.max_uses);
         return json(200, { invites: list.map(inviteView) });
       }
       if (method === 'POST') {
@@ -227,12 +243,63 @@ export async function handleBoards(req, deps, { user }) {
       }
       return err(405, 'bad_method', 'Method not allowed');
     }
+    // ---- invite by email (Oct 13, "Board sharing" 970:18246 / "Share your board" 994:40586): one single-use invite per
+    // address, bound to it. The person gets the link by email (when a mailer is set up) and, if they already have an
+    // account with that address, an in-app notification they can accept without the link (/api/invites/mine).
+    // The token is never returned to the co-owner here.
+    if (rest === '/invites/email') {
+      const { res } = await membership(boardId, 'co_owner'); if (res) return res;
+      if (method !== 'POST') return err(405, 'bad_method', 'Method not allowed');
+      if (!deps.limiter.take(`invite:${user.id}`)) return err(429, 'rate_limited', 'Too many requests, slow down');
+      const role = body.role === undefined ? 'viewer' : body.role;
+      if (!ROLES.includes(role)) return err(400, 'bad_input', 'Role must be viewer, editor or co_owner');
+      const raw = Array.isArray(body.emails) ? body.emails : typeof body.emails === 'string' ? body.emails.split(/[\s,;]+/) : [];
+      const emails = [...new Set(raw.filter((e) => typeof e === 'string').map((e) => e.trim().toLowerCase()).filter(Boolean))];
+      if (!emails.length || emails.some((e) => !EMAIL_RE.test(e) || e.length > 254)) return err(400, 'bad_input', 'Enter valid email addresses');
+      if (emails.length > MAX_EMAILS_PER_REQUEST) return err(400, 'bad_input', `Invite up to ${MAX_EMAILS_PER_REQUEST} people at a time`);
+      const t = Date.now();
+      const all = await B.invites.list(boardId);
+      const open = all.filter((i) => inviteOpen(i) && !i.declined_at);
+      const members = await Promise.all((await B.members.list(boardId)).map(memberView));
+      const name = await boardName(boardId);
+      const who = displayName() || user.email;
+      const out = [];
+      for (const email of emails) {
+        if (members.some((m) => m.email && m.email.toLowerCase() === email)) { out.push({ email, status: 'member' }); continue; }
+        if (open.length >= MAX_ACTIVE_INVITES) return err(409, 'limit', 'Too many open invite links. Revoke some first.');
+        // A new address, or one invited before: the old open invite goes (its link stops working), a fresh one is sent.
+        for (const prev of open.filter((i) => i.email === email)) await B.invites.revoke(prev.id, now());
+        const token = newToken();
+        const inv = {
+          id: randomUUID(), board_id: boardId, token_hash: hashToken(token), role, created_by: user.id, email,
+          created_at: new Date(t).toISOString(), expires_at: new Date(t + INVITE_DAYS.default * 86_400_000).toISOString(), max_uses: 1, uses: 0, emails_sent: 0, revoked_at: null,
+        };
+        await B.invites.create(inv);
+        open.push(inv);
+        let mailed = false;
+        if (deps.mailer) {
+          try {
+            await deps.mailer.send({ to: email, subject: `${who} invited you to “${name}” on Ongatu`, text: inviteEmail(who, name, inv, inviteUrl(deps.appOrigin, token)) });
+            await B.invites.countEmail(inv.id); mailed = true;
+          } catch { /* the in-app invite still stands */ }
+        }
+        out.push({ ...inviteView(inv), status: 'sent', mailed });
+      }
+      return json(201, { invites: out });
+    }
     const im = rest.match(/^\/invites\/([^/]+)(\/notify)?$/);
     if (im) {
       const { res } = await membership(boardId, 'co_owner'); if (res) return res;
       const inv = await B.invites.get(boardId, decodeURIComponent(im[1]));
       if (!inv) return err(404, 'not_found', 'Invite not found');
       if (!im[2] && method === 'DELETE') { await B.invites.revoke(inv.id, now()); return json(200, { id: inv.id, revoked: true }); }
+      if (!im[2] && method === 'PATCH') {
+        // Change the access an open invite grants (the "Invite sent" row's dropdown).
+        if (!ROLES.includes(body.role)) return err(400, 'bad_input', 'Role must be viewer, editor or co_owner');
+        if (!inviteOpen(inv) || inv.declined_at) return err(410, 'gone', 'This invite link has expired or was already used');
+        await B.invites.setRole(inv.id, body.role);
+        return json(200, inviteView({ ...inv, role: body.role }));
+      }
       if (im[2] && method === 'POST') {
         // "Notify by email": the link is only sent if the caller holds it (the token matches), so a co-owner can't
         // re-send someone else's link they never saw, and the server never stores a usable token.
@@ -295,6 +362,44 @@ export async function handleBoards(req, deps, { user }) {
     return err(404, 'not_found', 'Not found');
   }
 
+  // ---------------------------------------------------------------- invites to my address (in-app notifications)
+  // "Ongatu - Invite notification" (973:26339): "<who> invited you to join the “<board>” board." Accept / Decline, and,
+  // for the person who invited, "<name> accepted your invitation to join the “<board>” board." Only invites bound to
+  // the signed-in account's own (verified) address are listed or accepted here; nothing reveals other addresses.
+  if (path === '/api/invites/mine' && method === 'GET') {
+    const me = String(user.email || '').toLowerCase();
+    const invites = [];
+    for (const inv of me ? await B.invites.forEmail(me) : []) {
+      if (!inviteOpen(inv) || inv.declined_at) continue;
+      if (await B.members.get(inv.board_id, user.id)) continue;
+      const by = await B.members.get(inv.board_id, inv.created_by);
+      const byProfile = by && by.display_name ? null : await deps.profiles.get(inv.created_by);
+      invites.push({ id: inv.id, boardId: inv.board_id, boardName: await boardName(inv.board_id), role: inv.role, createdAt: inv.created_at,
+        invitedBy: (by && by.display_name) || (byProfile && byProfile.email) || null });
+    }
+    const since = Date.now() - ACCEPTED_DAYS * 86_400_000;
+    const accepted = [];
+    for (const mine of await B.members.forUser(user.id)) {
+      for (const m of await B.members.list(mine.board_id)) {
+        if (m.invited_by !== user.id || m.user_id === user.id || Date.parse(m.created_at) < since) continue;
+        const p = m.display_name ? null : await deps.profiles.get(m.user_id);
+        accepted.push({ boardId: m.board_id, boardName: await boardName(m.board_id), userId: m.user_id, name: m.display_name || (p && p.email) || null, at: m.created_at });
+      }
+    }
+    return json(200, { invites, accepted });
+  }
+  const mi = path.match(/^\/api\/invites\/mine\/([^/]+)\/(accept|decline)$/);
+  if (mi && method === 'POST') {
+    if (!deps.limiter.take(`join:${user.id}`)) return err(429, 'rate_limited', 'Too many requests, slow down');
+    const id = decodeURIComponent(mi[1]);
+    const me = String(user.email || '').toLowerCase();
+    const inv = UUID_RE.test(id) && me ? (await B.invites.forEmail(me)).find((i) => i.id === id) : null;
+    if (!inv || inv.revoked_at) return err(404, 'not_found', 'Invite not found');
+    if (mi[2] === 'decline') { await B.invites.decline(inv.id, now()); return json(200, { id: inv.id, declined: true }); }
+    if (inv.declined_at) return err(410, 'gone', 'This invite was declined');
+    return admit(inv);
+  }
+
   // ---------------------------------------------------------------- opening an invite link
   if (method === 'POST' && (path === '/api/invites/preview' || path === '/api/invites/accept')) {
     if (!deps.limiter.take(`join:${user.id}`)) return err(429, 'rate_limited', 'Too many requests, slow down');
@@ -314,15 +419,7 @@ export async function handleBoards(req, deps, { user }) {
         alreadyMember: !!existing, yourRole: existing ? existing.role : null, open,
       });
     }
-    // Accept. Someone already on the board keeps their role (a link never demotes, nor promotes, a member).
-    if (existing) return json(200, { boardId: inv.board_id, boardName: name, role: existing.role, alreadyMember: true });
-    if (!open) return err(410, 'gone', 'This invite link has expired or was already used');
-    if ((await B.members.forUser(user.id)).length >= MAX_BOARDS_PER_USER) return err(409, 'limit', `You can be on up to ${MAX_BOARDS_PER_USER} shared boards`);
-    if ((await B.members.list(inv.board_id)).length >= MAX_MEMBERS) return err(409, 'limit', `A board can have up to ${MAX_MEMBERS} members`);
-    // Taking a use is atomic in the store (two people opening a single-use link at once: only one gets in).
-    if (!(await B.invites.use(inv.id, now()))) return err(410, 'gone', 'This invite link has expired or was already used');
-    await B.members.put({ board_id: inv.board_id, user_id: user.id, role: inv.role, display_name: displayName(), invited_by: inv.created_by, created_at: now() });
-    return json(201, { boardId: inv.board_id, boardName: name, role: inv.role, alreadyMember: false });
+    return admit(inv);
   }
   return err(404, 'not_found', 'Not found');
 }
@@ -349,7 +446,7 @@ export async function leaveAllBoards(deps, userId) {
 }
 
 function inviteOpen(/** @type {any} */ inv) { return !inv.revoked_at && Date.parse(inv.expires_at) > Date.now() && inv.uses < inv.max_uses; }
-function inviteView(/** @type {any} */ i) { return { id: i.id, role: i.role, createdAt: i.created_at, expiresAt: i.expires_at, maxUses: i.max_uses, uses: i.uses }; }
+function inviteView(/** @type {any} */ i) { return { id: i.id, role: i.role, createdAt: i.created_at, expiresAt: i.expires_at, maxUses: i.max_uses, uses: i.uses, email: i.email || null }; }
 const ROLE_WORDS = { viewer: 'view', editor: 'view and edit', co_owner: 'co-own' };
 function shareText(/** @type {string} */ who, /** @type {string} */ board, /** @type {string} */ role, /** @type {string} */ url) {
   return `${who} invited you to ${ROLE_WORDS[role]} “${board}” on Ongatu: ${url}`;
@@ -401,6 +498,9 @@ export function memoryBoards() {
         async revoke(/** @type {string} */ id, /** @type {string} */ at) { const i = invites.get(id); if (i) i.revoked_at = at; },
         async use(/** @type {string} */ id) { const i = invites.get(id); if (!i || !inviteOpen(i)) return false; i.uses += 1; return true; },
         async countEmail(/** @type {string} */ id) { const i = invites.get(id); if (i) i.emails_sent = (i.emails_sent || 0) + 1; },
+        async setRole(/** @type {string} */ id, /** @type {string} */ role) { const i = invites.get(id); if (i) i.role = role; },
+        async forEmail(/** @type {string} */ email) { return [...invites.values()].filter((i) => i.email === email).map((i) => ({ ...i })); },
+        async decline(/** @type {string} */ id, /** @type {string} */ at) { const i = invites.get(id); if (i) { i.declined_at = at; i.revoked_at = i.revoked_at || at; } },
         async removeAll(/** @type {string} */ b) { for (const [k, i] of invites) if (i.board_id === b) invites.delete(k); },
       },
       keys: {

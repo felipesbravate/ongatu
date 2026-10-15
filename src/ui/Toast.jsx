@@ -3,9 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { RoundButton } from './Button.jsx';
 import { x } from './icons.js';
 
-// Toast (DS 304:659): Type=Positive / Negative / Neutral. surface/dark, radius/sm, Floating shadow, 240–400 wide, at
-// least 48 high. A 16px colour strip on the left (brand/mint, data/red, surface/tertiary), the message in
-// Body/Small/Medium white, and a Micro round button with an X that closes it. Position (Ongatu 238:7184): top right,
+// Toast (DS 304:659, pinned Mobile): Type=Positive / Negative / Neutral. surface/dark, 1px border/secondary, radius/sm,
+// Floating shadow, 320–400 wide, at least 64 high, 16 between parts. A 16px colour strip on the left (brand/mint,
+// status/red-deep, surface/tertiary), the message in Body/Medium/Medium white, and a Micro round button with a 12px X
+// (icon/muted) that closes it. Position (Ongatu 238:7184): top right,
 // 24px from the right edge, 12px under the app header.
 // type: 'success' (Positive) | 'fail' (Negative) | 'neutral'. `action` is an optional control before the X (the
 // year-delete Undo); the DS Toast has no slot for it.

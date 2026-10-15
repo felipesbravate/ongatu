@@ -6,7 +6,7 @@ export function Label({ type, icon, className, children, ...rest }) {
   if (!type && !icon) return <span className={['insight-tag', className].filter(Boolean).join(' ')} {...rest}>{children}</span>;
   return (
     <span className={['hc-delta', type, className].filter(Boolean).join(' ')} {...rest}>
-      {icon && <Icon icon={icon} size={12} />}<span>{children}</span>
+      {icon && <Icon icon={icon} size={10} />}<span>{children}</span>
     </span>
   );
 }

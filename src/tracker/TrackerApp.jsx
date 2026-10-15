@@ -2,9 +2,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
-import { AppHeader, Button, Toast, useToast } from '../ui/index.js';
-import { db, getMe, leavePage } from './api.js';
+import './screens.css';
+import { AppHeader, Avatar, Button, RoundButton, Toast, useMobile, useToast } from '../ui/index.js';
+import { plus } from '../ui/icons.js';
+import { db, getActiveBoard, getMe, leavePage } from './api.js';
+import { boardMembers, useBoards, useMemberNames } from './boards.js';
 import { AccountNav, firstNameOf } from './AccountBar.jsx';
+import { SharePanel } from './boards/SharePanel.jsx';
 import { AddPanel } from './AddPanel.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
 import { planDeleteSub, planRename } from './rename.js';
@@ -23,6 +27,9 @@ const copy = (o) => JSON.parse(JSON.stringify(o));
 
 export default function TrackerApp() {
   const [me, setMe] = useState(null);
+  const board = useBoards();
+  useMemberNames(); // re-renders once the shared board's member names are in, for "added by"
+
   const [loaded, setLoaded] = useState(() => new Set());
   const [loadError, setLoadError] = useState(false);
   const [gateReady, setGateReady] = useState(false);
@@ -53,7 +60,10 @@ export default function TrackerApp() {
   const [addingYear, setAddingYear] = useState(false);
   const [yearToast, setYearToast] = useState(null); // { message, undo }
   const [toastEl, showToast] = useToast();
+  const [sharing, setSharing] = useState(false); // the Share panel (boards-b's SharePanel) on a joint board
   const yearToastTimer = useRef(null);
+  // The line under the greeting: 211:18753 (desktop) adds "Track your spending…"; phones (898:9152) keep the short one.
+  const mobile = useMobile();
   const yearsHydrated = useRef(false);
   const lastYearsRef = useRef(null);
   const autoYearTried = useRef(false);
@@ -62,12 +72,14 @@ export default function TrackerApp() {
   // A new account (no years, never onboarded) goes to /welcome first (Ongatu 397:4392).
   useEffect(() => {
     let years = null, settings = null, gone = false;
+    const shared = !!getActiveBoard();
     const decide = () => {
       if (gone || years === null || settings === null) return;
-      if (!years && !settings) { gone = true; leavePage('/welcome'); return; }
+      // Oct 11: a shared board with no years yet is set up in onboarding too (the person's own onboarding is done).
+      if (!years && (shared || !settings)) { gone = true; leavePage('/welcome'); return; }
       setGateReady(true);
       // Onboarded but every year deleted: create the current year once, so entries have a home.
-      if (!years && settings && !autoYearTried.current) {
+      if (!years && settings && !shared && !autoYearTried.current) {
         autoYearTried.current = true;
         db.collection('years').add({ year: currentYearLabel(), currency: 'EUR', createdAt: new Date().toISOString() }).catch(() => {});
       }
@@ -401,9 +413,31 @@ export default function TrackerApp() {
       <div className="app-top-gap" />
       <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={openAlert} /></AppHeader>
       <div className={'wrap' + (addingYear ? ' is-adding-year' : '')}>
-        <header className="top">
-          <h1 className="app-title">{`Hey, ${profile.name}`}</h1>
-          <div className="app-sub">Ready to see where you stand today?</div>
+        <header className={'top' + (board.active ? ' is-joint' : '')}>
+          {board.active ? (
+            // Joint board (Ongatu 973:33223 owner / 973:30014 viewer; phones 994:41395, Oct 15): the board's name in
+            // Display/Title with its members (28px avatars, 12 apart; co-owners also get the + Round button = Share), and
+            // "How's your tracking going? Check your joint board." Phones put the members over the name.
+            <div className="board-heading" id="board-sub">
+              <div className="board-title-row">
+                <h1 className="app-title board-sub-name">{board.active.name}</h1>
+                <div className="board-users" id="board-users">
+                  {boardMembers().map((m) => (
+                    <span key={m.userId} title={m.you ? `${m.name || m.email} (you)` : (m.name || m.email || '')}>
+                      <Avatar size={28} name={m.you ? profile.name : (m.name || m.email)} image={m.you ? profile.image : undefined} />
+                    </span>
+                  ))}
+                  {board.active.role === 'co_owner' && <RoundButton icon={plus} variant="secondary" size="micro" iconSize={20} id="board-share" className="board-share" label="Invite people" onClick={() => setSharing(true)} />}
+                </div>
+              </div>
+              <div className="app-sub board-sub-meta">How’s your tracking going? Check your joint board.</div>
+            </div>
+          ) : (
+            <>
+              <h1 className="app-title">{`Hey, ${profile.name}`}</h1>
+              <div className="app-sub">{mobile ? 'Ready to see where you stand today?' : 'Ready to see where you stand today? Track your spending and savings for the month.'}</div>
+            </>
+          )}
         </header>
         <YearNav model={model} yearIdx={yearIdx} monthIdx={monthIdx} onYear={selectYear} onMonth={selectMonth} canSave onAddingChange={setAddingYear}
           onAddYear={(label, currency) => setPendingYear({ label, currency })} onDeleteYear={askDeleteYear} />
@@ -426,6 +460,7 @@ export default function TrackerApp() {
         <YearOverYear model={model} onYear={selectYear} />
         <footer className="note" id="app-footer">Ongatu. Your entries are encrypted before they are stored. Documents you upload are read once to extract entries and are never saved.</footer>
       </div>
+      {board.active && <SharePanel open={sharing} board={{ id: board.active.id, name: board.active.name, role: board.active.role }} onClose={() => setSharing(false)} showToast={showToast} />}
       {toastEl}
       <Toast id="year-toast" type="neutral" visible={!!yearToast} onClose={hideYearToast}
         action={yearToast ? <Button size="tiny" variant="secondary" className="toast-undo" onClick={yearToast.undo}>Undo</Button> : null}>{yearToast ? yearToast.message : ''}</Toast>

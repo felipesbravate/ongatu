@@ -30,6 +30,25 @@ export async function api(method, path, body, signal) {
   return data;
 }
 
+// ---------- active board (Oct 11) ----------
+// Which board the app shows: the personal one ('' / null) or a shared board's id, remembered per browser. Switching
+// reloads the page, so every listener and cache starts over on the new board. `settings` (name, picture, onboarding,
+// notifications) are the person's own, so they always go to the personal board.
+const BOARD_KEY = 'ongatu.board';
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+let activeBoard = null;
+try { const v = typeof localStorage !== 'undefined' ? localStorage.getItem(BOARD_KEY) : null; activeBoard = v && UUID_RE.test(v) ? v : null; } catch { activeBoard = null; }
+export const getActiveBoard = () => activeBoard;
+/** Show another board: a shared board's id, or null for the personal board. `go` = where to land (default '/'). */
+export function setActiveBoard(id, go = '/') {
+  try { if (id) localStorage.setItem(BOARD_KEY, id); else localStorage.removeItem(BOARD_KEY); } catch { /* private mode: this tab only */ }
+  activeBoard = id || null;
+  if (go) location.assign(go);
+}
+const collectionBase = (name) => (activeBoard && name !== 'settings' ? `/api/boards/${activeBoard}/db/` : '/api/db/');
+/** Where an import goes: the active board. */
+export const importPath = () => (activeBoard ? `/api/boards/${activeBoard}/import/commit` : '/api/import/commit');
+
 // ---------- db ----------
 const listeners = {}; // collection -> [{ cb, err }]
 const cache = {};     // collection -> last docs
@@ -45,7 +64,7 @@ async function refresh(name) {
   if (!subs.length || leaving) return;
   lastRefresh[name] = Date.now();
   try {
-    const r = await api('GET', '/api/db/' + encodeURIComponent(name));
+    const r = await api('GET', collectionBase(name) + encodeURIComponent(name));
     if (leaving || !r) return;
     cache[name] = r.docs;
     subs.slice().forEach((s) => { try { s.cb(snapshotOf(r.docs)); } catch (e) { console.error(e); } });
@@ -56,19 +75,22 @@ async function refresh(name) {
 }
 
 let focusHooked = false;
+// On a shared board other members write too: refresh every 45 s while the tab is visible, and on return to it.
+const SHARED_POLL_MS = 45000;
 function hookFocus() {
   if (focusHooked || typeof document === 'undefined') return;
   focusHooked = true;
+  if (activeBoard) setInterval(() => { if (document.visibilityState === 'visible') Object.keys(listeners).forEach((n) => { if (n !== 'settings') refresh(n); }); }, SHARED_POLL_MS);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;
-    Object.keys(listeners).forEach((n) => { if (Date.now() - (lastRefresh[n] || 0) > REFRESH_ON_FOCUS_MS) refresh(n); });
+    Object.keys(listeners).forEach((n) => { if (Date.now() - (lastRefresh[n] || 0) > (activeBoard ? 10000 : REFRESH_ON_FOCUS_MS)) refresh(n); });
   });
 }
 
 export const db = {
   collection(name) {
     return {
-      async add(data) { const r = await api('POST', '/api/db/' + encodeURIComponent(name), data); await refresh(name); return { id: r.id }; },
+      async add(data) { const r = await api('POST', collectionBase(name) + encodeURIComponent(name), data); await refresh(name); return { id: r.id }; },
       onSnapshot(cb, err) {
         hookFocus();
         const sub = { cb, err };
@@ -81,7 +103,7 @@ export const db = {
   },
   doc(path) {
     const i = path.indexOf('/'); const name = path.slice(0, i), id = path.slice(i + 1);
-    const url = '/api/db/' + encodeURIComponent(name) + '/' + encodeURIComponent(id);
+    const url = collectionBase(name) + encodeURIComponent(name) + '/' + encodeURIComponent(id);
     return {
       async set(data) { await api('PUT', url, data); await refresh(name); },
       async delete() { await api('DELETE', url); await refresh(name); },
@@ -133,3 +155,21 @@ export const getSignIn = () => api('GET', '/api/account/sign-in');              
 export const setSignIn = (body) => api('POST', '/api/account/sign-in', body);         // { method, password?, current? }
 export const listUsers = () => api('GET', '/api/admin/users');
 export const setUserStatus = (id, act) => api('POST', '/api/admin/users/' + encodeURIComponent(id) + '/' + act);
+
+// ---------- shared boards (Oct 11; server: src/lib/boards.js) ----------
+const bpath = (id, rest = '') => `/api/boards/${encodeURIComponent(id)}${rest}`;
+export const boardsApi = {
+  list: () => api('GET', '/api/boards'),
+  create: (name) => api('POST', '/api/boards', { name }),
+  get: (id) => api('GET', bpath(id)),
+  rename: (id, name) => api('PATCH', bpath(id), { name }),
+  remove: (id) => api('DELETE', bpath(id)),
+  setRole: (id, userId, role) => api('PATCH', bpath(id, '/members/' + encodeURIComponent(userId)), { role }),
+  removeMember: (id, userId) => api('DELETE', bpath(id, '/members/' + encodeURIComponent(userId))),
+  invites: (id) => api('GET', bpath(id, '/invites')),
+  createInvite: (id, role, opts = {}) => api('POST', bpath(id, '/invites'), { role, ...opts }),
+  revokeInvite: (id, inviteId) => api('DELETE', bpath(id, '/invites/' + encodeURIComponent(inviteId))),
+  notifyInvite: (id, inviteId, token, email) => api('POST', bpath(id, '/invites/' + encodeURIComponent(inviteId) + '/notify'), { token, email }),
+  preview: (token) => api('POST', '/api/invites/preview', { token }),
+  accept: (token) => api('POST', '/api/invites/accept', { token }),
+};

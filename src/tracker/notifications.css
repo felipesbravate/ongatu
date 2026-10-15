@@ -1,0 +1,46 @@
+/* Notifications page (Ongatu notifications-desktop 840:9143 / dark 840:9327) and Account page fixes (250:3399).
+   The page reuses the Account page's shell (.acct-page, .acct-head, .acct-content, .acct-menu in okara.css). */
+
+/* Pager header: title only, no subtitle (840:9147). */
+html .notif-page .acct-head:not(#z) .app-title{ margin-bottom:0; }
+
+/* Side menu (840:9150): the counter sits 8 after the label (not pushed to the right). */
+html .notif-menu .ds-menu-item .ds-menu-counter:not(#z){ margin-left:0; }
+
+/* Card (840:9152): 680 wide, surface/primary, radius/md, Card shadow, padding 16 / 24 / 24; the list padded 8 on the sides. */
+html .notif-card:not(#z){
+  width:680px; min-width:0; box-sizing:border-box;
+  padding:16px 24px 24px;
+  background:var(--surface-primary); border-radius:var(--radius-md);
+  box-shadow:0 0 20px rgba(22, 21, 15, .04);
+}
+html .notif-list:not(#z){ display:flex; flex-direction:column; padding:0 8px; }
+html .notif-list .notif-sep:not(#z){ width:100%; margin:0; }
+
+/* Notification entry: unread 112 min high with "Mark as read", read 88 with text/secondary. Padding 16, gap 8. */
+html .notif-entry:not(#z){ position:relative; }
+html .notif-entry .ds-notif-item:not(#z){ min-height:88px; padding:16px; gap:8px; box-sizing:border-box; }
+html .notif-entry.is-unread .ds-notif-item:not(#z){ min-height:112px; }
+html .notif-entry .ds-notif-body:not(#z){ gap:8px; }
+html .notif-entry .ds-notif-text:not(#z){
+  font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight);
+  line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); color:var(--text-secondary);
+}
+html .notif-entry.is-unread .ds-notif-text:not(#z){ color:var(--text-primary); }
+html .notif-entry .ds-notif-mark:not(#z){ padding:0; }
+/* The unread dot (840:9156): 8px data/red-orange, 9 left of the entry, 20 from its top. */
+html .notif-unread-dot:not(#z){ position:absolute; left:-9px; top:20px; width:8px; height:8px; border-radius:50%; background:var(--primitive-data-red-orange); pointer-events:none; }
+html .notif-list .ds-notif-empty:not(#z){ padding:16px; }
+
+@media (max-width:640px){
+  /* Phones: the Account page's phone layout, the filters in a row above a full-width card. */
+  html .notif-menu.ds-side-menu:not(#z){ flex-direction:row; flex-wrap:nowrap; gap:var(--space-xs); width:auto; flex:0 0 auto; }
+  html .notif-menu .ds-menu-item:not(#z){ width:auto; min-width:0; }
+  html .notif-card:not(#z){ width:auto; padding:var(--space-lg) var(--space-md) var(--space-md); }
+  html .notif-list:not(#z){ padding:0 4px; }
+  html .notif-entry .ds-notif-item:not(#z){ padding:var(--space-md); }
+  html .notif-unread-dot:not(#z){ left:-8px; }
+}
+
+/* Account 250:3399: the email field is as wide as the First name column (370 of 752; okara.css had 352). */
+html #profile .acct-form .acct-row.acct-email-row .field:not(#z){ width:100%; flex:1 1 auto; }

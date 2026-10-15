@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, Button, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
-import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, chevronDown, edit, minus, plus, reload } from '../ui/icons.js';
+import { ActionLink, Button, Expander, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 
 // Oct 4: the board's own Expenses sub-categories join the four default groups in the
@@ -19,6 +19,7 @@ export function spendParts(model, y, c) {
 }
 const partValue = (c, key) => c.byGroup[key] || 0;
 import { Icon } from '../ui/Icon.jsx';
+import { addedBy } from './boards.js';
 import { cardIndicators } from './indicators.js';
 import { Money } from '../ui/Money.jsx';
 import { latestEntry } from './latest-entry.js';
@@ -176,6 +177,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   });
   useEffect(() => { setExpanded(false); }, [breakdownType, monthIdx, y.year]);
   const collapsed = mobile && tall && !expanded;
+  // Amount meter (211:18753, Oct 12): a 16px € beside the figure on desktop; phones (898:9152) a 20px one.
+  const meterEuro = mobile ? 20 : 16;
 
   return (
     <div className={'card breakdown-card' + (collapsed ? ' is-collapsed' : '')} ref={cardRef}>
@@ -192,7 +195,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
             <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
               onChange={(v) => { v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
             <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
-            {lastEntry && <LatestEntry entry={lastEntry} currency={cur} />}
+            {lastEntry && <LatestEntry entry={lastEntry} currency={cur} mobile={mobile} />}
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
             {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : 'Add expense'}
@@ -200,8 +203,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
-            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={20} />)
-            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={20} />)}
+            : bd.flat ? rows.map((r) => <Meter key={r.item} name={r.item} amount={r.amount} max={maxV} currency={cur} color={color} state={r.isEstimate ? 'estimate' : r.deleted ? 'removed' : undefined} counter={counter(r)} euroSize={meterEuro} />)
+            : rows.map((r) => <Meter key={r.category} name={r.category} amount={r.amount} max={maxV} currency={cur} color={color} euroSize={meterEuro} />)}
         </div>
         <div id="itemslist" className="bd-list">
           {!bd.flat && bd.rows.length > 0 && rows.map((r, i) => (
@@ -221,11 +224,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
         </div>
       </div>
       {mobile && tall && (
-        <div className={'ds-expander' + (expanded ? ' is-open' : '')}>
-          <Button variant="tertiary" size="small" trailing={chevronDown} aria-expanded={expanded ? 'true' : 'false'} aria-controls="itemslist" id="tracker-expander" onClick={() => setExpanded((e) => !e)}>
-            {expanded ? 'See less' : 'See all'}
-          </Button>
-        </div>
+        <Expander open={expanded} onToggle={() => setExpanded((e) => !e)} controls="itemslist" id="tracker-expander" />
       )}
       <ItemTip tip={tip} actions={actions} />
     </div>
@@ -260,7 +259,7 @@ function RowMenu({ item, onAdd, onAdjustBudget }) {
   if (!items.length) return null;
   return (
     <span className="br-actions" ref={ref}>
-      <RoundButton icon={actionsIcon} size="micro" iconSize="md" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }} />
+      <RoundButton icon={actionsIcon} size="micro" className="br-more" label={`Actions for ${item}`} active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }} />
       {open && <MenuList className="br-menu row-menu" description={item} items={items} />}
     </span>
   );
@@ -310,18 +309,34 @@ function ItemTip({ tip, actions }) {
   const chronologicalEntries = (row.entries || []).slice().sort((a, b) =>
     String(a.date || a.createdAt || '').slice(0, 10).localeCompare(String(b.date || b.createdAt || '').slice(0, 10))
     || String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
-  chronologicalEntries.forEach((e) => lines.push(<TooltipEntryItem key={'e' + e.id} name={e.description || 'Manual entry'} date={formatEntryDate(e.date) || ''} amount={e.amount} currency={cur} onRemove={() => actions.deleteEntry(e.id)} removeTitle="Delete" />));
+  // Oct 11: on a shared board, entries other members added say who (e.g. "Sep 19 · Ana").
+  chronologicalEntries.forEach((e) => lines.push(<TooltipEntryItem key={'e' + e.id} name={e.description || 'Manual entry'} date={[formatEntryDate(e.date), addedBy(e)].filter(Boolean).join(' · ')} amount={e.amount} currency={cur} onRemove={() => actions.deleteEntry(e.id)} removeTitle="Delete" />));
   const foot = anyEstimateNote ? "~ estimated (split evenly) — the sheet didn't record this one's exact amount"
     : (row.isEstimate && !row.deleted && !(row.estimateSource === 'budget' && row.budget != null)) ? '≈ projected from recent months — nothing recorded yet. Add a real entry to replace it, or delete it.' : null;
   const budgetLabel = row.type === 'income' ? 'Estimated' : 'Budget set';
   if (pos) last.current = { style: pos, lines, foot, budget: row.budget, budgetLabel, cur };
   return <EntriesTooltip tipRef={ref} visible={!!pos} style={pos || { left: '0px', top: '0px' }} footnote={foot} budget={row.budget} budgetLabel={budgetLabel} currency={cur}>{lines}</EntriesTooltip>;
 }
-// "Latest" line (Tracker card 581:19517 / 787:15242): route, date · Dot · € and the figure in mono.
-function LatestEntry({ entry, currency }) {
+// "Latest" line. Desktop (581:19517 / 787:14891): "Latest: route, date", Dot (10), then € and the figure in mono
+// (Value/Medium), 8 apart, all link/disable. Phones (898:9193, Oct 12): "Last update: route", Dot (12), the date, then a
+// 16px € and the figure as an Action link (14/16 sans, link/default), 4 apart.
+function LatestEntry({ entry, currency, mobile }) {
   const route = [entry.item, entry.description].map((part) => part?.trim()).filter(Boolean).join('/') || 'Entry';
   const date = formatEntryDate(String(entry.date || entry.createdAt || '').slice(0, 10));
   const neg = entry.amount < 0;
+  if (mobile) {
+    return (
+      <div className="tracker-last-entry is-phone" role="status">
+        <span className="tle-text" title={`Last update: ${route}${date ? ` • ${date}` : ''}`}><span className="tle-route">{`Last update: ${route}`}</span></span>
+        {date && <><span className="tle-dot" aria-hidden="true"><i /></span><span className="tle-date">{date}</span></>}
+        <span className="tle-value">
+          {currency === 'EUR'
+            ? <><Icon icon={euro} size={16} className="tle-euro" /><span className="tle-num">{(neg ? '-' : '') + fmtFigure(Math.abs(entry.amount))}</span></>
+            : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currency === 'SEK' ? 'kr' : currency}`}</span>}
+        </span>
+      </div>
+    );
+  }
   return (
     <div className="tracker-last-entry" role="status">
       {/* Oct 9: one line, whatever the length: the route shortens with an ellipsis; the date, Dot and figure stay. */}
@@ -373,7 +388,11 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
   const cur = y.currency;
   const svgRef = useRef(null);
   const [tip, setTip] = useTip();
-  const W = 774, H = 220, padL = 8, padR = 8, padT = 20, padB = 30;
+  // Desktop (581:19558): 220 high, rules at 20/76/132/188. Phones (898:9252): 120 high, three rules at 20/60/100.
+  // The svg fills the card's width at that fixed height (strokes do not scale).
+  const mobile = useMobile();
+  const W = mobile ? 326 : 822, H = mobile ? 120 : 220, padL = 8, padR = 8, padT = 20, padB = mobile ? 20 : 32;
+  const rules = mobile ? 3 : 4;
   const totals = { incomes: [], expenses: [], investments: [] };
   for (let i = 0; i < 12; i++) { const c = model.computeMonth(y, i); totals.incomes.push(c.income); totals.expenses.push(c.expenseTotal); totals.investments.push(c.invest); }
   const maxV = Math.max(1, ...totals.incomes, ...totals.expenses, ...totals.investments) * 1.15;
@@ -390,7 +409,6 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
   // Phones (Trend_Chart_Section 342:8068): "€3.900 Incomes avg" = the average income of the months that have data
   // (Felipe, Sept 28), two lines (Incomes, Expenses), no change chip. On every size (211:18753 too): no axis letters, pins,
   // point markers or month line.
-  const mobile = useMobile();
   const incomeMonths = populated.filter((i) => totals.incomes[i] > 0);
   const avgIncome = incomeMonths.length ? incomeMonths.reduce((a, i) => a + totals.incomes[i], 0) / incomeMonths.length : 0;
   return (
@@ -398,19 +416,20 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
       <div className="hc-top">
         <div>
           <div className="hc-label">Incomes · Expenses · Savings</div>
-          <div className="hc-value" id="hero-value">{mobile ? fmtMoneyShort(avgIncome, cur) + ' Incomes avg' : fmtMoneyShort(totals.incomes[monthIdx], cur) + ' Incomes'}</div>
+          {/* Desktop (581:19554, Oct 12): the title and the change Label only; phones (898:9249) add the income average. */}
+          {mobile && <div className="hc-value" id="hero-value">{fmtMoneyShort(avgIncome, cur) + ' Incomes avg'}</div>}
         </div>
         {!mobile && <Label type={up ? 'positive' : 'negative'} icon={up ? arrowStraightUp : arrowStraightDown} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
           {`${Math.abs(pct).toFixed(1)}% since ${since}`}
         </Label>}
       </div>
-      <div className="chart-wrap" style={{ marginTop: 16 }}>
-        <svg id="trend-chart" ref={svgRef} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
-          {[0, 1, 2, 3].map((g) => { const gy = padT + g * ((H - padT - padB) / 3); return <line key={'g' + g} className="gridline" x1="0" x2={W} y1={gy} y2={gy} />; })}
-                    <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
-          {!mobile && <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />}
-          <path d={path(totals.incomes)} fill="none" stroke={color.incomes} strokeWidth="2.5" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" />
-                              {Array.from({ length: 12 }, (_, i) => (
+      <div className="chart-wrap">
+        <svg id="trend-chart" ref={svgRef} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ height: H }}>
+          {Array.from({ length: rules }, (_, g) => { const gy = padT + g * ((H - padT - padB) / (rules - 1)); return <line key={'g' + g} className="gridline" x1="0" x2={W} y1={gy} y2={gy} vectorEffect="non-scaling-stroke" />; })}
+          <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          {!mobile && <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
+          <path d={path(totals.incomes)} fill="none" stroke={color.incomes} strokeWidth="2.5" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          {Array.from({ length: 12 }, (_, i) => (
             <rect key={'r' + i} data-mi={i} x={x(i) - cw / 2} y={padT} width={cw} height={H - padT - padB} fill="transparent" style={{ cursor: 'pointer' }}
               onMouseEnter={() => setTip({ i, ...tipPos(svgRef.current, x(i), yScale(totals.incomes[i])) })} onMouseLeave={() => setTip((t) => t && { ...t, hide: true })}
               onClick={() => onMonth(i)} />

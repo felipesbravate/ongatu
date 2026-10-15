@@ -10,7 +10,7 @@ test('illustrations.js is generated from the Illustrations folder', () => {
 });
 
 test('every illustration has a 0 0 w h viewBox and a complete local SVG', () => {
-  assert.equal(ill.all.length, 113); // + Head, Success (Oct 2, onboarding), Calendar (Oct 4, mobile year modal), Empty state (Oct 6, setup)
+  assert.equal(ill.all.length, 114); // + Spreadsheet (Oct 12, import tips); + Head, Success (Oct 2, onboarding), Calendar (Oct 4, mobile year modal), Empty state (Oct 6, setup)
   for (const a of ill.all) {
     assert.equal(a.viewBox, `0 0 ${a.width} ${a.height}`, a.name);
     const svg = readFileSync(new URL('../public' + a.asset.split('?')[0], import.meta.url), 'utf8');

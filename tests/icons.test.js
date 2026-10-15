@@ -5,10 +5,10 @@ import { readFileSync } from 'node:fs';
 import * as icons from '../src/ui/icons.js';
 import { iconFrame } from '../src/ui/iconFrame.js';
 
-test('all 153 icon families and native artwork match the SVG exports', () => {
+test('all 154 icon families and native artwork match the SVG exports', () => {
   execFileSync(process.execPath, ['scripts/sync-icons.mjs', '--check']);
   const names = Object.values(icons).map(icon => icon.name);
-  assert.equal(names.length, 153);
+  assert.equal(names.length, 154);
   assert.equal(new Set(names).size, names.length);
   for (const icon of Object.values(icons)) {
     const svg = readFileSync(new URL('../public' + icon.asset.split('?')[0], import.meta.url), 'utf8');

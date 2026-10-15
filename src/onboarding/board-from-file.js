@@ -204,7 +204,11 @@ export function boardOf(rows, structure = []) {
     t.total += r.amount; types.set(k, t); r.typeKey = t.key;
   });
   const order = { income: 0, investment: 1, expense: 2 };
-  const subOrder = (s) => { const i = DEFAULT_SUBS.indexOf(s); return i < 0 ? 99 : i; };
+  // A file with sub-categories of its own (a template's sections) keeps them, in its order, and nothing else; otherwise
+  // the four default sub-categories, in theirs (Oct 9).
+  const seenSubs = [...new Set([...types.values()].filter((t) => t.type === 'expense').map((t) => t.group))];
+  const ownSubs = seenSubs.some((g) => !DEFAULT_SUBS.includes(g));
+  const subOrder = (s) => { if (ownSubs) return seenSubs.indexOf(s); const i = DEFAULT_SUBS.indexOf(s); return i < 0 ? 99 : i; };
   const all = [...types.values()];
   all.forEach((t, i) => { t.at = i; });
   const firstAt = new Map();
@@ -215,8 +219,7 @@ export function boardOf(rows, structure = []) {
     .sort((a, b) => order[a.type] - order[b.type] || subOrder(a.group) - subOrder(b.group) || groupAt(a) - groupAt(b) || a.at - b.at)
     .map((t) => ({ type: t.type, group: t.group, category: t.category, item: t.item, budget: Math.round(t.total / n), key: t.key }));
   const expenseSubs = [...new Set(list.filter((t) => t.type === 'expense').map((t) => t.group))];
-  // The four default sub-categories always show, in their order, then any of the file's own.
-  const subs = { expense: [...DEFAULT_SUBS, ...expenseSubs.filter((s) => !DEFAULT_SUBS.includes(s))] };
+  const subs = { expense: ownSubs ? seenSubs : [...DEFAULT_SUBS, ...expenseSubs.filter((s) => !DEFAULT_SUBS.includes(s))] };
   ['income', 'investment'].forEach((k) => { const own = [...new Set(list.filter((t) => t.type === k && t.group).map((t) => t.group))]; if (own.length) subs[k] = own; });
   return { kinds: ['income', 'investment', 'expense'], subs, groups: {}, types: list };
 }
@@ -239,7 +242,10 @@ export function boardFromFile(analysis, opt = {}) {
     first: yms[0] || null, last: yms[yms.length - 1] || null, months: yms.length,
     counts: { income: count('income'), investment: count('investment'), expense: count('expense') },
     shapes: [...new Set((analysis.sheets || []).filter((s) => s.rows).map((s) => s.shape))],
-    warnings: (analysis.warnings || []).filter((w) => w.code !== 'currency'),
+    warnings: (analysis.warnings || []).filter((w) => w.code !== 'currency' && w.code !== 'no_columns'),
+    // 03d "Review your setup" (930:21353): one warning per sheet that was left out, and why.
+    skippedSheets: (analysis.warnings || []).filter((w) => w.code === 'no_columns' && w.sheet)
+      .map((w) => ({ sheet: w.sheet, reason: 'Missing required date and amount columns.' })),
   };
 }
 

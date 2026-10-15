@@ -188,7 +188,15 @@ export const color = {
   "iconSecondary": "#747167ff",
   "iconLight": "#ffffffff",
   "textNotification": "#ea6b39ff",
-  "borderNotification": "#f48c63ff"
+  "borderNotification": "#f48c63ff",
+  "badgeCounterText": "#ffffffff",
+  "badgeCounterTextSecondary": "#aaa698ff",
+  "badgeCounterPressedIcon": "#ffffffff",
+  "badgeCounterCloseIcon": "#aaa698ff",
+  "badgeCounterDivider": "#32312cff",
+  "surfaceModal": "#1f1e19e0",
+  "iconRoundControl": "#16150fff",
+  "surfaceGradient": "#ffffff00"
 } as const;
 
 export const space = {

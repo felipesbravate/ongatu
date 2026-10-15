@@ -123,14 +123,15 @@ function AddYearModal({ open, onClose, onSubmit, model, canSave }) {
 // Nav tabs - Add year (79:1242): close, year, currency, "Add year". It only validates; the Year budget panel creates the year.
 function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
   const [label, setLabel] = useState('');
-  const [currency, setCurrency] = useState('EUR');
+  // 229:19777 (Oct 12): both fields start empty ("Year", "Currency"); a year added without a currency is in EUR.
+  const [currency, setCurrency] = useState('');
   const [status, setStatus] = useState(canSave ? null : { err: true, text: "This view can't save a new year (no database access)." });
   const yearOptions = addableYears(model);
-  useEffect(() => { if (open) { setLabel(''); setStatus(null); } }, [open]);
+  useEffect(() => { if (open) { setLabel(''); setCurrency(''); setStatus(null); } }, [open]);
   const submit = () => {
     const l = label.trim();
     const e = yearError(model, l, canSave); if (e) return setStatus({ err: true, text: e });
-    onSubmit(l, currency);
+    onSubmit(l, currency || 'EUR');
   };
   return (
     <div className={'year-add-pill' + (open ? ' open' : '')} id="year-add-panel" role="dialog" aria-label="Add a year">
@@ -140,7 +141,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
           <Dropdown id="year-add-year" ariaLabel="Year" size="tiny" placeholder="Year" value={label} onChange={setLabel} options={yearOptions} />
         </div>
         <div className="year-add-pill-currency">
-          <Dropdown id="year-add-currency" ariaLabel="Currency" size="tiny" value={currency} onChange={setCurrency} emptyOption={false}
+          <Dropdown id="year-add-currency" ariaLabel="Currency" size="tiny" placeholder="Currency" value={currency} onChange={setCurrency} emptyOption={false}
             options={[{ value: 'EUR', label: 'EUR' }, { value: 'SEK', label: 'SEK' }]} />
         </div>
       </div>

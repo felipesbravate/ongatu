@@ -210,3 +210,54 @@ test('import into a board needs an editor; limits on boards per person', async (
   for (let i = 1; i < MAX_BOARDS_PER_USER; i++) await boardWith(call, ana, 'B' + i);
   assert.equal((await call('POST', '/api/boards', ana, { name: 'One too many' })).body.error.code, 'limit');
 });
+
+// Oct 13: invite by email ("Board sharing" / "Share your board") and the in-app invite notifications.
+test('invite by email: one bound invite per address, emailed, listed as "Invite sent", role changeable, revocable', async () => {
+  const { call, outbox, boards } = setup();
+  const id = await boardWith(call);
+  await join(call, cai, (await invite(call, id, 'viewer')).token);
+  const r = await call('POST', `/api/boards/${id}/invites/email`, ana, { emails: ' BEN@example.com, cai@example.com ' });
+  assert.equal(r.status, 201, JSON.stringify(r.body));
+  assert.deepEqual(r.body.invites.map((i) => [i.email, i.status, i.role, i.mailed]), [['ben@example.com', 'sent', 'viewer', true], ['cai@example.com', 'member', undefined, undefined]]);
+  assert.ok(!JSON.stringify(r.body).includes('token'), 'the token is not returned');
+  assert.equal(outbox.length, 1);
+  assert.ok(outbox[0].to === 'ben@example.com' && outbox[0].text.includes('https://app.test/join#'));
+  const list = (await call('GET', `/api/boards/${id}/invites`, ana)).body.invites;
+  const sent = list.find((i) => i.email === 'ben@example.com');
+  assert.ok(sent);
+  assert.equal((await call('PATCH', `/api/boards/${id}/invites/${sent.id}`, ana, { role: 'editor' })).body.role, 'editor');
+  assert.equal((await call('PATCH', `/api/boards/${id}/invites/${sent.id}`, ana, { role: 'owner' })).status, 400);
+  assert.equal((await call('PATCH', `/api/boards/${id}/invites/${sent.id}`, cai, { role: 'co_owner' })).status, 403, 'viewers cannot');
+  assert.equal((await call('POST', `/api/boards/${id}/invites/email`, cai, { emails: ['dee@example.com'] })).status, 403);
+  assert.equal((await call('POST', `/api/boards/${id}/invites/email`, ana, { emails: ['nope'] })).status, 400);
+  // Inviting the same address again replaces the open invite.
+  await call('POST', `/api/boards/${id}/invites/email`, ana, { emails: ['ben@example.com'] });
+  assert.equal([...boards.invitesMap.values()].filter((i) => i.email === 'ben@example.com' && !i.revoked_at).length, 1);
+  // Without a mailer the in-app invite is still created.
+  const { call: call2 } = setup({ mailer: false });
+  const id2 = await boardWith(call2);
+  const r2 = await call2('POST', `/api/boards/${id2}/invites/email`, ana, { emails: ['ben@example.com'] });
+  assert.deepEqual(r2.body.invites.map((i) => [i.status, i.mailed]), [['sent', false]]);
+});
+
+test('invites to my address: listed for me only, accepted or declined without the link; the inviter sees who accepted', async () => {
+  const { call } = setup();
+  const id = await boardWith(call);
+  await call('POST', `/api/boards/${id}/invites/email`, ana, { emails: ['ben@example.com', 'dee@example.com'], role: 'editor' });
+  const mine = (await call('GET', '/api/invites/mine', ben)).body;
+  assert.deepEqual(mine.invites.map((i) => [i.boardName, i.role, i.invitedBy]), [['Casa', 'editor', 'Ana']]);
+  assert.equal((await call('GET', '/api/invites/mine', cai)).body.invites.length, 0, 'another address sees nothing');
+  const inv = mine.invites[0];
+  assert.equal((await call('POST', `/api/invites/mine/${inv.id}/accept`, cai)).status, 404, 'not bound to cai');
+  const ok = await call('POST', `/api/invites/mine/${inv.id}/accept`, ben);
+  assert.deepEqual([ok.status, ok.body.role], [201, 'editor']);
+  assert.equal((await call('GET', `/api/boards/${id}/db/entries`, ben)).status, 200);
+  assert.equal((await call('GET', '/api/invites/mine', ben)).body.invites.length, 0, 'gone once accepted');
+  const acc = (await call('GET', '/api/invites/mine', ana)).body.accepted;
+  assert.deepEqual(acc.map((a) => [a.boardName, a.name]), [['Casa', 'Ben']]);
+  const deeInv = (await call('GET', '/api/invites/mine', dee)).body.invites[0];
+  assert.equal((await call('POST', `/api/invites/mine/${deeInv.id}/decline`, dee)).status, 200);
+  assert.equal((await call('GET', '/api/invites/mine', dee)).body.invites.length, 0);
+  assert.equal((await call('POST', `/api/invites/mine/${deeInv.id}/accept`, dee)).status, 404, 'a declined invite is closed');
+  assert.equal((await call('GET', `/api/boards/${id}/invites`, ana)).body.invites.length, 0, 'declined invites leave the list');
+});

@@ -120,7 +120,7 @@ const TEMPLATE = [
   `SAVINGS,${M}`, blank('Emergency Fund'), blank('Retirement Fund'),
 ].join('\n');
 
-test('a blank budget template becomes the board: sections are groups, every named row is a type', async () => {
+test('a blank budget template becomes the board as the file has it: each section a sub-category, every named row a type', async () => {
   const book = await readFile('budget.csv', enc(TEMPLATE));
   book.sheets.push({ name: 'Help', rows: [['HELP'], ['Step 1:', 'Define Budget Categories'], ['© 2010-2019 Example']] });
   const a = analyzeWorkbook(book, { fileName: 'budget.xlsx' });
@@ -131,12 +131,12 @@ test('a blank budget template becomes the board: sections are groups, every name
   const b = r.board;
   const t = (item, cat) => b.types.find((x) => x.item === item && (cat === undefined || x.category === cat));
   assert.deepEqual(['Wages & Tips', 'Dividends', 'Other'].map((i) => t(i, null).type), ['income', 'income', 'income']);
-  assert.deepEqual(['type', 'group', 'category', 'budget'].map((k) => t('Mortgage/Rent')[k]), ['expense', 'Fixed', 'Home', 0]);
-  assert.deepEqual(['group', 'category'].map((k) => t('Electricity')[k]), ['Fixed', 'Home']);
-  assert.deepEqual(['group', 'category'].map((k) => t('Furnishings/Appliances')[k]), ['Variable', 'Home']);
-  assert.deepEqual(['group', 'category'].map((k) => t('Fuel')[k]), ['Variable', 'Transportation']);
-  assert.equal(t('Student Loans').group, 'Fixed');
-  assert.deepEqual(['group', 'category'].map((k) => t('Gifts Given')[k]), ['Extra', 'Charity/gifts']);
+  // Oct 9 (Felipe): sections are sub-categories in the file's order, nothing re-sorted into Fixed / Variable.
+  assert.deepEqual(b.subs.expense, ['Home', 'Transportation', 'Charity/gifts']);
+  assert.deepEqual(['type', 'group', 'category', 'budget'].map((k) => t('Mortgage/Rent')[k]), ['expense', 'Home', 'Home', 0]);
+  assert.deepEqual(b.types.filter((x) => x.group === 'Home').map((x) => x.item), ['Mortgage/Rent', 'Electricity', 'Furnishings/Appliances', 'Other']);
+  assert.deepEqual(b.types.filter((x) => x.group === 'Transportation').map((x) => x.item), ['Fuel', 'Student Loans']);
+  assert.equal(t('Gifts Given').group, 'Charity/gifts');
   assert.deepEqual([t('Emergency Fund').type, t('Retirement Fund').type], ['investment', 'investment']);
   assert.ok(!b.types.some((x) => /balance|total|net/i.test(x.item)));
 });
@@ -146,6 +146,14 @@ test('the same template with figures keeps its structure and imports the months'
   const r = await run('budget.csv', filled);
   assert.deepEqual(r.years, ['2025']); assert.equal(r.rows.length, 2);
   const rent = r.board.types.find((x) => x.item === 'Mortgage/Rent');
-  assert.deepEqual([rent.group, rent.category, rent.budget], ['Fixed', 'Home', 900]);
+  assert.deepEqual([rent.group, rent.category, rent.budget], ['Home', 'Home', 900]);
   assert.ok(r.board.types.find((x) => x.item === 'Electricity' && x.budget === 0));
+});
+
+test('a sheet without date and amount columns is listed as skipped, for the review screen (03d 930:21353)', async () => {
+  const bank = (await readFile('a.csv', enc('Fecha;Concepto;Importe\n28/01/2026;NOMINA ACME;2.500,00\n01/01/2026;Alquiler;-900,00'))).sheets[0];
+  const r = boardFromFile(analyzeWorkbook({ sheets: [bank, { name: 'Help', rows: [['Code', 'Value'], ['a', 1], ['b', 2], ['c', 3], ['d', 4]] }] }, { fileName: 'x.xlsx' }));
+  assert.deepEqual(r.skippedSheets, [{ sheet: 'Help', reason: 'Missing required date and amount columns.' }]);
+  assert.deepEqual(r.warnings, [], 'the skipped sheet is not repeated as a generic warning');
+  assert.equal(r.board.types.length, 2);
 });

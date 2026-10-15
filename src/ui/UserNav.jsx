@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { ActionLink, Button, RoundButton } from './Button.jsx';
 import { Icon } from './Icon.jsx';
 import { MenuItemCounter } from './SideMenu.jsx';
-import { arrowStraightLeft, bell, chevronDown } from './icons.js';
+import { arrowStraightLeft, arrowStraightRight, bell, checkmark, chevronDown } from './icons.js';
 import { useMobile } from './useMobile.js';
 
 const cx = (...c) => c.filter(Boolean).join(' ');
@@ -25,7 +25,7 @@ export function useDismiss(open, ref, onClose, alsoRef) {
 
 // avatar (DS 221:1044, Oct 3): a circle in four sizes, 40 (default), 56, 80 and 112. Style=Text: surface/accent with
 // the initial (Heading/Small, Medium, Large, XL); Style=Image: the picture, cropped to the circle. `large` = 80.
-const AVATAR_SIZES = [40, 56, 80, 112];
+const AVATAR_SIZES = [28, 40, 56, 80, 112]; // 28: the joint board's members (Ongatu 973:33229, Oct 15)
 export function Avatar({ name, image, large, size, className }) {
   const initial = (name || '?').trim().charAt(0).toUpperCase() || '?';
   const px = AVATAR_SIZES.includes(size) ? size : (large ? 80 : 40);
@@ -97,19 +97,26 @@ export function UserMenu({ name, image, open, onToggle, onClose, items }) {
 // notification-item (DS 228:469, Oct 3): a header row (date · time in Body/Medium/SemiBold, the optional Micro Secondary
 // action on the right, 16 apart), the text under it and — while the item is unread — the "Mark as read" link at the
 // bottom. `onMarkRead` omitted = read (no link).
-export function NotificationItem({ date, time, children, action, onMarkRead, id }) {
+// `ctas` (Oct 15, invite notification 973:26339): a row of Nano buttons under the text, 4 apart:
+// [{ label, onClick, outline, disabled, id }] — outline = 1px border/tertiary (Accept), otherwise text only (Decline).
+export function NotificationItem({ date, time, children, action, onMarkRead, ctas, id }) {
   return (
     <div className={'ds-notif-item' + (onMarkRead ? ' is-unread' : '')} id={id}>
       <div className="ds-notif-body">
         <div className="ds-notif-head">
           <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
-          {action && <Button variant="secondary" size="micro" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
+          {action && <Button variant="secondary" size="tiny" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
         </div>
         <div className="ds-notif-content">
           <div className="ds-notif-text">{children}</div>
         </div>
       </div>
-      {onMarkRead && <ActionLink className="ds-notif-mark" onClick={onMarkRead}>Mark as read</ActionLink>}
+      {ctas && ctas.length > 0 && (
+        <div className="ds-notif-ctas">
+          {ctas.map((c) => <button key={c.label} type="button" id={c.id} className={'ds-notif-cta' + (c.outline ? ' is-outline' : '')} onClick={c.onClick} disabled={c.disabled}>{c.label}</button>)}
+        </div>
+      )}
+      {onMarkRead && <ActionLink className="ds-notif-mark" size="small" icon={checkmark} onClick={onMarkRead}>Mark as read</ActionLink>}
     </div>
   );
 }
@@ -118,7 +125,8 @@ export function NotificationItem({ date, time, children, action, onMarkRead, id 
 // Active: the bell turns Active and the list opens below it, right-aligned.
 // State=Mobile (407:905, Ongatu 381:6397): on a phone the bell opens a full page over the app: a 64px bar (back arrow =
 // Round button Small Tertiary, "Notifications" in Heading/Large) and the items 12 apart with a divider between them.
-export function Notification({ open, onToggle, onClose, unread, children }) {
+// `seeAllHref` (Oct 12, 211:19682): the "See all notifications" Tertiary Medium button under the list → the Notifications page.
+export function Notification({ open, onToggle, onClose, unread, seeAllHref, children }) {
   const ref = useRef(null);
   const pageRef = useRef(null);
   const mobile = useMobile();
@@ -135,7 +143,12 @@ export function Notification({ open, onToggle, onClose, unread, children }) {
       <RoundButton icon={bell} size="small" active={open && !mobile} id="notif-btn" label={unread ? 'Notifications (new)' : 'Notifications'}
         aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'} onClick={onToggle} />
       {unread && <span className="ds-notif-badge" aria-hidden="true" />}
-      {open && !mobile && <div className="ds-notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">{children}</div>}
+      {open && !mobile && (
+        <div className="ds-notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+          <div className="ds-notif-list">{children}</div>
+          {seeAllHref && <a className="btn-pill tertiary ds-notif-all" id="notif-all" href={seeAllHref}><span>See all notifications</span><Icon icon={arrowStraightRight} size={16} /></a>}
+        </div>
+      )}
       {open && mobile && createPortal(
         <div className="ds-notif-page" id="notif-panel" role="dialog" aria-modal="true" aria-labelledby="notif-page-title" ref={pageRef}>
           <div className="ds-notif-page-nav">
@@ -150,7 +163,8 @@ export function Notification({ open, onToggle, onClose, unread, children }) {
   );
 }
 
-// User nav (DS 230:618): the notification bell, then the user.
-export function UserNav({ children }) {
-  return <div className="ds-user-nav" id="user-nav"><div className="ds-user-nav-actions">{children[0]}</div>{children[1]}</div>;
+// User nav (DS 230:618): the notification bell, then the user. `board` (Ongatu Product header 275:3376, Oct 13) = the
+// Board dropdown, 16 before the bell.
+export function UserNav({ children, board }) {
+  return <div className="ds-user-nav" id="user-nav">{board}<div className="ds-user-nav-actions">{children[0]}</div>{children[1]}</div>;
 }

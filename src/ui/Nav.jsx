@@ -1,5 +1,6 @@
 import { Icon } from './Icon.jsx';
-import { plus, x } from './icons.js';
+import { Button } from './Button.jsx';
+import { chevronDown, plus, x } from './icons.js';
 
 // Round button (Secondary) that opens "Add a year" (Nav tabs 59:850).
 export function YearAddButton(props) {
@@ -26,5 +27,18 @@ export function MonthSelector({ label, selected, state, onSelect }) {
   return (
     <button className={'month-btn' + (state ? ' ' + state : '')} title={state === 'estimated' ? "Projected — this month hasn't happened yet" : ''}
       role="tab" aria-pressed={selected ? 'true' : 'false'} onClick={onSelect}>{label}</button>
+  );
+}
+
+// Expander (DS 890:4102, pinned Mobile): an 88px band at the bottom of a clipped list, fading from surface/gradient
+// (surface/primary at 0%) to surface/primary, padding space/xs 0, with a Small Tertiary button ("See all" + 16px
+// chevron) at the bottom centre. `open` turns it into "See less" (the chevron flips in CSS). `controls` = the list's id.
+export function Expander({ open, onToggle, controls, id, moreLabel = 'See all', lessLabel = 'See less' }) {
+  return (
+    <div className={'ds-expander' + (open ? ' is-open' : '')}>
+      <Button variant="tertiary" size="small" trailing={chevronDown} aria-expanded={open ? 'true' : 'false'} aria-controls={controls} id={id} onClick={onToggle}>
+        {open ? lessLabel : moreLabel}
+      </Button>
+    </div>
   );
 }

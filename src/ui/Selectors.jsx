@@ -5,20 +5,23 @@ import { checkmark, information, negativeOutlined, positiveFilled, warningOutlin
 const cx = (...c) => c.filter(Boolean).join(' ');
 
 // Label 211:859 as a plain tag. type: neutral (default) | positive | negative | warning. size: regular | small.
+// The icon is 10px (icon-size/tn) in both sizes (Oct 12).
 export function Tag({ type, size, icon, className, children, ...rest }) {
   return (
     <span className={cx('ds-tag', type && type !== 'neutral' && type, size === 'small' && 'small', className)} {...rest}>
-      {icon && <Icon icon={icon} size={size === 'small' ? 10 : 12} />}{children}
+      {icon && <Icon icon={icon} size={10} />}{children}
     </span>
   );
 }
 
-// chip-selector 540:785: a toggle chip. Hover over an unselected chip previews the X of "remove".
+// chip-selector 540:785: a toggle chip. Hover over an unselected chip shows a 10px X after the label (540:796; CSS
+// reveals .ds-chip-x on hover).
 export function ChipSelector({ selected, onToggle, className, children, ...rest }) {
   return (
     <button type="button" aria-pressed={!!selected} className={cx('ds-chip', selected && 'is-selected', className)} onClick={onToggle} {...rest}>
       {selected ? <Icon icon={checkmark} size={10} /> : <span className="ds-chip-ring" />}
       {children}
+      {!selected && <Icon icon={x} size={10} className="ds-chip-x" />}
     </button>
   );
 }
@@ -113,12 +116,19 @@ export function BuildItem({ type, name, onRemove, removeLabel }) {
 }
 
 // info 632:905: an inline message. message: neutral (default) | warning | danger.
+// `action` = the optional Nano outline button at the end of the row ({ label, icon, onClick, id, disabled }), e.g. the
+// "No sub-categories created · + Add sub-category" boxes in the budget panel and onboarding (Oct 12). `icon={false}` = no icon.
 const INFO_ICON = { neutral: cancel, warning: warningOutlined, danger: negativeOutlined };
-export function InfoMessage({ message = 'neutral', title, children, icon, className, ...rest }) {
+export function InfoMessage({ message = 'neutral', title, children, icon, action, className, ...rest }) {
   return (
-    <div className={cx('ds-info', message !== 'neutral' && message, className)} role={message === 'neutral' ? 'note' : 'alert'} {...rest}>
-      <Icon icon={icon || INFO_ICON[message]} size={16} />
+    <div className={cx('ds-info', message !== 'neutral' && message, action && 'has-action', className)} role={message === 'neutral' ? 'note' : 'alert'} {...rest}>
+      {icon !== false && <Icon icon={icon || INFO_ICON[message]} size={16} />}
       <div className="ds-info-text">{title && <p className="ds-info-title">{title}</p>}{children && <p className="ds-info-desc">{children}</p>}</div>
+      {action && (
+        <button type="button" className="ds-info-action" id={action.id} onClick={action.onClick} disabled={action.disabled}>
+          {action.icon && <Icon icon={action.icon} size={12} />}<span>{action.label}</span>
+        </button>
+      )}
     </div>
   );
 }

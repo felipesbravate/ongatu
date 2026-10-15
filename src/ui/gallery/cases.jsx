@@ -9,10 +9,11 @@ import {
   KpiCard, Label, Meter, MonthSelector, PanelHeader, RoundButton, Segments, Toast, TooltipEntryItem, YearAddButton, YearTab,
   Avatar, MenuList, Notification, NotificationItem, ProgressBar, UserMenu, UserNav, Modal, Illustration, illustrations,
   Logo, Toggle, Checkbox, AppHeader, Input, SideMenu, MenuItemCounter,
+  Expander, Tag, ChipSelector, StepProgress, Pager, CategorySelector, InfoMessage, InfoTooltip, BoardDropdown, BoardSwitcher,
 } from '../index.js';
 import * as iconLibrary from '../icons.js';
 import { Icon } from '../Icon.jsx';
-import { actions, arrowStraightDown, arrowStraightUp, bell, edit, lock, minus, plus, reload, signOut, upload, user, x } from '../icons.js';
+import { actions, arrowStraightDown, arrowStraightUp, bell, cancel, edit, lock, minus, plus, reload, signOut, upload, user, x } from '../icons.js';
 
 const TOP = [{ value: 'Income', label: 'Income' }, { value: 'Investments', label: 'Savings/Investments' }, { value: 'Expenses', label: 'Expenses' }];
 const GROUPS = ['Fixed', 'Variable', 'Additional', 'Extra'].map((g) => ({ value: g, label: g }));
@@ -272,4 +273,45 @@ export const CASES = [
         <SideMenu label="Menu" value={v} onSelect={s} items={[{ key: 'a', label: 'Edit profile' }, { key: 'b', label: 'Security' }, { key: 'c', label: 'Data and privacy' }]} />
         <SideMenu label="With icons" value={v} onSelect={s} items={[{ key: 'a', label: 'Profile', icon: user }, { key: 'b', label: 'Security', icon: lock }, { key: 'c', label: 'Upload', icon: upload }]} />
       </div>)}</Controlled>) },
+  // ---- Oct 12 DS alignment (Figma 7glNMA9d7iVJFf2CvyrzAb) ----
+  { id: 'side-menu-counters', render: () => <SideMenu label="Notifications" value="all" items={[{ key: 'all', label: 'All', count: 7 }, { key: 'unread', label: 'Unread', count: 2, unread: true }]} /> },
+  { id: 'expander', render: () => <Controlled initial={false}>{(v, s) => <div style={{ position: 'relative', width: 356, height: 88 }}><Expander id="g-expander" open={v} onToggle={() => s(!v)} /></div>}</Controlled> },
+  { id: 'tags', render: () => (
+    <div style={{ display: 'grid', gap: 8 }}>{[undefined, 'small'].map((size) => (
+      <div key={size || 'regular'} style={{ display: 'flex', gap: 8 }}>{['neutral', 'positive', 'negative', 'warning'].map((t) => <Tag key={t} type={t} size={size} icon={x}>Label</Tag>)}</div>))}
+    </div>) },
+  { id: 'chip-selector', render: () => <Controlled initial={false}>{(v, s) => <div style={{ display: 'flex', gap: 8 }}><ChipSelector>Chip</ChipSelector><ChipSelector selected>Chip</ChipSelector><ChipSelector id="g-chip" selected={v} onToggle={() => s(!v)}>Try</ChipSelector></div>}</Controlled> },
+  { id: 'category-selector', render: () => <Controlled initial="income">{(v, s) => <div style={{ width: 592 }}><CategorySelector id="g-cat" value={v} onChange={s} options={[
+    { value: 'income', title: 'Income', description: 'Money coming in (salary or any other revenue streams).' },
+    { value: 'savings', title: 'Savings and Investments', description: 'Money set aside for goals, growth, or emergencies.' },
+    { value: 'expenses', title: 'Expenses', description: 'Money spent on living costs, bills, and daily purchases.' }]} /></div>}</Controlled> },
+  { id: 'step-progress', render: () => <StepProgress current={1} steps={[{ label: 'Tour' }, { label: 'Choose', progress: 0.5 }, { label: 'Setup' }]} /> },
+  { id: 'pager', render: () => <Controlled initial={0}>{(v, s) => <Pager count={6} current={v} onGo={s} />}</Controlled> },
+  { id: 'info-messages', render: () => (
+    <div style={{ display: 'grid', gap: 12, width: 320 }}>
+      <InfoMessage action={{ label: 'Add group', icon: plus, onClick: () => {} }}>No groups created</InfoMessage>
+      <InfoMessage title="Title" action={{ label: 'Button label', icon: plus, onClick: () => {} }}>Description</InfoMessage>
+      <InfoMessage message="warning" title="Title">Description</InfoMessage>
+      <InfoMessage message="danger" title="Title">Description</InfoMessage>
+    </div>) },
+  { id: 'info-tooltip', render: () => <div style={{ height: 60, width: 400 }}><InfoTooltip text="Description" /></div> },
+  { id: 'input-trailing', render: () => <div style={{ width: 352 }}><Input defaultValue="Search text" trailing={{ icon: cancel, label: 'Clear', onClick: () => {} }} /></div> },
+  { id: 'notification-see-all', render: () => (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', height: 360, width: 360 }}>
+      <Notification unread open seeAllHref="/notifications">
+        <NotificationItem date="Sep 23" time="15:11" action={{ label: 'Action', onClick: () => {} }} onMarkRead={() => {}}>ann@example.com is waiting for your approval.</NotificationItem>
+        <NotificationItem date="Sep 22" time="09:02">Your notification text is here.</NotificationItem>
+      </Notification>
+    </div>) },
+  // board-dropdown (Okara 1052:6292, Oct 15): Default / joint / Mobile pills, and the Desktop Active card.
+  { id: 'board-dropdown', render: () => (
+    <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+      <BoardDropdown name="Felipe’s personal board" />
+      <BoardDropdown name="Home Finances" kind="joint" />
+      <BoardDropdown name="Felipe’s personal board" mobile />
+    </div>) },
+  { id: 'board-switcher', render: () => (
+    <div style={{ position: 'relative', height: 300, width: 360 }}>
+      <BoardSwitcher boards={[{ id: null, name: 'Felipe’s personal board', kind: 'personal', current: true }, { id: 'b1', name: 'Home Finances', kind: 'joint', tag: 'Co-owner' }]} onPick={() => {}} onCreate={() => {}} onSettings={() => {}} onClose={() => {}} note="Your personal board data stays private." />
+    </div>) },
 ];

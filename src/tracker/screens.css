@@ -1,0 +1,144 @@
+/* Dashboard screens (Ongatu jHurei4Bb53jEqSosr1Vt5, Oct 12): screen layout overrides on top of src/ui/okara.css.
+   Desktop main page 211:18753 (dark 803:26663), add-year pill 265:18832, panel open 229:18910, Add entry panel 229:18167;
+   phones 898:9152 (dark 901:11726), scrolled 787:15208, create-year modal 703:17437. Component chrome stays in okara.css.
+   Rules use `html … :not(#z)` so they win over the layered okara overrides. Inside components pinned to the Mobile
+   token mode (.meter-row, .round-btn, .year-add-pill, .ds-action-link …) spacing is written in px: the tokens there
+   resolve to their phone values. */
+
+/* ---------------- Desktop and tablet ---------------- */
+@media (min-width:641px){
+  /* Content (581:19479): left 360 | 24 | right; cards 24 apart in each column, 24 above the next section. */
+  html .wrap > .row1:not(#z){ gap:var(--space-xl); margin-bottom:var(--space-xl); }
+  html .row1 .hero-left:not(#z), html .row1 .hero-right:not(#z){ gap:var(--space-xl); }
+  /* mini-grid (581:19482): KPI cards 16 apart both ways. */
+  html .hero-left .mini-grid:not(#z){ gap:var(--space-lg); }
+
+  /* Nav tabs (581:19465): the + then the year tabs 16 apart; the month row (581:19466) starts under the first tab (52). */
+  html .actions-wrap .years:not(#z){ gap:var(--space-lg); }
+  html .actions-wrap .months:not(#z){ padding-left:52px; }
+  /* Add year pill (265:18832): 4 above the nav's top, 5 to its left; Floating shadow (the padding already allows for the
+     1px border: 44 high like the frame). */
+  html .actions-wrap .year-add-pill:not(#z){ top:-4px; left:-5px; box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
+
+  /* Expense allocation (581:19487) and This month, at a glance (581:19508): no shadow. */
+  html .hero-left .alloc-card:not(#z), html .hero-left .glance-card:not(#z){ box-shadow:none; }
+
+  /* Breakdown card (581:19517): 36px Actions button; Controllers (766:8120) top-aligned; 24 between Controllers, the
+     meters and the list. */
+  html .breakdown-card .bd-menu .round-btn:not(#z){ width:36px; height:36px; padding:8px; }
+  html .breakdown-card .bd-content:not(#z){ gap:var(--space-xl); }
+  html .breakdown-card .bd-controllers:not(#z){ align-items:flex-start; }
+  /* Amount meters (802:25563): 34 high (info 20, 8, bar 6), 12 apart; the figure is a 16px € and Value/Medium. */
+  html .breakdown-card #meters:not(#z){ display:flex; flex-direction:column; gap:var(--space-md); }
+  html .breakdown-card #meters .meter-row:not(#z){ margin:0; }
+  html .breakdown-card #meters .meter-top:not(#z){ height:20px; margin:0; }
+  html .breakdown-card #meters .meter-amt:not(#z){ display:flex; align-items:center; line-height:20px; }
+  html .breakdown-card #meters .meter-amt .money:not(#z){ display:inline-flex; align-items:center; gap:4px; }
+  html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
+  /* Latest line (787:14891): text, Dot, € and the figure 8 apart; € and figure Value/Medium (14, -4%). */
+  html .breakdown-card .tracker-last-entry:not(#z){ gap:var(--space-sm); }
+  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.56px; }
+  html .breakdown-card .tracker-last-entry .tle-num + .tle-num:not(#z){ margin-left:calc(var(--space-xs) - var(--space-sm)); }
+
+  /* Hero chart (581:19553): header 24 (title + Label), the chart 12 under it at 220, the legend 12 under the chart:
+     swatch 9 (radius/ty) then the label 8 apart, items 12 apart, 12px Medium text/secondary. */
+  html .hero-chart .hc-top:not(#z){ min-height:24px; }
+  html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-md); }
+  html .hero-chart #trend-chart:not(#z){ display:block; width:100%; }
+  html .hero-chart .legend:not(#z){ gap:var(--space-md); margin-top:var(--space-md); }
+  html .hero-chart .legend > span:not(#z){ gap:var(--space-sm); font-size:12px; line-height:16px; font-weight:400; letter-spacing:0; color:var(--text-secondary); }
+
+  /* Add entry panel (229:18166): "Click to upload" is the Medium Action link, 16/20 with a 16px Upload icon (phones keep
+     the Small link, 369:13388). */
+  html #add-panel .dz-line .ds-action-link:not(#z){ font-size:16px; line-height:20px; letter-spacing:-0.32px; padding:0; gap:4px; }
+
+  /* Panel open (229:18910): no scrim, the panel's own shadow only (clicking the page still closes it). */
+  html .add-panel-backdrop:not(#z){ background:transparent; }
+}
+
+/* ---------------- Every width ---------------- */
+/* This month, at a glance (581:19508 / 898:9219): plain text/secondary; the text space/sm under the title; the tags
+   control-gap apart and control-gap under the text. */
+html .glance-card .insight-text:not(#z){ margin-top:0; }
+html .glance-card .insight-text b:not(#z){ color:inherit; font-weight:inherit; }
+html .glance-card .insight-tags:not(#z){ gap:var(--space-control-gap); padding-top:var(--space-control-gap); margin-top:0; }
+
+/* Files review (229:18717): Track in label 8 above its dropdown; the date column 42 wide. */
+html #add-panel .ap-period:not(#z){ gap:var(--space-sm); }
+html #add-panel .ap-period .fld-label:not(#z){ margin:0; }
+html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
+
+/* ---------------- Phones ---------------- */
+@media (max-width:640px){
+  /* 898:9152: the welcome 24 under the header, the nav 24 under the welcome, the content 24 under the nav. */
+  html .wrap:not(#z){ padding-top:var(--space-lg); }
+  html .wrap > .actions-wrap:not(#z){ margin-top:var(--space-lg); }
+  html .wrap > .row1:not(#z){ margin-top:var(--space-lg); }
+  /* Tags nav (898:9162): the months start space/2xl (48) in. */
+  html .actions-wrap .months:not(#z){ padding-left:var(--space-2xl); }
+  /* Scrolled (787:15208, 788:15599): Floating shadow under the sticky nav; months 8 apart. */
+  html body.is-scrolled .actions-wrap:not(#z){ box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
+  html body.is-scrolled .months:not(#z){ gap:8px; }
+
+  /* mini-grid (898:9181): 16 both ways; KPI cards 105 high (Figma's "↑ details" fits one line; a longer comparison such
+     as "55% of €2.837 avg" wraps to a second line and the card grows rather than clipping it). */
+  html .row1 .mini-grid:not(#z){ gap:var(--space-md); }
+  html .mini-grid .mini-kpi:not(#z){ min-height:105px; }
+
+  /* Tracker_Card_mobile (898:9186): radius/md, 24 between its parts, 36px Actions button. */
+  html .row1 .breakdown-card:not(#z){ border-radius:var(--radius-md); gap:var(--space-lg); }
+  html .breakdown-card .bd-menu .round-btn:not(#z){ width:36px; height:36px; padding:8px; }
+  /* Meters (898:9200): 32 high (info 20, 4, bar 8), 8 apart; the figure a 20px € and an Action link (14/16, link/default). */
+  html .breakdown-card #meters:not(#z){ display:flex; flex-direction:column; gap:var(--space-xs); }
+  html .breakdown-card #meters .meter-row:not(#z){ margin:0; }
+  html .breakdown-card #meters .meter-top:not(#z){ height:20px; margin:0; }
+  html .breakdown-card #meters .meter-track:not(#z){ height:8px; margin-top:4px; }
+  html .breakdown-card #meters .meter-amt:not(#z){ display:flex; align-items:center; line-height:16px; }
+  html .breakdown-card #meters .meter-amt .money:not(#z){ display:inline-flex; align-items:center; gap:4px; color:var(--link-default); }
+  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; font-weight:400; letter-spacing:-0.28px; color:var(--link-default); }
+  /* Last update (898:9193): text 14/16 link/disable, 12px Dot, the date, then a 16px € and the figure (link/default), 4 apart. */
+  html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:var(--space-tn); }
+  html .tracker-last-entry.is-phone .tle-dot:not(#z){ width:12px; height:12px; }
+  html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; flex:none; }
+  html .tracker-last-entry.is-phone .tle-value:not(#z){ display:inline-flex; align-items:center; flex:none; color:var(--link-default); }
+  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--link-default); }
+
+  /* Expense cards (901:10369): 124 high. */
+  html .ticker-strip .ticker-item:not(#z){ height:124px; }
+
+  /* This month, at a glance (898:9219) and Expense allocation (898:9227): padding 24. */
+  html .row1 .glance-card:not(#z), html .row1 .alloc-card:not(#z){ padding:var(--space-lg); }
+  /* Allocation bars (898:9231): left-aligned, 48 wide, 16 apart; labels +2% (Label/Default/SemiBold). */
+  html .alloc-card .alloc-bars:not(#z){ justify-content:flex-start; gap:var(--space-md); }
+  html .alloc-card .alloc-col:not(#z){ min-width:48px; }
+  html .alloc-card .alloc-bar:not(#z){ width:48px; }
+  html .alloc-card .alloc-name:not(#z){ letter-spacing:0.24px; }
+
+  /* Trend chart (898:9248): radius/md; header, chart (120) and legend 16 apart; legend items 12 apart, the 8px swatch
+     4 from its 10/10 Medium label. */
+  html .row1 .hero-chart:not(#z){ border-radius:var(--radius-md); }
+  html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-md); }
+  html .hero-chart #trend-chart:not(#z){ display:block; width:100%; }
+  html .hero-chart.is-compact .legend:not(#z){ gap:var(--space-sm); margin-top:var(--space-md); }
+  html .hero-chart.is-compact .legend > span:not(#z){ gap:var(--space-tn); font-size:10px; line-height:10px; font-weight:400; letter-spacing:-0.2px; }
+
+  /* Create year modal (703:17437): the illustration 16 above the text. */
+  html #year-modal .ds-modal-content:not(#z){ gap:var(--space-md); }
+  html #year-modal .ds-modal-form:not(#z){ margin-top:24px; } /* the text still 40 above the fields */
+
+}
+
+/* ---------------- Joint board (Ongatu 973:33223 / 973:30014 desktop, 994:41395 phones, Oct 15) ----------------
+   The board's name (Display/Title) and its members, space/xl apart: 28px avatars space/sm apart and, for co-owners, the
+   + Round button (border/tertiary, padding 4, Plus 20). The line under it is the usual .app-sub. Phones: the members
+   (8 apart) sit 8 above the name. */
+html .board-heading .board-title-row:not(#z){ display:flex; align-items:center; gap:var(--space-xl); flex-wrap:wrap; }
+html .board-heading .board-sub-name:not(#z){ margin:0; overflow-wrap:anywhere; }
+html .board-users:not(#z){ display:flex; align-items:center; gap:var(--space-sm); }
+html .board-users > span:not(#z){ display:inline-flex; }
+html .board-users .board-share.round-btn:not(#z){ width:28px; height:28px; padding:4px; border:1px solid var(--border-tertiary); }
+html .board-users:empty:not(#z){ display:none; }
+@media (max-width:640px){
+  html .board-heading .board-title-row:not(#z){ flex-direction:column-reverse; align-items:flex-start; gap:8px; }
+  html .board-users:not(#z){ gap:8px; }
+}

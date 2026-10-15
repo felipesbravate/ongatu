@@ -65,7 +65,7 @@ html[data-theme] .ds-input:not(.small):not(.tiny):not(#z){min-height:48px;paddin
 html[data-theme] .ds-input:not(.small):not(.tiny) input:not(#z){font-size:inherit;line-height:inherit;letter-spacing:inherit}
 html[data-theme] .ds-input.small{height:auto;min-height:36px}
 html[data-theme] .ds-dd--sm .ds-dd-trigger{min-height:36px}
-html[data-theme] .ds-dd-menu:not(#z){min-width:min(242px,calc(100vw - 16px));padding:var(--space-sm);border-color:var(--border-default);box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160)}
+html[data-theme] .ds-dd-menu:not(#z){min-width:min(242px,calc(100vw - 16px));padding:var(--space-md);border-color:var(--border-default);box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160)}
 html[data-theme] .ds-dd-menu.is-group{gap:var(--space-md)}
 html[data-theme] .ds-dd-menu .ds-dd-items{gap:var(--space-tn)}
 html[data-theme] .ds-drop-action:not(#z){width:242px}

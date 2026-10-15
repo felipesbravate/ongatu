@@ -25,11 +25,14 @@ export function FieldGroup({ label, className, children }) {
 // All sizes use Surface/Mobile. Leading icons are 20px (Medium/Small) or 16px (Tiny).
 // The empty, filled, focus and disabled states follow the semantic text, border and icon roles.
 // React 19 forwards a ref in rest to the native input.
-export function Input({ icon, iconSize, size = 'medium', className, placeholder = ' ', ...rest }) {
+// `trailing` (918:1064's optional right icon, e.g. Cancel to clear): { icon, label, onClick } → a button after the input.
+export function Input({ icon, iconSize, trailing, size = 'medium', className, placeholder = ' ', ...rest }) {
+  const tSize = iconSize || (size === 'tiny' ? 'md' : 'lg');
   return (
-    <span className={['ds-input', size !== 'medium' && size, rest.disabled && 'is-disabled', icon && 'has-icon', className].filter(Boolean).join(' ')}>
-      {icon && <Icon icon={icon} size={iconSize || (size === 'tiny' ? 'md' : 'lg')} />}
+    <span className={['ds-input', size !== 'medium' && size, rest.disabled && 'is-disabled', icon && 'has-icon', trailing && 'has-trailing', className].filter(Boolean).join(' ')}>
+      {icon && <Icon icon={icon} size={tSize} />}
       <input placeholder={placeholder} {...rest} />
+      {trailing && <button type="button" className="ds-input-trailing" aria-label={trailing.label} onClick={trailing.onClick} disabled={rest.disabled}><Icon icon={trailing.icon} size={tSize} /></button>}
     </span>
   );
 }

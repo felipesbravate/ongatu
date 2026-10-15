@@ -53,7 +53,7 @@ async def main():
                 check(f'{vp}: the board says what was found (file, Jan–Mar 2026, 19 entries)', 'cuenta.csv' in note and 'Jan 2026 – Mar 2026' in note and '19 entries' in note, note)
                 fr = await pg.inner_text('.ob-from-row'); check(f'{vp}: tracking starts from the file\'s first month (Jan 2026)', '2026' in fr and 'Jan' in fr, fr)
                 summ = await pg.inner_text('.ob-summary-list')
-                check(f'{vp}: summary counts per category and sub-category', 'Income\n1 type' in summ and 'Savings and investments\n1 type' in summ and 'Fixed\n2 items' in summ and 'Variable\n2 items' in summ and 'Extra\n1 item' in summ, summ)
+                check(f'{vp}: summary counts per category and sub-category', 'Income\n1 item' in summ and 'Savings and investments\n1 item' in summ and 'Fixed\n2 items' in summ and 'Variable\n2 items' in summ and 'Extra\n1 item' in summ, summ)
                 check(f'{vp}: the board opens on Income with the salary', 'Salary' in await pg.inner_text('.ob-board-groups'))
                 await pg.click('#ob-cat-expense'); await pg.wait_for_timeout(300)
                 board = await pg.inner_text('.ob-board-groups')

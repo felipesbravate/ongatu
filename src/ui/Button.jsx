@@ -23,7 +23,7 @@ export function Button({ variant = 'primary', size = 'medium', icon, trailing, i
 }
 
 // Round button (DS 52:629, Sept 29). variant: tertiary (default) | secondary | primary. size: medium | small | tiny | micro.
-// Medium hugs space/sm around a 24px icon (48 on phones, 40 on desktop); Small is a fixed 40 with a 20px icon; Tiny hugs
+// Medium hugs space/sm around a 24px icon (48, pinned Mobile); Small is a fixed 36 with a 20px icon; Tiny hugs
 // space/xs around 16 (32 / 24); Micro hugs space/tn around 16 (24 / 20). `iconSize` overrides the icon where a screen
 // draws another one. `active` draws State=Active (a menu it opens is showing).
 // Oct 3 (52:629): Medium 24, Small 20, Tiny 16, Micro 12, Nano 10.

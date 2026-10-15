@@ -78,6 +78,9 @@ export function supabaseStores(sb) {
         async revoke(/** @type {string} */ id, /** @type {string} */ at) { ok(await sb.from('board_invites').update({ revoked_at: at }).eq('id', id)); },
         async use(/** @type {string} */ id) { return !!ok(await sb.rpc('use_board_invite', { p_id: id })); },
         async countEmail(/** @type {string} */ id) { ok(await sb.rpc('count_board_invite_email', { p_id: id })); },
+        async setRole(/** @type {string} */ id, /** @type {string} */ role) { ok(await sb.from('board_invites').update({ role }).eq('id', id)); },
+        async forEmail(/** @type {string} */ email) { return ok(await sb.from('board_invites').select('*').eq('email', email).order('created_at', { ascending: false })) || []; },
+        async decline(/** @type {string} */ id, /** @type {string} */ at) { ok(await sb.from('board_invites').update({ declined_at: at }).eq('id', id)); ok(await sb.from('board_invites').update({ revoked_at: at }).eq('id', id).is('revoked_at', null)); },
         async removeAll(/** @type {string} */ b) { ok(await sb.from('board_invites').delete().eq('board_id', b)); },
       },
       keys: {

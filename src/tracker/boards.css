@@ -1,0 +1,180 @@
+/* Joint boards (boards-b, Oct 15 frames): Board settings (970:18246 / 992:34665 / 989:29429 / 992:37022; phones
+   986:27262 / 989:29453 / 992:37239 / 992:35130 / 989:28776), "Share your board" (994:40586 / 994:52459) and the
+   /join page. Prefix jb- (bd- is the breakdown rows). Selectors carry `html … :not(#z)` so they win over okara.css's
+   layered overrides. */
+
+/* ---------- shared pieces ---------- */
+/* Card ("Edit profile" 986:26977): surface/primary, radius md, 24 padding and 24 gap, the Card shadow. */
+html .jb-card:not(#z){
+  display:flex; flex-direction:column; gap:var(--space-lg); padding:var(--space-lg); box-sizing:border-box; width:100%; min-width:0;
+  background:var(--surface-primary); border-radius:var(--radius-md); box-shadow:0 0 20px rgba(22,21,15,.04); scroll-margin-top:88px;
+}
+/* Title block (986:26979): Heading/XL + Body/Medium/Medium, 4 apart. */
+html .jb-card-title:not(#z){ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
+html .jb-card-text:not(#z){ margin:calc(var(--space-tn) - var(--space-lg)) 0 0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
+html .jb-small:not(#z){ margin:0; font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
+
+/* Privacy reassurance (the /join page) */
+html .jb-note:not(#z){
+  display:flex; align-items:flex-start; gap:var(--space-xs); margin:0; padding:var(--space-sm); box-sizing:border-box; width:100%;
+  background:var(--surface-accent-light); border-radius:var(--radius-sm); color:var(--text-secondary);
+  font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls);
+}
+html .jb-note:not(#z) svg{ flex:0 0 auto; color:var(--icon-primary, var(--text-primary)); }
+html .jb-note:not(#z) span{ flex:1 1 auto; min-width:0; }
+
+/* Labels (1089:1055): 24 high, min 48, radius full, Body/Medium/Medium; Neutral surface/secondary, Warning
+   surface/warning + status/warning. */
+html .jb-tag:not(#z){
+  display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; height:24px; min-width:48px; padding:0 var(--space-xs); box-sizing:border-box;
+  border-radius:var(--radius-full); background:var(--surface-secondary); color:var(--text-primary); white-space:nowrap;
+  font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls);
+}
+html .jb-tag.is-warning:not(#z){ background:var(--surface-warning); color:var(--status-warning); }
+
+/* ---------- Board settings page ---------- */
+html .jb-page:not(#z){ display:flex; flex-direction:column; gap:var(--space-2xl); padding-bottom:var(--space-3xl); }
+/* Pager header (986:26963): the Action link, then the Title block (20 in, Display/Title + Body/Medium/Medium, 4 apart), 8 apart. */
+html .jb-head:not(#z){ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-xs); }
+html .jb-heading:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); padding:0 20px; box-sizing:border-box; width:100%; }
+html .jb-title:not(#z){ margin:0; font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--text-primary); }
+html .jb-sub:not(#z){ margin:0; font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); }
+/* Content (986:26968): 1110 wide, centred: Left 246 and the 800 cards, 64 apart. */
+html .jb-content:not(#z){ display:flex; justify-content:center; align-items:flex-start; gap:var(--space-3xl); width:100%; }
+html .jb-left:not(#z){ position:sticky; top:88px; display:flex; flex-direction:column; gap:var(--space-sm); width:246px; flex:0 0 246px; z-index:2; }
+html .jb-left-title:not(#z){ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
+html .jb-cards:not(#z){ display:flex; flex-direction:column; gap:var(--space-md); width:800px; flex:0 1 800px; min-width:0; }
+
+/* Board pill (986:26970): border/selected-item, radius full, 16 padding; 16px icon, Label 14 link/default, 12px chevron. */
+html .jb-picker:not(#z){ position:relative; width:100%; }
+html .jb-picker-btn:not(#z){
+  display:flex; align-items:center; gap:var(--space-xs); width:100%; padding:var(--space-md); box-sizing:border-box; margin:0;
+  border:1px solid var(--border-selected-item); border-radius:var(--radius-full); background:transparent; cursor:pointer; text-align:left;
+  font:inherit; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:20px; letter-spacing:var(--type-body-large-medium-ls); color:var(--link-default);
+}
+html .jb-picker-btn:not(#z):hover{ color:var(--link-hover, var(--link-default)); border-color:var(--link-disable, var(--border-selected-item)); }
+html .jb-picker-btn:not(#z) svg{ flex:0 0 auto; color:var(--link-default); }
+html .jb-picker-name:not(#z){ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .jb-picker:not(#z) .ds-bsw.is-card{ position:static; width:100%; box-sizing:border-box; }
+
+/* Board name (986:26982 / 986:26984): the field, then the info message (accent-light) and Save changes, 16 apart. */
+html .jb-name-card:not(#z) .ds-input{ width:100%; border-color:var(--border-selected-item); border-radius:var(--radius-sm); }
+html .jb-name-card:not(#z) .ds-input.is-disabled{ border-color:var(--border-default); background:var(--surface-secondary); }
+html .jb-name-actions:not(#z){ display:flex; align-items:center; gap:var(--space-md); }
+html .jb-info.ds-info:not(#z){ flex:1 1 auto; min-width:0; align-items:center; min-height:40px; gap:var(--space-sm); padding:var(--space-xs) var(--space-md); box-sizing:border-box; background:var(--surface-accent-light); }
+html .jb-info.ds-info:not(#z) .ds-info-desc{ color:var(--text-primary); }
+html .jb-name-actions:not(#z) > .btn-pill{ flex:0 0 auto; }
+
+/* Board sharing (986:26991 / 986:26996): 12 in from the card; the field and the CTA row 12 apart; People 24 below. */
+html .jb-sharing:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); width:100%; }
+html .jb-sharing-card:not(#z) .jb-sharing{ padding:0 var(--space-sm); box-sizing:border-box; }
+html .jb-sharing-card:not(#z) .jb-card-text{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+html .jb-sharing-input:not(#z){ display:flex; flex-direction:column; gap:var(--space-sm); }
+html .jb-sharing-input:not(#z) .ds-input{ width:100%; border-radius:var(--radius-sm); }
+html .jb-sharing-cta:not(#z){ display:flex; align-items:center; justify-content:space-between; gap:var(--space-sm); }
+html .jb-people:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); }
+html .jb-people-title:not(#z){ margin:0; white-space:pre; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html .jb-people-list:not(#z){ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--space-md); }
+html .jb-people-list:not(#z) > li{ display:flex; flex-direction:column; gap:var(--space-md); }
+html .jb-people-list:not(#z) .ds-divider{ margin:0; }
+html .jb-person:not(#z){ display:flex; align-items:center; gap:var(--space-xs); min-width:0; }
+html .jb-person-user:not(#z){ display:flex; align-items:center; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
+html .jb-person-user:not(#z) .ds-avatar{ flex:0 0 40px; }
+html .jb-person-info:not(#z){ display:flex; flex-direction:column; min-width:0; }
+html .jb-person-name:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .jb-person-email:not(#z){ font-size:var(--type-body-medium-medium-size); font-weight:var(--type-body-medium-medium-weight); line-height:var(--type-body-medium-medium-lh); letter-spacing:var(--type-body-medium-medium-ls); color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Access dropdown (Dropdown Tiny 992:35764, 120 wide; mine = Disable 992:35766) and its menu (986:27011). */
+html .jb-role:not(#z){ position:relative; flex:0 0 120px; width:120px; }
+html .jb-role:not(#z) select{ position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
+html .jb-role-trigger:not(#z){
+  display:flex; align-items:center; gap:var(--space-xs); width:100%; padding:var(--space-xs); box-sizing:border-box; margin:0; cursor:pointer;
+  border:1px solid var(--border-selected-item); border-radius:var(--radius-sm); background:transparent; color:var(--text-primary); text-align:left;
+  font:inherit; font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px;
+}
+html .jb-role-trigger:not(#z) span{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .jb-role-trigger:not(#z) svg{ flex:0 0 auto; color:var(--icon-primary, var(--text-primary)); }
+html .jb-role.is-open:not(#z) .jb-role-trigger{ border-color:var(--border-focus, var(--link-default)); }
+html .jb-role-trigger:not(#z):disabled{ cursor:default; background:var(--surface-secondary); border-color:var(--border-default); color:var(--text-muted); }
+html .jb-role-trigger:not(#z):disabled svg{ color:var(--text-muted); }
+html .jb-role-menu:not(#z){
+  position:absolute; right:0; top:calc(100% + var(--space-tn)); z-index:30; width:242px; box-sizing:border-box;
+  display:flex; flex-direction:column; gap:var(--space-md); padding:var(--space-md);
+  background:var(--surface-body); border:1px solid var(--border-secondary); border-radius:var(--radius-lg); box-shadow:0 4px 6px var(--effect-shadow-86-82-59-160);
+}
+html .jb-role-items:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); }
+html .jb-role-item:not(#z){
+  display:flex; align-items:center; gap:var(--space-xs); width:100%; height:36px; padding:var(--space-xs); box-sizing:border-box; margin:0; border:0; border-radius:var(--radius-sm);
+  background:transparent; color:var(--text-primary); cursor:pointer; text-align:left; font:inherit; font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px;
+}
+html .jb-role-item:not(#z):hover, html .jb-role-item:not(#z):focus-visible{ background:var(--surface-secondary); }
+html .jb-role-item.is-destructive:not(#z){ color:var(--action-destructive); }
+html .jb-role-item.is-destructive:not(#z) svg{ color:var(--action-destructive); }
+html .jb-role-menu:not(#z) .ds-divider, html .jb-role-sheet:not(#z) .ds-divider{ margin:0; }
+
+/* Delete this board / Leave board (991:31075): 12 padding, the text and the button 24 apart. */
+html .jb-danger:not(#z){ display:flex; align-items:center; gap:var(--space-lg); padding:var(--space-sm); }
+html .jb-danger-meta:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); flex:1 1 auto; min-width:0; }
+html .jb-danger-title:not(#z){ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html .jb-danger-text:not(#z){ margin:0; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+html .jb-danger-meta:not(#z) .ds-check{ margin-top:calc(var(--space-md) - var(--space-tn)); }
+html .jb-danger:not(#z) > .btn-pill{ flex:0 0 auto; }
+
+/* ---------- Share your board (994:40586): 480 wide, radius lg, 40 sides, the Floating shadow ---------- */
+html dialog#share-modal.ds-modal:not(#z){ width:480px; padding:0 0 var(--space-2xl); border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
+html #share-modal:not(#z) .ds-modal-header{ padding:var(--space-xs); }
+html #share-modal:not(#z) .ds-modal-body, html #share-modal:not(#z) .ds-modal-content{ gap:var(--space-lg); }
+html #share-modal:not(#z) .ds-modal-content{ padding:var(--space-xs) var(--space-2xl) 0; align-items:stretch; }
+html #share-modal:not(#z) .ds-modal-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+html #share-modal:not(#z) .ds-modal-description{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+html #share-modal:not(#z) .jb-sharing{ text-align:left; }
+
+/* ---------- sheets (phones): the board-sheet look (8 from the edges, radius 44) ---------- */
+html dialog.jb-sheet:not(#z){
+  position:fixed; inset:auto 8px 8px 8px; margin:0; width:auto; max-width:none; max-height:calc(100dvh - 16px); overflow-y:auto; box-sizing:border-box;
+  display:flex; flex-direction:column; gap:var(--space-md); padding:var(--space-md) var(--space-lg) var(--space-lg); border:1px solid var(--border-secondary); border-radius:44px;
+  background:var(--surface-primary); color:var(--text-primary); box-shadow:0 0 8px var(--effect-shadow-86-82-59-80);
+}
+html dialog.jb-sheet:not(#z):not([open]){ display:none; }
+html dialog.jb-sheet:not(#z)::backdrop{ background:var(--surface-modal); }
+html .jb-sheet-head:not(#z){ display:flex; align-items:center; justify-content:space-between; gap:var(--space-sm); padding:var(--space-xs) 0; }
+html .jb-role-sheet:not(#z) .jb-role-item{ height:40px; padding:0 var(--space-xs); }
+html .jb-role-sheet:not(#z) .jb-role-item.is-current{ background:var(--surface-secondary); }
+
+/* ---------- /join (Accept invitation) ---------- */
+html .jb-join:not(#z){ display:flex; flex-direction:column; gap:20px; max-width:560px; margin:0 auto; padding-top:var(--space-md); padding-bottom:var(--space-3xl); }
+html .jb-join:not(#z) .jb-heading{ padding:0; gap:var(--space-xs); }
+html .jb-join-card:not(#z){ gap:var(--space-sm); }
+html .jb-join-card:not(#z) .jb-card-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+html .jb-join-from:not(#z){ margin:0; font-size:var(--type-body-medium-regular-size); line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); color:var(--text-secondary); }
+html .jb-join-role:not(#z){ margin:0; font-size:var(--type-body-medium-semibold-size); font-weight:var(--type-body-medium-semibold-weight); line-height:var(--type-body-medium-semibold-lh); letter-spacing:var(--type-body-medium-semibold-ls); color:var(--text-accent); }
+html .jb-join-card:not(#z) .btn-pill{ align-self:flex-start; margin-top:var(--space-xs); }
+html .jb-join-loading:not(#z){ display:flex; flex-direction:column; align-items:center; gap:var(--space-md); padding:var(--space-2xl) 0; }
+html .jb-join-modal-text:not(#z){ display:flex; flex-direction:column; gap:20px; text-align:center; width:100%; }
+html .jb-join-modal-text:not(#z) p{ margin:0; font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); color:var(--text-secondary); }
+html .jb-join-modal-text:not(#z) p:first-child{ font-weight:600; }
+
+/* ---------- phones ---------- */
+@media (max-width:640px){
+  html .jb-card:not(#z){ padding:var(--space-lg); }
+  html .jb-page:not(#z){ gap:var(--space-lg); padding-top:var(--space-md); }
+  html .jb-head:not(#z){ gap:var(--space-lg); }
+  html .jb-heading:not(#z){ padding:0; gap:var(--space-xs); }
+  html .jb-title:not(#z){ font-size:var(--type-display-title-mobile-size); font-weight:var(--type-display-title-mobile-weight); line-height:var(--type-display-title-mobile-lh); letter-spacing:var(--type-display-title-mobile-ls); }
+  html .jb-sub:not(#z){ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
+  html .jb-content:not(#z){ flex-direction:column; align-items:stretch; gap:var(--space-md); }
+  html .jb-left:not(#z){ position:static; width:auto; flex:none; }
+  html .jb-cards:not(#z){ width:auto; flex:none; }
+  html .jb-name-actions:not(#z){ flex-direction:column; align-items:stretch; }
+  html .jb-name-actions:not(#z) > .btn-pill{ width:100%; }
+  html .jb-sharing-card:not(#z) .jb-sharing{ padding:0; }
+  /* People (986:27262): the access dropdown under the name, the label on the right. */
+  html .jb-person:not(#z){ display:grid; grid-template-columns:40px minmax(0,1fr) auto; column-gap:var(--space-xs); row-gap:var(--space-xs); align-items:center; }
+  html .jb-person:not(#z) > .jb-person-user{ display:contents; }
+  html .jb-person:not(#z) > .jb-person-user > .jb-tag{ grid-column:3; grid-row:1; }
+  html .jb-person:not(#z) > .jb-role{ grid-column:2; grid-row:2; }
+  html .jb-danger:not(#z){ flex-direction:column; align-items:flex-start; padding:var(--space-md) var(--space-xs) var(--space-xs); }
+  html dialog#share-modal.ds-modal:not(#z){ width:auto; margin:auto 8px 8px; border-radius:44px; max-height:calc(100dvh - 16px); }
+  html #share-modal:not(#z) .ds-modal-content{ padding:var(--space-xs) var(--space-lg) 0; }
+  html .jb-join:not(#z){ max-width:none; }
+}

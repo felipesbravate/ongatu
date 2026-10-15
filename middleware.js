@@ -8,7 +8,7 @@ import { trackerCsp } from './src/lib/headers.js';
 // /api still verify the session (an expired cookie still ends on /login, a step later). `mock_user` is the local
 // mock server's session cookie (scripts/dev-mock-server.mjs).
 const SESSION_COOKIE = /^(sb-.+-auth-token(\.\d+)?|mock_user)$/;
-const PRIVATE_PAGES = new Set(['/', '/account', '/welcome']);
+const PRIVATE_PAGES = new Set(['/', '/account', '/notifications', '/welcome', '/board-settings']);
 
 export function middleware(request) {
   const { pathname, searchParams } = request.nextUrl;
@@ -27,4 +27,4 @@ export function middleware(request) {
   return res;
 }
 
-export const config = { matcher: ['/', '/account', '/login', '/welcome'] };
+export const config = { matcher: ['/', '/account', '/notifications', '/login', '/welcome', '/join', '/board-settings'] };

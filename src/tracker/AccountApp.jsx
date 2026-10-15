@@ -1,7 +1,7 @@
 'use client';
 // Account page (Cost-tracker/Ongatu 250:3399, Security states 283:4288 / 283:4351 / 283:4409): the App header, "Return
-// to dashboard", a menu on the left (Side menu 304:553: Edit profile, Security, Data and privacy) and three cards: Personal information
-// (picture, first/last name, email), Security (sign-in code or password, one or the other) and Data and privacy
+// to dashboard", a menu on the left (Side menu 304:553: Personal preferences, Security, Shared boards, Data and privacy) and the cards: Personal
+// preferences (picture, email, first/last name, dark mode), Security (sign-in code or password, one or the other) and Data and privacy
 // (import, export, clear all data, delete account). Destructive actions ask first in the confirm modal.
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
@@ -13,16 +13,19 @@ import { api, deleteMe, deleteMyData, getMe, getSignIn, setSignIn, signOut } fro
 import { AccountNav } from './AccountBar.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
 import { useBudgetAlertsStandalone } from './alerts.js';
+import { alertHref } from './notifications.js';
+import './notifications.css';
 import { avatarFromFile, removeAvatar, saveAvatar, saveProfile, useProfile } from './profile.js';
 
-// Side menu labels and icons as in Ongatu 250:3399 (Sept 28).
+// Side menu labels and icons as in Ongatu 250:3399 (Oct 12: "Personal preferences"). Oct 15: no Shared boards section — joint boards are managed from the header
+// board switcher and /board-settings.
 import { useRouter } from 'next/navigation';
 import { useAppNavigation } from './AppNavigation.jsx';
 import { useTheme } from '../ui/Theme.jsx';
 import { AppSkeleton } from '../ui/Loading.jsx';
 
 const SECTIONS = [
-  { id: 'profile', label: 'Personal information', icon: user },
+  { id: 'profile', label: 'Personal preferences', icon: user },
   { id: 'security', label: 'Security', icon: lock },
   { id: 'data', label: 'Data & privacy', icon: security },
 ];
@@ -65,7 +68,7 @@ export default function AccountApp() {
   return (
     <>
       <div className="app-top-gap" />
-      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { router.push('/?alert=' + encodeURIComponent([a.year, a.mi, a.group, a.type || 'expense'].join('|'))); }} /></AppHeader>
+      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { router.push(alertHref(a)); }} /></AppHeader>
       <div className="wrap acct-page">
         <header className="acct-head">
           <ActionLink href="/" onClick={(event) => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); router.push('/'); } }} size="medium" icon={arrowStraightLeft} id="acct-back">Go to dashboard</ActionLink>
@@ -133,7 +136,7 @@ function ProfileCard({ me, profile, confirm, showToast }) {
         </div>
         <div className="acct-form">
           <div className="acct-row acct-email-row">
-            <Field label="Email" htmlFor="email"><Input id="email" icon={lock} iconSize="md" value={me.email} disabled readOnly /></Field>
+            <Field label="Email" htmlFor="email"><Input id="email" value={me.email} disabled readOnly /></Field>
           </div>
           <div className="acct-row">
             <Field label="First name" htmlFor="first-name"><Input id="first-name" value={first} onChange={(e) => setFirst(e.target.value)} autoComplete="given-name" placeholder="First name" /></Field>

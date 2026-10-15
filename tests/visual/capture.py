@@ -184,7 +184,7 @@ async def budget(pg):
     await pg.wait_for_selector('#budget-panel.open, #budget-panel[aria-hidden="false"], #budget-panel:not([hidden])', timeout=5000); await settle(pg)
 async def s_budget(pg): await budget(pg)
 async def s_budget_income(pg):
-    await budget(pg); await pg.click('#budget-kind-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Income")'); await settle(pg)
+    await budget(pg); await pg.click('#budget-kind button[data-v="income"]'); await settle(pg)
 async def s_budget_variable(pg):
     await budget(pg); await pg.click('#budget-sub-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Variable")'); await settle(pg)
 async def s_budget_hover(pg):

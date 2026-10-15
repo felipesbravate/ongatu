@@ -12,6 +12,7 @@ import { ActionLink, Divider, Dropdown, Input, Modal, illustrations, useDismiss,
 import { Icon } from '../ui/Icon.jsx';
 import { chevronDown, plus, remove } from '../ui/icons.js';
 import { InfoMessage, InfoTooltip } from '../ui/Selectors.jsx';
+import './budget.css';
 import { EXP_GROUPS, hasGroups } from './model.js';
 
 export const KINDS = [
@@ -50,8 +51,9 @@ function Rows({ values, setValues, placeholder, label, idPrefix }) {
 
 // A text field that suggests the existing values ("Select or type to create new..."), with the Dropdown-list under it
 // (577:5997, Simple: the groups, full width; 573:6715, typing a new name: an Action list that hugs its rows and starts
-// with '+ Create "Bank"'). Arrow keys move, Enter picks, Escape closes.
-export function Combo({ id, value, onChange, onPick, onBlur, options, placeholder, listLabel = 'Show the groups', className }) {
+// with '+ Add "Bank" group', 573:6715; `createLabel(name)` words it for other lists). Arrow keys move, Enter picks,
+// Escape closes.
+export function Combo({ id, value, onChange, onPick, onBlur, options, placeholder, listLabel = 'Show the groups', className, createLabel = (l) => `Add "${l}" group`, autoFocus }) {
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
@@ -70,7 +72,7 @@ export function Combo({ id, value, onChange, onPick, onBlur, options, placeholde
   };
   return (
     <div className={'fld-combo' + (className ? ' ' + className : '')} ref={ref}>
-      <Input id={id} role="combobox" aria-expanded={open ? 'true' : 'false'} aria-controls={listId} aria-autocomplete="list" value={value} placeholder={placeholder} maxLength={60} autoComplete="off"
+      <Input id={id} autoFocus={autoFocus} role="combobox" aria-expanded={open ? 'true' : 'false'} aria-controls={listId} aria-autocomplete="list" value={value} placeholder={placeholder} maxLength={60} autoComplete="off"
         onFocus={() => setOpen(true)} onClick={() => setOpen(true)} onKeyDown={onKey} onBlur={onBlur} onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(0); }} />
       <button type="button" className="fld-combo-chev" tabIndex={-1} aria-label={listLabel} onMouseDown={(e) => { e.preventDefault(); setOpen((o) => !o); }}><Icon icon={chevronDown} size={12} /></button>
       {open && items.length > 0 && (
@@ -80,7 +82,7 @@ export function Combo({ id, value, onChange, onPick, onBlur, options, placeholde
               <div key={(it.create ? '+' : '') + it.label} role="option" aria-selected={norm(it.label) === norm(q) && !it.create ? 'true' : 'false'}
                 className={'ds-dd-item' + (i === active ? ' is-active' : '') + (it.create ? ' has-icon fld-combo-create' : '')}
                 onMouseDown={(e) => { e.preventDefault(); pick(it); }} onMouseEnter={() => setActive(i)}>
-                {it.create && <Icon icon={plus} size="md" />}<span>{it.create ? `Create "${it.label}"` : it.label}</span>
+                {it.create && <Icon icon={plus} size="md" />}<span>{it.create ? createLabel(it.label) : it.label}</span>
               </div>
             ))}
           </div>
@@ -113,10 +115,11 @@ export function TypeModal({ open, kind, kindName, group: fixedGroup, category: f
   const noun = kindInfo ? kindInfo.noun : (kindName || 'new');
   const save = () => {
     const list = cleanList(items);
-    if (!list.length) return setErr('Add at least one type.');
+    if (!list.length) return setErr('Add at least one item.');
     onSave({ group: sub || null, category: grouped ? (cat.trim() || (isExp ? UNGROUPED : null)) : null, items: list });
   };
   const subOptions = [...(optionalSub ? [{ value: '__none', label: 'None' }] : []), ...subList.map((g) => ({ value: g, label: g }))];
+  const mobile = useMobile();
   return (
     <Modal open={open} onClose={onClose} id={id} illustration={illustrations.networkNodes}
       title={kindInfo ? `Add ${noun === 'income' || noun === 'expense' ? 'an' : 'a'} ${noun} type` : `Add a ${kindName || 'category'} type`}
@@ -134,9 +137,10 @@ export function TypeModal({ open, kind, kindName, group: fixedGroup, category: f
           <div className="fld"><label className="fld-label" htmlFor={`${id}-group`}>Group (Optional)</label>
             <Combo id={`${id}-group`} value={cat} onChange={setCat} options={groupsOf(sub || null)} placeholder="Select or type to create new..." /></div>
         )}
-        <div className="fld"><span className="fld-label">Type</span>
+        {/* 577:6584 / 661:6306: "Type name"; "+ Add another item" is Medium (16/20) on phones. */}
+        <div className="fld"><span className="fld-label">Type name</span>
           <Rows values={items} setValues={setItems} label="Type" idPrefix={`${id}-item`} placeholder={isExp ? 'e.g., Electricity, Netflix, Uber' : kind === 'income' ? 'e.g., Salary, Freelance' : kind === 'investment' ? 'e.g., Stocks, Pension' : 'e.g., Monthly donation'} /></div>
-        <ActionLink icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another type</ActionLink>
+        <ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another item</ActionLink>
         {err && <InfoMessage message="danger" title={err} />}
       </div>
     </Modal>
@@ -145,8 +149,12 @@ export function TypeModal({ open, kind, kindName, group: fixedGroup, category: f
 
 // Oct 5 (Felipe): no category creation; the three categories are fixed. Sub-categories and groups stay free.
 
+const article = (w) => (/^[aeiou]/i.test(String(w || '')) ? 'an' : 'a');
+
 // Sub-category creation for a category already on the board (shown read-only). Any names (Oct 4).
+// 564:7231 / 564:7081 (Oct 12): Signal Bars (78), "Create an Expenses sub-category".
 export function SubCategoryModal({ open, kind, kindName, existing = [], onClose, onSave, id = 'subcategory-modal' }) {
+  const name = kindName || kindLabel(kind);
   const [subs, setSubs] = useState(['']);
   const [warn, setWarn] = useState(null);
   useEffect(() => { if (open) { setSubs(['']); setWarn(null); } }, [open]);
@@ -156,12 +164,12 @@ export function SubCategoryModal({ open, kind, kindName, existing = [], onClose,
     onSave({ groups });
   };
   return (
-    <Modal open={open} onClose={onClose} id={id} illustration={illustrations.networkNodes} title="Create a sub-category"
+    <Modal open={open} onClose={onClose} id={id} illustration={illustrations.signalBars} illustrationWidth={78} title={`Create ${article(name)} ${name} sub-category`}
       description={kind === 'income' ? 'Define different groups of sources of income to track.' : 'Split this category into groups you track separately.'}
       secondary={{ label: 'Cancel', onClick: onClose, id: `${id}-cancel` }} primary={{ label: 'Create sub-category', onClick: save, id: `${id}-save` }}>
       <div className="ds-modal-form">
         <div className="fld"><label className="fld-label" htmlFor={`${id}-cat`}>Category</label>
-          <Input id={`${id}-cat`} value={kindName || kindLabel(kind)} disabled readOnly /></div>
+          <Input id={`${id}-cat`} value={name} disabled readOnly /></div>
         <div className="fld"><span className="fld-label">Sub-category</span>
           <Rows values={subs} setValues={setSubs} label="Sub-category" idPrefix={`${id}-sub`} placeholder={kind === 'expense' ? 'e.g., Fixed, Variable, Extra' : kind === 'investment' ? 'e.g., Stocks, Shares, Funds' : kind === 'income' ? 'e.g., Job, Side projects' : 'e.g., Monthly, One-off'} /></div>
         <div className="fld-row">
@@ -197,5 +205,82 @@ export function RenameModal({ open, title, label, value, existing = [], descript
         {warn && <InfoMessage message="warning" title={warn} />}
       </div>
     </Modal>
+  );
+}
+
+// Sub-category edit (919:13266, Oct 12), also used for a group: Pencil (78), 'Edit "Fixed" sub-category', "Change the
+// name or delete this sub-category.", the category read-only, the name; Delete (Tertiary, action/destructive) + Save.
+// onSave(newName) only when the name changed; onDelete() opens the deletion modal (or the caller's confirmation).
+export function SubCategoryEditModal({ open, kind, kindName, value, noun = 'sub-category', existing = [], onClose, onSave, onDelete, id = 'subcategory-edit-modal' }) {
+  const [name, setName] = useState(value || '');
+  const [warn, setWarn] = useState(null);
+  useEffect(() => { if (open) { setName(value || ''); setWarn(null); } }, [open, value]);
+  const save = () => {
+    const n = name.trim();
+    if (!n) return setWarn('Give it a name');
+    if (norm(n) === norm(value)) return onClose();
+    if (existing.some((x) => norm(x) === norm(n))) return setWarn(`${n} is already on your board`);
+    onSave(n);
+  };
+  const label = noun.charAt(0).toUpperCase() + noun.slice(1);
+  return (
+    <Modal open={open} onClose={onClose} id={id} illustration={illustrations.pencil} illustrationWidth={78}
+      title={`Edit "${value || ''}" ${noun}`} description={`Change the name or delete this ${noun}.`}
+      secondary={onDelete ? { label: 'Delete', onClick: onDelete, id: `${id}-delete` } : { label: 'Cancel', onClick: onClose, id: `${id}-cancel` }}
+      primary={{ label: 'Save', onClick: save, id: `${id}-save` }}>
+      <div className="ds-modal-form">
+        <div className="fld"><label className="fld-label" htmlFor={`${id}-cat`}>Category</label>
+          <Input id={`${id}-cat`} value={kindName || kindLabel(kind)} disabled readOnly /></div>
+        <div className="fld"><label className="fld-label" htmlFor={`${id}-name`}>{`${label} name`}</label>
+          <Input id={`${id}-name`} value={name} maxLength={60} autoComplete="off" onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } }} /></div>
+        {warn && <InfoMessage message="warning" title={warn} />}
+      </div>
+    </Modal>
+  );
+}
+
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+// Sub-category deletion (922:13829 / 922:13962, Oct 12): Explamation (64), 'The "Fixed" sub-category has 4 groups and
+// 16 items.', the category read-only, "Move items to (optional)" with its Info tooltip and the other sub-categories;
+// Cancel + a destructive "Delete all" ("Move items & delete" once a sub-category is picked).
+// onConfirm(target) — target = the sub-category to move the groups and items to, or null to delete them; may be async.
+// `note` = an extra sentence after the description (the Editing budget says the delete applies from that month on).
+export function SubCategoryDeleteModal({ open, kind, kindName, name, groups = 0, items = 0, targets = [], note, onClose, onConfirm, id = 'subcategory-delete-modal' }) {
+  const [target, setTarget] = useState('');
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { if (open) { setTarget(''); setBusy(false); } }, [open, name]);
+  const run = async () => { setBusy(true); try { await onConfirm(target || null); } finally { setBusy(false); } };
+  const empty = !groups && !items;
+  const title = empty ? `Delete the "${name || ''}" sub-category?` : `The "${name || ''}" sub-category has ${groups ? `${plural(groups, 'group')} and ` : ''}${plural(items, 'item')}.`;
+  const description = <>{empty ? 'It has no groups or items yet.'
+    : <>Deleting this sub-category will <span className="ds-modal-em">permanently remove all associated groups and items</span>. To keep them, select a new sub-category to move them to.</>}{note ? ` ${note}` : ''}</>;
+  const opts = [...(target ? [{ value: '__none', label: 'None (delete all)' }] : []), ...targets.map((g) => ({ value: g, label: g }))];
+  return (
+    <Modal open={open} onClose={busy ? undefined : onClose} id={id} illustration={illustrations.explamation} illustrationWidth={64} title={title} description={description}
+      secondary={{ label: 'Cancel', onClick: onClose, disabled: busy, id: `${id}-cancel` }}
+      primary={{ label: busy ? 'Deleting…' : target ? 'Move items & delete' : empty ? 'Delete' : 'Delete all', onClick: run, disabled: busy, destructive: true, id: `${id}-ok` }}>
+      <div className="ds-modal-form">
+        <div className="fld"><label className="fld-label" htmlFor={`${id}-cat`}>Category</label>
+          <Input id={`${id}-cat`} value={kindName || kindLabel(kind)} disabled readOnly /></div>
+        {!empty && targets.length > 0 && (
+          <div className="fld"><span className="fld-label-row"><label className="fld-label" htmlFor={`${id}-to-trigger`}>Move items to (optional)</label>
+            <InfoTooltip text={`All groups and items will be moved to the selected sub-category before "${name}" is deleted.`} /></span>
+            <Dropdown id={`${id}-to`} size="md" placeholder="Select sub-category" value={target} onChange={(v) => setTarget(v === '__none' ? '' : v)} options={opts} /></div>
+        )}
+      </div>
+    </Modal>
+  );
+}
+
+// A Sub-category / Group field with nothing to pick yet (03b 931:27920, 03d 930:21383, Year budget 232:5851): the label,
+// then an Info message on surface/accent-light with "No sub-categories created" and the Nano "+ Add sub-category".
+// `icon` = a leading 16px icon (03b draws Cancel), false for none.
+export function EmptyField({ id, label, text, actionLabel, actionId, onAdd, icon = false, className }) {
+  return (
+    <div className={'fld fld-empty' + (className ? ' ' + className : '')} id={id}>
+      <span className="fld-label">{label}</span>
+      <InfoMessage className="fld-info" icon={icon} action={{ label: actionLabel, icon: plus, onClick: onAdd, id: actionId }}>{text}</InfoMessage>
+    </div>
   );
 }

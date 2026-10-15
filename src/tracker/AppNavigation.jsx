@@ -16,7 +16,7 @@ export function AppNavigation({ children }) {
     action.current = onAdd;
     return () => { if (action.current === onAdd) action.current = null; };
   }, []);
-  const visible = pathname === '/' || pathname === '/account';
+  const visible = pathname === '/' || pathname === '/account' || pathname === '/notifications';
   return <NavigationContext.Provider value={register}>
     <div className={visible ? 'app-route-content' : undefined} key={pathname}>{children}</div>
     {visible && <MobileBottomNav selection={pathname === '/account' ? 'account' : 'home'} image={image}

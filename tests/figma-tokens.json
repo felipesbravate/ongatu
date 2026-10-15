@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 8 October 2026. File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.json; inventory and source values are in tests/figma-audit.json. Legacy text-style names remain for compatible call sites. Figma Medium (500) maps to 400 by the existing app convention. Regenerate with scripts/sync-tokens.mjs, sync-theme.mjs and sync-tokens-native.mjs.",
+  "_note": "Okara Design System snapshot, 12 October 2026 (re-checked against Figma; border/tertiary dark, badge counter and surface/modal added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.json; inventory and source values are in tests/figma-audit.json. Legacy text-style names remain for compatible call sites. Figma Medium (500) maps to 400 by the existing app convention. Regenerate with scripts/sync-tokens.mjs, sync-theme.mjs and sync-tokens-native.mjs.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -186,7 +186,15 @@
     "icon/secondary": "#747167ff",
     "icon/light": "#ffffffff",
     "text/notification": "#ea6b39ff",
-    "border/notification": "#f48c63ff"
+    "border/notification": "#f48c63ff",
+    "badge/counter-text": "#ffffffff",
+    "badge/counter-text-secondary": "#aaa698ff",
+    "badge/counter-pressed-icon": "#ffffffff",
+    "badge/counter-close-icon": "#aaa698ff",
+    "badge/counter-divider": "#32312cff",
+    "surface/modal": "#1f1e19e0",
+    "icon/round-control": "#16150fff",
+    "surface/gradient": "#ffffff00"
   },
   "Opacity": {
     "opacity/disabled": 0.4,

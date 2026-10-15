@@ -335,7 +335,7 @@ function findTransactionHeader(rows) {
 export function parseTransactions(rows, src) {
   const warnings = [];
   const head = findTransactionHeader(rows);
-  if (!head) return { candidates: [], warnings: [{ code: 'no_columns', message: `“${src.sheet}”: couldn't find a date column and an amount column.` }] };
+  if (!head) return { candidates: [], warnings: [{ code: 'no_columns', sheet: src.sheet, message: `“${src.sheet}”: couldn't find a date column and an amount column.` }] };
   const col = (role) => head.roles.indexOf(role);
   const cDate = col('date'), cDesc = col('description'), cAmt = col('amount'), cDeb = col('debit'), cCred = col('credit');
   const cCat = col('category'), cSub = col('subcategory'), cCur = col('currency');
@@ -443,14 +443,15 @@ export function parseGrid(rows, src, det) {
     const labels = labelCols.map((c) => (row[c] == null ? '' : String(row[c]).trim()));
     if (!labels.some(Boolean)) continue;
     if (sectioned && isHeaderRow(row)) {
-      // A block header: "INCOME" / "Fixed expenses" set the bucket; anything else ("HOME EXPENSES", "TRANSPORTATION")
-      // is an Expenses group named after it.
+      // A block header: "INCOME" / "Savings" / "Fixed expenses" set the category (and sub-category).
       const label = labels.filter(Boolean).join(' ');
       const s = sectionOf(label);
       const incomeLike = /\b(income|incomes|ingresos?|receitas?|earnings|salar(y|ies))\b/.test(norm(label));
       const savingsLike = /\b(savings?|investments?|ahorros?|inversion(es)?|investimentos?|poupanca)\b/.test(norm(label));
-      ctx = s || (incomeLike ? { type: 'income', group: null } : savingsLike ? { type: 'investment', group: null } : { type: 'expense', group: null });
-      heading = s ? null : (ctx.type === 'expense' ? sectionName(label) : null);
+      // Oct 9 (Felipe): the board follows the file, so any other block is an Expenses sub-category of its own
+      // ("HOME EXPENSES" -> Home) with its rows as types, whether the cells hold figures or not.
+      ctx = s || (incomeLike ? { type: 'income', group: null } : savingsLike ? { type: 'investment', group: null } : { type: 'expense', group: sectionName(label) });
+      heading = s || ctx.type !== 'expense' ? null : ctx.group;
       fill.fill(null);
       continue;
     }
