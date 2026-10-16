@@ -208,11 +208,11 @@ function MiniDashboard() {
   const rows = [['Income', '3.900,00', 'var(--data-purple)', 72], ['Expenses', '1.160,00', 'var(--data-pink)', 44], ['Savings', '1.500,00', 'var(--data-light-blue)', 55]];
   return (
     <div className="ob-mini" aria-hidden="true">
-      <div className="ob-mini-head"><span>Balance</span><span className="ob-mini-bal">€1.240,00</span></div>
+      <div className="ob-mini-head"><span>Balance</span><span className="ob-mini-bal">1.240,00 €</span></div>
       <div className="ob-mini-rows">
         {rows.map(([n, v, c, w]) => (
           <div key={n} className="ob-mini-meter">
-            <div className="ob-mini-info"><span>{n}</span><span className="ob-mini-val"><Icon icon={euro} size={12} />{v}</span></div>
+            <div className="ob-mini-info"><span>{n}</span><span className="ob-mini-val">{v}<Icon icon={euro} size={12} /></span></div>
             <div className="ob-mini-bar"><div style={{ width: w + '%', background: c }} /></div>
           </div>
         ))}

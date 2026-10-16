@@ -13,7 +13,7 @@ const pct = (v) => `${Math.round(v * 100)}%`;
 const money = (v, cur) => {
   const n = Math.round(Math.abs(v));
   const s = n.toLocaleString('de-DE');
-  return cur === 'EUR' ? `€${s}` : `${s} ${cur === 'SEK' ? 'kr' : cur}`;
+  return `${s}\u00a0${cur === 'EUR' ? '€' : cur === 'SEK' ? 'kr' : cur}`; // "1.235 €" (Oct 16)
 };
 
 // The months to compare with: { prev: { c, label } | null, avg: c-like | null, state, budget }.

@@ -434,8 +434,8 @@ export default function TrackerApp() {
             </div>
           ) : (
             <>
-              <h1 className="app-title">{`Hey, ${profile.name}`}</h1>
-              <div className="app-sub">{mobile ? 'Ready to see where you stand today?' : 'Ready to see where you stand today? Track your spending and savings for the month.'}</div>
+              <h1 className="app-title">{`Hello, ${profile.name}!`}</h1>
+              <div className="app-sub">Ready to see where you stand today?</div>
             </>
           )}
         </header>

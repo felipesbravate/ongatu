@@ -77,7 +77,7 @@ async def main():
             await pg.fill('#entry-desc', 'MSF'); await pg.click('#entry-item-trigger'); await pg.click('.ds-dd-menu .ds-dd-item > span:text-is("Donation")')
             await pg.fill('#entry-amount', '25'); await pg.click('#entry-submit'); await pg.wait_for_timeout(1200)
             await pg.click('#add-panel .panel-close'); await pg.wait_for_timeout(500)
-            bal = (await pg.inner_text('#balance-value')).replace('\n', ' ')
+            bal = await pg.get_attribute('#balance-value', 'aria-label')
             check('the entry is money out: balance -25,00', bal.startswith('-') and '25,00' in bal, bal)
             await pg.click('#breakdown-top-seg button:has-text("Save/Invest")'); await pg.wait_for_timeout(300)
             check('Savings shows its sub-category as a block', 'Funds' in await pg.inner_text('#itemslist') and 'ETF' in await pg.inner_text('#itemslist'))

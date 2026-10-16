@@ -285,12 +285,12 @@ async def main():
             # 2b. main page against the Cost-tracker designs (node 2:2)
             d = await pg.evaluate("""() => { const cs = e => getComputedStyle(e), q = s => document.querySelector(s);
                 const col = s => cs(q(s)).backgroundColor, tok = n => cs(document.documentElement).getPropertyValue(n).trim();
-                return { radius: cs(q('.balance-card')).borderRadius, kpiR: cs(q('.mini-kpi')).borderRadius,
+                return { radius: cs(q('#balance-card')).borderRadius, kpiR: cs(q('.mini-kpi')).borderRadius,
                          cols: cs(q('.ticker-strip')).gridTemplateColumns.split(' ').length, segBg: col('.seg-tabs'), tag: [cs(q('.insight-tag')).borderRadius, col('.insight-tag')],
                          allocBar: cs(q('.alloc-bar')).width, allocGap: cs(q('.alloc-bars')).columnGap, monthsPad: cs(q('.months')).paddingLeft,
                          swatches: [...document.querySelectorAll('.legend .swatch')].map(e => cs(e).backgroundColor),
                          euro: !!q('.mini-kpi .money-ic svg'), tokens: [tok('--group-fixed'), tok('--group-variable'), tok('--group-extra'), tok('--group-additional'), tok('--chart-invest')] }; }""")
-            check('cards are radius 20, KPI cards 16', d['radius'] == '20px' and d['kpiR'] == '16px', d)
+            check('Oct 16: every dashboard card is radius/card 20 (KPI cards too); the balance is the surface-less hero', d['radius'] == '20px' and d['kpiR'] == '20px', d)
             check('expense cards sit four across', d['cols'] == 4, d)
             bw = await pg.evaluate("() => [...document.querySelectorAll('.card, .mini-kpi, .ticker-item')].map(e => getComputedStyle(e).borderTopWidth + ' ' + getComputedStyle(e).borderLeftStyle)")
             check('dashboard cards, KPI boxes and expense cards have no border', len(bw) >= 8 and all(x == '0px none' for x in bw), bw)
@@ -300,17 +300,17 @@ async def main():
             mp = await admin_ctx.new_page(); await mp.set_viewport_size({'width': 390, 'height': 844})
             await mp.goto(BASE + '/'); await mp.wait_for_selector('#user-nav'); await mp.wait_for_timeout(900)
             mo = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = s => q(s).getBoundingClientRect(), vis = s => !!q(s) && getComputedStyle(q(s)).display !== 'none';
-                const cards = ['.balance-card', '.mini-grid', '.breakdown-card', '.ticker-strip', '.glance-card', '.alloc-card', '.hero-chart'].map(s => Math.round(r(s).top));
+                const cards = ['#balance-card', '.mini-grid', '.breakdown-card', '.ticker-strip', '.glance-card', '.alloc-card', '.hero-chart'].map(s => Math.round(r(s).top));
                 const ti = q('.ticker-strip .ticker-item'), st = q('.ticker-strip');
                 return { header: [r('#app-header').height, Math.round(r('.ds-app-header-logo svg').width)], user: vis('.ds-user'), bell: vis('#notif-btn'), add: vis('#tracker-add-btn'), nav: vis('#mobile-nav'),
-                         ticker: vis('.ticker-strip'), strip: ti ? [Math.round(ti.getBoundingClientRect().width), getComputedStyle(st).columnGap, getComputedStyle(ti).padding, getComputedStyle(ti).borderRadius, getComputedStyle(st).overflowX, Math.round(st.getBoundingClientRect().right)] : null, side: Math.round(r('.balance-card').left), title: getComputedStyle(q('.app-title')).fontSize, cards, scrollW: document.documentElement.scrollWidth,
+                         ticker: vis('.ticker-strip'), strip: ti ? [Math.round(ti.getBoundingClientRect().width), getComputedStyle(st).columnGap, getComputedStyle(ti).padding, getComputedStyle(ti).borderRadius, getComputedStyle(st).overflowX, Math.round(st.getBoundingClientRect().right)] : null, side: Math.round(r('#balance-card').left), title: getComputedStyle(q('.app-title')).fontSize, cards, scrollW: document.documentElement.scrollWidth,
                          pill: [Math.round(r('.ds-mnav-pill').width), Math.round(r('#mnav-home').height)], home: q('#mnav-home').getAttribute('aria-current'), seg: [...document.querySelectorAll('#breakdown-top-seg button')].map(b => b.textContent) }; }""")
             check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 32px title (Display/Title-mobile, Oct 3); no sideways scroll',
                   mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '32px' and mo['scrollW'] <= 390, mo)
             check('phone (901:11300, Oct 9): Balance, KPIs, Tracker, Expense cards, At a glance, allocation, chart, in that order; Add is in the bottom nav',
                   mo['cards'] == sorted(mo['cards']) and mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
-            check('phone Expense cards (901:11367): a sideways row of 200-wide cards, 16 apart, padding 16 24, radius 16, running to the screen edge',
-                  mo['strip'] == [200, '16px', '16px 24px', '16px', 'auto', 390], mo['strip'])
+            check('phone Expense cards (901:11367): a sideways row of 200-wide cards, 16 apart, padding 16 24, radius/card 20 (Oct 16), running to the screen edge',
+                  mo['strip'] == [200, '16px', '16px 24px', '20px', 'auto', 390], mo['strip'])
             check('phone: bottom nav (378:673) full-width 366 pill (12px from the edges), 56 high items, Home selected', mo['pill'] == [366, 56] and mo['home'] == 'page', mo)
             await mp.evaluate("window.scrollTo(0, 600)"); await mp.wait_for_timeout(300)
             st2 = await mp.evaluate("() => [Math.round(document.querySelector('#app-header').getBoundingClientRect().top), Math.round(document.querySelector('.actions-wrap').getBoundingClientRect().top)]")
@@ -354,7 +354,7 @@ async def main():
             await mp.click('#mnav-add'); await mp.wait_for_timeout(500)
             check('phone: the bottom nav + opens Add an entry', await mp.locator('#add-panel.open').count() == 1)
             await mp.close()
-            check('Segments sit on surface/secondary, tags are round Label chips (radius/full since Oct 2)', d['segBg'] == 'rgb(239, 238, 229)' and d['tag'] == ['999px', 'rgb(239, 238, 229)'], d)
+            check('Segments sit on surface/secondary; the glance tags are round accent Labels (1028:49171, Oct 16)', d['segBg'] == 'rgb(239, 238, 229)' and d['tag'] == ['999px', 'rgb(245, 245, 255)'], d)
             check('allocation bars are 48 wide, space/md apart (12 on desktop)', d['allocBar'] == '48px' and d['allocGap'] == '12px', d)
             al = await pg.evaluate("() => { const m = document.getElementById('months'), sl = m.scrollLeft; m.scrollLeft = 0; const r = [Math.round(document.querySelector('.year-btn').getBoundingClientRect().left), Math.round(m.querySelector('.month-btn').getBoundingClientRect().left)]; m.scrollLeft = sl; return r; }")
             check('the first month starts exactly under the first year tab (Oct 4)', al[0] == al[1], [d['monthsPad'], al])
@@ -385,7 +385,7 @@ async def main():
             check('Savings/Investments tile carries the rate ("X% of incomes", Oct 9): Value/Small (11/400/-4% on desktop), text/secondary, right under the value; every tile has a comparison line',
                   n['detail'] is not None and ('% of incomes' in n['detail'] or n['detail'] in ('Projected from budget', 'No incomes yet this month')) and not n['noDetail'] and n['detailStyle'] == [True, '11px', '400', '-0.44px', 'rgb(116, 113, 103)', '0px'], n)
             check('KPI and Expense card names (Oct 2): Heading/Medium (14/400/14 -2% on desktop), sentence case', n['label'] == ['14px', '400', '14px', '-0.28px'] and n['name'] == ['14px', '400', '14px', '-0.28px'], n)
-            check('Label chip (211:859, Oct 2): Label/Tiny, 24 high, space/xs sides (4 on desktop), radius/full', n['tag'] == ['12px', '400', '14px', '-0.24px', '24px', '4px', '999px'], n['tag'])
+            check('glance Label (1028:49171, Oct 16): 14/16 -2%, 24 high, 8 sides, radius/full', n['tag'] == ['14px', '400', '16px', '-0.28px', '24px', '8px', '999px'], n['tag'])
             check('Segments container radius is 8', n['segR'] == '8px', n['segR'])
             check('chart delta is a Label with a 10px sign icon (Label.jsx, Oct 12)',
                   n['delta'] and n['delta']['h'] == '24px' and n['delta']['r'] == '999px' and n['delta']['pad'] == '4px' and n['delta']['svg'] == [10, 10] and n['delta']['font'] == ['12px', '400', '14px', '-0.24px']
@@ -741,8 +741,8 @@ async def main():
             await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').get_by_role('button', name='View').first.click(); await pg.wait_for_timeout(400)
             check('View opens the Variable expenses of that month', await pg.locator('#notif-panel').count() == 0 and 'Groceries' in await pg.inner_text('.breakdown-card'))
             le = await pg.evaluate("() => { const e = document.querySelector('.bd-tabs-stack .tracker-last-entry'); return e && [e.querySelector('.tle-text').textContent, [...e.querySelectorAll('.tle-num')].map(n => n.textContent), !!e.querySelector('.tle-dot'), getComputedStyle(e.querySelector('.tle-text')).fontSize, getComputedStyle(e.querySelector('.tle-num')).fontSize]; }")
-            check('Latest line (581:19517 / 787:14891, Oct 12): inside the selectors, "Latest: <item>/<description>, <Mon D>", the Dot, then € and the figure in mono (14 / 14, Value/Medium)',
-                  bool(le) and re.fullmatch(r'Latest: Groceries/[^,]+, [A-Z][a-z]{2} \d{1,2}', le[0]) and le[1][0] == '€' and re.fullmatch(r'[\d.]+,\d\d', le[1][1]) and le[2] and le[3:] == ['14px', '14px'], le)
+            check('Latest line (581:19517 / 787:14891, Oct 12): inside the selectors, "Latest: <item>/<description>, <Mon D>", the Dot, then the figure and € in mono (1028:49184, Oct 16: 16/20 text, Value/Medium 14)',
+                  bool(le) and re.fullmatch(r'Latest: Groceries/[^,]+, [A-Z][a-z]{2} \d{1,2}', le[0]) and le[1][1] == '€' and re.fullmatch(r'[\d.]+,\d\d', le[1][0]) and le[2] and le[3:] == ['16px', '14px'], le)
             await pg.locator('.bd-row, .meter-row', has_text='Groceries').first.locator('.note-count').click(); await pg.wait_for_timeout(250)
             head = await pg.inner_text('#note-tip .tip-head')
             check('Entries tooltip starts with "Budget set" and the budget', 'Budget set' in head and '10,00' in head, head)
@@ -821,7 +821,7 @@ async def main():
               window.scrollTo(0, 600); const r1 = h.getBoundingClientRect().top; window.scrollTo(0, 0);
               return { logo: !!h.querySelector('.ds-logo[data-variant=symbol]'), nav: !!h.querySelector('#user-nav'), r0, r1, h: h.getBoundingClientRect().height }; }""")
             check('App header: symbol logo + User nav, 40 from the top (as the desktop frame places it), sticks at 0 on scroll, 64 high', hdr['logo'] and hdr['nav'] and hdr['r0'] == 40 and hdr['r1'] == 0 and hdr['h'] == 64, hdr)
-            check('greets the user by the first part of the email', (await ann.inner_text('.app-title')).strip() == 'Hey, Ann')
+            check('greets the user by the first part of the email', (await ann.inner_text('.app-title')).strip() == 'Hello, Ann!')
 
             # 9. Account page: name, sign-in method, data
             await ann.click('#user-menu-btn'); await ann.click('#menu-account'); await ann.wait_for_url('**/account'); await ann.wait_for_selector('#profile')

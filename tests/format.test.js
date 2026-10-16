@@ -6,9 +6,9 @@ import { fmtMoney, fmtMoneyShort } from '../src/ui/format.js';
 test('amounts are shown in European format', () => {
   assert.equal(fmtNum(1163.59), '1.163,59');
   assert.equal(fmtNum(6.06), '6,06');
-  assert.equal(fmtMoney(1234.5, 'EUR'), '€1.234,50');
-  assert.equal(fmtMoney(-12, 'SEK'), '-12,00 kr');
-  assert.equal(fmtMoneyShort(1318.4, 'EUR'), '€1.318');
+  assert.equal(fmtMoney(1234.5, 'EUR'), '1.234,50\u00a0€');
+  assert.equal(fmtMoney(-12, 'SEK'), '-12,00\u00a0kr');
+  assert.equal(fmtMoneyShort(1318.4, 'EUR'), '1.318\u00a0€');
 });
 
 test('typed amounts are read the European way, and a plain dot decimal still works', () => {

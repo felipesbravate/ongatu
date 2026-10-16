@@ -79,15 +79,15 @@ export const CASES = [
       <div className="mini-grid" id="mini-kpis">
         <KpiCard label="Income" dotColor="var(--kpi-income)" value={3729.82} currency="EUR" />
         <KpiCard label="Expenses" dotColor="var(--kpi-expense)" value={1573.62} currency="EUR" />
-        <KpiCard label="Savings/Investments" dotColor="var(--kpi-invest)" value={0} currency="EUR" detail="0% rate - €0 saved of €3.730 income" />
+        <KpiCard label="Savings/Investments" dotColor="var(--kpi-invest)" value={0} currency="EUR" detail="0% rate - 0 € saved of 3.730 € income" />
       </div>) },
   { id: 'expense-cards', legacy: { state: 'dashboard', selector: '#ticker-strip' },
     render: () => (
       <div className="ticker-strip" id="ticker-strip">
-        <ExpenseCard name="Fixed" initial="F" badgeColor="var(--badge-fixed)" value={1090.13} currency="EUR" delta={{ icon: arrowStraightDown, text: '€308 vs last month', color: good }} />
-        <ExpenseCard name="Variable" initial="V" badgeColor="var(--group-variable)" value={483.49} currency="EUR" delta={{ icon: arrowStraightDown, text: '€355 vs last month', color: good }} />
+        <ExpenseCard name="Fixed" initial="F" badgeColor="var(--badge-fixed)" value={1090.13} currency="EUR" delta={{ icon: arrowStraightDown, text: '308 € vs last month', color: good }} />
+        <ExpenseCard name="Variable" initial="V" badgeColor="var(--group-variable)" value={483.49} currency="EUR" delta={{ icon: arrowStraightDown, text: '355 € vs last month', color: good }} />
         <ExpenseCard name="Extra" initial="E" badgeColor="var(--group-extra)" value={0} currency="EUR" delta={{ icon: minus, text: 'same as last month', color: 'var(--text-secondary)' }} />
-        <ExpenseCard name="Additional" initial="A" badgeColor="var(--group-additional)" value={0} currency="EUR" delta={{ icon: arrowStraightDown, text: '€656 vs last month', color: good }} />
+        <ExpenseCard name="Additional" initial="A" badgeColor="var(--group-additional)" value={0} currency="EUR" delta={{ icon: arrowStraightDown, text: '656 € vs last month', color: good }} />
       </div>) },
   { id: 'meter', legacy: { state: 'dashboard', selector: '#meters .meter-row' },
     render: () => <Meter name="Habitation" amount={1090.13} max={1090.13} currency="EUR" color="var(--group-fixed)" /> },
@@ -213,7 +213,7 @@ export const CASES = [
       <RoundButton icon={plus} disabled label="Inactive" />
     </div>) },
   { id: 'action-link-medium', render: () => <ActionLink size="medium" icon={upload}>Click to upload</ActionLink> },
-  { id: 'kpi-indicator', render: () => <div style={{ width: 230 }}><KpiCard label="Savings/Investments" dotColor="var(--kpi-invest)" value={500} currency="EUR" detail="€40 vs last month" indicator={arrowStraightUp} /></div> },
+  { id: 'kpi-indicator', render: () => <div style={{ width: 230 }}><KpiCard label="Savings/Investments" dotColor="var(--kpi-invest)" value={500} currency="EUR" detail="40 € vs last month" indicator={arrowStraightUp} /></div> },
   { id: 'avatar', render: () => <Avatar name="Felipe" /> },
   { id: 'menu-list', render: () => <div style={{ position: 'relative', height: 60 }}><MenuList items={[{ key: 'b', label: "Adjust month's budget", icon: edit }]} style={{ position: 'static' }} /></div> },
   { id: 'user-nav', render: () => (

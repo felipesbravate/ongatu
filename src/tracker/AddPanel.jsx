@@ -490,10 +490,10 @@ function ReviewRow({ r, iss, editing, mobile, period, yl, model, patchRow }) {
         </div>
       </div>
       {amountOk
-        ? <div className="c-amt rv-value"><Icon icon={euro} size={16} /><span>{fmtNum(r.amount)}</span></div>
-        : <div className="c-amt bad" title={r.flag || ''}><label className="bd-input"><Icon icon={euro} size={12} />
+        ? <div className="c-amt rv-value"><span>{fmtNum(r.amount)}</span><Icon icon={euro} size={16} /></div>
+        : <div className="c-amt bad" title={r.flag || ''}><label className="bd-input">
             <input data-f="amount" inputMode="decimal" aria-label="Amount" defaultValue={r.amount > 0 ? fmtNum(r.amount) : ''} placeholder="0,00" autoComplete="off"
-              onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /></label></div>}
+              onChange={(e) => patchRow(r.id, { amount: parseAmount(e.target.value), flag: '' })} /><Icon icon={euro} size={12} /></label></div>}
     </div>
   );
 }

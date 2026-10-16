@@ -1,6 +1,8 @@
+'use client';
 import { Icon } from './Icon.jsx';
 import { Money } from './Money.jsx';
 import { Input } from './Field.jsx';
+import { useMobile } from './useMobile.js';
 import { euro, arrowStraightDown, arrowStraightUp, minus } from './icons.js';
 
 // A comparison line (src/tracker/indicators.js): { head?, tone: good|bad|neutral, dir: up|down|flat|null, text }.
@@ -18,6 +20,35 @@ export function TrendLine({ trend, className = 'detail', id }) {
         {(!trend.head || icon) && <span>{trend.text}</span>}
       </span>
     </div>
+  );
+}
+
+// Balance hero (Okara 1161:1557, Oct 16): replaces the balance card. No surface, centred: the label (Heading/Medium,
+// text/secondary), space/xl, the amount (text/accent: the whole part in Value/2XL 48/40 with its thousand groups set
+// space/xs apart instead of a dot, the cents in Value/XL on the baseline, then the Euro icon icon-size/xl, space/tn after),
+// space/xl, the details line (TrendLine). Other currencies show the code after the cents.
+export function BalanceHero({ label, value, currency, trend, labelId, valueId, trendId, children, id, className }) {
+  const mobile = useMobile(); // icon-size/xl: 16 desktop, 24 phones (each size has its own artwork)
+  const neg = value < 0;
+  const abs = Math.abs(Math.round(value * 100) / 100);
+  const [whole, cents] = abs.toFixed(2).split('.');
+  const groups = Number(whole).toLocaleString('de-DE').split('.');
+  const spoken = `${neg ? '-' : ''}${abs.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency === 'EUR' ? '€' : currency}`;
+  return (
+    <section className={['ds-balance-hero', className].filter(Boolean).join(' ')} id={id} aria-labelledby={labelId}>
+      <p className="bh-label" id={labelId}>{label}</p>
+      <div className="bh-amount" id={valueId} role="text" aria-label={spoken}>
+        <span className="bh-value" aria-hidden="true">
+          <span className="bh-whole">{neg && <span>-</span>}{groups.map((g, i) => <span key={i}>{g}</span>)}</span>
+          <span className="bh-cents">{`,${cents}`}</span>
+        </span>
+        {currency === 'EUR'
+          ? <span className="bh-euro" aria-hidden="true"><Icon icon={euro} size={mobile ? 24 : 16} /></span>
+          : <span className="bh-code" aria-hidden="true">{currency === 'SEK' ? 'kr' : currency}</span>}
+      </div>
+      {trend && <TrendLine trend={trend} className="bh-details" id={trendId} />}
+      {children}
+    </section>
   );
 }
 

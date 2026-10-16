@@ -364,12 +364,12 @@ export function BudgetRow({ r, onValue, onRemove, onEditing }) {
       <span className="bd-item-name br-name" title={r.item}>{r.item}</span>
       {r.isCustomized && <span className="br-tag" title="Set from an earlier customization — used as the default suggestion until changed again">●</span>}
       {r.editing
-        ? <label className="bd-input br-edit"><Icon icon={euro} size={12} />
+        ? <label className="bd-input br-edit">
             <input ref={input} type="text" inputMode="decimal" className="br-input" aria-label={`Monthly budget for ${r.item}`} defaultValue={r.value}
               onBlur={(e) => done(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onEditing(r.key, false); } }} /></label>
-        : <span className="bd-value"><Icon icon={euro} size={16} className="bd-euro" />
-            <button type="button" className="bd-amount br-amount" aria-label={`Monthly budget for ${r.item}: ${r.value}. Edit`} onClick={() => onEditing(r.key, true)}>{r.value}</button></span>}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); done(e.currentTarget.value); } else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); onEditing(r.key, false); } }} /><Icon icon={euro} size={12} /></label>
+        : <span className="bd-value">
+            <button type="button" className="bd-amount br-amount" aria-label={`Monthly budget for ${r.item}: ${r.value} €. Edit`} onClick={() => onEditing(r.key, true)}>{r.value}</button><Icon icon={euro} size={16} className="bd-euro" /></span>}
       {/* 703:16128 / 232:5853 (Oct 12): the Actions menu ("Remove") on phones too. */}
       {!r.editing && <RowActions item={r.item} onRemove={() => onRemove(r.key)} />}
     </div>

@@ -14,19 +14,19 @@ const mo = (income, invest, fixed, variable = 0) => ({ income, invest, byGroup: 
 test('finished month compares with the previous month (incomes with the 3-month average)', () => {
   const { y, model } = fake({ months: { 4: mo(3000, 300, 1500), 5: mo(3000, 300, 1500), 6: mo(3000, 300, 1500, 100), 7: mo(3300, 600, 1460) } });
   const r = cardIndicators(model, y, 7, NOW);
-  assert.deepEqual(r.expense, { tone: 'good', dir: 'down', text: '€140 vs Jul' });
+  assert.deepEqual(r.expense, { tone: 'good', dir: 'down', text: '140\u00a0€ vs Jul' });
   assert.deepEqual(r.income, { tone: 'good', dir: 'up', text: '10% vs 3‑mo avg' });
   assert.equal(r.invest.head, '18% of incomes');
   assert.deepEqual([r.invest.tone, r.invest.dir, r.invest.text], ['good', 'up', '8 pts vs Jul']);
   assert.equal(r.balance.head, 'Kept 38% of incomes');
-  assert.deepEqual(r.group('Variable', 'last month'), { tone: 'good', dir: 'down', text: '€100 vs last month' });
-  assert.deepEqual(r.group('Fixed', 'last month'), { tone: 'good', dir: 'down', text: '€40 vs last month' });
+  assert.deepEqual(r.group('Variable', 'last month'), { tone: 'good', dir: 'down', text: '100\u00a0€ vs last month' });
+  assert.deepEqual(r.group('Fixed', 'last month'), { tone: 'good', dir: 'down', text: '40\u00a0€ vs last month' });
 });
 
 test('"same as" when nothing moved; red when expenses rise', () => {
   const { y, model } = fake({ months: { 6: mo(3000, 300, 1500), 7: mo(3000, 300, 1600) } });
   const r = cardIndicators(model, y, 7, NOW);
-  assert.deepEqual(r.expense, { tone: 'bad', dir: 'up', text: '€100 vs Jul' });
+  assert.deepEqual(r.expense, { tone: 'bad', dir: 'up', text: '100\u00a0€ vs Jul' });
   assert.equal(r.invest.dir, 'flat');
   assert.equal(r.invest.text, 'same as Jul');
 });
@@ -37,13 +37,13 @@ test('current month uses the budget, otherwise the 3-month average', () => {
   let { y, model } = fake({ months, budgets });
   let r = cardIndicators(model, y, 8, NOW);
   assert.deepEqual(r.income, { tone: 'neutral', dir: null, text: '88% of expected' });
-  assert.deepEqual(r.expense, { tone: 'good', dir: null, text: '75% of €2.100 budget' });
+  assert.deepEqual(r.expense, { tone: 'good', dir: null, text: '75% of 2.100\u00a0€ budget' });
   assert.equal(r.invest.text, '1 pt vs plan');
   ({ y, model } = fake({ months: { ...months, 8: mo(3520, 300, 2310) }, budgets }));
   assert.equal(cardIndicators(model, y, 8, NOW).expense.tone, 'bad');
   ({ y, model } = fake({ months }));
   r = cardIndicators(model, y, 8, NOW);
-  assert.deepEqual(r.expense, { tone: 'neutral', dir: null, text: '79% of €2.000 avg' });
+  assert.deepEqual(r.expense, { tone: 'neutral', dir: null, text: '79% of 2.000\u00a0€ avg' });
   assert.deepEqual(r.income, { tone: 'neutral', dir: null, text: '88% of 3‑mo avg' });
 });
 

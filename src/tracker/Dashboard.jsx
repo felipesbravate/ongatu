@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, Button, Expander, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { ActionLink, BalanceHero, Button, Expander, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 
@@ -51,19 +51,11 @@ export function HeroLeft({ model, y, monthIdx }) {
   const expChange = prev ? c.expenseTotal - prev.expenseTotal : null;
   return (
     <div className="hero-left">
-      <div className="card balance-card">
-        <div className="label" id="balance-label">{MONTH_NAMES[monthIdx]} balance</div>
-        <div className="value" id="balance-value">
-          {/* Balance card 441:1057: the € is a 20 x 27 shape beside Value/XL, space/xs apart (other currencies: text). */}
-          {cur === 'EUR'
-            ? <span className="money">{c.balance < 0 ? '-' : ''}<Icon icon={euro} size="2xl" className="balance-euro" /><span>{fmtFigure(c.balance)}</span></span>
-            : fmtMoney(c.balance, cur)}
-        </div>
-        {/* Desktop (Ongatu 211:18753) shows a static "↑ details" line, as the KPI cards do (nothing on tap, Felipe Sept 29);
-            phones (342:7993) keep the month change. */}
-        <TrendLine trend={ind.balance} className="balance-details" id="balance-delta" />
+      {/* Balance hero (Okara 1161:1557; Ongatu 1028:49106 desktop, 1013:33046 phones, Oct 16) in place of the balance card. */}
+      <BalanceHero id="balance-card" className="balance-hero" label={`${MONTH_NAMES[monthIdx]} balance`} labelId="balance-label" valueId="balance-value"
+        value={c.balance} currency={cur} trend={ind.balance} trendId="balance-delta">
         <span className="estimate-pill" id="balance-estimate-pill" hidden={!c.isEstimateMonth}>Projected — no data yet</span>
-      </div>
+      </BalanceHero>
       <div className="mini-grid" id="mini-kpis">
         {tiles.map((t) => <KpiCard key={t.label} label={t.label} dotColor={t.color} value={t.value} currency={cur} trend={t.trend} euroSize={16} />)}
       </div>
@@ -178,24 +170,25 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
   useEffect(() => { setExpanded(false); }, [breakdownType, monthIdx, y.year]);
   const collapsed = mobile && tall && !expanded;
   // Amount meter (211:18753, Oct 12): a 16px € beside the figure on desktop; phones (898:9152) a 20px one.
-  const meterEuro = mobile ? 20 : 16;
+  const meterEuro = 16; // Oct 16: Amount meter 1023:38971 is a 16px € after the figure on phones too
 
   return (
+    // Oct 16 (Ongatu 1028:49175 / 1013:33505): "Tracker" (Heading/XL) and its Actions (Medium round button) sit above
+    // the card; the card starts with the Latest line, then the segments. The month stays in a visually hidden hint.
+    <section className="tracker-section" aria-labelledby="tracker-title">
+    <div className="tracker-head">
+      <h2 className="tracker-title" id="tracker-title">Tracker</h2>
+      {onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) && <TrackerMenu onAdjustBudget={onAdjustBudget} monthName={MONTH_NAMES[monthIdx]} />}
+    </div>
     <div className={'card breakdown-card' + (collapsed ? ' is-collapsed' : '')} ref={cardRef}>
-      <div className="bd-header">
-        <div className="bd-title">
-          <h2>Tracker</h2>
-          <div className="hint" id="cat-hint">{`${y.months[monthIdx]} ${y.year}${eligible ? ' · projected' : ''}`}</div>
-        </div>
-        {onAdjustBudget && model.canAdjustMonthBudget(y, monthIdx) && <TrackerMenu onAdjustBudget={onAdjustBudget} monthName={MONTH_NAMES[monthIdx]} />}
-      </div>
+      <div className="visually-hidden" id="cat-hint">{`${y.months[monthIdx]} ${y.year}${eligible ? ' · projected' : ''}`}</div>
       <div className="bd-content">
         <div className="bd-controllers">
           <div className="bd-tabs-stack">
+            {lastEntry && <LatestEntry entry={lastEntry} currency={cur} mobile={mobile} />}
             <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
               onChange={(v) => { v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
             <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
-            {lastEntry && <LatestEntry entry={lastEntry} currency={cur} mobile={mobile} />}
           </div>
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
             {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : 'Add expense'}
@@ -228,6 +221,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       )}
       <ItemTip tip={tip} actions={actions} />
     </div>
+    </section>
   );
 }
 // The Tracker's Actions (Round button, Medium, Tertiary; Active while open) and its menu (Dropdown-list, Simple),
@@ -239,7 +233,7 @@ function TrackerMenu({ onAdjustBudget, monthName }) {
   useDismiss(open, ref, close);
   return (
     <div className="bd-menu" ref={ref}>
-      <RoundButton icon={actionsIcon} size="small" id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
+      <RoundButton icon={actionsIcon} size="medium" id="tracker-menu-btn" label="Tracker actions" active={open} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)} />
       {open && <MenuList id="tracker-menu" items={[{ key: 'budget', id: 'adjust-budget', label: monthName ? `Edit ${monthName}'s budget` : "Edit this month's budget", icon: edit, onSelect: () => { setOpen(false); onAdjustBudget(); } }]} />}
     </div>
   );
@@ -331,7 +325,7 @@ function LatestEntry({ entry, currency, mobile }) {
         {date && <><span className="tle-dot" aria-hidden="true"><i /></span><span className="tle-date">{date}</span></>}
         <span className="tle-value">
           {currency === 'EUR'
-            ? <><Icon icon={euro} size={16} className="tle-euro" /><span className="tle-num">{(neg ? '-' : '') + fmtFigure(Math.abs(entry.amount))}</span></>
+            ? <><span className="tle-num">{(neg ? '-' : '') + fmtFigure(Math.abs(entry.amount))}</span><Icon icon={euro} size={12} className="tle-euro" /></>
             : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currency === 'SEK' ? 'kr' : currency}`}</span>}
         </span>
       </div>
@@ -343,7 +337,7 @@ function LatestEntry({ entry, currency, mobile }) {
       <span className="tle-text" title={`Latest: ${route}${date ? `, ${date}` : ''}`}><span className="tle-route">{`Latest: ${route}`}</span>{date && <span className="tle-date">{`, ${date}`}</span>}</span>
       <span className="tle-dot" aria-hidden="true"><i /></span>
       {currency === 'EUR'
-        ? <><span className="tle-num">{neg ? '-€' : '€'}</span><span className="tle-num">{fmtFigure(Math.abs(entry.amount))}</span></>
+        ? <><span className="tle-num">{(neg ? '-' : '') + fmtFigure(Math.abs(entry.amount))}</span><span className="tle-num">€</span></>
         : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currency === 'SEK' ? 'kr' : currency}`}</span>}
     </div>
   );

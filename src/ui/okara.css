@@ -4133,3 +4133,18 @@ html .ds-notif-item:has(.ds-notif-ctas):not(#z){ gap:var(--space-sm); }
    and the delete-account confirm checkbox sits 16 under its description. Cards then measure 416 / 225 / 549 as in Figma. */
 @media (min-width:641px){ html .acct-card:not(#z){ padding-top:var(--space-xl); } }
 html .acct-meta > .ds-check:not(#z){ margin-top:12px; }
+
+/* Balance hero (Okara 1161:1557, Ongatu 1028:49106 / 1013:33046, Oct 16): no surface, everything centred, 148 tall.
+   Label Heading/Medium text/secondary; space/xl; amount in text/accent: whole part Value/2XL (48/40, thousand groups
+   space/xs apart), cents Value/XL (lh 26) on the baseline, the Euro icon space/tn after; space/xl; details Value/Small. */
+html .ds-balance-hero:not(#z){ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-xl); min-height:148px; padding:0; margin:0; background:transparent; border-radius:var(--radius-card); box-shadow:none; filter:drop-shadow(0 0 10px rgba(22,21,15,.04)); text-align:center; }
+html .ds-balance-hero .bh-label:not(#z){ margin:0; width:100%; font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-secondary); text-transform:none; }
+html .ds-balance-hero .bh-amount:not(#z){ display:flex; align-items:flex-end; justify-content:center; gap:var(--space-tn); width:100%; color:var(--text-accent); }
+html .ds-balance-hero .bh-value:not(#z){ display:flex; align-items:flex-end; font-family:var(--font-mono); font-weight:400; white-space:nowrap; font-variant-numeric:tabular-nums; }
+html .ds-balance-hero .bh-whole:not(#z){ display:flex; gap:var(--space-xs); font-size:48px; line-height:40px; letter-spacing:0; }
+html .ds-balance-hero .bh-cents:not(#z){ font-size:var(--size-value-xl); line-height:26px; letter-spacing:0; }
+html .ds-balance-hero .bh-euro:not(#z){ display:flex; color:var(--text-accent); }
+html .ds-balance-hero .bh-euro svg{ display:block; }
+html .ds-balance-hero .bh-code:not(#z){ font-family:var(--font-mono); font-size:var(--size-value-xl); line-height:26px; }
+html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; width:100%; font-family:var(--font-mono); font-size:var(--type-value-small-size); line-height:normal; letter-spacing:-0.04em; color:var(--text-secondary); }
+html .ds-balance-hero .estimate-pill:not(#z){ margin:0; }
