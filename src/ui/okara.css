@@ -4068,7 +4068,7 @@ html .ds-board-dd svg:not(#z){ flex-shrink:0; color:var(--link-default); }
 html .ds-board-dd:hover:not(#z){ border-color:var(--link-disable); }
 html .ds-board-dd:hover .ds-board-dd-name:not(#z), html .ds-board-dd:hover svg:not(#z){ color:var(--link-hover); }
 html .ds-board-dd:focus-visible:not(#z){ outline:2px solid var(--border-focus); outline-offset:2px; }
-html .ds-board-dd.is-mobile:not(#z){ padding-right:var(--space-md); max-width:220px; }
+html .ds-board-dd.is-mobile:not(#z){ padding-right:var(--space-sm); gap:var(--space-xs); max-width:220px; } /* Oct 16 (1120:3757) */
 /* While the card is open the pill keeps its place (hidden), so the header doesn't move. */
 html .ds-board-menu.is-open:not(.is-mobile) .ds-board-dd:not(#z){ visibility:hidden; }
 
@@ -4119,7 +4119,7 @@ html .ds-bsw.is-sheet .ds-bsw-list:not(#z){ gap:var(--space-sm); }
 html .ds-bsw.is-sheet .ds-bsw-item:not(#z){ height:auto; }
 @media (prefers-reduced-motion: reduce){ html .ds-bsw.is-card:not(#z), html dialog.ds-bsw.is-sheet:not(#z){ animation:none; } }
 /* Phones: the user menu is in the bottom nav; the board pill stays in the header, before the bell. */
-@media (max-width:640px){ html .ds-app-header .ds-board-menu:not(#z){ min-width:0; height:auto; padding:0; } html .ds-app-header .ds-user-nav:not(#z){ align-items:center; } }
+@media (max-width:640px){ html .ds-app-header .ds-board-menu:not(#z){ min-width:0; height:auto; padding:0; } html .ds-app-header .ds-user-nav:not(#z){ align-items:center; gap:var(--space-xs); /* Oct 16: Product header Mobile (728:1446) Actions, space/xs */ } }
 /* avatar 28 (Ongatu 973:33229, the joint board's members): Heading/Small initial. */
 html .ds-avatar.s28:not(#z){ width:28px; height:28px; min-width:28px; }
 

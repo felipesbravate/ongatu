@@ -309,10 +309,10 @@ async def main():
                   mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '32px' and mo['scrollW'] <= 390, mo)
             ml = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e);
                 const c = q('.bd-controllers'), le = c && c.querySelector(':scope > .tracker-last-entry'), it = c && c.querySelector('.bd-interaction'), dd = q('#board-dd'), t = le && le.querySelector('.tle-text');
-                return { dd: dd && [Math.round(r(dd).width), Math.round(r(dd).height), !!dd.querySelector('.ds-board-dd-chevron'), Math.round(r(dd.querySelector('.ds-board-dd-name')).width) <= 1],
+                return { dd: dd && [Math.round(r(dd).width), Math.round(r(dd).height), !!dd.querySelector('.ds-board-dd-chevron'), Math.round(r(dd.querySelector('.ds-board-dd-name')).width) <= 1, Math.round(r(dd.querySelector('.ds-board-dd-icon')).width), Math.round(r(q('#notif-btn')).left - r(dd).right)],
                          le: le && [Math.round(r(le).top - r(it).bottom), cs(t).fontSize, cs(t).lineHeight, cs(le).columnGap, cs(le.querySelector('.tle-num')).fontSize, Math.round(r(q('#meters')).top - r(c).bottom)] }; }""")
-            check('phone (1013:33046, Oct 16): header board pill 66x36, icon and chevron, the name only for screen readers; Last update under the segments, 12 below, 14/16, 4 apart, Value/Small 12, meters 24 below',
-                  (ml['dd'] is None or ml['dd'] == [66, 36, True, True]) and ml['le'] == [12, '14px', '16px', '4px', '12px', 24], ml)
+            check('phone (1013:33046, Oct 16): header (728:1446) board pill 58x36, 16px icon and chevron 8 apart, 8 from the bell, the name only for screen readers; Last update under the segments, 12 below, 14/16, 4 apart, Value/Small 12, meters 24 below',
+                  ml['dd'] == [58, 36, True, True, 16, 8] and ml['le'] == [12, '14px', '16px', '4px', '12px', 24], ml)
             check('phone (901:11300, Oct 9): Balance, KPIs, Tracker, Expense cards, At a glance, allocation, chart, in that order; Add is in the bottom nav',
                   mo['cards'] == sorted(mo['cards']) and mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
             check('phone Expense cards (901:11367): a sideways row of 200-wide cards, 16 apart, padding 16 24, radius/card 20 (Oct 16), running to the screen edge',
