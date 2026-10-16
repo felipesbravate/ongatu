@@ -35,9 +35,8 @@
   html .breakdown-card #meters .meter-amt .money:not(#z){ display:inline-flex; align-items:center; gap:4px; }
   html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
   /* Latest line (787:14891): text, Dot, € and the figure 8 apart; € and figure Value/Medium (14, -4%). */
-  html .breakdown-card .tracker-last-entry:not(#z){ gap:var(--space-sm); }
-  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.56px; }
-  html .breakdown-card .tracker-last-entry .tle-num + .tle-num:not(#z){ margin-left:calc(var(--space-xs) - var(--space-sm)); }
+  html .breakdown-card .tracker-last-entry:not(#z){ gap:var(--space-xs); } /* Oct 16 (1042:45640): 4 apart */
+  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:12px; line-height:16px; letter-spacing:-0.48px; } /* Value/Medium at 12 (Oct 16) */
 
   /* Hero chart (581:19553): header 24 (title + Label), the chart 12 under it at 220, the legend 12 under the chart:
      swatch 9 (radius/ty) then the label 8 apart, items 12 apart, 12px Medium text/secondary. */
@@ -155,9 +154,9 @@ html .breakdown-card .bd-tabs-stack:not(#z){ gap:8px; }
 html .visually-hidden{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 @media (min-width:641px){
   html .breakdown-card .bd-content:not(#z){ gap:var(--space-2xl); }
-  /* Latest: Body/Large/Medium 16/20 in link/disable, the 10px Dot, the figure and € in Value/Medium, 8 apart. */
-  html .breakdown-card .tracker-last-entry .tle-text:not(#z){ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
-  html .breakdown-card .tracker-last-entry:not(#z){ height:16px; } /* the Figma line box is 16 (its 20px text overflows it) */
+  /* Latest: Body/Large/Medium 14/16 in link/disable, the 10px Dot, the figure and € in Value/Medium 12, 4 apart (Oct 16). */
+  html .breakdown-card .tracker-last-entry .tle-text:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; } /* Oct 16: Body/Large/Medium in the Desktop mode, 14/16 */
+  html .breakdown-card .tracker-last-entry:not(#z){ height:16px; }
 }
 @media (max-width:640px){
   html .breakdown-card .bd-content:not(#z){ gap:var(--space-lg); }
@@ -183,9 +182,19 @@ html .glance-card .insight-tag:not(#z){ height:24px; min-width:48px; padding:0 8
   html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
   html .breakdown-card #meters .meter-amt .money:not(#z){ color:var(--text-primary); gap:4px; }
   html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-mono); font-size:14px; line-height:normal; letter-spacing:-0.56px; color:var(--text-primary); }
-  html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:8px; }
-  html .tracker-last-entry.is-phone .tle-text:not(#z), html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:16px; line-height:20px; letter-spacing:-0.32px; color:var(--link-disable); }
+  html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:4px; }
+  html .tracker-last-entry.is-phone .tle-text:not(#z), html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--link-disable); }
   html .tracker-last-entry.is-phone .tle-value:not(#z){ gap:0; color:var(--text-accent-light); }
   html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-mono); font-size:12px; line-height:normal; letter-spacing:-0.48px; color:var(--text-accent-light); }
 }
 html .ds-balance-hero .bh-whole:not(#z){ gap:calc(var(--space-xs) + 0.16em); }
+
+/* Oct 16 (1028:49182 desktop, 1013:33086 phone): Controllers = the segments and the Add button, then the Latest line
+   under them, full width: 12 apart on both (space/md desktop, space/sm phones). */
+html .breakdown-card .bd-controllers:not(#z){ flex-direction:column; align-items:stretch; flex-wrap:nowrap; gap:var(--space-md); }
+html .breakdown-card .bd-interaction:not(#z){ display:flex; align-items:flex-end; justify-content:space-between; gap:var(--space-xl); flex-wrap:wrap; min-width:0; }
+html .breakdown-card .bd-controllers > .tracker-last-entry:not(#z){ min-width:0; max-width:100%; }
+@media (max-width:640px){
+  html .breakdown-card .bd-controllers:not(#z){ gap:var(--space-sm); }
+  html .breakdown-card .bd-interaction:not(#z), html .breakdown-card .bd-interaction .bd-tabs-stack:not(#z){ width:100%; }
+}

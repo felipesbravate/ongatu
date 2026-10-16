@@ -307,6 +307,12 @@ async def main():
                          pill: [Math.round(r('.ds-mnav-pill').width), Math.round(r('#mnav-home').height)], home: q('#mnav-home').getAttribute('aria-current'), seg: [...document.querySelectorAll('#breakdown-top-seg button')].map(b => b.textContent) }; }""")
             check('phone: 64px header with a 32px logo and the bell, no user menu; 16px sides; 32px title (Display/Title-mobile, Oct 3); no sideways scroll',
                   mo['header'] == [64, 32] and not mo['user'] and mo['bell'] and mo['side'] == 16 and mo['title'] == '32px' and mo['scrollW'] <= 390, mo)
+            ml = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e);
+                const c = q('.bd-controllers'), le = c && c.querySelector(':scope > .tracker-last-entry'), it = c && c.querySelector('.bd-interaction'), dd = q('#board-dd'), t = le && le.querySelector('.tle-text');
+                return { dd: dd && [Math.round(r(dd).width), Math.round(r(dd).height), !!dd.querySelector('.ds-board-dd-chevron'), Math.round(r(dd.querySelector('.ds-board-dd-name')).width) <= 1],
+                         le: le && [Math.round(r(le).top - r(it).bottom), cs(t).fontSize, cs(t).lineHeight, cs(le).columnGap, cs(le.querySelector('.tle-num')).fontSize, Math.round(r(q('#meters')).top - r(c).bottom)] }; }""")
+            check('phone (1013:33046, Oct 16): header board pill 66x36, icon and chevron, the name only for screen readers; Last update under the segments, 12 below, 14/16, 4 apart, Value/Small 12, meters 24 below',
+                  (ml['dd'] is None or ml['dd'] == [66, 36, True, True]) and ml['le'] == [12, '14px', '16px', '4px', '12px', 24], ml)
             check('phone (901:11300, Oct 9): Balance, KPIs, Tracker, Expense cards, At a glance, allocation, chart, in that order; Add is in the bottom nav',
                   mo['cards'] == sorted(mo['cards']) and mo['ticker'] and not mo['add'] and mo['nav'] and mo['seg'] == ['Incomes', 'Save/Invest', 'Expenses'], mo)
             check('phone Expense cards (901:11367): a sideways row of 200-wide cards, 16 apart, padding 16 24, radius/card 20 (Oct 16), running to the screen edge',
@@ -740,9 +746,9 @@ async def main():
             check('"Mark as read" takes the link away', await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').locator('.ds-notif-mark').count() == n_mk - 1)
             await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').get_by_role('button', name='View').first.click(); await pg.wait_for_timeout(400)
             check('View opens the Variable expenses of that month', await pg.locator('#notif-panel').count() == 0 and 'Groceries' in await pg.inner_text('.breakdown-card'))
-            le = await pg.evaluate("() => { const e = document.querySelector('.bd-tabs-stack .tracker-last-entry'); return e && [e.querySelector('.tle-text').textContent, [...e.querySelectorAll('.tle-num')].map(n => n.textContent), !!e.querySelector('.tle-dot'), getComputedStyle(e.querySelector('.tle-text')).fontSize, getComputedStyle(e.querySelector('.tle-num')).fontSize]; }")
-            check('Latest line (581:19517 / 787:14891, Oct 12): inside the selectors, "Latest: <item>/<description>, <Mon D>", the Dot, then the figure and € in mono (1028:49184, Oct 16: 16/20 text, Value/Medium 14)',
-                  bool(le) and re.fullmatch(r'Latest: Groceries/[^,]+, [A-Z][a-z]{2} \d{1,2}', le[0]) and le[1][1] == '€' and re.fullmatch(r'[\d.]+,\d\d', le[1][0]) and le[2] and le[3:] == ['16px', '14px'], le)
+            le = await pg.evaluate("() => { const e = document.querySelector('.bd-controllers > .tracker-last-entry'); return e && [e.querySelector('.tle-text').textContent, [...e.querySelectorAll('.tle-num')].map(n => n.textContent), !!e.querySelector('.tle-dot'), getComputedStyle(e.querySelector('.tle-text')).fontSize, getComputedStyle(e.querySelector('.tle-num')).fontSize]; }")
+            check('Latest line (1042:45640, Oct 16): under the segments and the Add button, "Latest: <item>/<description>, <Mon D>", the Dot, then the figure and € in mono (14/16 text, Value/Medium 12)',
+                  bool(le) and re.fullmatch(r'Latest: Groceries/[^,]+, [A-Z][a-z]{2} \d{1,2}', le[0]) and le[1][1] == '€' and re.fullmatch(r'[\d.]+,\d\d', le[1][0]) and le[2] and le[3:] == ['14px', '12px'], le)
             await pg.locator('.bd-row, .meter-row', has_text='Groceries').first.locator('.note-count').click(); await pg.wait_for_timeout(250)
             head = await pg.inner_text('#note-tip .tip-head')
             check('Entries tooltip starts with "Budget set" and the budget', 'Budget set' in head and '10,00' in head, head)

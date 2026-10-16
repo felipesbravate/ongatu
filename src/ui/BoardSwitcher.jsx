@@ -10,14 +10,14 @@ const cx = (...c) => c.filter(Boolean).join(' ');
 //   Desktop Default (1052:6291): a 220 slot (pl space/xs, py space/tn) with the pill on its right: 36 high, 1px
 //     border/selected-item, pl space/xs pr space/sm, the 24px icon (User 2 = personal, Duo = joint), the board name
 //     (Label/Tiny, link/default) and a 12px chevron, space/tn apart. Hover (1053:1936): border link/disable, name link/hover.
-//   Mobile Default (1120:3757): the same pill without the chevron, pr space/md.
+//   Mobile Default (1120:3757, Oct 16): 66 wide: the icon and the 12px chevron, no name on screen (kept for screen readers), pr space/md.
 export function BoardDropdown({ id, name, kind = 'personal', open, onToggle, mobile, className, ...rest }) {
   return (
     <button type="button" id={id} className={cx('ds-board-dd', mobile && 'is-mobile', open && 'is-open', className)} aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'}
       onClick={onToggle} {...rest}>
       <Icon icon={kind === 'joint' ? duo : user2} size={24} className="ds-board-dd-icon" />
-      <span className="ds-board-dd-name">{name}</span>
-      {!mobile && <Icon icon={chevronDown} size={12} className="ds-board-dd-chevron" />}
+      <span className={cx('ds-board-dd-name', mobile && 'visually-hidden')}>{name}</span>
+      <Icon icon={chevronDown} size={12} className="ds-board-dd-chevron" />
     </button>
   );
 }

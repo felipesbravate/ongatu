@@ -184,8 +184,9 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
       <div className="visually-hidden" id="cat-hint">{`${y.months[monthIdx]} ${y.year}${eligible ? ' · projected' : ''}`}</div>
       <div className="bd-content">
         <div className="bd-controllers">
+          {/* Oct 16 (1028:49182 / 1013:33086): the Latest line sits under the segments (and the Add button), full width. */}
+          <div className="bd-interaction">
           <div className="bd-tabs-stack">
-            {lastEntry && <LatestEntry entry={lastEntry} currency={cur} mobile={mobile} />}
             <Segments id="breakdown-top-seg" options={topTabs} value={topTab}
               onChange={(v) => { v === 'Expenses' ? onTab(breakdownGroup, null) : onTab(v, null); }} />
             <Segments sub id="breakdown-group-seg" aria-label="Expense type" options={groupTabs} value={topTab === 'Expenses' ? effType : breakdownGroup} hidden={topTab !== 'Expenses'} onChange={(v) => onTab(v, v)} />
@@ -193,6 +194,8 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
           <Button id="tracker-add-btn" icon={plus} aria-pressed={addOpen ? 'true' : 'false'} onClick={onAdd}>
             {topTab === 'Income' ? 'Add income' : topTab === 'Investments' ? 'Add savings/investment' : 'Add expense'}
           </Button>
+          </div>
+          {lastEntry && <LatestEntry entry={lastEntry} currency={cur} mobile={mobile} />}
         </div>
         <div id="meters">
           {!bd.rows.length ? <div className="hint">Nothing recorded yet.</div>
