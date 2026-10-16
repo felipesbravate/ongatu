@@ -11,21 +11,21 @@
 html .fld-empty:not(#z){ display:flex; flex-direction:column; gap:12px; min-width:0; }
 html .fld-info.ds-info:not(#z){ background:var(--surface-accent-light); border:none; border-radius:var(--radius-sm); padding:8px; min-height:40px; box-sizing:border-box; align-items:center; gap:12px; }
 html .fld-info.ds-info:not(#z) .ds-info-text{ justify-content:center; }
-html .fld-info.ds-info:not(#z) .ds-info-desc{ font-size:11px; line-height:12px; letter-spacing:-0.22px; color:var(--text-primary); }
+html .fld-info.ds-info:not(#z) .ds-info-desc{ font-size:11px; line-height:12px; letter-spacing:0; color:var(--text-primary); }
 @media (max-width:640px){
   html .fld-empty:not(#z){ gap:8px; }
   html .fld-info.ds-info:not(#z){ padding:12px; gap:16px; }
-  html .fld-info.ds-info:not(#z) .ds-info-desc{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+  html .fld-info.ds-info:not(#z) .ds-info-desc{ font-size:12px; line-height:14px; letter-spacing:0; }
 }
 
 /* ---- Modals ---- */
 /* 919:13266: Delete is a Tertiary button in action/destructive. */
 html dialog.ds-modal:not(#z) .ds-modal-actions .btn-pill.tertiary[id$="-delete"]{ color:var(--action-destructive); }
 /* 922:13962: the emphasised part of the description is 16/20 in text/primary. */
-html dialog.ds-modal:not(#z) .ds-modal-em{ font-size:16px; line-height:20px; letter-spacing:-0.32px; color:var(--text-primary); }
+html dialog.ds-modal:not(#z) .ds-modal-em{ font-size:16px; line-height:20px; letter-spacing:0; color:var(--text-primary); }
 /* "Move items to (optional)" + its Info tooltip (4 apart); the bubble is surface/body, radius 16, padding 12, 12/14. */
 html dialog.ds-modal:not(#z) .fld-label-row{ display:inline-flex; align-items:center; gap:4px; }
-html dialog.ds-modal:not(#z) .fld-label-row .ds-info-tip-bubble{ background:var(--surface-body); border-radius:var(--radius-md); padding:12px; width:217px; font-size:12px; font-weight:500; line-height:14px; letter-spacing:-0.24px; color:var(--text-primary); box-shadow:var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16)) 0 4px 12px 0; text-align:left; }
+html dialog.ds-modal:not(#z) .fld-label-row .ds-info-tip-bubble{ background:var(--surface-body); border-radius:var(--radius-md); padding:12px; width:217px; font-size:12px; font-weight:400; line-height:14px; letter-spacing:0; color:var(--text-primary); box-shadow:var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16)) 0 4px 12px 0; text-align:left; }
 
 /* ---- Budget panel top (232:5852): Segments, 16, Sub-category | Group (16 apart; stacked on phones), 40 to the items.
    A field: label 14/16, 8, Dropdown 48, 8, "Edit sub-category" (Small, 16 icon). ---- */
@@ -34,20 +34,20 @@ html .budget-panel:not(#z) .budget-kind-seg{ align-self:flex-start; max-width:10
 html .budget-panel:not(#z) .budget-selectors{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; align-items:start; }
 html .budget-panel:not(#z) .budget-selectors > .fld{ display:flex; flex-direction:column; gap:8px; min-width:0; margin:0; }
 html .budget-panel:not(#z) .budget-selectors > .fld-empty{ gap:12px; }
-html .budget-panel:not(#z) .budget-selectors .fld-label{ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--text-secondary); }
+html .budget-panel:not(#z) .budget-selectors .fld-label{ font-size:14px; line-height:16px; letter-spacing:0; color:var(--text-secondary); }
 html .budget-panel:not(#z) .budget-field-links{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 16px; min-height:16px; }
-html .budget-panel:not(#z) .budget-field-links .ds-action-link{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .budget-panel:not(#z) .budget-field-links .ds-action-link{ font-size:14px; line-height:16px; letter-spacing:0; }
 html .budget-panel:not(#z) .budget-sections .budget-add-item{ display:flex; }
 html .budget-panel:not(#z) .budget-sections .budget-add-item .ds-action-link,
-html .budget-panel:not(#z) .budget-group-add.ds-action-link{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
-html .budget-panel:not(#z) .budget-group-empty{ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--text-secondary); }
+html .budget-panel:not(#z) .budget-group-add.ds-action-link{ font-size:16px; line-height:20px; letter-spacing:0; }
+html .budget-panel:not(#z) .budget-group-empty{ font-size:14px; line-height:16px; letter-spacing:0; color:var(--text-secondary); }
 html .budget-panel:not(#z) .budget-items.is-empty{ min-height:48px; display:flex; align-items:center; justify-content:center; }
 
 @media (max-width:640px){
   /* 703:16128: fields stacked 16 apart, labels 16/20, 8 to the box. */
   html .budget-panel:not(#z) .budget-selectors{ grid-template-columns:minmax(0, 1fr); }
   html .budget-panel:not(#z) .budget-selectors > .fld-empty{ gap:8px; }
-  html .budget-panel:not(#z) .budget-selectors .fld-label{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .budget-panel:not(#z) .budget-selectors .fld-label{ font-size:16px; line-height:20px; letter-spacing:0; }
   html .budget-panel:not(#z) .budget-kind-seg{ align-self:stretch; display:flex; }
   html .budget-panel:not(#z) .budget-kind-seg > button{ flex:1 1 0; min-width:0; }
 }

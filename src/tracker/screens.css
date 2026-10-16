@@ -36,7 +36,7 @@
   html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
   /* Latest line (787:14891): text, Dot, € and the figure 8 apart; € and figure Value/Medium (14, -4%). */
   html .breakdown-card .tracker-last-entry:not(#z){ gap:var(--space-xs); } /* Oct 16 (1042:45640): 4 apart */
-  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:12px; line-height:16px; letter-spacing:-0.48px; } /* Value/Medium at 12 (Oct 16) */
+  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:12px; line-height:16px; letter-spacing:0; } /* Value/Medium at 12 (Oct 16) */
 
   /* Hero chart (581:19553): header 24 (title + Label), the chart 12 under it at 220, the legend 12 under the chart:
      swatch 9 (radius/ty) then the label 8 apart, items 12 apart, 12px Medium text/secondary. */
@@ -44,11 +44,11 @@
   html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-md); }
   html .hero-chart #trend-chart:not(#z){ display:block; width:100%; }
   html .hero-chart .legend:not(#z){ gap:var(--space-md); margin-top:var(--space-md); }
-  html .hero-chart .legend > span:not(#z){ gap:var(--space-sm); font-size:12px; line-height:16px; font-weight:500; letter-spacing:0; color:var(--text-secondary); }
+  html .hero-chart .legend > span:not(#z){ gap:var(--space-sm); font-size:12px; line-height:16px; font-weight:400; letter-spacing:0; color:var(--text-secondary); }
 
   /* Add entry panel (229:18166): "Click to upload" is the Medium Action link, 16/20 with a 16px Upload icon (phones keep
      the Small link, 369:13388). */
-  html #add-panel .dz-line .ds-action-link:not(#z){ font-size:16px; line-height:20px; letter-spacing:-0.32px; padding:0; gap:4px; }
+  html #add-panel .dz-line .ds-action-link:not(#z){ font-size:16px; line-height:20px; letter-spacing:0; padding:0; gap:4px; }
 
   /* Panel open (229:18910): no scrim, the panel's own shadow only (clicking the page still closes it). */
   html .add-panel-backdrop:not(#z){ background:transparent; }
@@ -91,13 +91,13 @@ html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
   html .breakdown-card #meters .meter-track:not(#z){ height:8px; margin-top:4px; }
   html .breakdown-card #meters .meter-amt:not(#z){ display:flex; align-items:center; line-height:16px; }
   html .breakdown-card #meters .meter-amt .money:not(#z){ display:inline-flex; align-items:center; gap:4px; color:var(--link-default); }
-  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; font-weight:500; letter-spacing:-0.28px; color:var(--link-default); }
+  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; font-weight:400; letter-spacing:0; color:var(--link-default); }
   /* Last update (898:9193): text 14/16 link/disable, 12px Dot, the date, then a 16px € and the figure (link/default), 4 apart. */
   html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:var(--space-tn); }
   html .tracker-last-entry.is-phone .tle-dot:not(#z){ width:12px; height:12px; }
-  html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; flex:none; }
+  html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:0; flex:none; }
   html .tracker-last-entry.is-phone .tle-value:not(#z){ display:inline-flex; align-items:center; flex:none; color:var(--link-default); }
-  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--link-default); }
+  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; letter-spacing:0; color:var(--link-default); }
 
   /* Expense cards (901:10369): 124 high. */
   html .ticker-strip .ticker-item:not(#z){ height:124px; }
@@ -116,7 +116,7 @@ html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
   html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-md); }
   html .hero-chart #trend-chart:not(#z){ display:block; width:100%; }
   html .hero-chart.is-compact .legend:not(#z){ gap:var(--space-sm); margin-top:var(--space-md); }
-  html .hero-chart.is-compact .legend > span:not(#z){ gap:var(--space-tn); font-size:10px; line-height:10px; font-weight:500; letter-spacing:-0.2px; }
+  html .hero-chart.is-compact .legend > span:not(#z){ gap:var(--space-tn); font-size:10px; line-height:10px; font-weight:400; letter-spacing:0; }
 
   /* Create year modal (703:17437): the illustration 16 above the text. */
   html #year-modal .ds-modal-content:not(#z){ gap:var(--space-md); }
@@ -155,7 +155,7 @@ html .visually-hidden{ position:absolute !important; width:1px; height:1px; padd
 @media (min-width:641px){
   html .breakdown-card .bd-content:not(#z){ gap:var(--space-2xl); }
   /* Latest: Body/Large/Medium 14/16 in link/disable, the 10px Dot, the figure and € in Value/Medium 12, 4 apart (Oct 16). */
-  html .breakdown-card .tracker-last-entry .tle-text:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; } /* Oct 16: Body/Large/Medium in the Desktop mode, 14/16 */
+  html .breakdown-card .tracker-last-entry .tle-text:not(#z){ font-size:14px; line-height:16px; letter-spacing:0; } /* Oct 16: Body/Large/Medium in the Desktop mode, 14/16 */
   html .breakdown-card .tracker-last-entry:not(#z){ height:16px; }
 }
 @media (max-width:640px){
@@ -169,10 +169,10 @@ html .wrap :is(.card, .mini-kpi, .ticker-item, .breakdown-card, .glance-card, .a
 /* Phones (Tags nav 1013:33056, Oct 16): month chips Label/Small 16/20 with 12/4 padding (28 tall), 12 apart, 48 indent. */
 @media (max-width:640px){
   html .months:not(#z), html body.is-scrolled .months:not(#z){ gap:12px; padding-left:48px; } /* same when the nav sticks: no jump */
-  html .months .month-btn:not(#z){ height:28px; min-height:28px; padding:4px 12px; font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .months .month-btn:not(#z){ height:28px; min-height:28px; padding:4px 12px; font-size:16px; line-height:20px; letter-spacing:0; }
 }
 /* This month, at a glance (1028:49166): the tags are accent labels: surface/accent-light, text/accent-light 14/16. */
-html .glance-card .insight-tag:not(#z){ height:24px; min-width:48px; padding:0 8px; background:var(--surface-accent-light); color:var(--text-accent-light); font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .glance-card .insight-tag:not(#z){ height:24px; min-width:48px; padding:0 8px; background:var(--surface-accent-light); color:var(--text-accent-light); font-size:14px; line-height:16px; letter-spacing:0; }
 
 /* Phones, Oct 16 (Tracker_Card_mobile 1013:33080): meters as on desktop — the name 16/20 text/primary, the figure in
    Value/Medium (14, -4%) text/primary and a 16px € 4 after it, the 6px bar 8 under the info, meters 8 apart. The
@@ -181,11 +181,11 @@ html .glance-card .insight-tag:not(#z){ height:24px; min-width:48px; padding:0 8
 @media (max-width:640px){
   html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
   html .breakdown-card #meters .meter-amt .money:not(#z){ color:var(--text-primary); gap:4px; }
-  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-mono); font-size:14px; line-height:normal; letter-spacing:-0.56px; color:var(--text-primary); }
+  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-mono); font-size:14px; line-height:normal; letter-spacing:0; color:var(--text-primary); }
   html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:4px; }
-  html .tracker-last-entry.is-phone .tle-text:not(#z), html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--link-disable); }
+  html .tracker-last-entry.is-phone .tle-text:not(#z), html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:0; color:var(--link-disable); }
   html .tracker-last-entry.is-phone .tle-value:not(#z){ gap:0; color:var(--text-accent-light); }
-  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-mono); font-size:12px; line-height:normal; letter-spacing:-0.48px; color:var(--text-accent-light); }
+  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-mono); font-size:12px; line-height:normal; letter-spacing:0; color:var(--text-accent-light); }
 }
 html .ds-balance-hero .bh-whole:not(#z){ gap:calc(var(--space-xs) + 0.16em); }
 

@@ -26,11 +26,12 @@ export const surfaceValue = (v) => v + 'px';
 // render as in Figma, so sans styles keep their real weight; Martian Mono (unchanged) keeps the Oct 3 rule.
 // Felipe (Oct 16, later): one step lighter in code. Inter = Figma - 100 (Regular 300, Medium 400, SemiBold 500);
 // Martian Mono (the Value styles) is always 300. Same rule in scripts/sync-tokens-native.mjs and tests/tokens.test.js.
+// Felipe (Oct 16): no negative letter-spacing in code -- Figma's -2% / -4% become 0 (positive values would pass through).
 export const codeWeight = (w, family = 'sans') => (family === 'mono' ? 300 : Number(w) - 100);
 export const textStyleVars = (name, t) => {
   const k = '--type-' + kebab(name);
   return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(codeWeight(t.weight, t.family))],
-    [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : t.lineHeight ? t.lineHeight + 'px' : 'normal'], [k + '-ls', t.letterSpacing ? t.letterSpacing / 100 + 'em' : '0']];
+    [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : t.lineHeight ? t.lineHeight + 'px' : 'normal'], [k + '-ls', t.letterSpacing > 0 ? t.letterSpacing / 100 + 'em' : '0']];
 };
 export const fontStack = (name, family) => `"${family}", ${FONT_FALLBACK[name] || 'sans-serif'}`;
 

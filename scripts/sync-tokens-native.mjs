@@ -38,7 +38,8 @@ export function build(t) {
     const w = s.family === 'mono' ? 300 : Number(s.weight) - 100;
     const style = { fontFamily: fam[w] || fam[400], fontSize: s.size };
     if (s.lineHeight != null) style.lineHeight = s.lineHeight;
-    if (s.letterSpacing) style.letterSpacing = Math.round(s.size * s.letterSpacing) / 100; // Figma % of font size -> points
+    // Oct 16: no negative letter-spacing in code (as scripts/sync-tokens.mjs).
+    if (s.letterSpacing > 0) style.letterSpacing = Math.round(s.size * s.letterSpacing) / 100; // Figma % of font size -> points
     text[camel(k.replace(/\//g, '-'))] = style;
   }
   const body = [

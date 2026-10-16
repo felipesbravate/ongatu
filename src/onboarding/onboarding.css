@@ -14,7 +14,7 @@ html .ob-page:not(#z) .ob-header{ gap:4px; }
 html .ob-page:not(#z) .ob-card{ border-radius:20px; padding:40px; gap:40px; }
 html .ob-page:not(#z) .ob-card-head{ gap:4px; }
 html .ob-page:not(#z) .ob-card-title{ font-size:20px; line-height:20px; letter-spacing:0; }
-html .ob-page:not(#z) .ob-card-text{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .ob-page:not(#z) .ob-card-text{ font-size:14px; line-height:16px; letter-spacing:0; }
 
 /* ---- Tour: card 24/40/40/40 (card 3: 40 all round, no Skip, 16 above the art), 40 between content and the CTA;
    content 24 apart (Skip 16 above the art); title 20/20, 8, text 14/16. ---- */
@@ -35,14 +35,14 @@ html .ob-page:not(#z) .ob-choose{ gap:40px; }
 html .ob-page:not(#z) .ob-options{ gap:16px; }
 html .ob-page:not(#z) .ob-option{ padding:23px; border-radius:16px; gap:12px; }
 html .ob-page:not(#z) .ob-option-text{ gap:4px; }
-html .ob-page:not(#z) .ob-option-title{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
-html .ob-page:not(#z) .ob-option-desc{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+html .ob-page:not(#z) .ob-option-title{ font-size:16px; line-height:20px; letter-spacing:0; }
+html .ob-page:not(#z) .ob-option-desc{ font-size:12px; line-height:14px; letter-spacing:0; }
 
 /* ---- Set up your board: card 1024 (body 640 | 24 | 280). ---- */
 html .ob-page.is-wide:not(#z) .ob-content{ width:1024px; max-width:100%; }
 html .ob-page:not(#z) .ob-setup{ gap:40px; }
 html .ob-page:not(#z) .ob-setup-cols{ gap:24px; }
-html .ob-page:not(#z) .ob-col-title{ font-size:16px; line-height:20px; letter-spacing:-0.32px; padding:0; }
+html .ob-page:not(#z) .ob-col-title{ font-size:16px; line-height:20px; letter-spacing:0; padding:0; }
 html .ob-page:not(#z) .ob-board .ob-col-board{ flex:1 1 640px; gap:16px; }
 html .ob-page:not(#z) .ob-board-top{ gap:16px; }
 html .ob-page:not(#z) .ob-board-fields{ gap:16px; }
@@ -50,11 +50,11 @@ html .ob-page:not(#z) .ob-board-fields .fld{ gap:8px; }
 html .ob-page:not(#z) .ob-board .ob-board-top + *{ margin-top:24px; } /* 16 (column gap) + 24 = the 40 under the selectors */
 html .ob-page:not(#z) .ob-board .ob-board-groups{ gap:16px; }
 html .ob-page:not(#z) .ob-board .budget-group{ gap:12px; }
-html .ob-page:not(#z) .ob-board .budget-cat-title{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+html .ob-page:not(#z) .ob-board .budget-cat-title{ font-size:16px; line-height:20px; letter-spacing:0; }
 html .ob-page:not(#z) .ob-board .budget-items{ gap:0; }
 html .ob-page:not(#z) .ob-board .budget-row{ min-height:24px; }
-html .ob-page:not(#z) .ob-board .budget-row .br-name{ font-size:16px; line-height:20px; letter-spacing:-0.32px; color:var(--text-secondary); }
-html .ob-page:not(#z) .ob-board .budget-group-empty{ color:var(--text-secondary); font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .ob-page:not(#z) .ob-board .budget-row .br-name{ font-size:16px; line-height:20px; letter-spacing:0; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-board .budget-group-empty{ color:var(--text-secondary); font-size:14px; line-height:16px; letter-spacing:0; }
 
 /* Empty board (749:10871): Empty state illustration, 24, title + text (8 apart), 24, Small Primary button. */
 html .ob-page:not(#z) .ob-board-empty{ gap:24px; width:400px; max-width:100%; }
@@ -69,13 +69,13 @@ html .ob-page:not(#z) .ob-from-row{ gap:8px; }
 html .ob-page:not(#z) .ob-summary .ds-dd-trigger, html .ob-page:not(#z) .ob-summary .ds-dd{ background:var(--surface-primary); }
 html .ob-page:not(#z) .ob-summary-list{ gap:12px; }
 html .ob-page:not(#z) .ob-sum-cat{ gap:12px; }
-html .ob-page:not(#z) .ob-sum-row{ gap:8px; font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-primary); }
-html .ob-page:not(#z) .ob-sum-count{ font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-sum-row{ gap:8px; font-size:12px; line-height:14px; letter-spacing:0; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-sum-count{ font-size:12px; line-height:14px; letter-spacing:0; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-sum-subs{ display:flex; flex-direction:column; gap:4px; padding-left:8px; }
 html .ob-page:not(#z) .ob-sum-sub{ padding-left:0; margin:0; gap:16px; font-size:12px; line-height:14px; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-sum-sub + .ob-sum-sub{ margin-top:0; }
 html .ob-page:not(#z) .ob-summary-cta{ gap:12px; }
-html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-muted); }
+html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter-spacing:0; color:var(--text-muted); }
 
 /* ================================ Phones ================================ */
 @media (max-width:640px){
@@ -93,7 +93,7 @@ html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter
   html .ob-page:not(#z) .ob-tour.is-last .ob-tour-top{ padding-top:0; }
   html .ob-page:not(#z) .ob-tour-text{ gap:12px; }
   html .ob-page:not(#z) .ob-tour .ob-card-title{ font-size:24px; line-height:24px; }
-  html .ob-page:not(#z) .ob-tour .ob-card-text{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .ob-page:not(#z) .ob-tour .ob-card-text{ font-size:16px; line-height:20px; letter-spacing:0; }
 
   html .ob-page:not(#z) .ob-options{ flex-direction:column; }
   html .ob-page:not(#z) .ob-option{ height:auto; }
@@ -123,8 +123,8 @@ html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter
   html .ob-welcome-page:not(#z){ min-height:100vh; min-height:100dvh; box-sizing:border-box; padding:40px 48px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:48px; }
   html .ob-welcome-page:not(#z) .ob-welcome-body{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; text-align:center; width:100%; }
   html .ob-welcome-page:not(#z) .ob-welcome-text{ display:flex; flex-direction:column; gap:12px; }
-  html .ob-welcome-page:not(#z) .ob-welcome-title{ margin:0; color:var(--text-primary); font-size:24px; font-weight:500; line-height:24px; }
-  html .ob-welcome-page:not(#z) .ob-welcome-desc{ margin:0; color:var(--text-secondary); font-size:16px; font-weight:500; line-height:20px; letter-spacing:-0.32px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-title{ margin:0; color:var(--text-primary); font-size:24px; font-weight:400; line-height:24px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-desc{ margin:0; color:var(--text-secondary); font-size:16px; font-weight:400; line-height:20px; letter-spacing:0; }
   html .ob-welcome-page:not(#z) .ob-welcome-go{ width:320px; max-width:100%; justify-content:center; }
 }
 /* 401:4464: the budget figure is Value 14 (mono), in link/default. */
@@ -139,7 +139,7 @@ html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter
   html dialog#ob-welcome:not(#z) .ds-modal-content{ padding:0; gap:24px; }
   html dialog#ob-welcome:not(#z) .ds-modal-text{ gap:8px; }
   html dialog#ob-welcome:not(#z) .ds-modal-title{ font-size:20px; line-height:20px; letter-spacing:0; }
-  html dialog#ob-welcome:not(#z) .ds-modal-description{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html dialog#ob-welcome:not(#z) .ds-modal-description{ font-size:14px; line-height:16px; letter-spacing:0; }
   html dialog#ob-welcome:not(#z) .ds-modal-actions{ padding:0; margin:0; }
 }
 
@@ -151,7 +151,7 @@ html .ob-page:not(#z) .ob-option{ position:relative; }
 html .ob-page:not(#z) .ob-option-tag{ position:absolute; top:11px; right:11px; }
 @media (min-width:641px){
   html .ob-page:not(#z) .ob-option{ padding:23px 15px 15px; }
-  html .ob-page:not(#z) .ob-option .ob-option-link{ white-space:nowrap; font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html .ob-page:not(#z) .ob-option .ob-option-link{ white-space:nowrap; font-size:14px; line-height:16px; letter-spacing:0; }
 }
 html .ob-page:not(#z) .ob-import{ gap:24px; }
 html .ob-page:not(#z) .ob-dropzone{ width:100%; box-sizing:border-box; min-height:160px; display:flex; align-items:center; justify-content:center; }
@@ -176,19 +176,19 @@ html .ob-page:not(#z) .ob-tour.is-last .ob-art > *{ transform:translateX(24.5px)
 html .ob-page:not(#z) .ob-option{ height:auto; }
 html .ob-page:not(#z) .ob-option-text{ flex:0 0 auto; }
 html .ob-page:not(#z) .ob-option-art{ align-items:center; }
-html .ob-page:not(#z) .ob-option .ob-option-link{ margin-top:28px; font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .ob-page:not(#z) .ob-option .ob-option-link{ margin-top:28px; font-size:14px; line-height:16px; letter-spacing:0; }
 @media (min-width:641px){ html .ob-page:not(#z) .ob-options{ gap:8px; } }
 
 /* Set up / Review (401:4464 / 749:10871 / 930:21353). */
-html .ob-page:not(#z) .ob-setup .ob-card-text{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+html .ob-page:not(#z) .ob-setup .ob-card-text{ font-size:12px; line-height:14px; letter-spacing:0; }
 html .ob-page:not(#z) .ob-board-fields{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; align-items:start; }
 html .ob-page:not(#z) .ob-board-fields > .fld{ display:flex; flex-direction:column; gap:8px; min-width:0; }
 html .ob-page:not(#z) .ob-board-fields > .fld-empty{ gap:12px; }
-html .ob-page:not(#z) .ob-board-fields .fld-label{ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-board-fields .fld-label{ font-size:14px; line-height:16px; letter-spacing:0; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-field-links{ display:flex; min-height:16px; }
-html .ob-page:not(#z) .ob-field-links .ds-action-link{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .ob-page:not(#z) .ob-field-links .ds-action-link{ font-size:14px; line-height:16px; letter-spacing:0; }
 html .ob-page:not(#z) .ob-board .budget-items.is-empty{ min-height:48px; display:flex; align-items:center; justify-content:center; }
-html .ob-page:not(#z) .ob-board .budget-group-empty{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+html .ob-page:not(#z) .ob-board .budget-group-empty{ font-size:16px; line-height:20px; letter-spacing:0; }
 
 /* 03d (930:21353): the card is 24 between the header, the summary and the body. Summary box: surface/body, radius 8,
    padding 16, Information 16, 12, file name · period (Heading/Medium 14/14, 4 apart), 8, the counts as a disc list
@@ -198,11 +198,11 @@ html .ob-page:not(#z) .ob-import-sum{ display:flex; flex-direction:column; gap:8
 html .ob-page:not(#z) .ob-import-note{ margin:0; padding:16px; border-radius:var(--radius-sm); background:var(--surface-body); display:flex; flex-direction:row; align-items:flex-start; gap:12px; color:var(--text-primary); }
 html .ob-page:not(#z) .ob-import-note > svg{ flex:none; }
 html .ob-page:not(#z) .ob-import-note-text{ display:flex; flex-direction:column; gap:8px; min-width:0; }
-html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ margin:0; display:flex; flex-wrap:wrap; align-items:center; gap:4px; font-size:14px; line-height:14px; letter-spacing:-0.28px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ margin:0; display:flex; flex-wrap:wrap; align-items:center; gap:4px; font-size:14px; line-height:14px; letter-spacing:0; color:var(--text-primary); }
 html .ob-page:not(#z) .ob-import-note-head > span:first-child{ overflow-wrap:anywhere; }
-html .ob-page:not(#z) .ob-import-note-list{ margin:0; padding:0 0 0 16.5px; list-style:disc; font-size:11px; line-height:12px; letter-spacing:-0.22px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-import-note-list{ margin:0; padding:0 0 0 16.5px; list-style:disc; font-size:11px; line-height:12px; letter-spacing:0; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-import-warn.ds-info{ background:var(--surface-warning); border-radius:var(--radius-sm); padding:8px 16px; min-height:40px; box-sizing:border-box; align-items:center; gap:12px; }
-html .ob-page:not(#z) .ob-import-warn .ds-info-desc{ font-size:11px; line-height:12px; letter-spacing:-0.22px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-import-warn .ds-info-desc{ font-size:11px; line-height:12px; letter-spacing:0; color:var(--text-primary); }
 html .ob-page:not(#z) .ob-review .ob-board-top + *{ margin-top:24px; }
 
 /* Empty board (749:10871): Empty state 120, Tiny button. */
@@ -212,30 +212,30 @@ html .ob-page:not(#z) .ob-board-empty .ob-add-type{ align-self:center; }
    1px dashed border/default, radius 8; "Click to upload" link/default 16/20 with a 16px icon; hint 12/14.
    Tips (909:19163): two columns 40 apart, 24 in from the sides: art, 12 (16), title Heading/Medium 14/14, 8, text 11/12. */
 html .ob-page:not(#z) .ob-import{ gap:40px; }
-html .ob-page:not(#z) .ob-import .ob-card-text{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+html .ob-page:not(#z) .ob-import .ob-card-text{ font-size:12px; line-height:14px; letter-spacing:0; }
 html .ob-page:not(#z) .ob-import-body{ display:flex; flex-direction:column; gap:24px; }
 html .ob-page:not(#z) .ob-dropzone{ height:160px; min-height:160px; border:1px dashed var(--border-default); border-radius:var(--radius-sm); background:var(--surface-body); padding:24px 16px; }
 html .ob-page:not(#z) .ob-dropzone .dz-text{ display:flex; flex-direction:column; align-items:center; gap:2px; }
-html .ob-page:not(#z) .ob-dropzone .dz-line{ display:flex; align-items:center; justify-content:center; gap:2px; font-size:14px; font-weight:600; line-height:16px; letter-spacing:-0.28px; color:var(--text-primary); }
-html .ob-page:not(#z) .ob-dropzone .ds-action-link{ color:var(--link-default); font-size:16px; font-weight:500; line-height:20px; letter-spacing:-0.32px; gap:4px; }
-html .ob-page:not(#z) .ob-dropzone .dz-hint{ font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-dropzone .dz-line{ display:flex; align-items:center; justify-content:center; gap:2px; font-size:14px; font-weight:500; line-height:16px; letter-spacing:0; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-dropzone .ds-action-link{ color:var(--link-default); font-size:16px; font-weight:400; line-height:20px; letter-spacing:0; gap:4px; }
+html .ob-page:not(#z) .ob-dropzone .dz-hint{ font-size:12px; line-height:14px; letter-spacing:0; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-import-tips{ margin:0; padding:0 24px; display:flex; gap:40px; list-style:none; }
 html .ob-page:not(#z) .ob-tip{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
 html .ob-page:not(#z) .ob-tip + .ob-tip{ gap:16px; }
 html .ob-page:not(#z) .ob-tip-text{ display:flex; flex-direction:column; gap:8px; }
-html .ob-page:not(#z) .ob-tip-title{ margin:0; font-size:14px; line-height:14px; letter-spacing:-0.28px; color:var(--text-primary); }
-html .ob-page:not(#z) .ob-tip-desc{ margin:0; font-size:11px; line-height:12px; letter-spacing:-0.22px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-tip-title{ margin:0; font-size:14px; line-height:14px; letter-spacing:0; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-tip-desc{ margin:0; font-size:11px; line-height:12px; letter-spacing:0; color:var(--text-secondary); }
 /* Reading (935:41321): 1px solid border/default, radius 8, padding 16; Upload 35, 12, title SemiBold 12/14, sub
    11/12; 12, progress 8 (surface/secondary, green gradient), 2, the % SemiBold 11/12. */
 html .ob-page:not(#z) .ob-reading{ border:1px solid var(--border-default); border-radius:var(--radius-sm); background:var(--surface-primary); padding:16px; display:flex; flex-direction:column; gap:12px; box-sizing:border-box; }
 html .ob-page:not(#z) .ob-reading-info{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
 html .ob-page:not(#z) .ob-reading-text p{ margin:0; }
-html .ob-page:not(#z) .ob-reading-title{ font-size:12px; font-weight:600; line-height:14px; letter-spacing:-0.24px; color:var(--text-primary); overflow-wrap:anywhere; }
-html .ob-page:not(#z) .ob-reading-sub{ font-size:11px; line-height:12px; letter-spacing:-0.22px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-reading-title{ font-size:12px; font-weight:500; line-height:14px; letter-spacing:0; color:var(--text-primary); overflow-wrap:anywhere; }
+html .ob-page:not(#z) .ob-reading-sub{ font-size:11px; line-height:12px; letter-spacing:0; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-reading-progress{ display:flex; flex-direction:column; gap:2px; }
 html .ob-page:not(#z) .ob-progress{ height:8px; border-radius:var(--radius-full); background:var(--surface-secondary); overflow:hidden; }
 html .ob-page:not(#z) .ob-progress > div{ height:100%; border-radius:var(--radius-full); background:linear-gradient(90deg, var(--primitive-data-green-light, #76c8a4), var(--primitive-data-green, #17a768)); transition:width .3s ease; }
-html .ob-page:not(#z) .ob-reading-pct{ margin:0; text-align:center; font-size:11px; font-weight:600; line-height:12px; letter-spacing:-0.22px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-reading-pct{ margin:0; text-align:center; font-size:11px; font-weight:500; line-height:12px; letter-spacing:0; color:var(--text-primary); }
 
 /* Welcome modal (404:4571): Floating shadow. */
 @media (min-width:641px){ html dialog#ob-welcome.ds-modal:not(#z){ box-shadow:0 4px 12px 0 var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16)); } }
@@ -250,48 +250,48 @@ html .ob-page:not(#z) .ob-reading-pct{ margin:0; text-align:center; font-size:11
 
   /* Choose (935:37211): padding 16, art → text 16, title 20/24, text 14/16, link 14/16 48 below, tag 16 in. */
   html .ob-page:not(#z) .ob-option{ padding:15px; gap:16px; }
-  html .ob-page:not(#z) .ob-option-title{ font-size:20px; line-height:24px; letter-spacing:-0.4px; }
-  html .ob-page:not(#z) .ob-option-desc{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html .ob-page:not(#z) .ob-option-title{ font-size:20px; line-height:24px; letter-spacing:0; }
+  html .ob-page:not(#z) .ob-option-desc{ font-size:14px; line-height:16px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-option .ob-option-link{ margin-top:32px; }
   html .ob-page:not(#z) .ob-option-tag{ top:15px; right:15px; }
 
   /* Set up (853:10147 / 935:39023): fields stacked 24 apart, labels 16/20, 8 to the box; groups not indented,
      header 16 above the rows (14/16 title); subtitle 14/16. */
-  html .ob-page:not(#z) .ob-setup .ob-card-text, html .ob-page:not(#z) .ob-import .ob-card-text{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html .ob-page:not(#z) .ob-setup .ob-card-text, html .ob-page:not(#z) .ob-import .ob-card-text{ font-size:14px; line-height:16px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-board-fields{ grid-template-columns:minmax(0, 1fr); gap:24px; }
   html .ob-page:not(#z) .ob-board-fields > .fld-empty{ gap:8px; }
-  html .ob-page:not(#z) .ob-board-fields .fld-label{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html .ob-page:not(#z) .ob-board-fields .fld-label{ font-size:16px; line-height:20px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-board .ob-board-groups{ padding:0; }
   html .ob-page:not(#z) .ob-board .budget-group{ gap:16px; }
-  html .ob-page:not(#z) .ob-board .budget-cat-title{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html .ob-page:not(#z) .ob-board .budget-cat-title{ font-size:14px; line-height:16px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-board-empty-text{ gap:12px; }
   html .ob-page:not(#z) .ob-board-empty-text h4{ font-size:20px; line-height:24px; }
   /* Below the card (853:19253): Medium dropdowns 12 apart; summary rows 14/16; subs 8 apart, 12 in, 16 under. */
   html .ob-page:not(#z) .ob-from-row{ gap:12px; }
   html .ob-page:not(#z) .ob-sum-row, html .ob-page:not(#z) .ob-sum-count, html .ob-page:not(#z) .ob-sum-sub,
-  html .ob-page:not(#z) .ob-summary-note{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html .ob-page:not(#z) .ob-summary-note{ font-size:14px; line-height:16px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-sum-subs{ gap:8px; padding-left:12px; }
   html .ob-page:not(#z) .ob-sum-cat{ gap:16px; }
 
   /* 03d phone (935:41336): summary padding 24, 16 gap, head 16/16 stacked, list 12/14; warning 12/24, 12 below. */
   html .ob-page:not(#z) .ob-import-sum{ gap:12px; }
   html .ob-page:not(#z) .ob-import-note{ padding:24px; gap:16px; }
-  html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ flex-direction:column; align-items:flex-start; font-size:16px; line-height:16px; letter-spacing:-0.32px; }
+  html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ flex-direction:column; align-items:flex-start; font-size:16px; line-height:16px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-import-note .ob-import-dot{ display:none; }
-  html .ob-page:not(#z) .ob-import-note-list{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+  html .ob-page:not(#z) .ob-import-note-list{ font-size:12px; line-height:14px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-import-warn.ds-info{ padding:12px 24px; }
-  html .ob-page:not(#z) .ob-import-warn .ds-info-desc{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+  html .ob-page:not(#z) .ob-import-warn .ds-info-desc{ font-size:12px; line-height:14px; letter-spacing:0; }
 
   /* Import phone (935:40825 / 935:41139): tips stacked 16 apart (title 16/16, 12, text 12/14); reading padding 24. */
   html .ob-page:not(#z) .ob-import{ gap:24px; }
   html .ob-page:not(#z) .ob-import-tips{ flex-direction:column; gap:16px; padding:0; }
   html .ob-page:not(#z) .ob-tip-text{ gap:12px; }
-  html .ob-page:not(#z) .ob-tip-title{ font-size:16px; line-height:16px; letter-spacing:-0.32px; }
-  html .ob-page:not(#z) .ob-tip-desc{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+  html .ob-page:not(#z) .ob-tip-title{ font-size:16px; line-height:16px; letter-spacing:0; }
+  html .ob-page:not(#z) .ob-tip-desc{ font-size:12px; line-height:14px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-reading{ padding:24px; gap:16px; }
   html .ob-page:not(#z) .ob-reading-info{ gap:12px; }
-  html .ob-page:not(#z) .ob-reading-title{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
-  html .ob-page:not(#z) .ob-reading-sub, html .ob-page:not(#z) .ob-reading-pct{ font-size:12px; line-height:14px; letter-spacing:-0.24px; }
+  html .ob-page:not(#z) .ob-reading-title{ font-size:14px; line-height:16px; letter-spacing:0; }
+  html .ob-page:not(#z) .ob-reading-sub, html .ob-page:not(#z) .ob-reading-pct{ font-size:12px; line-height:14px; letter-spacing:0; }
   html .ob-page:not(#z) .ob-reading-progress{ gap:4px; }
 
   /* Welcome page (853:19308): Go to your board 320 wide, 20 from the bottom. */
@@ -313,23 +313,23 @@ html .ob-page.is-joint:not(#z) .ob-content:has(.ob-share-card){ gap:16px; }
 html .ob-page.is-joint:not(#z) .ob-content:has(.ob-share-card) > .ds-steps{ margin-bottom:24px; }
 html .ob-page.is-joint:not(#z) .ob-content:has(.ob-share-card) > .ob-header{ margin-bottom:24px; }
 html .ob-page:not(#z) .ob-share-card{ width:100%; box-sizing:border-box; gap:24px; border-radius:var(--radius-md); box-shadow:0 0 20px #16150f0a; }
-html .ob-page:not(#z) .ob-share-card .ob-share-text{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+html .ob-page:not(#z) .ob-share-card .ob-share-text{ font-size:14px; line-height:16px; letter-spacing:0; }
 html .ob-page:not(#z) .ob-board-name{ display:flex; flex-direction:column; gap:8px; width:100%; }
-html .ob-page:not(#z) .ob-board-name .fld-label{ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--text-secondary); }
+html .ob-page:not(#z) .ob-board-name .fld-label{ font-size:14px; line-height:16px; letter-spacing:0; color:var(--text-secondary); }
 html .ob-page:not(#z) .ob-share-card .ds-input{ width:100%; }
 html .ob-page:not(#z) .ob-invite{ display:flex; flex-direction:column; gap:12px; width:100%; }
 html .ob-page:not(#z) .ob-invite-cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
 html .ob-page:not(#z) .ob-invite-cta .btn-pill{ width:auto; flex:0 0 auto; }
 html .ob-page:not(#z) .ob-people{ display:flex; flex-direction:column; gap:24px; width:100%; }
-html .ob-page:not(#z) .ob-people-title{ margin:0; font-size:16px; font-weight:500; line-height:20px; letter-spacing:-0.32px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-people-title{ margin:0; font-size:16px; font-weight:400; line-height:20px; letter-spacing:0; color:var(--text-primary); }
 html .ob-page:not(#z) .ob-people-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:16px; }
 html .ob-page:not(#z) .ob-person{ display:flex; align-items:center; gap:8px; }
 html .ob-page:not(#z) .ob-person-who{ display:flex; flex-direction:column; min-width:0; }
-html .ob-page:not(#z) .ob-person-name{ font-size:14px; line-height:14px; letter-spacing:-0.28px; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-html .ob-page:not(#z) .ob-person-email{ font-size:12px; line-height:14px; letter-spacing:-0.24px; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .ob-page:not(#z) .ob-person-name{ font-size:14px; line-height:14px; letter-spacing:0; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .ob-page:not(#z) .ob-person-email{ font-size:12px; line-height:14px; letter-spacing:0; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 /* Labels 24 high, px 4, min 48: "You" surface/secondary; "Invite sent" surface/warning + status/warning. */
 html .ob-page:not(#z) .ob-person-tag{ flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; height:24px; min-width:48px; padding:0 4px; box-sizing:border-box; border-radius:var(--radius-full);
-  background:var(--surface-secondary); color:var(--text-primary); font-size:12px; line-height:14px; letter-spacing:-0.24px; white-space:nowrap; }
+  background:var(--surface-secondary); color:var(--text-primary); font-size:12px; line-height:14px; letter-spacing:0; white-space:nowrap; }
 html .ob-page:not(#z) .ob-person-tag.is-sent{ background:var(--surface-warning); color:var(--status-warning); padding:0 8px; }
 html .ob-page:not(#z) .ob-person-role.ds-dd{ width:120px; flex-shrink:0; margin-left:auto; }
 @media (max-width:640px){
