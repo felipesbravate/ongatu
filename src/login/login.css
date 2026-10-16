@@ -32,7 +32,7 @@ html .login-page .login-header{ gap:8px; padding:0 16px; }
 html .login-page .login-header .ds-logo{ width:131px; height:104px; }
 html[data-theme] .login-page .login-tagline,
 html .login-page .login-tagline{
-  color:var(--text-accent); font-size:12px; font-weight:400; line-height:14px; letter-spacing:-0.24px;
+  color:var(--text-accent); font-size:12px; font-weight:500; line-height:14px; letter-spacing:-0.24px;
 }
 
 html .login-page .login-card{
@@ -40,10 +40,10 @@ html .login-page .login-card{
   background-color:var(--surface-primary); box-shadow:0 0 20px rgba(22,21,15,0.04);
 }
 html .login-page .login-head{ gap:24px; }
-html .login-page .login-title{ font-size:20px; font-weight:400; line-height:20px; letter-spacing:0; }
+html .login-page .login-title{ font-size:20px; font-weight:500; line-height:20px; letter-spacing:0; }
 html .login-page .login-form, html .login-page .login-body{ gap:40px; }
 html .login-page .login-field{ gap:8px; }
-html .login-page .login-label{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; text-transform:none; }
+html .login-page .login-label{ color:var(--text-secondary); font-size:14px; font-weight:500; line-height:16px; letter-spacing:-0.28px; text-transform:none; }
 html .login-page .login-wide:not(#z){ width:100%; max-width:none; }
 /* Inputs and the code boxes: radius/sm 8 (568:4059, 430:5508). */
 html .login-page .ds-input:not(.tiny):not(.small):not(#z){ border-radius:var(--radius-sm); }
@@ -55,14 +55,14 @@ html .login-page:not(.is-email) .login-card:not(#z){ box-shadow:none; }
 html .login-page .login-user{ gap:12px; }
 html .login-page .login-user-text{ display:flex; flex-direction:column; gap:0; }
 html .login-page .login-avatar{ width:48px; height:48px; min-width:48px; background:var(--surface-accent); color:var(--text-white, #fff); font-size:20px; line-height:24px; }
-html .login-page .login-hello{ color:var(--text-primary); font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
-html .login-page .login-email{ color:var(--text-accent-light); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+html .login-page .login-hello{ color:var(--text-primary); font-size:16px; font-weight:500; line-height:20px; letter-spacing:-0.32px; }
+html .login-page .login-email{ color:var(--text-accent-light); font-size:14px; font-weight:500; line-height:16px; letter-spacing:-0.28px; }
 
 /* "Check your inbox": title 4 above the line; the line 14/16 text/secondary with the email 16/20 text/primary. */
 html .login-page.is-newcode .login-head{ gap:4px; }
-html .login-page .login-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+html .login-page .login-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:14px; font-weight:500; line-height:16px; letter-spacing:-0.28px; }
 /* 713:18301: two 16px lines (32): the 16/20 email keeps a 16 line box on desktop. */
-html .login-page .login-sub strong{ font-weight:400; color:var(--text-primary); font-size:16px; line-height:16px; letter-spacing:-0.32px; }
+html .login-page .login-sub strong{ font-weight:500; color:var(--text-primary); font-size:16px; line-height:16px; letter-spacing:-0.32px; }
 
 /* Code boxes: 48 x 48, 8 apart; the field hugs them and sits centred. */
 html .login-page .login-code-field:not(#z){ align-self:center; width:auto; max-width:100%; }
@@ -72,10 +72,10 @@ html .login-page .login-code .login-code-box:not(#z){ flex:0 1 48px; width:48px;
 /* CTA column: button, 12, link + notes (2 apart). */
 html .login-page .login-cta-col{ display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; }
 html .login-page .login-link,
-html .login-page .login-resend .ds-action-link{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+html .login-page .login-resend .ds-action-link{ font-size:16px; font-weight:500; line-height:20px; letter-spacing:-0.32px; }
 html .login-page .login-resend, html .login-page .login-resend-row{ gap:2px; }
 html .login-page .login-note,
-html .login-page .login-resend.is-small .login-note{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+html .login-page .login-resend.is-small .login-note{ color:var(--text-secondary); font-size:14px; font-weight:500; line-height:16px; letter-spacing:-0.28px; }
 
 /* Create account - Name (568:5262). */
 html .login-page.is-new .login-content{ gap:24px; }

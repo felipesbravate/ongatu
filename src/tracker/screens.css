@@ -45,7 +45,7 @@
   html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-md); }
   html .hero-chart #trend-chart:not(#z){ display:block; width:100%; }
   html .hero-chart .legend:not(#z){ gap:var(--space-md); margin-top:var(--space-md); }
-  html .hero-chart .legend > span:not(#z){ gap:var(--space-sm); font-size:12px; line-height:16px; font-weight:400; letter-spacing:0; color:var(--text-secondary); }
+  html .hero-chart .legend > span:not(#z){ gap:var(--space-sm); font-size:12px; line-height:16px; font-weight:500; letter-spacing:0; color:var(--text-secondary); }
 
   /* Add entry panel (229:18166): "Click to upload" is the Medium Action link, 16/20 with a 16px Upload icon (phones keep
      the Small link, 369:13388). */
@@ -92,7 +92,7 @@ html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
   html .breakdown-card #meters .meter-track:not(#z){ height:8px; margin-top:4px; }
   html .breakdown-card #meters .meter-amt:not(#z){ display:flex; align-items:center; line-height:16px; }
   html .breakdown-card #meters .meter-amt .money:not(#z){ display:inline-flex; align-items:center; gap:4px; color:var(--link-default); }
-  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; font-weight:400; letter-spacing:-0.28px; color:var(--link-default); }
+  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-sans); font-size:14px; line-height:16px; font-weight:500; letter-spacing:-0.28px; color:var(--link-default); }
   /* Last update (898:9193): text 14/16 link/disable, 12px Dot, the date, then a 16px € and the figure (link/default), 4 apart. */
   html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:var(--space-tn); }
   html .tracker-last-entry.is-phone .tle-dot:not(#z){ width:12px; height:12px; }
@@ -117,7 +117,7 @@ html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
   html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-md); }
   html .hero-chart #trend-chart:not(#z){ display:block; width:100%; }
   html .hero-chart.is-compact .legend:not(#z){ gap:var(--space-sm); margin-top:var(--space-md); }
-  html .hero-chart.is-compact .legend > span:not(#z){ gap:var(--space-tn); font-size:10px; line-height:10px; font-weight:400; letter-spacing:-0.2px; }
+  html .hero-chart.is-compact .legend > span:not(#z){ gap:var(--space-tn); font-size:10px; line-height:10px; font-weight:500; letter-spacing:-0.2px; }
 
   /* Create year modal (703:17437): the illustration 16 above the text. */
   html #year-modal .ds-modal-content:not(#z){ gap:var(--space-md); }

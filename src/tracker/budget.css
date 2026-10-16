@@ -25,7 +25,7 @@ html dialog.ds-modal:not(#z) .ds-modal-actions .btn-pill.tertiary[id$="-delete"]
 html dialog.ds-modal:not(#z) .ds-modal-em{ font-size:16px; line-height:20px; letter-spacing:-0.32px; color:var(--text-primary); }
 /* "Move items to (optional)" + its Info tooltip (4 apart); the bubble is surface/body, radius 16, padding 12, 12/14. */
 html dialog.ds-modal:not(#z) .fld-label-row{ display:inline-flex; align-items:center; gap:4px; }
-html dialog.ds-modal:not(#z) .fld-label-row .ds-info-tip-bubble{ background:var(--surface-body); border-radius:var(--radius-md); padding:12px; width:217px; font-size:12px; font-weight:400; line-height:14px; letter-spacing:-0.24px; color:var(--text-primary); box-shadow:var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16)) 0 4px 12px 0; text-align:left; }
+html dialog.ds-modal:not(#z) .fld-label-row .ds-info-tip-bubble{ background:var(--surface-body); border-radius:var(--radius-md); padding:12px; width:217px; font-size:12px; font-weight:500; line-height:14px; letter-spacing:-0.24px; color:var(--text-primary); box-shadow:var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16)) 0 4px 12px 0; text-align:left; }
 
 /* ---- Budget panel top (232:5852): Segments, 16, Sub-category | Group (16 apart; stacked on phones), 40 to the items.
    A field: label 14/16, 8, Dropdown 48, 8, "Edit sub-category" (Small, 16 icon). ---- */

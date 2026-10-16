@@ -229,122 +229,129 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "Inter_600SemiBold",
     "fontSize": 32
+  },
+  "Value2XL": {
+    "fontFamily": "MartianMono_400Regular",
+    "fontSize": 48,
+    "lineHeight": 40
   },
   "ValueXL": {
-    "fontFamily": "DMSans_400Regular",
-    "fontSize": 32
+    "fontFamily": "MartianMono_400Regular",
+    "fontSize": 32,
+    "lineHeight": 26
   },
   "ValueLarge": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 16
   },
   "ValueMedium": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 14,
     "letterSpacing": -0.56
   },
   "ValueSmall": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 12,
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 24
   },
   "HeadingLarge": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 20,
     "letterSpacing": -0.4
   },
   "HeadingMedium": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "HeadingSmall": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 14,
     "letterSpacing": -0.28
   },
   "BodyLargeMedium": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "BodyLargeSemiBold": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "Inter_600SemiBold",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "BodyMediumRegular": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 14,
+    "lineHeight": 16,
     "letterSpacing": -0.28
   },
   "BodyMediumMedium": {
-    "fontFamily": "DMSans_400Regular",
-    "fontSize": 14,
-    "letterSpacing": -0.28
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 14
   },
   "BodyMediumSemiBold": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "Inter_600SemiBold",
     "fontSize": 14,
     "letterSpacing": -0.28
   },
   "BodySmallRegular": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 12,
+    "lineHeight": 14,
     "letterSpacing": -0.24
   },
   "BodySmallMedium": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 12,
     "letterSpacing": -0.24
   },
   "BodySmallSemiBold": {
-    "fontFamily": "DMSans_600SemiBold",
+    "fontFamily": "Inter_600SemiBold",
     "fontSize": 12,
     "letterSpacing": -0.24
   },
   "BadgeSemiBolt": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 8,
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 18,
     "letterSpacing": -0.36
   },
   "LabelMedium": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "LabelSmall": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "LabelTiny": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 14,
     "letterSpacing": -0.28
   },
   "LabelMicro": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 12,
     "letterSpacing": -0.24
   },
   "LabelNano": {
-    "fontFamily": "DMSans_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 10,
     "letterSpacing": -0.2
   }

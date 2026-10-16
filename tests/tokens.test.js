@@ -26,7 +26,7 @@ test('every Figma variable is in :root with the same value (aliases as var() to 
     if (collection === 'TextStyles') {
       for (const [name, s] of Object.entries(vars)) {
         const k = '--type-' + kebab(name);
-        const want = { size: s.sizeVar ? `var(${cssName('Surface', s.sizeVar)})` : s.size + 'px', weight: String(Number(s.weight) === 500 ? 400 : s.weight), /* Figma Medium (500) = 400 in code (Felipe, Oct 3) */ lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
+        const want = { size: s.sizeVar ? `var(${cssName('Surface', s.sizeVar)})` : s.size + 'px', weight: String(s.family === 'mono' && Number(s.weight) === 500 ? 400 : s.weight), /* Inter keeps Figma's weights; Martian Mono Medium (500) = 400 (Oct 3) */ lh: s.lhVar ? `var(${cssName('Surface', s.lhVar)})` : s.lineHeight ? s.lineHeight + 'px' : 'normal', ls: s.letterSpacing ? s.letterSpacing / 100 + 'em' : '0' };
         for (const [p, v] of Object.entries(want)) assert.equal(decl[`${k}-${p}`], v, `${k}-${p}: code has ${decl[`${k}-${p}`]}, Figma ${name} has ${v}`);
       }
       continue;

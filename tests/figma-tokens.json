@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 12 October 2026 (re-checked against Figma; border/tertiary dark, badge counter and surface/modal added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.json; inventory and source values are in tests/figma-audit.json. Legacy text-style names remain for compatible call sites. Figma Medium (500) maps to 400 by the existing app convention. Regenerate with scripts/sync-tokens.mjs, sync-theme.mjs and sync-tokens-native.mjs.",
+  "_note": "Okara Design System snapshot, 16 October 2026 (font/sans is now Inter; text styles re-read: weights, letter spacing, Value/2XL added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -201,7 +201,7 @@
     "opacity/background": 24
   },
   "Typography": {
-    "font/sans": "DM Sans",
+    "font/sans": "Inter",
     "font/mono": "Martian Mono"
   },
   "Surface": {
@@ -417,8 +417,9 @@
   "TextStyles": {
     "Display/Title": {
       "size": 40,
-      "weight": 600,
+      "weight": 500,
       "letterSpacing": 0,
+      "family": "sans",
       "sizeVar": "size/display-title",
       "lhVar": "lh/display-title"
     },
@@ -426,37 +427,51 @@
       "size": 32,
       "weight": 600,
       "letterSpacing": 0,
+      "family": "sans",
       "sizeVar": "size/value-xl",
       "lhVar": "lh/display-title"
+    },
+    "Value/2XL": {
+      "size": 48,
+      "weight": 500,
+      "letterSpacing": 0,
+      "family": "mono",
+      "lineHeight": 40
     },
     "Value/XL": {
       "size": 32,
       "weight": 500,
       "letterSpacing": 0,
-      "sizeVar": "size/value-xl"
+      "family": "mono",
+      "sizeVar": "size/value-xl",
+      "lineHeight": 26
     },
     "Value/Large": {
       "size": 16,
-      "weight": 500,
+      "weight": 400,
       "letterSpacing": 0,
+      "family": "mono",
       "sizeVar": "size/value-lg"
     },
     "Value/Medium": {
       "size": 14,
       "weight": 500,
       "letterSpacing": -4,
+      "family": "mono",
       "sizeVar": "size/value-md"
     },
     "Value/Small": {
       "size": 12,
-      "weight": 500,
+      "weight": 400,
       "letterSpacing": -4,
+      "family": "mono",
       "sizeVar": "size/value-sm"
     },
     "Heading/XL": {
       "size": 24,
       "weight": 500,
       "letterSpacing": 0,
+      "family": "sans",
       "sizeVar": "size/heading-xl",
       "lhVar": "lh/heading-xl"
     },
@@ -464,6 +479,7 @@
       "size": 20,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/heading-lg",
       "lhVar": "lh/heading-lg"
     },
@@ -471,6 +487,7 @@
       "size": 16,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/heading-md",
       "lhVar": "lh/heading-md"
     },
@@ -478,6 +495,7 @@
       "size": 14,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/heading-sm",
       "lhVar": "lh/heading-sm"
     },
@@ -485,6 +503,7 @@
       "size": 16,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium"
     },
@@ -492,6 +511,7 @@
       "size": 16,
       "weight": 600,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-semibold"
     },
@@ -499,13 +519,16 @@
       "size": 14,
       "weight": 400,
       "letterSpacing": -2,
+      "family": "sans",
+      "lineHeight": 16,
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
     },
     "Body/Medium/Medium": {
       "size": 14,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
+      "family": "sans",
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
     },
@@ -513,6 +536,7 @@
       "size": 14,
       "weight": 600,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
     },
@@ -520,6 +544,8 @@
       "size": 12,
       "weight": 400,
       "letterSpacing": -2,
+      "family": "sans",
+      "lineHeight": 14,
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-sm"
     },
@@ -527,6 +553,7 @@
       "size": 12,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-sm"
     },
@@ -534,6 +561,7 @@
       "size": 12,
       "weight": 600,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-sm"
     },
@@ -541,6 +569,7 @@
       "size": 8,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/badge",
       "lhVar": "lh/badge"
     },
@@ -548,12 +577,14 @@
       "size": 18,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "lhVar": "lh/body-lg-semibold"
     },
     "Label/Medium": {
       "size": 16,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/heading-lg"
     },
@@ -561,13 +592,15 @@
       "size": 16,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium"
     },
     "Label/Tiny": {
       "size": 14,
-      "weight": 500,
+      "weight": 400,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
     },
@@ -575,6 +608,7 @@
       "size": 12,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-md"
     },
@@ -582,6 +616,7 @@
       "size": 10,
       "weight": 500,
       "letterSpacing": -2,
+      "family": "sans",
       "lhVar": "lh/body-sm"
     }
   }

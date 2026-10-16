@@ -11,9 +11,10 @@ const outPath = new URL('../mobile/src/theme/tokens.ts', import.meta.url);
 
 export const camel = (s) => s.replace(/[/-]+([a-z0-9])/gi, (_, c) => c.toUpperCase());
 const strip = (name, prefix) => (name.startsWith(prefix + '/') ? name.slice(prefix.length + 1) : name);
-// DM Sans / Martian Mono static cuts shipped by @expo-google-fonts (one family name per weight in React Native).
+// Inter / Martian Mono static cuts shipped by @expo-google-fonts (one family name per weight in React Native).
+// Oct 16: the sans is Inter (was DM Sans).
 const FONT = {
-  sans: { 400: 'DMSans_400Regular', 500: 'DMSans_500Medium', 600: 'DMSans_600SemiBold' },
+  sans: { 400: 'Inter_400Regular', 500: 'Inter_500Medium', 600: 'Inter_600SemiBold' },
   mono: { 400: 'MartianMono_400Regular', 500: 'MartianMono_500Medium', 600: 'MartianMono_600SemiBold' },
 };
 
@@ -31,8 +32,9 @@ export function build(t) {
   const text = {};
   for (const [k, s] of Object.entries(t.TextStyles || {})) {
     const fam = FONT[s.family] || FONT.sans;
-    // Felipe (Oct 3): Figma's "Medium" (500) is drawn in the Regular (400) cut, as on the web.
-    const w = Number(s.weight) === 500 ? 400 : s.weight;
+    // Felipe (Oct 3): Figma's "Medium" (500) was drawn in the Regular (400) cut for DM Sans. Oct 16: Inter keeps its real
+    // weights; Martian Mono keeps the Oct 3 rule (same as scripts/sync-tokens.mjs).
+    const w = s.family === 'mono' && Number(s.weight) === 500 ? 400 : s.weight;
     const style = { fontFamily: fam[w] || fam[400], fontSize: s.size };
     if (s.lineHeight != null) style.lineHeight = s.lineHeight;
     if (s.letterSpacing) style.letterSpacing = Math.round(s.size * s.letterSpacing) / 100; // Figma % of font size -> points
