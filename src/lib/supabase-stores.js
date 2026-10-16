@@ -4,7 +4,18 @@
 // `sb` is a supabase-js client created with the SERVICE ROLE key, server-side only.
 
 /** @param {any} r */
-const ok = (r) => { if (r.error) throw new Error(`db: ${r.error.message}`); return r.data; };
+// A table or column the code needs but the database doesn't have (a migration in supabase/migrations wasn't run, or the
+// API's schema cache is stale) says so instead of "Something went wrong": code not_migrated passes safeError().
+const MISSING = new Set(['42P01', '42703', '42883', 'PGRST202', 'PGRST204', 'PGRST205']);
+const ok = (r) => {
+  if (!r.error) return r.data;
+  const e = /** @type {any} */ (new Error(`db: ${r.error.message}`));
+  if (MISSING.has(r.error.code) || /does not exist|schema cache/i.test(r.error.message || '')) {
+    e.code = 'not_migrated';
+    e.message = `The database is missing part of its setup (${String(r.error.message).slice(0, 90)}). Run the SQL files in supabase/migrations.`;
+  }
+  throw e;
+};
 
 /** @param {any} sb */
 export function supabaseStores(sb) {

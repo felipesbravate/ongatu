@@ -120,14 +120,33 @@ html .jb-danger-text:not(#z){ margin:0; font-size:var(--type-body-large-medium-s
 html .jb-danger-meta:not(#z) .ds-check{ margin-top:calc(var(--space-md) - var(--space-tn)); }
 html .jb-danger:not(#z) > .btn-pill{ flex:0 0 auto; }
 
-/* ---------- Share your board (994:40586): 480 wide, radius lg, 40 sides, the Floating shadow ---------- */
-html dialog#share-modal.ds-modal:not(#z){ width:480px; padding:0 0 var(--space-2xl); border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
-html #share-modal:not(#z) .ds-modal-header{ padding:var(--space-xs); }
-html #share-modal:not(#z) .ds-modal-body, html #share-modal:not(#z) .ds-modal-content{ gap:var(--space-lg); }
-html #share-modal:not(#z) .ds-modal-content{ padding:var(--space-xs) var(--space-2xl) 0; align-items:stretch; }
-html #share-modal:not(#z) .ds-modal-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
-html #share-modal:not(#z) .ds-modal-description{ font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
-html #share-modal:not(#z) .jb-sharing{ text-align:left; }
+/* ---------- Share your board (994:40586, re-measured Oct 16) ----------
+   480 wide, radius 24, Floating shadow, 40 bottom padding. Top-nav 64 (padding 8, X 48). Content: 8 top, 40 sides, sections
+   24 apart. Header: 12 top, the Share illustration 67x80, 12, title Heading/Large 16/20, 4, text Body/Large/Medium 14/16.
+   (Exact px: the Figma values are the Mobile-mode tokens, which on desktop would resolve smaller.) */
+html dialog#share-modal.ds-modal:not(#z){ width:480px; max-width:calc(100vw - 32px); min-height:0; padding:0 0 40px; gap:0; border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
+html #share-modal:not(#z) .ds-modal-header{ padding:8px; min-height:64px; box-sizing:border-box; }
+html #share-modal:not(#z) .ds-modal-body{ padding:0 40px; gap:0; }
+html #share-modal:not(#z) .ds-modal-content{ padding:8px 0 0; gap:24px; align-items:stretch; }
+html #share-modal:not(#z) .ds-modal-title-block{ display:flex; flex-direction:column; align-items:center; gap:12px; padding-top:12px; }
+html #share-modal:not(#z) .ds-modal-text{ gap:4px; margin-top:-12px; }
+html #share-modal:not(#z) .ds-modal-title{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+html #share-modal:not(#z) .ds-modal-description{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
+html #share-modal:not(#z) .jb-sharing{ text-align:left; padding:0; }
+
+/* Board sharing block (modal and the settings card), Figma values in px: input → CTA row 12; People heading → list 24;
+   rows 40 tall, 16 apart, no dividers; avatar 40 → name 8 → tag; access dropdown Tiny 120 x 32 (padding 8, 14/16). */
+html .jb-sharing:not(#z){ gap:24px; }
+html .jb-sharing-input:not(#z){ gap:12px; }
+html .jb-sharing-cta:not(#z){ gap:12px; }
+html .jb-sharing-cta:not(#z) .btn-pill{ min-width:80px; padding:7px 15px; gap:4px; }
+html .jb-people:not(#z){ gap:24px; }
+html .jb-people-list:not(#z), html .jb-people-list:not(#z) > li{ gap:16px; }
+html #share-modal .jb-people-list:not(#z) .ds-divider{ display:none; }
+html .jb-person:not(#z){ min-height:40px; gap:8px; }
+html .jb-person-user:not(#z){ gap:8px; }
+html .jb-tag:not(#z){ flex:0 0 auto; }
+html .jb-role-trigger:not(#z){ padding:7px; gap:8px; min-height:32px; }
 
 /* ---------- sheets (phones): the board-sheet look (8 from the edges, radius 44) ---------- */
 html dialog.jb-sheet:not(#z){
@@ -177,4 +196,30 @@ html .jb-join-modal-text:not(#z) p:first-child{ font-weight:600; }
   html dialog#share-modal.ds-modal:not(#z){ width:auto; margin:auto 8px 8px; border-radius:44px; max-height:calc(100dvh - 16px); }
   html #share-modal:not(#z) .ds-modal-content{ padding:var(--space-xs) var(--space-lg) 0; }
   html .jb-join:not(#z){ max-width:none; }
+}
+/* Share modal fine-tuning (Oct 16): the illustration frame is 80 tall in Figma; Copy link and Send invite keep 4 between icon and label. */
+html #share-modal:not(#z) .ds-modal-title-block > *{ height:80px; }
+html #share-modal:not(#z) .ds-modal-title-block svg{ height:80px; width:67px; }
+html .jb-sharing-cta:not(#z) .ds-action-link{ gap:4px; }
+
+/* Share your board on phones (sheet 994:52459, Oct 16): 8 from the edges, radius 44, border/secondary, 0 0 8 shadow,
+   40 bottom. Top-nav 80 (padding 16). Content 24 sides, sections 24 apart. Header: 16 top, illustration, 16, title
+   Heading/Large 20/24, 8, text 16/20. People heading 16/16, list 8 sides, rows 16 apart: avatar, 12, name 16/16 over the
+   email 14/16, tag (24, 14/16) on the right; the access dropdown (104 wide) 4 under, lined up with the name (52). */
+@media (max-width:640px){
+  html dialog#share-modal.ds-modal:not(#z){ width:auto; max-width:none; margin:auto 8px 8px; padding:0 0 40px; border:1px solid var(--border-secondary); border-radius:44px; box-shadow:0 0 8px rgba(22,21,15,.08); max-height:calc(100dvh - 16px); }
+  html #share-modal:not(#z) .ds-modal-header{ padding:16px; min-height:80px; }
+  html #share-modal:not(#z) .ds-modal-body{ padding:0 24px; }
+  html #share-modal:not(#z) .ds-modal-content{ padding:0; gap:24px; }
+  html #share-modal:not(#z) .ds-modal-title-block{ padding-top:16px; }
+  html #share-modal:not(#z) .ds-modal-text{ gap:8px; margin-top:-8px; }
+  html #share-modal:not(#z) .ds-modal-title{ font-size:20px; line-height:24px; letter-spacing:-0.4px; }
+  html #share-modal:not(#z) .ds-modal-description{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html #share-modal:not(#z) .jb-people-title{ font-size:16px; line-height:16px; letter-spacing:-0.32px; }
+  html #share-modal:not(#z) .jb-people-list{ padding:0 8px; gap:16px; }
+  html #share-modal:not(#z) .jb-person{ grid-template-columns:40px minmax(0,1fr) auto; column-gap:12px; row-gap:4px; }
+  html #share-modal:not(#z) .jb-person-name{ font-size:16px; line-height:16px; letter-spacing:-0.32px; }
+  html #share-modal:not(#z) .jb-person-email{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html #share-modal:not(#z) .jb-tag{ padding:0 8px; font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html #share-modal:not(#z) .jb-role{ width:104px; flex-basis:104px; justify-self:start; }
 }
