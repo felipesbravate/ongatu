@@ -618,6 +618,13 @@
       "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-sm"
+    },
+    "Body/Default/Regular": {
+      "size": 16,
+      "weight": 420,
+      "letterSpacing": 0,
+      "family": "sans",
+      "lineHeight": 20
     }
   }
 }

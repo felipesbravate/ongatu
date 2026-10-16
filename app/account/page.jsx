@@ -10,7 +10,7 @@ export default async function Page() {
   await headers();
   return (
     <>
-      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Martian+Mono:wght@300;400;500;600&display=swap" />
+      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Martian+Mono:wght@300;400;500;600&display=swap" />
       <Root view="account" />
     </>
   );

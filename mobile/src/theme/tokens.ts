@@ -345,6 +345,11 @@ export const text = {
   "LabelNano": {
     "fontFamily": "Geist_400Regular",
     "fontSize": 10
+  },
+  "BodyDefaultRegular": {
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 16,
+    "lineHeight": 20
   }
 } as const;
 

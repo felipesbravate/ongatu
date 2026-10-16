@@ -38,19 +38,30 @@ export function BoardSwitcher({ id = 'board-switcher', boards, onPick, onCreate,
   useEffect(() => {
     if (!mobile) return;
     const d = ref.current; if (!d) return;
-    if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
+    if (open) {
+      d.classList.remove('is-closing');
+      if (!d.open) {
+        d.showModal();
+        d.querySelector('.ds-bsw-title')?.focus({ preventScroll: true });
+      }
+      return;
+    }
+    if (!d.open) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { d.close(); return; }
+    d.classList.add('is-closing');
+    const timer = setTimeout(() => { d.classList.remove('is-closing'); d.close(); }, 200);
+    return () => clearTimeout(timer);
   }, [mobile, open]);
   if (!mobile && !open) return null;
   const titleId = id + '-title';
   const head = (
     <div className="ds-bsw-head">
       <div className="ds-bsw-title-row">
-        <h2 className="ds-bsw-title" id={titleId}>Your boards</h2>
-        {onSettings && <RoundButton icon={settings} size={mobile ? 'medium' : 'micro'} iconSize={mobile ? 24 : 16} id="board-settings" label="Board settings" onClick={onSettings} />}
+        <h2 className="ds-bsw-title" id={titleId} tabIndex={-1}>Your boards</h2>
+        {onSettings && <RoundButton icon={settings} size={mobile ? 'medium' : 'micro'} iconSize={20} id="board-settings" label="Board settings" onClick={onSettings} />}
       </div>
       {mobile
-        ? <RoundButton icon={x} iconSize={24} id={id + '-close'} label="Close" onClick={onClose} />
+        ? <RoundButton icon={x} iconSize={20} id={id + '-close'} label="Close" onClick={onClose} />
         : <button type="button" className="ds-bsw-collapse" id={id + '-close'} aria-label="Close board list" onClick={onClose}><Icon icon={chevronDown} size={12} /></button>}
     </div>
   );
@@ -60,7 +71,7 @@ export function BoardSwitcher({ id = 'board-switcher', boards, onPick, onCreate,
         {boards.map((b) => (
           <button key={b.id || 'personal'} type="button" role="menuitemradio" aria-checked={b.current ? 'true' : 'false'} id={'board-pick-' + (b.id || 'personal')}
             className={cx('ds-bsw-item', b.current && 'is-selected')} onClick={() => onPick && onPick(b.id || null)}>
-            <Icon icon={b.kind === 'joint' ? duo : user2} size={24} />
+            <Icon icon={b.kind === 'joint' ? duo : user2} size={20} />
             <span className="ds-bsw-name">{b.name}</span>
             {b.tag && <span className="ds-bsw-tag">{b.tag}</span>}
           </button>

@@ -371,6 +371,10 @@
     --type-label-nano-weight: 400;
     --type-label-nano-lh: var(--lh-body-sm);
     --type-label-nano-ls: 0;
+    --type-body-default-regular-size: 16px;
+    --type-body-default-regular-weight: 320;
+    --type-body-default-regular-lh: 20px;
+    --type-body-default-regular-ls: 0;
     /* @tokens:end */
 
     /* Screen layout spacing. Sept 29 (later): the Ongatu screens are rebound to Surface, so the layout follows the
@@ -4153,3 +4157,27 @@ html .ds-balance-hero .bh-euro svg{ display:block; }
 html .ds-balance-hero .bh-code:not(#z){ font-family:var(--font-mono); font-size:var(--size-value-xl); line-height:26px; }
 html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; width:100%; font-family:var(--font-mono); font-size:var(--type-value-small-size); line-height:normal; letter-spacing:-0.04em; color:var(--text-secondary); }
 html .ds-balance-hero .estimate-pill:not(#z){ margin:0; }
+
+/* October 17: page subtitles and board-sheet refinements.
+   Body/Default/Regular: Geist, variable weight 420, 16/20, no tracking (Okara). */
+
+html .app-sub:not(#z){
+  font-family:var(--font-sans);
+  font-size:var(--type-body-default-regular-size);
+  font-weight:var(--type-body-default-regular-weight);
+  line-height:var(--type-body-default-regular-lh);
+  letter-spacing:var(--type-body-default-regular-ls);
+}
+/* This card keeps 24px padding in both Surface modes. */
+html .card.hero-chart:not(#z){ padding:24px; }
+html[data-theme="dark"] #add-panel .doc-ic{ color:var(--text-white); }
+html .ds-bsw.is-card .ds-bsw-title-row .round-btn:not(#z){ padding:2px; }
+html .ds-bsw-title:focus{ outline:none; }
+html dialog.ds-bsw.is-sheet[open]:not(#z){ animation:ds-sheet-in .25s cubic-bezier(.2,0,0,1); }
+html dialog.ds-bsw.is-sheet::backdrop{ animation:ds-fade-in .2s cubic-bezier(.2,0,0,1); }
+html dialog.ds-bsw.is-sheet.is-closing:not(#z){ animation:ds-sheet-out .2s cubic-bezier(.4,0,1,1) both; pointer-events:none; }
+html dialog.ds-bsw.is-sheet.is-closing::backdrop{ animation:ds-fade-out .2s cubic-bezier(.4,0,1,1) both; }
+@media (prefers-reduced-motion:reduce){
+  html dialog.ds-bsw.is-sheet[open]:not(#z), html dialog.ds-bsw.is-sheet.is-closing:not(#z),
+  html dialog.ds-bsw.is-sheet::backdrop, html dialog.ds-bsw.is-sheet.is-closing::backdrop{ animation:none; }
+}
