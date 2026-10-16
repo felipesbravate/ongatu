@@ -229,11 +229,11 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 32
   },
   "Value2XL": {
@@ -261,99 +261,90 @@ export const text = {
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 24
   },
   "HeadingLarge": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 20,
-    "letterSpacing": -0.4
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 20
   },
   "HeadingMedium": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 16,
-    "letterSpacing": -0.32
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 16
   },
   "HeadingSmall": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 14,
-    "letterSpacing": -0.28
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 14
   },
   "BodyLargeMedium": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "BodyLargeSemiBold": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 16,
     "letterSpacing": -0.32
   },
   "BodyMediumRegular": {
-    "fontFamily": "Inter_300Light",
+    "fontFamily": "Geist_300Light",
     "fontSize": 14,
     "lineHeight": 16,
     "letterSpacing": -0.28
   },
   "BodyMediumMedium": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 14
   },
   "BodyMediumSemiBold": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 14,
     "letterSpacing": -0.28
   },
   "BodySmallRegular": {
-    "fontFamily": "Inter_300Light",
+    "fontFamily": "Geist_300Light",
     "fontSize": 12,
     "lineHeight": 14,
     "letterSpacing": -0.24
   },
   "BodySmallMedium": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 12,
     "letterSpacing": -0.24
   },
   "BodySmallSemiBold": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 12,
     "letterSpacing": -0.24
   },
   "BadgeSemiBolt": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 8,
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 18,
-    "letterSpacing": -0.36
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 18
   },
   "LabelMedium": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 16,
-    "letterSpacing": -0.32
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 16
   },
   "LabelSmall": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 16,
-    "letterSpacing": -0.32
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 16
   },
   "LabelTiny": {
-    "fontFamily": "Inter_300Light",
-    "fontSize": 14,
-    "letterSpacing": -0.28
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 14
   },
   "LabelMicro": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 12,
-    "letterSpacing": -0.24
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 12
   },
   "LabelNano": {
-    "fontFamily": "Inter_400Regular",
-    "fontSize": 10,
-    "letterSpacing": -0.2
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 10
   }
 } as const;
 

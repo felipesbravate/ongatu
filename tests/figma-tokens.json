@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 16 October 2026 (font/sans is now Inter; text styles re-read: weights, letter spacing, Value/2XL added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.",
+  "_note": "Okara Design System snapshot, 16 October 2026 (evening): font/sans is Geist; same-named text styles re-read (Display/Title-mobile Medium, Heading and Label tracking 0, Label/Tiny Medium). Body/*, Label/Default (was Label/Medium) and Badge/Medium (was Badge/SemiBolt) renames not applied yet. File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -201,7 +201,7 @@
     "opacity/background": 24
   },
   "Typography": {
-    "font/sans": "Inter",
+    "font/sans": "Geist",
     "font/mono": "Martian Mono"
   },
   "Surface": {
@@ -425,7 +425,7 @@
     },
     "Display/Title-mobile": {
       "size": 32,
-      "weight": 600,
+      "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/value-xl",
@@ -478,7 +478,7 @@
     "Heading/Large": {
       "size": 20,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-lg",
       "lhVar": "lh/heading-lg"
@@ -486,7 +486,7 @@
     "Heading/Medium": {
       "size": 16,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-md",
       "lhVar": "lh/heading-md"
@@ -494,7 +494,7 @@
     "Heading/Small": {
       "size": 14,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-sm",
       "lhVar": "lh/heading-sm"
@@ -576,14 +576,14 @@
     "Label/Large": {
       "size": 18,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-lg-semibold"
     },
     "Label/Medium": {
       "size": 16,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/heading-lg"
@@ -591,15 +591,15 @@
     "Label/Small": {
       "size": 16,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium"
     },
     "Label/Tiny": {
       "size": 14,
-      "weight": 400,
-      "letterSpacing": -2,
+      "weight": 500,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
@@ -607,7 +607,7 @@
     "Label/Micro": {
       "size": 12,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-md"
@@ -615,7 +615,7 @@
     "Label/Nano": {
       "size": 10,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-sm"
     }
