@@ -90,7 +90,7 @@ html .jb-role:not(#z) select{ position:absolute; opacity:0; width:1px; height:1p
 html .jb-role-trigger:not(#z){
   display:flex; align-items:center; gap:var(--space-xs); width:100%; padding:var(--space-xs); box-sizing:border-box; margin:0; cursor:pointer;
   border:1px solid var(--border-selected-item); border-radius:var(--radius-sm); background:transparent; color:var(--text-primary); text-align:left;
-  font:inherit; font-size:14px; font-weight:400; line-height:16px; letter-spacing:0;
+  font:inherit; font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px;
 }
 html .jb-role-trigger:not(#z) span{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 html .jb-role-trigger:not(#z) svg{ flex:0 0 auto; color:var(--icon-primary, var(--text-primary)); }
@@ -105,7 +105,7 @@ html .jb-role-menu:not(#z){
 html .jb-role-items:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); }
 html .jb-role-item:not(#z){
   display:flex; align-items:center; gap:var(--space-xs); width:100%; height:36px; padding:var(--space-xs); box-sizing:border-box; margin:0; border:0; border-radius:var(--radius-sm);
-  background:transparent; color:var(--text-primary); cursor:pointer; text-align:left; font:inherit; font-size:16px; font-weight:400; line-height:20px; letter-spacing:0;
+  background:transparent; color:var(--text-primary); cursor:pointer; text-align:left; font:inherit; font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px;
 }
 html .jb-role-item:not(#z):hover, html .jb-role-item:not(#z):focus-visible{ background:var(--surface-secondary); }
 html .jb-role-item.is-destructive:not(#z){ color:var(--action-destructive); }
@@ -130,8 +130,8 @@ html #share-modal:not(#z) .ds-modal-body{ padding:0 40px; gap:0; }
 html #share-modal:not(#z) .ds-modal-content{ padding:8px 0 0; gap:24px; align-items:stretch; }
 html #share-modal:not(#z) .ds-modal-title-block{ display:flex; flex-direction:column; align-items:center; gap:12px; padding-top:12px; }
 html #share-modal:not(#z) .ds-modal-text{ gap:4px; margin-top:-12px; }
-html #share-modal:not(#z) .ds-modal-title{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:0; }
-html #share-modal:not(#z) .ds-modal-description{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:0; }
+html #share-modal:not(#z) .ds-modal-title{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+html #share-modal:not(#z) .ds-modal-description{ font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
 html #share-modal:not(#z) .jb-sharing{ text-align:left; padding:0; }
 
 /* Board sharing block (modal and the settings card), Figma values in px: input → CTA row 12; People heading → list 24;
@@ -213,13 +213,13 @@ html .jb-sharing-cta:not(#z) .ds-action-link{ gap:4px; }
   html #share-modal:not(#z) .ds-modal-content{ padding:0; gap:24px; }
   html #share-modal:not(#z) .ds-modal-title-block{ padding-top:16px; }
   html #share-modal:not(#z) .ds-modal-text{ gap:8px; margin-top:-8px; }
-  html #share-modal:not(#z) .ds-modal-title{ font-size:20px; line-height:24px; letter-spacing:0; }
-  html #share-modal:not(#z) .ds-modal-description{ font-size:16px; line-height:20px; letter-spacing:0; }
-  html #share-modal:not(#z) .jb-people-title{ font-size:16px; line-height:16px; letter-spacing:0; }
+  html #share-modal:not(#z) .ds-modal-title{ font-size:20px; line-height:24px; letter-spacing:-0.4px; }
+  html #share-modal:not(#z) .ds-modal-description{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
+  html #share-modal:not(#z) .jb-people-title{ font-size:16px; line-height:16px; letter-spacing:-0.32px; }
   html #share-modal:not(#z) .jb-people-list{ padding:0 8px; gap:16px; }
   html #share-modal:not(#z) .jb-person{ grid-template-columns:40px minmax(0,1fr) auto; column-gap:12px; row-gap:4px; }
-  html #share-modal:not(#z) .jb-person-name{ font-size:16px; line-height:16px; letter-spacing:0; }
-  html #share-modal:not(#z) .jb-person-email{ font-size:14px; line-height:16px; letter-spacing:0; }
-  html #share-modal:not(#z) .jb-tag{ padding:0 8px; font-size:14px; line-height:16px; letter-spacing:0; }
+  html #share-modal:not(#z) .jb-person-name{ font-size:16px; line-height:16px; letter-spacing:-0.32px; }
+  html #share-modal:not(#z) .jb-person-email{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
+  html #share-modal:not(#z) .jb-tag{ padding:0 8px; font-size:14px; line-height:16px; letter-spacing:-0.28px; }
   html #share-modal:not(#z) .jb-role{ width:104px; flex-basis:104px; justify-self:start; }
 }

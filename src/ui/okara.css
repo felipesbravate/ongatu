@@ -290,11 +290,11 @@
     --type-value-medium-size: var(--size-value-md);
     --type-value-medium-weight: 300;
     --type-value-medium-lh: normal;
-    --type-value-medium-ls: 0;
+    --type-value-medium-ls: -0.04em;
     --type-value-small-size: var(--size-value-sm);
     --type-value-small-weight: 300;
     --type-value-small-lh: normal;
-    --type-value-small-ls: 0;
+    --type-value-small-ls: -0.04em;
     --type-heading-xl-size: var(--size-heading-xl);
     --type-heading-xl-weight: 400;
     --type-heading-xl-lh: var(--lh-heading-xl);
@@ -302,27 +302,27 @@
     --type-heading-large-size: var(--size-heading-lg);
     --type-heading-large-weight: 400;
     --type-heading-large-lh: var(--lh-heading-lg);
-    --type-heading-large-ls: 0;
+    --type-heading-large-ls: -0.02em;
     --type-heading-medium-size: var(--size-heading-md);
     --type-heading-medium-weight: 400;
     --type-heading-medium-lh: var(--lh-heading-md);
-    --type-heading-medium-ls: 0;
+    --type-heading-medium-ls: -0.02em;
     --type-heading-small-size: var(--size-heading-sm);
     --type-heading-small-weight: 400;
     --type-heading-small-lh: var(--lh-heading-sm);
-    --type-heading-small-ls: 0;
+    --type-heading-small-ls: -0.02em;
     --type-body-large-medium-size: var(--size-body-lg);
     --type-body-large-medium-weight: 400;
     --type-body-large-medium-lh: var(--lh-body-lg-medium);
-    --type-body-large-medium-ls: 0;
+    --type-body-large-medium-ls: -0.02em;
     --type-body-large-semibold-size: var(--size-body-lg);
     --type-body-large-semibold-weight: 500;
     --type-body-large-semibold-lh: var(--lh-body-lg-semibold);
-    --type-body-large-semibold-ls: 0;
+    --type-body-large-semibold-ls: -0.02em;
     --type-body-medium-regular-size: var(--size-body-md);
     --type-body-medium-regular-weight: 300;
     --type-body-medium-regular-lh: var(--lh-body-md);
-    --type-body-medium-regular-ls: 0;
+    --type-body-medium-regular-ls: -0.02em;
     --type-body-medium-medium-size: var(--size-body-md);
     --type-body-medium-medium-weight: 400;
     --type-body-medium-medium-lh: var(--lh-body-md);
@@ -330,47 +330,47 @@
     --type-body-medium-semibold-size: var(--size-body-md);
     --type-body-medium-semibold-weight: 500;
     --type-body-medium-semibold-lh: var(--lh-body-md);
-    --type-body-medium-semibold-ls: 0;
+    --type-body-medium-semibold-ls: -0.02em;
     --type-body-small-regular-size: var(--size-body-sm);
     --type-body-small-regular-weight: 300;
     --type-body-small-regular-lh: var(--lh-body-sm);
-    --type-body-small-regular-ls: 0;
+    --type-body-small-regular-ls: -0.02em;
     --type-body-small-medium-size: var(--size-body-sm);
     --type-body-small-medium-weight: 400;
     --type-body-small-medium-lh: var(--lh-body-sm);
-    --type-body-small-medium-ls: 0;
+    --type-body-small-medium-ls: -0.02em;
     --type-body-small-semibold-size: var(--size-body-sm);
     --type-body-small-semibold-weight: 500;
     --type-body-small-semibold-lh: var(--lh-body-sm);
-    --type-body-small-semibold-ls: 0;
+    --type-body-small-semibold-ls: -0.02em;
     --type-badge-semibolt-size: var(--size-badge);
     --type-badge-semibolt-weight: 400;
     --type-badge-semibolt-lh: var(--lh-badge);
-    --type-badge-semibolt-ls: 0;
+    --type-badge-semibolt-ls: -0.02em;
     --type-label-large-size: 18px;
     --type-label-large-weight: 400;
     --type-label-large-lh: var(--lh-body-lg-semibold);
-    --type-label-large-ls: 0;
+    --type-label-large-ls: -0.02em;
     --type-label-medium-size: var(--size-body-lg);
     --type-label-medium-weight: 400;
     --type-label-medium-lh: var(--lh-heading-lg);
-    --type-label-medium-ls: 0;
+    --type-label-medium-ls: -0.02em;
     --type-label-small-size: var(--size-body-lg);
     --type-label-small-weight: 400;
     --type-label-small-lh: var(--lh-body-lg-medium);
-    --type-label-small-ls: 0;
+    --type-label-small-ls: -0.02em;
     --type-label-tiny-size: var(--size-body-md);
     --type-label-tiny-weight: 300;
     --type-label-tiny-lh: var(--lh-body-md);
-    --type-label-tiny-ls: 0;
+    --type-label-tiny-ls: -0.02em;
     --type-label-micro-size: var(--size-body-sm);
     --type-label-micro-weight: 400;
     --type-label-micro-lh: var(--lh-body-md);
-    --type-label-micro-ls: 0;
+    --type-label-micro-ls: -0.02em;
     --type-label-nano-size: 10px;
     --type-label-nano-weight: 400;
     --type-label-nano-lh: var(--lh-body-sm);
-    --type-label-nano-ls: 0;
+    --type-label-nano-ls: -0.02em;
     /* @tokens:end */
 
     /* Screen layout spacing. Sept 29 (later): the Ongatu screens are rebound to Surface, so the layout follows the
@@ -1835,7 +1835,7 @@
   .ds-mnav-item svg{ display:block; flex-shrink:0; }
   .ds-mnav-item:focus-visible, .ds-mnav-action .round-btn:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
   .ds-mnav-img{ width:24px; height:24px; border-radius:var(--radius-full); object-fit:cover; display:block; flex-shrink:0; }
-  .ds-mnav-label{ font-size:var(--type-label-tiny-size); font-weight:500; line-height:var(--type-label-tiny-lh); letter-spacing:0; white-space:nowrap; }
+  .ds-mnav-label{ font-size:var(--type-label-tiny-size); font-weight:500; line-height:var(--type-label-tiny-lh); letter-spacing:-0.02em; white-space:nowrap; }
   .ds-mnav-action{ position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); display:flex; }
   /* The Add action is a 48px primary Round button in the nav (DS 378:673), not the 40px Medium size. */
   .ds-mnav-action .round-btn{ width:48px; height:48px; }
@@ -2723,7 +2723,7 @@
      action/secondary text. */
   .seg-tabs, .seg-tabs.sub{ display:flex; flex-wrap:nowrap; width:fit-content; height:auto; box-sizing:border-box; gap:var(--space-xs); padding:var(--space-tn); border-radius:var(--radius-sm); background:var(--surface-secondary); }
   .seg-tabs button, .seg-tabs.sub button{ height:auto; min-height:0; min-width:0; box-sizing:border-box; border:none; border-radius:var(--radius-sm); background:transparent; color:var(--text-secondary);
-    font-size:var(--size-body-md); font-weight:400; line-height:20px; letter-spacing:0; white-space:nowrap; }
+    font-size:var(--size-body-md); font-weight:400; line-height:20px; letter-spacing:-0.02em; white-space:nowrap; }
   .seg-tabs button{ padding:8px var(--space-xs); }
   .seg-tabs.sub button{ padding:var(--space-tn) var(--space-xs); }
   .seg-tabs button:hover{ background:var(--action-secondary-hover); color:var(--text-primary); }
@@ -2985,7 +2985,7 @@
      Value/Small 12, Mobile tokens); Editing = Tiny input with a 12px € and Value/Small. Items xs apart, 24 high. */
   .bd-row{ min-height:24px; gap:var(--space-xs); }
   .bd-row .bd-item-name{ color:var(--text-secondary); font-size:var(--type-body-large-medium-size); font-weight:var(--type-body-large-medium-weight); line-height:var(--type-body-large-medium-lh); letter-spacing:var(--type-body-large-medium-ls); }
-  .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:0; }
+  .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
   .bd-row .n .money, .bd-row .bd-value{ gap:var(--space-tn); }
   /* Oct 3 (third pass): the newest screens (581:19517 Tracker, 232:5851 / 232:5853 Year budget) draw Surface=Mobile rows on
      desktop too, so the Desktop sizes above are no longer applied. */
@@ -3256,7 +3256,7 @@
   .budget-panel .budget-filters > .span-2:has(> .ds-action-link), .budget-panel .budget-group > div:has(> .budget-group-add),
   .budget-panel .budget-type-section > div:has(> .ds-action-link){ display:flex; }
   /* Tracker rows (581:19517): the figure is a Medium Action link (link/default; hover underlined). */
-  .bd-row .bd-amount-link{ display:inline-flex; align-items:center; flex:none; padding:0; border:0; background:none; cursor:pointer; color:var(--link-default); font-family:var(--font-mono); font-size:14px; letter-spacing:0; }
+  .bd-row .bd-amount-link{ display:inline-flex; align-items:center; flex:none; padding:0; border:0; background:none; cursor:pointer; color:var(--link-default); font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
   .bd-row .bd-amount-link .money-ic{ color:currentColor; }
   .bd-row .bd-amount-link:hover{ color:var(--link-hover); text-decoration:underline; text-underline-offset:3px; }
   .bd-row .bd-amount-link:focus-visible{ outline:2px solid var(--border-focus, var(--link-default)); outline-offset:2px; border-radius:4px; }
@@ -3281,10 +3281,10 @@
   /* Upload box: "Click to upload" 14/16 link/default (desktop: Medium link, 20px icon, 2 apart, 2 above and below; phones:
      Small link, 16px icon, 4 apart, 4 above and below), "or drag and drop your file here" 14/16 SemiBold text/primary,
      the hint 12/14 text/secondary centred. Desktop: line and hint 2 apart; phones: touching. */
-  #add-panel .dz-line{ flex-wrap:nowrap; gap:2px; font-size:14px; line-height:16px; font-weight:500; letter-spacing:0; color:var(--text-primary); }
-  #add-panel .dz-line .ds-action-link{ padding:2px 0; gap:2px; font-size:14px; line-height:16px; font-weight:400; letter-spacing:0; color:var(--link-default); }
+  #add-panel .dz-line{ flex-wrap:nowrap; gap:2px; font-size:14px; line-height:16px; font-weight:500; letter-spacing:-0.28px; color:var(--text-primary); }
+  #add-panel .dz-line .ds-action-link{ padding:2px 0; gap:2px; font-size:14px; line-height:16px; font-weight:400; letter-spacing:-0.28px; color:var(--link-default); }
   #add-panel .dz-text{ gap:2px; }
-  #add-panel .dz-hint{ font-size:12px; line-height:14px; font-weight:400; letter-spacing:0; color:var(--text-secondary); }
+  #add-panel .dz-hint{ font-size:12px; line-height:14px; font-weight:400; letter-spacing:-0.24px; color:var(--text-secondary); }
   @media (max-width:640px){
     #add-panel .dz-line{ gap:4px; }
     #add-panel .dz-line .ds-action-link{ padding:4px 0; gap:4px; }
@@ -3330,7 +3330,7 @@
     #add-panel #entry-group-field{ margin-left:2px; }
     #add-panel .add-grid > .span-2:has(#entry-add-type){ display:flex; margin-top:-4px; }
     #add-panel .ap-manual .add-actions{ justify-content:flex-end; }
-    #add-panel .ds-input input, .budget-panel .ds-input input{ font-size:14px; letter-spacing:0; }
+    #add-panel .ds-input input, .budget-panel .ds-input input{ font-size:14px; letter-spacing:-0.28px; }
     #add-panel .ds-input.is-value input{ font-size:14px; letter-spacing:0; }
   }
   @media (max-width:640px){
@@ -3435,8 +3435,8 @@
      One block that wins over the earlier passes. Rebuilding okara.css per component is still pending. */
 
   /* D2: Input. Desktop screens override it to radius 6, 12px sides, Body/Large 14/18; phones keep radius 8, 16px, 16/22. Not pinned (D1). */
-  .ds-input:not(.tiny):not(.small):not(#z){ min-height:48px; border-radius:var(--radius-sm); /* Oct 12: Figma 918:1064 is radius/sm 8 */ padding:0 11px; font-size:var(--size-body-lg); line-height:18px; letter-spacing:0; }
-  .ds-input:not(.tiny):not(.small) input:not(#z){ font-size:var(--size-body-lg); line-height:18px; letter-spacing:0; }
+  .ds-input:not(.tiny):not(.small):not(#z){ min-height:48px; border-radius:var(--radius-sm); /* Oct 12: Figma 918:1064 is radius/sm 8 */ padding:0 11px; font-size:var(--size-body-lg); line-height:18px; letter-spacing:-0.02em; }
+  .ds-input:not(.tiny):not(.small) input:not(#z){ font-size:var(--size-body-lg); line-height:18px; letter-spacing:-0.02em; }
   .ds-input.is-value:not(.tiny):not(.small) input:not(#z){ font-family:var(--font-mono); font-size:var(--size-value-lg); letter-spacing:0; }
   @media (max-width:640px){
     .ds-input:not(.tiny):not(.small):not(#z){ border-radius:var(--radius-sm); padding:0 15px; line-height:22px; }
@@ -3454,13 +3454,13 @@
 
   /* Main page (211:18753 / 342:7993). */
   .month-btn.estimated:not([aria-pressed="true"]):not(#z){ background:var(--surface-secondary); color:var(--text-secondary); border:none; }
-  .alloc-name:not(#z){ font-size:var(--size-label-default); line-height:var(--lh-label-default); font-weight:500; letter-spacing:0; color:var(--text-muted); }
+  .alloc-name:not(#z){ font-size:var(--size-label-default); line-height:var(--lh-label-default); font-weight:500; letter-spacing:-0.02em; color:var(--text-muted); }
   .legend:not(#z), .legend:not(#z) span{ font-size:var(--size-body-md); line-height:normal; font-weight:400; color:var(--text-secondary); }
   #tracker-menu-btn:not(.x){ width:40px; height:40px; }
   .seg-tabs:not(#z) button{ letter-spacing:0; }
   @media (max-width:640px){
     .hero-chart.is-compact .legend:not(#z), .hero-chart.is-compact .legend:not(#z) span{ font-size:var(--size-label-tiny); line-height:var(--lh-label-tiny); font-weight:500; }
-    .bd-block-title:not(#z){ font-size:var(--size-heading-md); line-height:var(--lh-heading-md); font-weight:400; letter-spacing:0; }
+    .bd-block-title:not(#z){ font-size:var(--size-heading-md); line-height:var(--lh-heading-md); font-weight:400; letter-spacing:-0.02em; }
     #breakdown-top-seg:not(.x){ padding:2px; gap:4px; }
     #mnav-add:not(.x){ width:48px; height:48px; }
   }
@@ -3693,7 +3693,7 @@
 .note-count:not(.is-icon){
   min-width:22px; border:1px solid var(--border-default); background:transparent;
   color:var(--text-primary); font-family:var(--font-mono); font-size:10px;
-  font-weight:300; line-height:normal; letter-spacing:0;
+  font-weight:300; line-height:normal; letter-spacing:-.4px;
 }
 .note-count:not(.is-icon):hover{ background:var(--action-secondary-hover); border-color:var(--border-hover); }
 .note-count:not(.is-icon):active, .note-count:not(.is-icon).is-open{
@@ -3711,14 +3711,14 @@
 }
 .tracker-last-entry .tle-text{
   display:flex; min-width:0; flex:0 1 auto;
-  font-family:var(--font-sans, inherit); font-size:14px; font-weight:400; line-height:16px; letter-spacing:0;
+  font-family:var(--font-sans, inherit); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px;
 }
 .tracker-last-entry .tle-route{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
 .tracker-last-entry .tle-date, .tracker-last-entry .tle-num{ flex:none; }
 .tracker-last-entry .tle-dot{ width:10px; height:10px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
 .tracker-last-entry .tle-dot i{ width:3.33px; height:3.33px; border-radius:50%; background:currentColor; }
 .tracker-last-entry .tle-num{
-  font-family:var(--font-mono); font-size:12px; font-weight:300; line-height:normal; letter-spacing:0;
+  font-family:var(--font-mono); font-size:12px; font-weight:300; line-height:normal; letter-spacing:-0.48px;
 }
 
 /* A single selection layer persists as Home and Account change. */
@@ -3780,20 +3780,20 @@ html #note-tip .tip-item{ gap:var(--space-xs); min-height:24px; }
 html #note-tip .tip-left{ gap:var(--space-xs); align-items:center; }
 html #note-tip .tip-right{ gap:var(--space-xs); }
 html #note-tip .tip-dot::before{ background:var(--action-disable); }
-html #note-tip .tip-name{ font-size:var(--size-body-lg); font-weight:400; line-height:var(--lh-body-lg-medium); letter-spacing:0; color:var(--badge-counter-text); }
+html #note-tip .tip-name{ font-size:var(--size-body-lg); font-weight:400; line-height:var(--lh-body-lg-medium); letter-spacing:-0.02em; color:var(--badge-counter-text); }
 html #note-tip .tip-item.sub .tip-name{ font-weight:400; }
-html #note-tip .tip-date{ font-size:var(--size-body-md); font-weight:var(--type-label-tiny-weight); /* Label/Tiny Regular (Oct 16) */ line-height:var(--lh-body-md); letter-spacing:0; color:var(--badge-counter-text-secondary); }
-html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:300; line-height:normal; letter-spacing:0; color:var(--badge-counter-text); }
+html #note-tip .tip-date{ font-size:var(--size-body-md); font-weight:var(--type-label-tiny-weight); /* Label/Tiny Regular (Oct 16) */ line-height:var(--lh-body-md); letter-spacing:-0.02em; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:300; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text); }
 html #note-tip .tip-amount .money{ gap:4px; align-items:center; }
 html #note-tip .tip-amount .money-ic, html #note-tip .tip-amount .money-ic svg{ color:var(--badge-counter-pressed-icon); }
 html #note-tip .tip-del, html #note-tip .tip-del svg{ color:var(--badge-counter-close-icon); }
 html #note-tip .tip-head{ gap:10px; padding-right:0; }
-html #note-tip .tip-head-label{ font-size:var(--size-body-md); font-weight:500; line-height:var(--lh-body-md); letter-spacing:0; color:var(--badge-counter-text-secondary); }
-html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:300; line-height:normal; letter-spacing:0; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-head-label{ font-size:var(--size-body-md); font-weight:500; line-height:var(--lh-body-md); letter-spacing:-0.02em; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:300; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-amount .money{ gap:0; align-items:center; }
 html #note-tip .tip-head-amount .money-ic, html #note-tip .tip-head-amount .money-ic svg{ color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--badge-counter-divider); margin:var(--space-md) 0; }
-html #note-tip .tip-empty{ font-size:var(--size-body-md); font-weight:400; line-height:var(--lh-body-md); letter-spacing:0; color:var(--text-white); }
+html #note-tip .tip-empty{ font-size:var(--size-body-md); font-weight:400; line-height:var(--lh-body-md); letter-spacing:-0.02em; color:var(--text-white); }
 /* Entry counter (146:5252), Oct 9: 14 high, padding 0 space/tn: 2 on desktop, 4 on phones (set in px: the Tracker rows pin the Mobile spacing); the number in text/secondary;
    Pressed: badge/counter-pressed-background (+ border) with the number or the Chart icon in counter-pressed-text/icon. */
 html .note-count:not(.is-icon){ padding:0 2px; color:var(--text-secondary); }
@@ -3830,9 +3830,9 @@ html .is-trend svg.trend-flat, html .ticker-item .ti-delta svg.trend-flat{ color
   html .ticker-strip .ticker-item > *:not(#z){ margin:0; }
   html .ticker-strip .ti-top{ display:flex; align-items:center; gap:8px; }
   html .ticker-strip .ti-dot:not(#z){ width:20px; height:20px; min-width:20px; font-size:12px; line-height:16px; color:#fff; }
-  html .ticker-strip .ti-name:not(#z){ font-size:16px; font-weight:400; line-height:16px; letter-spacing:0; color:var(--text-primary); }
+  html .ticker-strip .ti-name:not(#z){ font-size:16px; font-weight:400; line-height:16px; letter-spacing:-0.32px; color:var(--text-primary); }
   html .ticker-strip .ti-val:not(#z){ font-family:var(--font-mono); font-size:16px; font-weight:300; line-height:16px; letter-spacing:0; }
-  html .ticker-strip .ti-delta:not(#z){ gap:4px; font-size:12px; line-height:14px; letter-spacing:0; white-space:nowrap; }
+  html .ticker-strip .ti-delta:not(#z){ gap:4px; font-size:12px; line-height:14px; letter-spacing:-0.48px; white-space:nowrap; }
 }
 html .mini-kpi{ min-width:0; }
 html .is-trend .trend-change{ white-space:normal; }
@@ -3856,7 +3856,7 @@ html .board-sub-meta{ color:var(--text-secondary); }
 
 /* /join */
 html .join-page .join-card:not(#z){ gap:16px; }
-html .join-page .join-text{ margin:0; text-align:center; font-size:16px; line-height:20px; letter-spacing:0; color:var(--text-primary); }
+html .join-page .join-text{ margin:0; text-align:center; font-size:16px; line-height:20px; letter-spacing:-0.32px; color:var(--text-primary); }
 html .join-page .join-loading{ display:flex; flex-direction:column; align-items:center; gap:16px; padding:24px 0; }
 
 /* ===== Okara DS alignment, 12 Oct 2026 (Figma 7glNMA9d7iVJFf2CvyrzAb, re-read per component with use_figma).
@@ -4127,7 +4127,7 @@ html .ds-avatar.s28:not(#z){ width:28px; height:28px; min-width:28px; }
    padding 4/8, min-width 48, radius full, Body/Small 12/16 -2% in text/primary. The item is 12 between content and CTAs. */
 html .ds-notif-item:has(.ds-notif-ctas):not(#z){ gap:var(--space-sm); }
 .ds-notif-ctas{ display:flex; align-items:center; gap:4px; }
-.ds-notif-cta{ display:inline-flex; align-items:center; justify-content:center; min-width:48px; padding:4px 8px; border:1px solid transparent; border-radius:var(--radius-full); background:transparent; color:var(--text-primary); font:inherit; font-size:12px; line-height:16px; font-weight:400; letter-spacing:0; cursor:pointer; }
+.ds-notif-cta{ display:inline-flex; align-items:center; justify-content:center; min-width:48px; padding:4px 8px; border:1px solid transparent; border-radius:var(--radius-full); background:transparent; color:var(--text-primary); font:inherit; font-size:12px; line-height:16px; font-weight:400; letter-spacing:-0.24px; cursor:pointer; }
 .ds-notif-cta.is-outline{ border-color:var(--border-tertiary); }
 .ds-notif-cta:hover:not(:disabled){ background:var(--action-secondary-hover); }
 .ds-notif-cta:active:not(:disabled){ background:var(--action-tertiary-press); }
@@ -4151,5 +4151,5 @@ html .ds-balance-hero .bh-cents:not(#z){ font-size:var(--size-value-xl); line-he
 html .ds-balance-hero .bh-euro:not(#z){ display:flex; color:var(--text-accent); }
 html .ds-balance-hero .bh-euro svg{ display:block; }
 html .ds-balance-hero .bh-code:not(#z){ font-family:var(--font-mono); font-size:var(--size-value-xl); line-height:26px; }
-html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; width:100%; font-family:var(--font-mono); font-size:var(--type-value-small-size); line-height:normal; letter-spacing:0; color:var(--text-secondary); }
+html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; width:100%; font-family:var(--font-mono); font-size:var(--type-value-small-size); line-height:normal; letter-spacing:-0.04em; color:var(--text-secondary); }
 html .ds-balance-hero .estimate-pill:not(#z){ margin:0; }

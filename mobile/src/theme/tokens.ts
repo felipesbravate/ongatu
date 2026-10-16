@@ -252,11 +252,13 @@ export const text = {
   },
   "ValueMedium": {
     "fontFamily": "MartianMono_300Light",
-    "fontSize": 14
+    "fontSize": 14,
+    "letterSpacing": -0.56
   },
   "ValueSmall": {
     "fontFamily": "MartianMono_300Light",
-    "fontSize": 12
+    "fontSize": 12,
+    "letterSpacing": -0.48
   },
   "HeadingXL": {
     "fontFamily": "Inter_400Regular",
@@ -264,28 +266,34 @@ export const text = {
   },
   "HeadingLarge": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 20
+    "fontSize": 20,
+    "letterSpacing": -0.4
   },
   "HeadingMedium": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 16
+    "fontSize": 16,
+    "letterSpacing": -0.32
   },
   "HeadingSmall": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 14
+    "fontSize": 14,
+    "letterSpacing": -0.28
   },
   "BodyLargeMedium": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 16
+    "fontSize": 16,
+    "letterSpacing": -0.32
   },
   "BodyLargeSemiBold": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 16
+    "fontSize": 16,
+    "letterSpacing": -0.32
   },
   "BodyMediumRegular": {
     "fontFamily": "Inter_300Light",
     "fontSize": 14,
-    "lineHeight": 16
+    "lineHeight": 16,
+    "letterSpacing": -0.28
   },
   "BodyMediumMedium": {
     "fontFamily": "Inter_400Regular",
@@ -293,48 +301,59 @@ export const text = {
   },
   "BodyMediumSemiBold": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 14
+    "fontSize": 14,
+    "letterSpacing": -0.28
   },
   "BodySmallRegular": {
     "fontFamily": "Inter_300Light",
     "fontSize": 12,
-    "lineHeight": 14
+    "lineHeight": 14,
+    "letterSpacing": -0.24
   },
   "BodySmallMedium": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 12
+    "fontSize": 12,
+    "letterSpacing": -0.24
   },
   "BodySmallSemiBold": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 12
+    "fontSize": 12,
+    "letterSpacing": -0.24
   },
   "BadgeSemiBolt": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 8
+    "fontSize": 8,
+    "letterSpacing": -0.16
   },
   "LabelLarge": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 18
+    "fontSize": 18,
+    "letterSpacing": -0.36
   },
   "LabelMedium": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 16
+    "fontSize": 16,
+    "letterSpacing": -0.32
   },
   "LabelSmall": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 16
+    "fontSize": 16,
+    "letterSpacing": -0.32
   },
   "LabelTiny": {
     "fontFamily": "Inter_300Light",
-    "fontSize": 14
+    "fontSize": 14,
+    "letterSpacing": -0.28
   },
   "LabelMicro": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 12
+    "fontSize": 12,
+    "letterSpacing": -0.24
   },
   "LabelNano": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 10
+    "fontSize": 10,
+    "letterSpacing": -0.2
   }
 } as const;
 

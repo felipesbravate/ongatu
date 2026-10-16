@@ -7,6 +7,6 @@
 .ct-row{display:flex;gap:8px;align-items:center;padding:8px 0}
 .ct-row span{margin-right:auto}
 .ct-dialog-title{font-size:16px;font-weight:400;line-height:1.2;margin:0 0 8px}
-.ct-dialog-text{font-size:14px;font-weight:400;line-height:15.2px;letter-spacing:0;color:var(--text-secondary);margin:0 0 24px}
+.ct-dialog-text{font-size:14px;font-weight:400;line-height:15.2px;letter-spacing:-.14px;color:var(--text-secondary);margin:0 0 24px}
 .ct-dialog-actions{display:flex;gap:8px;align-items:center;margin-top:16px}
 .ct-row span{font-size:12px;font-weight:400}

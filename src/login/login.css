@@ -32,7 +32,7 @@ html .login-page .login-header{ gap:8px; padding:0 16px; }
 html .login-page .login-header .ds-logo{ width:131px; height:104px; }
 html[data-theme] .login-page .login-tagline,
 html .login-page .login-tagline{
-  color:var(--text-accent); font-size:12px; font-weight:400; line-height:14px; letter-spacing:0;
+  color:var(--text-accent); font-size:12px; font-weight:400; line-height:14px; letter-spacing:-0.24px;
 }
 
 html .login-page .login-card{
@@ -43,7 +43,7 @@ html .login-page .login-head{ gap:24px; }
 html .login-page .login-title{ font-size:20px; font-weight:400; line-height:20px; letter-spacing:0; }
 html .login-page .login-form, html .login-page .login-body{ gap:40px; }
 html .login-page .login-field{ gap:8px; }
-html .login-page .login-label{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:0; text-transform:none; }
+html .login-page .login-label{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; text-transform:none; }
 html .login-page .login-wide:not(#z){ width:100%; max-width:none; }
 /* Inputs and the code boxes: radius/sm 8 (568:4059, 430:5508). */
 html .login-page .ds-input:not(.tiny):not(.small):not(#z){ border-radius:var(--radius-sm); }
@@ -55,14 +55,14 @@ html .login-page:not(.is-email) .login-card:not(#z){ box-shadow:none; }
 html .login-page .login-user{ gap:12px; }
 html .login-page .login-user-text{ display:flex; flex-direction:column; gap:0; }
 html .login-page .login-avatar{ width:48px; height:48px; min-width:48px; background:var(--surface-accent); color:var(--text-white, #fff); font-size:20px; line-height:24px; }
-html .login-page .login-hello{ color:var(--text-primary); font-size:16px; font-weight:400; line-height:20px; letter-spacing:0; }
-html .login-page .login-email{ color:var(--text-accent-light); font-size:14px; font-weight:400; line-height:16px; letter-spacing:0; }
+html .login-page .login-hello{ color:var(--text-primary); font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
+html .login-page .login-email{ color:var(--text-accent-light); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
 
 /* "Check your inbox": title 4 above the line; the line 14/16 text/secondary with the email 16/20 text/primary. */
 html .login-page.is-newcode .login-head{ gap:4px; }
-html .login-page .login-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:0; }
+html .login-page .login-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
 /* 713:18301: two 16px lines (32): the 16/20 email keeps a 16 line box on desktop. */
-html .login-page .login-sub strong{ font-weight:400; color:var(--text-primary); font-size:16px; line-height:16px; letter-spacing:0; }
+html .login-page .login-sub strong{ font-weight:400; color:var(--text-primary); font-size:16px; line-height:16px; letter-spacing:-0.32px; }
 
 /* Code boxes: 48 x 48, 8 apart; the field hugs them and sits centred. */
 html .login-page .login-code-field:not(#z){ align-self:center; width:auto; max-width:100%; }
@@ -72,10 +72,10 @@ html .login-page .login-code .login-code-box:not(#z){ flex:0 1 48px; width:48px;
 /* CTA column: button, 12, link + notes (2 apart). */
 html .login-page .login-cta-col{ display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; }
 html .login-page .login-link,
-html .login-page .login-resend .ds-action-link{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:0; }
+html .login-page .login-resend .ds-action-link{ font-size:16px; font-weight:400; line-height:20px; letter-spacing:-0.32px; }
 html .login-page .login-resend, html .login-page .login-resend-row{ gap:2px; }
 html .login-page .login-note,
-html .login-page .login-resend.is-small .login-note{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:0; }
+html .login-page .login-resend.is-small .login-note{ color:var(--text-secondary); font-size:14px; font-weight:400; line-height:16px; letter-spacing:-0.28px; }
 
 /* Create account - Name (568:5262). */
 html .login-page.is-new .login-content{ gap:24px; }
@@ -86,9 +86,9 @@ html .login-page.is-new .login-body{ gap:24px; }
 html .login-page.is-new .login-form--tight{ gap:12px; }
 html .login-page.is-new .login-field{ gap:4px; }
 html .login-page .login-cta{ gap:8px; width:100%; }
-html .login-page .login-cta .btn-pill.tertiary{ display:inline-flex; align-items:center; justify-content:center; gap:2px; padding:8px 12px; font-size:14px; line-height:20px; letter-spacing:0; }
+html .login-page .login-cta .btn-pill.tertiary{ display:inline-flex; align-items:center; justify-content:center; gap:2px; padding:8px 12px; font-size:14px; line-height:20px; letter-spacing:-0.28px; }
 /* 568:5277: Back (Tertiary, 36 high, top-aligned) and Continue share the row half and half. */
-html .login-page .login-cta #login-back.btn-pill:not(#z){ flex:0 0 calc(50% - 4px); box-sizing:border-box; align-self:flex-start; min-width:0; min-height:0; height:auto; border:0; padding:8px 12px; font-size:14px; line-height:20px; letter-spacing:0; }
+html .login-page .login-cta #login-back.btn-pill:not(#z){ flex:0 0 calc(50% - 4px); box-sizing:border-box; align-self:flex-start; min-width:0; min-height:0; height:auto; border:0; padding:8px 12px; font-size:14px; line-height:20px; letter-spacing:-0.28px; }
 html .login-page .login-cta #signup-submit:not(#z){ flex:0 0 calc(50% - 4px); box-sizing:border-box; min-width:0; }
 html .login-page .login-only-mobile{ display:none; }
 
@@ -108,7 +108,7 @@ html .login-page .login-only-mobile{ display:none; }
   html .login-page.is-new .login-header{ gap:12px; padding:0 24px; }
   html .login-page .login-header .ds-logo{ width:120px; height:96px; }
   html[data-theme] .login-page .login-tagline,
-  html .login-page .login-tagline{ font-size:14px; line-height:16px; letter-spacing:0; }
+  html .login-page .login-tagline{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
   html[data-theme] .login-page .login-card,
   html .login-page .login-card,
   html .login-page.is-new .login-card{ padding:0; gap:24px; background:transparent; background-image:none; box-shadow:none; border-radius:0; }
@@ -116,25 +116,25 @@ html .login-page .login-only-mobile{ display:none; }
   html .login-page .login-form, html .login-page .login-body, html .login-page.is-new .login-body{ gap:24px; }
   html .login-page .login-field{ gap:12px; }
   html .login-page.is-new .login-field, html .login-page.is-new .login-form--tight{ gap:8px; }
-  html .login-page .login-label{ font-size:16px; line-height:20px; letter-spacing:0; }
+  html .login-page .login-label{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
   html .login-page .ds-input{ background:var(--surface-primary); }
   html .login-page .login-head, html .login-page.is-new .login-head{ gap:24px; }
   html .login-page.is-newcode .login-head{ gap:8px; }
-  html .login-page .login-sub:not(#z), html .login-page .login-sub strong{ font-size:16px; line-height:20px; letter-spacing:0; }
+  html .login-page .login-sub:not(#z), html .login-page .login-sub strong{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
   /* Code and password (866:14362, 866:13690): no title (kept for screen readers), the user block alone: 16 between the
      avatar and the text, 4 between Hello (Heading/Large 20/24) and the email (16/20); the code row may overflow the
      342 column by 3 on each side, centred. */
   html .login-page.is-code .login-title, html .login-page.is-password .login-title{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
   html .login-page .login-user{ gap:16px; }
   html .login-page .login-user-text{ gap:4px; }
-  html .login-page .login-hello{ font-size:20px; line-height:24px; letter-spacing:0; }
-  html .login-page .login-email{ font-size:16px; line-height:20px; letter-spacing:0; }
+  html .login-page .login-hello{ font-size:20px; line-height:24px; letter-spacing:-0.4px; }
+  html .login-page .login-email{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
   html .login-page .login-code-field:not(#z){ max-width:none; }
   html .login-page .login-code:not(#z){ gap:12px; }
   html .login-page .login-cta-col{ gap:16px; }
   html .login-page .login-resend, html .login-page .login-resend-row{ gap:4px; }
   html .login-page .login-note,
-  html .login-page .login-resend.is-small .login-note{ font-size:16px; line-height:20px; letter-spacing:0; }
+  html .login-page .login-resend.is-small .login-note{ font-size:16px; line-height:20px; letter-spacing:-0.32px; }
   html .login-page .login-only-desktop{ display:none; }
   html .login-page .login-only-mobile{ display:inline; }
   html .login-page #login-back{ display:none; }
