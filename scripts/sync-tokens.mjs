@@ -24,13 +24,13 @@ export const surfaceValue = (v) => v + 'px';
 // variables the style is bound to, so they follow the mode; letter spacing is a % in Figma, em here.
 // Felipe (Oct 3): Figma's "Medium" (500) rendered as 400 in code, for DM Sans. Oct 16: the sans is Inter, whose weights
 // render as in Figma, so sans styles keep their real weight; Martian Mono (unchanged) keeps the Oct 3 rule.
-// Oct 16 evening: the sans is Geist; the one-step-lighter rule carries over.
-// Felipe (Oct 16, later): one step lighter in code. Inter = Figma - 100 (Regular 300, Medium 400, SemiBold 500);
-// Martian Mono (the Value styles) is always 300. Same rule in scripts/sync-tokens-native.mjs and tests/tokens.test.js.
-export const codeWeight = (w, family = 'sans') => (family === 'mono' ? 300 : Number(w) - 100);
+// Code weight (Felipe, "New Text styles" sheet, Oct 17): the Figma weight, unless the style carries an explicit
+// `codeWeight` in tests/figma-tokens.json (Value/Medium: Figma 500, code 400). Replaces the Oct 16 "Figma − 100" rule.
+// Same rule in scripts/sync-tokens-native.mjs and tests/tokens.test.js.
+export const codeWeight = (w, override) => Number(override ?? w);
 export const textStyleVars = (name, t) => {
   const k = '--type-' + kebab(name);
-  return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(codeWeight(t.weight, t.family))],
+  return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(codeWeight(t.weight, t.codeWeight))],
     [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : t.lineHeight ? t.lineHeight + 'px' : 'normal'], [k + '-ls', t.letterSpacing ? t.letterSpacing / 100 + 'em' : '0']];
 };
 export const fontStack = (name, family) => `"${family}", ${FONT_FALLBACK[name] || 'sans-serif'}`;

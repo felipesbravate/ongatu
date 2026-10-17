@@ -229,105 +229,105 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 32
   },
   "Value2XL": {
-    "fontFamily": "MartianMono_300Light",
+    "fontFamily": "MartianMono_500Medium",
     "fontSize": 48,
     "lineHeight": 40
   },
   "ValueXL": {
-    "fontFamily": "MartianMono_300Light",
+    "fontFamily": "MartianMono_500Medium",
     "fontSize": 32,
     "lineHeight": 26
   },
   "ValueLarge": {
-    "fontFamily": "MartianMono_300Light",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 16
   },
   "ValueMedium": {
-    "fontFamily": "MartianMono_300Light",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 14,
     "letterSpacing": -0.56
   },
   "ValueSmall": {
-    "fontFamily": "MartianMono_300Light",
+    "fontFamily": "MartianMono_400Regular",
     "fontSize": 12,
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 24
   },
   "HeadingLarge": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 20
   },
   "HeadingMedium": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 16
   },
   "HeadingSmall": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 14
   },
   "BodyDefaultRegular": {
-    "fontFamily": "Geist_300Light",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 16
   },
   "BodyDefaultBold": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 16
   },
   "BodySmallRegular": {
-    "fontFamily": "Geist_300Light",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 14
   },
   "BodySmallMedium": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 14
   },
   "BodyTinyRegular": {
-    "fontFamily": "Geist_300Light",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 12
   },
   "BodyTinyMedium": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 12
   },
   "BadgeMedium": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 8,
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "Geist_300Light",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 18
   },
   "LabelDefault": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 16
   },
   "LabelSmall": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 16,
     "letterSpacing": -0.16
   },
   "LabelTiny": {
-    "fontFamily": "Geist_300Light",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 14
   },
   "LabelMicro": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 12
   },
   "LabelNano": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 10
   }
 } as const;

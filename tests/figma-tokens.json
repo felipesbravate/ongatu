@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 17 October 2026 (font/sans is now Geist, a variable font: text styles use its exact weights 380/420/450/480/500; styles renamed: Body/Large -> Body/Default, Body/Medium -> Body/Small, Body/Small -> Body/Tiny, Label/Medium -> Label/Default, Badge/SemiBolt -> Badge/Medium). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.",
+  "_note": "Okara Design System snapshot, 17 October 2026 (font/sans is now Geist, a variable font: text styles use its exact weights 380/420/450/480/500; styles renamed: Body/Large -> Body/Default, Body/Medium -> Body/Small, Body/Small -> Body/Tiny, Label/Medium -> Label/Default, Badge/SemiBolt -> Badge/Medium). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights follow Felipe's \"New Text styles\" sheet (Oct 17): the Figma weight, except Value/Medium (Figma 500) = 400 in code (codeWeight).",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -458,7 +458,8 @@
       "weight": 500,
       "letterSpacing": -4,
       "family": "mono",
-      "sizeVar": "size/value-md"
+      "sizeVar": "size/value-md",
+      "codeWeight": 400
     },
     "Value/Small": {
       "size": 12,

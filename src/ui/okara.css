@@ -268,99 +268,99 @@
 
     /* Collection: TextStyles */
     --type-display-title-size: var(--size-display-title);
-    --type-display-title-weight: 400;
+    --type-display-title-weight: 500;
     --type-display-title-lh: var(--lh-display-title);
     --type-display-title-ls: 0;
     --type-display-title-mobile-size: var(--size-value-xl);
-    --type-display-title-mobile-weight: 400;
+    --type-display-title-mobile-weight: 500;
     --type-display-title-mobile-lh: var(--lh-display-title);
     --type-display-title-mobile-ls: 0;
     --type-value-2xl-size: 48px;
-    --type-value-2xl-weight: 300;
+    --type-value-2xl-weight: 500;
     --type-value-2xl-lh: 40px;
     --type-value-2xl-ls: 0;
     --type-value-xl-size: var(--size-value-xl);
-    --type-value-xl-weight: 300;
+    --type-value-xl-weight: 500;
     --type-value-xl-lh: 26px;
     --type-value-xl-ls: 0;
     --type-value-large-size: var(--size-value-lg);
-    --type-value-large-weight: 300;
+    --type-value-large-weight: 400;
     --type-value-large-lh: normal;
     --type-value-large-ls: 0;
     --type-value-medium-size: var(--size-value-md);
-    --type-value-medium-weight: 300;
+    --type-value-medium-weight: 400;
     --type-value-medium-lh: normal;
     --type-value-medium-ls: -0.04em;
     --type-value-small-size: var(--size-value-sm);
-    --type-value-small-weight: 300;
+    --type-value-small-weight: 400;
     --type-value-small-lh: normal;
     --type-value-small-ls: -0.04em;
     --type-heading-xl-size: var(--size-heading-xl);
-    --type-heading-xl-weight: 400;
+    --type-heading-xl-weight: 500;
     --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
     --type-heading-large-size: var(--size-heading-lg);
-    --type-heading-large-weight: 350;
+    --type-heading-large-weight: 450;
     --type-heading-large-lh: var(--lh-heading-lg);
     --type-heading-large-ls: 0;
     --type-heading-medium-size: var(--size-heading-md);
-    --type-heading-medium-weight: 400;
+    --type-heading-medium-weight: 500;
     --type-heading-medium-lh: var(--lh-heading-md);
     --type-heading-medium-ls: 0;
     --type-heading-small-size: var(--size-heading-sm);
-    --type-heading-small-weight: 400;
+    --type-heading-small-weight: 500;
     --type-heading-small-lh: var(--lh-heading-sm);
     --type-heading-small-ls: 0;
     --type-body-default-regular-size: var(--size-body-lg);
-    --type-body-default-regular-weight: 280;
+    --type-body-default-regular-weight: 380;
     --type-body-default-regular-lh: var(--lh-body-lg-medium);
     --type-body-default-regular-ls: 0;
     --type-body-default-bold-size: var(--size-body-lg);
-    --type-body-default-bold-weight: 400;
+    --type-body-default-bold-weight: 500;
     --type-body-default-bold-lh: var(--lh-body-lg-semibold);
     --type-body-default-bold-ls: 0;
     --type-body-small-regular-size: var(--size-body-md);
-    --type-body-small-regular-weight: 320;
+    --type-body-small-regular-weight: 420;
     --type-body-small-regular-lh: var(--lh-body-md);
     --type-body-small-regular-ls: 0;
     --type-body-small-medium-size: var(--size-body-md);
-    --type-body-small-medium-weight: 400;
+    --type-body-small-medium-weight: 500;
     --type-body-small-medium-lh: var(--lh-body-md);
     --type-body-small-medium-ls: 0;
     --type-body-tiny-regular-size: var(--size-body-sm);
-    --type-body-tiny-regular-weight: 320;
+    --type-body-tiny-regular-weight: 420;
     --type-body-tiny-regular-lh: var(--lh-body-sm);
     --type-body-tiny-regular-ls: 0;
     --type-body-tiny-medium-size: var(--size-body-sm);
-    --type-body-tiny-medium-weight: 400;
+    --type-body-tiny-medium-weight: 500;
     --type-body-tiny-medium-lh: var(--lh-body-sm);
     --type-body-tiny-medium-ls: 0;
     --type-badge-medium-size: var(--size-badge);
-    --type-badge-medium-weight: 400;
+    --type-badge-medium-weight: 500;
     --type-badge-medium-lh: var(--lh-badge);
     --type-badge-medium-ls: -0.02em;
     --type-label-large-size: 18px;
-    --type-label-large-weight: 320;
+    --type-label-large-weight: 420;
     --type-label-large-lh: var(--lh-body-lg-semibold);
     --type-label-large-ls: 0;
     --type-label-default-size: var(--size-body-lg);
-    --type-label-default-weight: 380;
+    --type-label-default-weight: 480;
     --type-label-default-lh: var(--lh-heading-lg);
     --type-label-default-ls: 0;
     --type-label-small-size: var(--size-body-lg);
-    --type-label-small-weight: 380;
+    --type-label-small-weight: 480;
     --type-label-small-lh: var(--lh-body-lg-medium);
     --type-label-small-ls: -0.01em;
     --type-label-tiny-size: var(--size-body-md);
-    --type-label-tiny-weight: 320;
+    --type-label-tiny-weight: 420;
     --type-label-tiny-lh: var(--lh-body-md);
     --type-label-tiny-ls: 0;
     --type-label-micro-size: var(--size-body-sm);
-    --type-label-micro-weight: 400;
+    --type-label-micro-weight: 500;
     --type-label-micro-lh: var(--lh-body-md);
     --type-label-micro-ls: 0;
     --type-label-nano-size: 10px;
-    --type-label-nano-weight: 400;
+    --type-label-nano-weight: 500;
     --type-label-nano-lh: var(--lh-body-sm);
     --type-label-nano-ls: 0;
     /* @tokens:end */
@@ -776,7 +776,7 @@
   .year-del-btn svg{ display:block; }
   .year-confirm{
     display:flex; align-items:center; gap:6px; height:32px; padding:0 6px; white-space:nowrap;
-    font-size:11px; font-weight:400; color:var(--ink);
+    font-size:11px; font-weight:500; color:var(--ink);
   }
   /* Yes/Cancel are now real Button, Size=Tiny instances (.btn-pill.tiny /
      .btn-pill.tiny.ghost, already matching Figma exactly elsewhere in this
@@ -1011,7 +1011,7 @@
   .hero-chart .hc-value{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .hc-delta{ margin-left:8px; }
   .legend{ display:flex; gap:var(--layout-md); flex-wrap:wrap; margin-top:var(--layout-md); font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--legend-text); }
-  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:400; }
+  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:500; }
   .swatch{ width:9px; height:9px; border-radius:var(--radius-ty); display:inline-block; }
 
   /* Icons carry their DS size (10 / 12 / 20) as width/height attributes (Icon.jsx); CSS never resizes them. */
@@ -1064,7 +1064,7 @@
   .alloc-name{ font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); color:var(--label-muted); text-transform:uppercase; }
 
   .insight-text{ font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--ink-2); margin-top:var(--layout-xs); }
-  .insight-text b{ color:var(--ink); font-weight:400; }
+  .insight-text b{ color:var(--ink); font-weight:500; }
   .insight-tags{ display:flex; gap:var(--layout-xs); flex-wrap:wrap; margin-top:var(--layout-xs); padding-top:var(--layout-xs); }
   /* Tags are the DS "Label" component (211:859): 20px high, 8px side padding, 4px radius, 12px SemiBold, line height auto,
      tracking 0. Types: Neutral (surface/secondary + text/secondary), Positive, Negative, Warning (surface/x + status/x). */
@@ -1184,7 +1184,7 @@
   #note-tip .tip-del{ color:var(--action-disable); }
   #note-tip .tip-del:hover{ color:var(--text-white); background:rgba(255,255,255,.18); }
   #note-tip .tip-del:active{ color:var(--text-white); background:rgba(255,255,255,.28); }
-  #note-tip .tip-item.sub .tip-name{ font-weight:400; }
+  #note-tip .tip-item.sub .tip-name{ font-weight:500; }
   #note-tip .tip-foot{ margin:var(--layout-xs) var(--layout-xs) 0 28px; padding-top:var(--layout-xs); border-top:1px solid rgba(255,255,255,.16); font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--text-secondary); }
 
   /* ---- Add entry panel: right-side slide-over drawer, matching the Cost-tracker
@@ -3332,7 +3332,7 @@
      Tiny 140 | Dropdown Tiny 140 | 16px € + Value/Large 14 text/primary on the right; 8 apart. */
   #add-panel .ds-dd-lead{ flex-shrink:0; color:var(--icon-primary); }
   #ap-review .is-guess .ds-dd-trigger{ border-color:var(--border-selected-item); }
-  #ap-review .rv-value{ display:flex; align-items:center; justify-content:flex-end; gap:0; font-family:var(--font-mono); font-size:var(--type-value-large-size); line-height:normal; font-weight:300; color:var(--text-primary); white-space:nowrap; }
+  #ap-review .rv-value{ display:flex; align-items:center; justify-content:flex-end; gap:0; font-family:var(--font-mono); font-size:var(--type-value-large-size); line-height:normal; font-weight:400; color:var(--text-primary); white-space:nowrap; }
   #ap-review .rv-value svg{ color:var(--text-primary); }
   #ap-review .c-date{ color:var(--text-secondary); }
   #ap-review .add-status{ display:flex; align-items:center; gap:4px; flex:1 1 auto; min-width:0; font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
@@ -3440,12 +3440,12 @@
 
   /* Main page (211:18753 / 342:7993). */
   .month-btn.estimated:not([aria-pressed="true"]):not(#z){ background:var(--surface-secondary); color:var(--text-secondary); border:none; }
-  .alloc-name:not(#z){ font-size:var(--size-label-default); line-height:var(--lh-label-default); font-weight:500; letter-spacing:-0.02em; color:var(--text-muted); }
-  .legend:not(#z), .legend:not(#z) span{ font-size:var(--size-body-md); line-height:normal; font-weight:400; color:var(--text-secondary); }
+  .alloc-name:not(#z){ font-size:var(--size-label-default); line-height:var(--lh-label-default); font-weight:600; letter-spacing:-0.02em; color:var(--text-muted); }
+  .legend:not(#z), .legend:not(#z) span{ font-size:var(--size-body-md); line-height:normal; font-weight:500; color:var(--text-secondary); }
   #tracker-menu-btn:not(.x){ width:40px; height:40px; }
   .seg-tabs:not(#z) button{ letter-spacing:0; }
   @media (max-width:640px){
-    .hero-chart.is-compact .legend:not(#z), .hero-chart.is-compact .legend:not(#z) span{ font-size:var(--size-label-tiny); line-height:var(--lh-label-tiny); font-weight:500; }
+    .hero-chart.is-compact .legend:not(#z), .hero-chart.is-compact .legend:not(#z) span{ font-size:var(--size-label-tiny); line-height:var(--lh-label-tiny); font-weight:600; }
     .bd-block-title:not(#z){ font-size:var(--size-heading-md); line-height:var(--lh-heading-md); font-weight:var(--type-heading-medium-weight); letter-spacing:var(--type-heading-medium-ls); }
     #breakdown-top-seg:not(.x){ padding:2px; gap:4px; }
     #mnav-add:not(.x){ width:48px; height:48px; }
@@ -3679,7 +3679,7 @@
 .note-count:not(.is-icon){
   min-width:22px; border:1px solid var(--border-default); background:transparent;
   color:var(--text-primary); font-family:var(--font-mono); font-size:10px;
-  font-weight:300; line-height:normal; letter-spacing:-.4px;
+  font-weight:500; line-height:normal; letter-spacing:-.4px;
 }
 .note-count:not(.is-icon):hover{ background:var(--action-secondary-hover); border-color:var(--border-hover); }
 .note-count:not(.is-icon):active, .note-count:not(.is-icon).is-open{
@@ -3704,7 +3704,7 @@
 .tracker-last-entry .tle-dot{ width:10px; height:10px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
 .tracker-last-entry .tle-dot i{ width:3.33px; height:3.33px; border-radius:50%; background:currentColor; }
 .tracker-last-entry .tle-num{
-  font-family:var(--font-mono); font-size:12px; font-weight:300; line-height:normal; letter-spacing:-0.48px;
+  font-family:var(--font-mono); font-size:12px; font-weight:400; line-height:normal; letter-spacing:-0.48px;
 }
 
 /* A single selection layer persists as Home and Account change. */
@@ -3769,13 +3769,13 @@ html #note-tip .tip-dot::before{ background:var(--action-disable); }
 html #note-tip .tip-name{ font-size:var(--size-body-lg); font-weight:var(--type-label-small-weight); line-height:var(--lh-body-lg-medium); letter-spacing:var(--type-label-small-ls); color:var(--badge-counter-text); }
 html #note-tip .tip-item.sub .tip-name{ font-weight:var(--type-label-small-weight); }
 html #note-tip .tip-date{ font-size:var(--size-body-md); font-weight:var(--type-label-tiny-weight); /* Label/Tiny Regular (Oct 16) */ line-height:var(--lh-body-md); letter-spacing:var(--type-label-tiny-ls); color:var(--badge-counter-text-secondary); }
-html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:300; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text); }
+html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:400; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text); }
 html #note-tip .tip-amount .money{ gap:4px; align-items:center; }
 html #note-tip .tip-amount .money-ic, html #note-tip .tip-amount .money-ic svg{ color:var(--badge-counter-pressed-icon); }
 html #note-tip .tip-del, html #note-tip .tip-del svg{ color:var(--badge-counter-close-icon); }
 html #note-tip .tip-head{ gap:10px; padding-right:0; }
 html #note-tip .tip-head-label{ font-size:var(--size-body-md); font-weight:var(--type-body-small-medium-weight); line-height:var(--lh-body-md); letter-spacing:var(--type-body-small-medium-ls); color:var(--badge-counter-text-secondary); }
-html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:300; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:400; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-amount .money{ gap:0; align-items:center; }
 html #note-tip .tip-head-amount .money-ic, html #note-tip .tip-head-amount .money-ic svg{ color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--badge-counter-divider); margin:var(--space-md) 0; }
@@ -3817,7 +3817,7 @@ html .is-trend svg.trend-flat, html .ticker-item .ti-delta svg.trend-flat{ color
   html .ticker-strip .ti-top{ display:flex; align-items:center; gap:8px; }
   html .ticker-strip .ti-dot:not(#z){ width:20px; height:20px; min-width:20px; font-size:12px; line-height:16px; color:#fff; }
   html .ticker-strip .ti-name:not(#z){ font-size:16px; font-weight:var(--type-heading-medium-weight); line-height:16px; letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
-  html .ticker-strip .ti-val:not(#z){ font-family:var(--font-mono); font-size:16px; font-weight:300; line-height:16px; letter-spacing:0; }
+  html .ticker-strip .ti-val:not(#z){ font-family:var(--font-mono); font-size:16px; font-weight:400; line-height:16px; letter-spacing:0; }
   html .ticker-strip .ti-delta:not(#z){ gap:4px; font-size:12px; line-height:14px; letter-spacing:-0.48px; white-space:nowrap; }
 }
 html .mini-kpi{ min-width:0; }
@@ -4033,7 +4033,7 @@ html[data-theme] #note-tip .tip-head-amount .money:not(#z){ gap:0; }
    Medium on lh/heading-md. */
 html[data-theme] .is-trend:not(#z){ column-gap:var(--space-tn); }
 html[data-theme] .is-trend .trend-change:not(#z){ gap:var(--space-tn); }
-html[data-theme] .ticker-strip .ti-dot:not(#z){ font-weight:400; line-height:var(--lh-heading-md); }
+html[data-theme] .ticker-strip .ti-dot:not(#z){ font-weight:500; line-height:var(--lh-heading-md); }
 /* Balance card 441:1057 (dark): the flat-comparison Minus was surface/tertiary, invisible on a dark card; icon/muted. */
 html[data-theme] .is-trend svg.trend-flat:not(#z), html[data-theme] .ticker-item .ti-delta svg.trend-flat:not(#z){ color:var(--icon-muted); }
 /* Month selector 4:171: the code-only Estimated state now has no dashed border, so it keeps the Unselected padding. */
@@ -4130,7 +4130,7 @@ html .acct-meta > .ds-check:not(#z){ margin-top:12px; }
 html .ds-balance-hero:not(#z){ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-lg); min-height:154px; padding:0; margin:0; background:transparent; border-radius:var(--radius-card); box-shadow:none; filter:drop-shadow(0 0 10px rgba(22,21,15,.04)); text-align:center; }
 html .ds-balance-hero .bh-label:not(#z){ margin:0; width:100%; font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); /* Oct 17: Label/Small (1161:1541), Mobile mode */ color:var(--text-secondary); text-transform:none; }
 html .ds-balance-hero .bh-amount:not(#z){ display:flex; align-items:flex-end; justify-content:center; gap:var(--space-tn); width:100%; color:var(--text-accent); }
-html .ds-balance-hero .bh-value:not(#z){ display:flex; align-items:flex-end; font-family:var(--font-mono); font-weight:300; white-space:nowrap; font-variant-numeric:tabular-nums; }
+html .ds-balance-hero .bh-value:not(#z){ display:flex; align-items:flex-end; font-family:var(--font-mono); font-weight:var(--type-value-2xl-weight); white-space:nowrap; font-variant-numeric:tabular-nums; }
 html .ds-balance-hero .bh-whole:not(#z){ display:flex; gap:var(--space-xs); font-size:48px; line-height:40px; letter-spacing:0; }
 html .ds-balance-hero .bh-cents:not(#z){ font-size:var(--size-value-xl); line-height:26px; letter-spacing:0; }
 html .ds-balance-hero .bh-euro:not(#z){ display:flex; color:var(--text-accent); }

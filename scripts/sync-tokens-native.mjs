@@ -33,10 +33,8 @@ export function build(t) {
   const text = {};
   for (const [k, s] of Object.entries(t.TextStyles || {})) {
     const fam = FONT[s.family] || FONT.sans;
-    // Felipe (Oct 3): Figma's "Medium" (500) was drawn in the Regular (400) cut for DM Sans. Oct 16/17: the sans keeps its real
-    // weights; Martian Mono keeps the Oct 3 rule (same as scripts/sync-tokens.mjs).
-    // Oct 16 (later): one step lighter in code -- sans = Figma - 100, Martian Mono always 300 (as scripts/sync-tokens.mjs).
-    const w = s.family === 'mono' ? 300 : Number(s.weight) - 100;
+    // Oct 17 ("New Text styles"): the Figma weight unless the style has an explicit codeWeight (as scripts/sync-tokens.mjs).
+    const w = Number(s.codeWeight ?? s.weight);
     const cuts = Object.keys(fam).map(Number);
     const nearestCut = cuts.reduce((best, c) => (Math.abs(c - w) < Math.abs(best - w) || (Math.abs(c - w) === Math.abs(best - w) && c > best) ? c : best), cuts[0]);
     const style = { fontFamily: fam[nearestCut], fontSize: s.size };

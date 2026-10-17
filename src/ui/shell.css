@@ -9,4 +9,4 @@
 .ct-dialog-title{font-size:16px;font-weight:var(--type-body-default-bold-weight);line-height:1.2;margin:0 0 8px}
 .ct-dialog-text{font-size:14px;font-weight:var(--type-body-small-regular-weight);line-height:15.2px;letter-spacing:var(--type-body-small-regular-ls);color:var(--text-secondary);margin:0 0 24px}
 .ct-dialog-actions{display:flex;gap:8px;align-items:center;margin-top:16px}
-.ct-row span{font-size:12px;font-weight:400}
+.ct-row span{font-size:12px;font-weight:500}

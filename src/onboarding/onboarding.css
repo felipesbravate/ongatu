@@ -123,7 +123,7 @@ html .ob-page:not(#z) .ob-summary-note{ font-size:12px; line-height:14px; letter
   html .ob-welcome-page:not(#z){ min-height:100vh; min-height:100dvh; box-sizing:border-box; padding:40px 48px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:48px; }
   html .ob-welcome-page:not(#z) .ob-welcome-body{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; text-align:center; width:100%; }
   html .ob-welcome-page:not(#z) .ob-welcome-text{ display:flex; flex-direction:column; gap:12px; }
-  html .ob-welcome-page:not(#z) .ob-welcome-title{ margin:0; color:var(--text-primary); font-size:24px; font-weight:400; line-height:24px; }
+  html .ob-welcome-page:not(#z) .ob-welcome-title{ margin:0; color:var(--text-primary); font-size:24px; font-weight:500; line-height:24px; }
   html .ob-welcome-page:not(#z) .ob-welcome-desc{ margin:0; color:var(--text-secondary); font-size:16px; font-weight:var(--type-body-default-regular-weight); line-height:20px; letter-spacing:var(--type-body-default-regular-ls); }
   html .ob-welcome-page:not(#z) .ob-welcome-go{ width:320px; max-width:100%; justify-content:center; }
 }
@@ -235,7 +235,7 @@ html .ob-page:not(#z) .ob-reading-sub{ font-size:11px; line-height:12px; letter-
 html .ob-page:not(#z) .ob-reading-progress{ display:flex; flex-direction:column; gap:2px; }
 html .ob-page:not(#z) .ob-progress{ height:8px; border-radius:var(--radius-full); background:var(--surface-secondary); overflow:hidden; }
 html .ob-page:not(#z) .ob-progress > div{ height:100%; border-radius:var(--radius-full); background:linear-gradient(90deg, var(--primitive-data-green-light, #76c8a4), var(--primitive-data-green, #17a768)); transition:width .3s ease; }
-html .ob-page:not(#z) .ob-reading-pct{ margin:0; text-align:center; font-size:11px; font-weight:500; line-height:12px; letter-spacing:-0.22px; color:var(--text-primary); }
+html .ob-page:not(#z) .ob-reading-pct{ margin:0; text-align:center; font-size:11px; font-weight:600; line-height:12px; letter-spacing:-0.22px; color:var(--text-primary); }
 
 /* Welcome modal (404:4571): Floating shadow. */
 @media (min-width:641px){ html dialog#ob-welcome.ds-modal:not(#z){ box-shadow:0 4px 12px 0 var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16)); } }
