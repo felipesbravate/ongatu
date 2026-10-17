@@ -11,8 +11,9 @@ const outPath = new URL('../mobile/src/theme/tokens.ts', import.meta.url);
 
 export const camel = (s) => s.replace(/[/-]+([a-z0-9])/gi, (_, c) => c.toUpperCase());
 const strip = (name, prefix) => (name.startsWith(prefix + '/') ? name.slice(prefix.length + 1) : name);
-// Inter / Martian Mono static cuts shipped by @expo-google-fonts (one family name per weight in React Native).
-// Oct 16: the sans is Inter (was DM Sans). Oct 16 evening: Geist.
+// Geist / Martian Mono static cuts shipped by @expo-google-fonts (one family name per weight in React Native).
+// Oct 16 evening: the sans is Geist (Inter earlier on Oct 16, DM Sans before). Oct 17: Figma uses Geist as a variable
+// font (380, 420, 450, 480, 500); React Native gets the nearest static cut (nearestCut below).
 const FONT = {
   sans: { 300: 'Geist_300Light', 400: 'Geist_400Regular', 500: 'Geist_500Medium', 600: 'Geist_600SemiBold' },
   mono: { 300: 'MartianMono_300Light', 400: 'MartianMono_400Regular', 500: 'MartianMono_500Medium', 600: 'MartianMono_600SemiBold' },
@@ -32,11 +33,13 @@ export function build(t) {
   const text = {};
   for (const [k, s] of Object.entries(t.TextStyles || {})) {
     const fam = FONT[s.family] || FONT.sans;
-    // Felipe (Oct 3): Figma's "Medium" (500) was drawn in the Regular (400) cut for DM Sans. Oct 16: Inter keeps its real
+    // Felipe (Oct 3): Figma's "Medium" (500) was drawn in the Regular (400) cut for DM Sans. Oct 16/17: the sans keeps its real
     // weights; Martian Mono keeps the Oct 3 rule (same as scripts/sync-tokens.mjs).
-    // Oct 16 (later): one step lighter in code -- Inter = Figma - 100, Martian Mono always 300 (as scripts/sync-tokens.mjs).
+    // Oct 16 (later): one step lighter in code -- sans = Figma - 100, Martian Mono always 300 (as scripts/sync-tokens.mjs).
     const w = s.family === 'mono' ? 300 : Number(s.weight) - 100;
-    const style = { fontFamily: fam[w] || fam[400], fontSize: s.size };
+    const cuts = Object.keys(fam).map(Number);
+    const nearestCut = cuts.reduce((best, c) => (Math.abs(c - w) < Math.abs(best - w) || (Math.abs(c - w) === Math.abs(best - w) && c > best) ? c : best), cuts[0]);
+    const style = { fontFamily: fam[nearestCut], fontSize: s.size };
     if (s.lineHeight != null) style.lineHeight = s.lineHeight;
     if (s.letterSpacing) style.letterSpacing = Math.round(s.size * s.letterSpacing) / 100; // Figma % of font size -> points
     text[camel(k.replace(/\//g, '-'))] = style;

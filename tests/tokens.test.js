@@ -100,5 +100,5 @@ test('components pinned to the Mobile mode redeclare every Mobile Surface value 
   const pinned = {};
   for (const m of block.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) pinned[m[1]] = m[2].trim();
   for (const [name, v] of Object.entries(figma.Surface)) assert.equal(pinned[cssName('Surface', name)], v.Mobile + 'px', `${name} not pinned to its Mobile value`);
-  for (const k of ['--type-label-medium-size', '--type-heading-small-size', '--layout-xl']) assert.equal(pinned[k], decl[k], `${k} must be redeclared on the pinned components`);
+  for (const k of ['--type-label-default-size', '--type-heading-small-size', '--layout-xl']) assert.equal(pinned[k], decl[k], `${k} must be redeclared on the pinned components`);
 });

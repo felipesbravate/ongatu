@@ -276,66 +276,50 @@ export const text = {
     "fontFamily": "Geist_400Regular",
     "fontSize": 14
   },
-  "BodyLargeMedium": {
-    "fontFamily": "Geist_400Regular",
-    "fontSize": 16,
-    "letterSpacing": -0.32
-  },
-  "BodyLargeSemiBold": {
-    "fontFamily": "Geist_500Medium",
-    "fontSize": 16,
-    "letterSpacing": -0.32
-  },
-  "BodyMediumRegular": {
+  "BodyDefaultRegular": {
     "fontFamily": "Geist_300Light",
-    "fontSize": 14,
-    "lineHeight": 16,
-    "letterSpacing": -0.28
+    "fontSize": 16
   },
-  "BodyMediumMedium": {
+  "BodyDefaultBold": {
     "fontFamily": "Geist_400Regular",
-    "fontSize": 14
-  },
-  "BodyMediumSemiBold": {
-    "fontFamily": "Geist_500Medium",
-    "fontSize": 14,
-    "letterSpacing": -0.28
+    "fontSize": 16
   },
   "BodySmallRegular": {
     "fontFamily": "Geist_300Light",
-    "fontSize": 12,
-    "lineHeight": 14,
-    "letterSpacing": -0.24
+    "fontSize": 14
   },
   "BodySmallMedium": {
     "fontFamily": "Geist_400Regular",
-    "fontSize": 12,
-    "letterSpacing": -0.24
+    "fontSize": 14
   },
-  "BodySmallSemiBold": {
-    "fontFamily": "Geist_500Medium",
-    "fontSize": 12,
-    "letterSpacing": -0.24
+  "BodyTinyRegular": {
+    "fontFamily": "Geist_300Light",
+    "fontSize": 12
   },
-  "BadgeSemiBolt": {
+  "BodyTinyMedium": {
+    "fontFamily": "Geist_400Regular",
+    "fontSize": 12
+  },
+  "BadgeMedium": {
     "fontFamily": "Geist_400Regular",
     "fontSize": 8,
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_300Light",
     "fontSize": 18
   },
-  "LabelMedium": {
+  "LabelDefault": {
     "fontFamily": "Geist_400Regular",
     "fontSize": 16
   },
   "LabelSmall": {
     "fontFamily": "Geist_400Regular",
-    "fontSize": 16
+    "fontSize": 16,
+    "letterSpacing": -0.16
   },
   "LabelTiny": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_300Light",
     "fontSize": 14
   },
   "LabelMicro": {
@@ -345,11 +329,6 @@ export const text = {
   "LabelNano": {
     "fontFamily": "Geist_400Regular",
     "fontSize": 10
-  },
-  "BodyDefaultRegular": {
-    "fontFamily": "Geist_400Regular",
-    "fontSize": 16,
-    "lineHeight": 20
   }
 } as const;
 

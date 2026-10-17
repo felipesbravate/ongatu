@@ -36,7 +36,7 @@ export default function SignIn() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={s.center}>
         <View style={s.card}>
           <T v="HeadingXL" style={{ textAlign: 'center' }}>{step === 'email' ? 'Sign in or create an account' : 'Check your email'}</T>
-          {step === 'code' && <T v="BodyMediumRegular" c={C.textSecondary} style={{ textAlign: 'center' }}>We sent a 6-digit code to {email}.</T>}
+          {step === 'code' && <T v="BodySmallRegular" c={C.textSecondary} style={{ textAlign: 'center' }}>We sent a 6-digit code to {email}.</T>}
           <View style={{ gap: space.xs }}>
             <T v="LabelSmall" c={C.textSecondary}>{step === 'email' ? 'ENTER YOUR EMAIL' : 'ENTER THE CODE'}</T>
             <TextInput
@@ -48,12 +48,12 @@ export default function SignIn() {
               accessibilityLabel={step === 'email' ? 'Email' : 'Code'}
             />
           </View>
-          {err && <T v="BodySmallMedium" c={C.statusFail}>{err}</T>}
+          {err && <T v="BodyTinyRegular" c={C.statusFail}>{err}</T>}
           <Pressable disabled={!canGo || busy} onPress={step === 'email' ? sendCode : verify} accessibilityRole="button"
             style={({ pressed }) => [s.btn, { backgroundColor: pressed ? C.actionPrimaryPress : C.actionPrimary, opacity: !canGo || busy ? 0.4 : 1 }]}>
-            {busy ? <ActivityIndicator color={C.textWhite} /> : <T v="BodyLargeMedium" c={C.textWhite}>{step === 'email' ? 'Continue' : 'Sign in'}</T>}
+            {busy ? <ActivityIndicator color={C.textWhite} /> : <T v="BodyDefaultRegular" c={C.textWhite}>{step === 'email' ? 'Continue' : 'Sign in'}</T>}
           </Pressable>
-          {step === 'code' && <Pressable onPress={() => { setStep('email'); setCode(''); }} accessibilityRole="button"><T v="BodyMediumMedium" c={C.linkDefault} style={{ textAlign: 'center' }}>Use another email</T></Pressable>}
+          {step === 'code' && <Pressable onPress={() => { setStep('email'); setCode(''); }} accessibilityRole="button"><T v="BodySmallRegular" c={C.linkDefault} style={{ textAlign: 'center' }}>Use another email</T></Pressable>}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -64,6 +64,6 @@ const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: C.surfaceBody },
   center: { flex: 1, justifyContent: 'center', padding: space.md },
   card: { backgroundColor: C.surfacePrimary, borderRadius: radius.card, padding: space.lg, gap: space.md },
-  input: { ...text.BodyLargeMedium, height: 48, borderWidth: 1, borderColor: C.borderDefault, borderRadius: radius.sm, paddingHorizontal: space.sm, color: C.textPrimary },
+  input: { ...text.BodyDefaultRegular, height: 48, borderWidth: 1, borderColor: C.borderDefault, borderRadius: radius.sm, paddingHorizontal: space.sm, color: C.textPrimary },
   btn: { height: 48, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center' },
 });

@@ -12,7 +12,7 @@
 .loading-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);min-height:calc(var(--space-xl) + var(--space-md))}
 .loading-row .skeleton:first-child{width:48%}
 .loading-row:nth-child(even) .skeleton:first-child{width:36%}
-.loading-status{font-family:var(--font-sans);font-size:var(--type-body-medium-medium-size);font-weight:var(--type-body-medium-medium-weight);line-height:var(--type-body-medium-medium-lh);letter-spacing:var(--type-body-medium-medium-ls);color:var(--text-secondary);margin:0}
+.loading-status{font-family:var(--font-sans);font-size:var(--type-body-small-regular-size);font-weight:var(--type-body-small-regular-weight);line-height:var(--type-body-small-regular-lh);letter-spacing:var(--type-body-small-regular-ls);color:var(--text-secondary);margin:0}
 .login-card.is-loading{position:relative}
 .login-card.is-loading > :not(.login-loading-overlay){visibility:hidden;pointer-events:none}
 .login-loading-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-lg);padding:inherit;background:var(--surface-primary);border-radius:inherit}

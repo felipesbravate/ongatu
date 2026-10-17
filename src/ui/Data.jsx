@@ -2,7 +2,6 @@
 import { Icon } from './Icon.jsx';
 import { Money } from './Money.jsx';
 import { Input } from './Field.jsx';
-import { useMobile } from './useMobile.js';
 import { euro, arrowStraightDown, arrowStraightUp, minus } from './icons.js';
 
 // A comparison line (src/tracker/indicators.js): { head?, tone: good|bad|neutral, dir: up|down|flat|null, text }.
@@ -23,12 +22,12 @@ export function TrendLine({ trend, className = 'detail', id }) {
   );
 }
 
-// Balance hero (Okara 1161:1557, Oct 16): replaces the balance card. No surface, centred: the label (Heading/Medium,
-// text/secondary), space/xl, the amount (text/accent: the whole part in Value/2XL 48/40 with its thousand groups set
-// space/xs apart instead of a dot, the cents in Value/XL on the baseline, then the Euro icon icon-size/xl, space/tn after),
-// space/xl, the details line (TrendLine). Other currencies show the code after the cents.
+// Balance hero (Okara 1161:1557, Oct 16/17): replaces the balance card. Explicitly in the Surface Mobile mode at every
+// width (pinned in okara.css). No surface, centred: the label (Label/Small, text/secondary), space/lg, the amount
+// (text/accent: the whole part in Value/2XL 48/40 with its thousand groups set space/xs apart instead of a dot, the cents
+// in Value/XL on the baseline, then the 24px Euro icon, space/tn after), space/lg, the details line (TrendLine). Other
+// currencies show the code after the cents.
 export function BalanceHero({ label, value, currency, trend, labelId, valueId, trendId, children, id, className }) {
-  const mobile = useMobile(); // icon-size/xl: 16 desktop, 24 phones (each size has its own artwork)
   const neg = value < 0;
   const abs = Math.abs(Math.round(value * 100) / 100);
   const [whole, cents] = abs.toFixed(2).split('.');
@@ -43,7 +42,7 @@ export function BalanceHero({ label, value, currency, trend, labelId, valueId, t
           <span className="bh-cents">{`,${cents}`}</span>
         </span>
         {currency === 'EUR'
-          ? <span className="bh-euro" aria-hidden="true"><Icon icon={euro} size={mobile ? 24 : 16} /></span>
+          ? <span className="bh-euro" aria-hidden="true"><Icon icon={euro} size={24} /* Oct 17: 24 at every width (1161:1546) */ /></span>
           : <span className="bh-code" aria-hidden="true">{currency === 'SEK' ? 'kr' : currency}</span>}
       </div>
       {trend && <TrendLine trend={trend} className="bh-details" id={trendId} />}

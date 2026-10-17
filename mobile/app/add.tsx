@@ -7,7 +7,7 @@ export default function AddEntry() {
   return (
     <View style={{ flex: 1, padding: space.lg, gap: space.xs }}>
       <T v="HeadingXL" accessibilityRole="header">Add entry</T>
-      <T v="BodyMediumRegular" c={C.textSecondary}>Coming next: the form from the Add entry frame.</T>
+      <T v="BodySmallRegular" c={C.textSecondary}>Coming next: the form from the Add entry frame.</T>
     </View>
   );
 }

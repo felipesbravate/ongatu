@@ -23,8 +23,8 @@ html .notif-entry .ds-notif-item:not(#z){ min-height:88px; padding:16px; gap:8px
 html .notif-entry.is-unread .ds-notif-item:not(#z){ min-height:112px; }
 html .notif-entry .ds-notif-body:not(#z){ gap:8px; }
 html .notif-entry .ds-notif-text:not(#z){
-  font-size:var(--type-body-medium-regular-size); font-weight:var(--type-body-medium-regular-weight);
-  line-height:var(--type-body-medium-regular-lh); letter-spacing:var(--type-body-medium-regular-ls); color:var(--text-secondary);
+  font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight);
+  line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary);
 }
 html .notif-entry.is-unread .ds-notif-text:not(#z){ color:var(--text-primary); }
 html .notif-entry .ds-notif-mark:not(#z){ padding:0; }

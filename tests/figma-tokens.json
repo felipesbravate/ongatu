@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 16 October 2026 (evening): font/sans is Geist; same-named text styles re-read (Display/Title-mobile Medium, Heading and Label tracking 0, Label/Tiny Medium). Body/*, Label/Default (was Label/Medium) and Badge/Medium (was Badge/SemiBolt) renames not applied yet. File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.",
+  "_note": "Okara Design System snapshot, 17 October 2026 (font/sans is now Geist, a variable font: text styles use its exact weights 380/420/450/480/500; styles renamed: Body/Large -> Body/Default, Body/Medium -> Body/Small, Body/Small -> Body/Tiny, Label/Medium -> Label/Default, Badge/SemiBolt -> Badge/Medium). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -443,8 +443,8 @@
       "weight": 500,
       "letterSpacing": 0,
       "family": "mono",
-      "sizeVar": "size/value-xl",
-      "lineHeight": 26
+      "lineHeight": 26,
+      "sizeVar": "size/value-xl"
     },
     "Value/Large": {
       "size": 16,
@@ -477,7 +477,7 @@
     },
     "Heading/Large": {
       "size": 20,
-      "weight": 500,
+      "weight": 450,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-lg",
@@ -499,32 +499,31 @@
       "sizeVar": "size/heading-sm",
       "lhVar": "lh/heading-sm"
     },
-    "Body/Large/Medium": {
+    "Body/Default/Regular": {
       "size": 16,
-      "weight": 500,
-      "letterSpacing": -2,
+      "weight": 380,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium"
     },
-    "Body/Large/SemiBold": {
+    "Body/Default/Bold": {
       "size": 16,
-      "weight": 600,
-      "letterSpacing": -2,
+      "weight": 500,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-semibold"
     },
-    "Body/Medium/Regular": {
+    "Body/Small/Regular": {
       "size": 14,
-      "weight": 400,
-      "letterSpacing": -2,
+      "weight": 420,
+      "letterSpacing": 0,
       "family": "sans",
-      "lineHeight": 16,
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
     },
-    "Body/Medium/Medium": {
+    "Body/Small/Medium": {
       "size": 14,
       "weight": 500,
       "letterSpacing": 0,
@@ -532,40 +531,23 @@
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md"
     },
-    "Body/Medium/SemiBold": {
-      "size": 14,
-      "weight": 600,
-      "letterSpacing": -2,
-      "family": "sans",
-      "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md"
-    },
-    "Body/Small/Regular": {
+    "Body/Tiny/Regular": {
       "size": 12,
-      "weight": 400,
-      "letterSpacing": -2,
+      "weight": 420,
+      "letterSpacing": 0,
       "family": "sans",
-      "lineHeight": 14,
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-sm"
     },
-    "Body/Small/Medium": {
+    "Body/Tiny/Medium": {
       "size": 12,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-sm"
     },
-    "Body/Small/SemiBold": {
-      "size": 12,
-      "weight": 600,
-      "letterSpacing": -2,
-      "family": "sans",
-      "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-sm"
-    },
-    "Badge/SemiBolt": {
+    "Badge/Medium": {
       "size": 8,
       "weight": 500,
       "letterSpacing": -2,
@@ -575,14 +557,14 @@
     },
     "Label/Large": {
       "size": 18,
-      "weight": 500,
+      "weight": 420,
       "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-lg-semibold"
     },
-    "Label/Medium": {
+    "Label/Default": {
       "size": 16,
-      "weight": 500,
+      "weight": 480,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
@@ -590,15 +572,15 @@
     },
     "Label/Small": {
       "size": 16,
-      "weight": 500,
-      "letterSpacing": 0,
+      "weight": 480,
+      "letterSpacing": -1,
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium"
     },
     "Label/Tiny": {
       "size": 14,
-      "weight": 500,
+      "weight": 420,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
@@ -618,13 +600,6 @@
       "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-sm"
-    },
-    "Body/Default/Regular": {
-      "size": 16,
-      "weight": 420,
-      "letterSpacing": 0,
-      "family": "sans",
-      "lineHeight": 20
     }
   }
 }

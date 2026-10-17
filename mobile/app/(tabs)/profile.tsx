@@ -13,10 +13,10 @@ export default function Profile() {
       <T v="DisplayTitle" accessibilityRole="header">Profile</T>
       <View style={{ backgroundColor: C.surfacePrimary, borderRadius: radius.md, padding: space.md, gap: space.xs }}>
         <T v="LabelSmall" c={C.textSecondary}>SIGNED IN AS</T>
-        <T v="BodyLargeMedium">{me?.email ?? '…'}</T>
+        <T v="BodyDefaultRegular">{me?.email ?? '…'}</T>
       </View>
       <Pressable onPress={signOut} accessibilityRole="button" style={({ pressed }) => ({ height: 48, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center', backgroundColor: pressed ? C.actionSecondaryPress : C.surfaceSecondary })}>
-        <T v="BodyLargeMedium">Sign out</T>
+        <T v="BodyDefaultRegular">Sign out</T>
       </Pressable>
     </View>
   );

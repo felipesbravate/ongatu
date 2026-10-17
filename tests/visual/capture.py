@@ -33,6 +33,11 @@ def font_css():
                 f = f'{slug}-{sub}-{w}-normal.woff2'
                 if os.path.exists(os.path.join(FONTS, f)):
                     faces.append(f"@font-face{{font-family:'{fam}';font-style:normal;font-weight:{w};font-display:block;src:url(https://fonts.gstatic.com/local/{f}) format('woff2')}}")
+    # Oct 17: Geist is a variable font (Figma uses 380, 420, 450, 480): one face for the whole weight range.
+    for sub in ('latin-ext', 'latin'):
+        f = f'geist-{sub}-wght-normal.woff2'
+        if os.path.exists(os.path.join(FONTS, f)):
+            faces.append(f"@font-face{{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:block;src:url(https://fonts.gstatic.com/local/{f}) format('woff2')}}")
     return '\n'.join(faces)
 
 async def route_fonts(ctx):

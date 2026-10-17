@@ -86,6 +86,7 @@ export const PINNED_MOBILE = [
   '.ds-side-menu', '.ds-steps', '.ds-list-sel', '.meter-row', // Oct 4 audit: Side menu, Step progress, list-selector, Meter render Mobile in the Ongatu frames; Input does not
   '.ds-chip', '.ds-pager', '.ds-toast',          // Oct 12: chip-selector 540:785 and Pager 543:823 have no mode (Figma default = Mobile); Toast 304:659 is explicitly Mobile
   '.ds-info-action',                             // Oct 12: the Nano Button inside info 632:905 is explicitly Mobile
+  '.ds-balance-hero',                            // Oct 17: Balance hero 1161:1557 instances are explicitly Mobile (16/20 label on desktop too)
 ];
 const rootCss = css.slice(0, css.indexOf('/* @tokens-mobile:start */'));
 const decls = new Map();

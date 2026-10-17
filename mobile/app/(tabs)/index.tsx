@@ -24,9 +24,9 @@ export default function Home() {
   useScrollToTop(ref); // tapping Home again scrolls to the top
 
   const body = () => {
-    if (error) return <Card><T v="BodyMediumMedium" c={C.statusFail}>{error}</T></Card>;
-    if (me && me.status !== 'approved') return <Card><T v="HeadingMedium">{me.status === 'blocked' ? 'Account blocked' : 'Waiting for approval'}</T><T v="BodyMediumRegular" c={C.textSecondary}>{me.status === 'blocked' ? 'Contact the owner of this Ongatu.' : 'You will get access once your account is approved.'}</T></Card>;
-    if (!model || !data) return <Card><T v="BodyMediumRegular" c={C.textSecondary}>Loading…</T></Card>;
+    if (error) return <Card><T v="BodySmallRegular" c={C.statusFail}>{error}</T></Card>;
+    if (me && me.status !== 'approved') return <Card><T v="HeadingMedium">{me.status === 'blocked' ? 'Account blocked' : 'Waiting for approval'}</T><T v="BodySmallRegular" c={C.textSecondary}>{me.status === 'blocked' ? 'Contact the owner of this Ongatu.' : 'You will get access once your account is approved.'}</T></Card>;
+    if (!model || !data) return <Card><T v="BodySmallRegular" c={C.textSecondary}>Loading…</T></Card>;
     const cur = model.currentYearMonthIndex();
     const years = model.DATA ?? [];
     const yi = cur ? cur.yearIdx : Math.max(0, years.length - 1);
@@ -43,7 +43,7 @@ export default function Home() {
           <T v="HeadingSmall" c={C.textSecondary}>BALANCE THIS MONTH</T>
           <T v="ValueXL" accessibilityLabel={`Balance ${fmtMoney(c.balance, y.currency)}`}>{fmtMoney(c.balance, y.currency)}</T>
           {prev && <T v="ValueSmall" c={d >= 0 ? C.statusSuccess : C.statusFail}>{d >= 0 ? '↑' : '↓'} {fmtMoneyShort(Math.abs(d), y.currency)} vs last month</T>}
-          <T v="BodySmallRegular" c={C.textSecondary}>{MONTH_NAMES[mi]} {y.year}</T>
+          <T v="BodyTinyRegular" c={C.textSecondary}>{MONTH_NAMES[mi]} {y.year}</T>
         </Card>
         <View style={{ flexDirection: 'row', gap: space.md }}>
           <Kpi label="INCOMES" dot={C.surfaceAccent} value={c.income} />
@@ -60,7 +60,7 @@ export default function Home() {
       <View style={s.topNav}><Icon name="user" size={20} fill="transparent" /></View>
       <View style={{ gap: space.xs }}>
         <T v="DisplayTitle" accessibilityRole="header">Hey, {firstName(me?.email, me?.name)}</T>
-        <T v="BodyLargeMedium" c={C.textSecondary}>Ready to see where you stand today? Track your spending and savings for the month.</T>
+        <T v="BodyDefaultRegular" c={C.textSecondary}>Ready to see where you stand today? Track your spending and savings for the month.</T>
       </View>
       {body()}
     </ScrollView>
@@ -74,7 +74,7 @@ function Kpi({ label, dot, value, detail }: { label: string; dot: string; value:
   return (
     <View style={{ flex: 1 }}>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: dot }} /><T v="BodyMediumMedium">{label}</T></View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: dot }} /><T v="BodySmallRegular">{label}</T></View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.tn }}><T v="ValueMedium">€</T><T v="ValueMedium">{fmtFigure(value)}</T></View>
         {detail && <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}><Icon name="arrowUp" size={12} fill={C.surfaceTertiary} /><T v="ValueSmall" c={C.textSecondary}>{detail}</T></View>}
       </Card>
