@@ -344,7 +344,7 @@
     --type-label-large-lh: var(--lh-body-lg-semibold);
     --type-label-large-ls: 0;
     --type-label-default-size: var(--size-body-lg);
-    --type-label-default-weight: 480;
+    --type-label-default-weight: 400;
     --type-label-default-lh: var(--lh-heading-lg);
     --type-label-default-ls: 0;
     --type-label-small-size: var(--size-body-lg);
@@ -2146,10 +2146,10 @@
   /* App header 285:600: 64 high, space/xs space/xl. */
   @media (min-width:641px){ .ds-app-header{ padding:var(--space-xs) max(var(--space-xl), calc((100% - 1238px) / 2 - 16px)); } }
   /* Main page layout, Ongatu 211:18753 (rebound to Surface Sept 29): Body space/2xl, page header space/lg (title block
-     space/xs, nav rows space/xs), Content space/md between the 360px left column and the right column, and space/md
+     space/xs, nav rows space/xs), Content space/md between the left column (400px since Oct 17) and the right column, and space/md
      between cards in each column; cards padding space/lg. Phones keep their own layout (342:7993). */
   @media (min-width:641px){
-    .row1{ grid-template-columns:360px 1fr; gap:var(--space-md); margin-bottom:var(--space-md); }
+    .row1{ grid-template-columns:400px 1fr; /* Oct 17: left block 400 (Ongatu 1058:89362) */ gap:var(--space-md); margin-bottom:var(--space-md); }
     .hero-left, .hero-right{ gap:var(--space-md); }
     .yoy{ gap:var(--space-md); }
     /* The desktop frame places the App header 40 from the top and the page 40 under it (absolute positions in Figma,

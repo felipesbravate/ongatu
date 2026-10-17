@@ -25,7 +25,7 @@ export const surfaceValue = (v) => v + 'px';
 // Felipe (Oct 3): Figma's "Medium" (500) rendered as 400 in code, for DM Sans. Oct 16: the sans is Inter, whose weights
 // render as in Figma, so sans styles keep their real weight; Martian Mono (unchanged) keeps the Oct 3 rule.
 // Code weight (Felipe, "New Text styles" sheet, Oct 17): the Figma weight, unless the style carries an explicit
-// `codeWeight` in tests/figma-tokens.json (Value/Medium: Figma 500, code 400). Replaces the Oct 16 "Figma − 100" rule.
+// `codeWeight` in tests/figma-tokens.json (Value/Medium: Figma 500, code 400; Label/Default: Figma 480, code 400). Replaces the Oct 16 "Figma − 100" rule.
 // Same rule in scripts/sync-tokens-native.mjs and tests/tokens.test.js.
 export const codeWeight = (w, override) => Number(override ?? w);
 export const textStyleVars = (name, t) => {

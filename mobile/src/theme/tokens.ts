@@ -310,7 +310,7 @@ export const text = {
     "fontSize": 18
   },
   "LabelDefault": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Geist_400Regular",
     "fontSize": 16
   },
   "LabelSmall": {

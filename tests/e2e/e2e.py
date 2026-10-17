@@ -423,9 +423,9 @@ async def main():
             # Tiny space/xs round xl / md (24). Dropdowns write Label/Large (18/600/16 on desktop), inputs Body/Large/Medium, Tiny Label/Tiny.
             # Oct 3: Input, Dropdown and dropdown-item always use the Mobile tokens; Medium and Small write Label/Medium at 400 (16/400/24), Tiny Label/Tiny.
             check('Dropdown sizes (71:1096, Oct 3, Mobile tokens everywhere): Medium 48 / 16 Label/Medium, Small 36 / 8 Label/Small, Tiny 32 / 8 Label/Tiny (Oct 3 re-read)',
-                  sz['dd-md'] == [48, '15px', '16px', '480', '24px'] and sz['dd-sm'] == [36, '7px', '16px', '480', '20px'] and sz['dd-tiny'] == [32, '7px', '14px', '420', '16px'], sz)
+                  sz['dd-md'] == [48, '15px', '16px', '400', '24px'] and sz['dd-sm'] == [36, '7px', '16px', '480', '20px'] and sz['dd-tiny'] == [32, '7px', '14px', '420', '16px'], sz)
             check('Input sizes (Okara audit Oct 8: Surface/Mobile at every width): Medium 48, Label/Medium 16/24; Small 36; Tiny 32',
-                  sz['in-medium'] == [48, '15px', '16px', '480', '24px'] and sz['in-small'] == [36, '7px', '16px', '480', '20px'] and sz['in-tiny'] == [32, '7px', '14px', '420', '16px'], sz)
+                  sz['in-medium'] == [48, '15px', '16px', '400', '24px'] and sz['in-small'] == [36, '7px', '16px', '480', '20px'] and sz['in-tiny'] == [32, '7px', '14px', '420', '16px'], sz)
             st = await pg.evaluate("""() => { const host = document.body, mk = (h) => { const w = document.createElement('div'); w.innerHTML = h; host.appendChild(w); return w; };
                 const e = mk('<span class="ds-input"><input placeholder="Label"></span>'), f = mk('<span class="ds-input"><input placeholder="Label" value="Felipe"></span>'),
                       de = mk('<div class="ds-dd ds-dd--md is-empty"><button class="ds-dd-trigger">Select</button></div>'), df = mk('<div class="ds-dd ds-dd--md"><button class="ds-dd-trigger">Rent</button></div>'),
