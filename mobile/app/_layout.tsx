@@ -25,6 +25,8 @@ function Gate() {
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.surfaceBody } }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="sign-in" options={{ animation: 'fade' }} />
+      {/* Notifications (Okara 228:455 State=Mobile): a full screen pushed over the tabs. */}
+      <Stack.Screen name="notifications" options={{ contentStyle: { backgroundColor: color.surfacePrimary } }} />
       {/* Add entry opens as a native iOS sheet with detents; drag down to close. */}
       <Stack.Screen name="add" options={{ presentation: 'formSheet', sheetAllowedDetents: [0.6, 1], sheetGrabberVisible: true, sheetCornerRadius: 24, contentStyle: { backgroundColor: color.surfacePrimary } }} />
     </Stack>

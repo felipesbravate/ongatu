@@ -1,10 +1,10 @@
 'use client';
 import { Children, Fragment, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ActionLink, Button, RoundButton } from './Button.jsx';
+import { RoundButton } from './Button.jsx';
 import { Icon } from './Icon.jsx';
 import { MenuItemCounter } from './SideMenu.jsx';
-import { arrowStraightLeft, arrowStraightRight, bell, checkmark, chevronDown } from './icons.js';
+import { arrowStraightLeft, arrowStraightRight, bell, chevronDown } from './icons.js';
 import { useMobile } from './useMobile.js';
 
 const cx = (...c) => c.filter(Boolean).join(' ');
@@ -94,29 +94,32 @@ export function UserMenu({ name, image, open, onToggle, onClose, items }) {
   );
 }
 
-// notification-item (DS 228:469, Oct 3): a header row (date · time in Body/Medium/SemiBold, the optional Micro Secondary
-// action on the right, 16 apart), the text under it and — while the item is unread — the "Mark as read" link at the
-// bottom. `onMarkRead` omitted = read (no link).
-// `ctas` (Oct 15, invite notification 973:26339): a row of Nano buttons under the text, 4 apart:
-// [{ label, onClick, outline, disabled, id }] — outline = 1px border/tertiary (Accept), otherwise text only (Decline).
+// notification-item (DS 228:469, Oct 17): the header (date and time in Body/Small/Medium; an unread item shows the 12px
+// Dot after it on hover, as in State=Unread-hover), the text under it 8 below (Body/Small/Regular; text/secondary once
+// read) and, 12 below, the CTAs row: Nano buttons 4 apart, the first outlined (border/tertiary), the rest text only.
+// `action` = the primary CTA (View, Approve); `onMarkRead` (unread items) adds "Mark as read" as a secondary CTA;
+// `ctas` = an explicit row ([{ label, onClick, outline, disabled, id, className }]) for the invite (Accept / Decline).
 export function NotificationItem({ date, time, children, action, onMarkRead, ctas, id }) {
+  const unread = !!onMarkRead;
+  const row = ctas && ctas.length ? ctas : [
+    action && { label: action.label, onClick: action.onClick, disabled: action.disabled, outline: true },
+    onMarkRead && { label: 'Mark as read', onClick: onMarkRead, outline: !action, className: 'ds-notif-mark' },
+  ].filter(Boolean);
   return (
-    <div className={'ds-notif-item' + (onMarkRead ? ' is-unread' : '')} id={id}>
+    <div className={'ds-notif-item' + (unread ? ' is-unread' : '')} id={id}>
       <div className="ds-notif-body">
         <div className="ds-notif-head">
-          <div className="ds-notif-when"><span>{date}</span>{time && <><span className="ds-notif-dot" aria-hidden="true" /><span>{time}</span></>}</div>
-          {action && <Button variant="secondary" size="tiny" onClick={action.onClick} disabled={action.disabled}>{action.label}</Button>}
+          <div className="ds-notif-when"><span>{time ? `${date}, ${time}` : date}</span>{unread && <span className="ds-notif-dot" aria-label="Unread" role="img" />}</div>
         </div>
         <div className="ds-notif-content">
           <div className="ds-notif-text">{children}</div>
         </div>
       </div>
-      {ctas && ctas.length > 0 && (
+      {row.length > 0 && (
         <div className="ds-notif-ctas">
-          {ctas.map((c) => <button key={c.label} type="button" id={c.id} className={'ds-notif-cta' + (c.outline ? ' is-outline' : '')} onClick={c.onClick} disabled={c.disabled}>{c.label}</button>)}
+          {row.map((c) => <button key={c.label} type="button" id={c.id} className={'ds-notif-cta' + (c.outline ? ' is-outline' : '') + (c.className ? ' ' + c.className : '')} onClick={c.onClick} disabled={c.disabled}>{c.label}</button>)}
         </div>
       )}
-      {onMarkRead && <ActionLink className="ds-notif-mark" size="small" icon={checkmark} onClick={onMarkRead}>Mark as read</ActionLink>}
     </div>
   );
 }

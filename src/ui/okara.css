@@ -2119,7 +2119,6 @@
   .ds-notif-content{ gap:var(--space-md); }
   /* Content (date row + text) space/xs apart, then the Action link "Mark as read" while unread (228:469, 211:19682). */
   .ds-notif-body{ display:flex; flex-direction:column; gap:var(--space-xs); }
-  .ds-notif-mark{ align-self:flex-start; }
   /* Notification 228:455: the bell is a Small Round button (40). */
   .ds-notif{ width:40px; height:40px; }
   .ds-notif-panel{ top:48px; }
@@ -2646,7 +2645,6 @@
   .ds-notif-head .btn-pill{ flex-shrink:0; }
   .ds-notif-when{ color:var(--text-primary); font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
   .ds-notif-item:hover .ds-notif-content{ gap:var(--space-md); }
-  .ds-notif-mark{ align-self:flex-start; padding:var(--space-tn) 0; font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
   /* Notification 228:455: the bell is a Small round button (36); the open list is 320 wide, pad xs, tn apart. */
   .ds-notif{ width:auto; height:auto; }
   .ds-notif-panel{ top:44px; padding:var(--space-xs); gap:var(--space-tn); }
@@ -3970,7 +3968,6 @@ html[data-theme] .ds-notif-when:not(#z){ gap:var(--space-tn); }
 html[data-theme] .ds-notif-dot:not(#z){ width:12px; height:12px; }
 html[data-theme] .ds-notif-dot::before{ left:4px; top:4px; width:4px; height:4px; background:var(--icon-primary); }
 html[data-theme] .ds-notif-item:not(.is-unread):not(.ds-notif-empty) .ds-notif-text:not(#z){ color:var(--text-secondary); }
-html[data-theme] .ds-notif-mark:not(#z){ padding:0; }
 html[data-theme] .ds-notif-page-nav .round-btn svg{ color:var(--icon-round-control); }
 
 /* user 221:1048, Active: the card carries the Floating shadow 0 4 12. */
@@ -4165,3 +4162,22 @@ html dialog.ds-bsw.is-sheet.is-closing::backdrop{ animation:ds-fade-out .2s cubi
   html dialog.ds-bsw.is-sheet[open]:not(#z), html dialog.ds-bsw.is-sheet.is-closing:not(#z),
   html dialog.ds-bsw.is-sheet::backdrop, html dialog.ds-bsw.is-sheet.is-closing::backdrop{ animation:none; }
 }
+
+/* notification-item 228:469 (Oct 17): no "Mark as read" link (it is a secondary CTA now); the unread Dot (12px) shows
+   after the date on hover only (State=Unread-hover); read and unread items look the same otherwise. */
+html .ds-notif-item .ds-notif-dot:not(#z){ display:none; width:12px; height:12px; flex:none; }
+html .ds-notif-item.is-unread:hover .ds-notif-dot:not(#z), html .ds-notif-item.is-unread:focus-within .ds-notif-dot:not(#z){ display:block; }
+html .ds-notif-item .ds-notif-head:not(#z){ min-height:0; }
+
+/* board-dropdown 1052:6292 (Oct 17): desktop pill border link/default (hover link/hover), the mobile pill keeps
+   border/selected-item; the Active card is 322 wide with the up chevron first and the title filling the row; menu-items
+   48 high (padding 12 + Label/Default 24), 12 inside, 8 apart. */
+html .ds-board-dd:not(.is-mobile):not(#z){ border-color:var(--link-default); }
+html .ds-board-dd:not(.is-mobile):hover:not(#z){ border-color:var(--link-hover); }
+html .ds-bsw.is-card:not(#z){ width:322px; }
+html .ds-bsw.is-card .ds-bsw-head:not(#z){ justify-content:flex-start; gap:var(--space-xs); }
+html .ds-bsw.is-card .ds-bsw-title-row:not(#z){ flex:1 1 auto; }
+html .ds-bsw.is-card .ds-bsw-title:not(#z){ flex:1 1 auto; }
+html .ds-bsw-collapse:not(#z){ margin:-6px 0 -6px -6px; }
+html .ds-bsw.is-card .ds-bsw-list:not(#z){ gap:var(--space-xs); }
+html .ds-bsw-item:not(#z){ height:auto; gap:var(--space-sm); }

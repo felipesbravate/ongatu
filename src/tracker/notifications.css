@@ -17,9 +17,9 @@ html .notif-card:not(#z){
 html .notif-list:not(#z){ display:flex; flex-direction:column; padding:0 8px; }
 html .notif-list .notif-sep:not(#z){ width:100%; margin:0; }
 
-/* Notification entry: unread 112 min high with "Mark as read", read 88 with text/secondary. Padding 16, gap 8. */
+/* Notification entry: unread 112 min high (its CTAs include "Mark as read"), read 88 with text/secondary. Padding 16. */
 html .notif-entry:not(#z){ position:relative; }
-html .notif-entry .ds-notif-item:not(#z){ min-height:88px; padding:16px; gap:8px; box-sizing:border-box; }
+html .notif-entry .ds-notif-item:not(#z){ min-height:88px; padding:16px; gap:12px; box-sizing:border-box; } /* Oct 17: CTAs 12 under the text (228:469) */
 html .notif-entry.is-unread .ds-notif-item:not(#z){ min-height:112px; }
 html .notif-entry .ds-notif-body:not(#z){ gap:8px; }
 html .notif-entry .ds-notif-text:not(#z){
@@ -27,7 +27,6 @@ html .notif-entry .ds-notif-text:not(#z){
   line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary);
 }
 html .notif-entry.is-unread .ds-notif-text:not(#z){ color:var(--text-primary); }
-html .notif-entry .ds-notif-mark:not(#z){ padding:0; }
 /* The unread dot (840:9156): 8px data/red-orange, 9 left of the entry, 20 from its top. */
 html .notif-unread-dot:not(#z){ position:absolute; left:-9px; top:20px; width:8px; height:8px; border-radius:50%; background:var(--primitive-data-red-orange); pointer-events:none; }
 html .notif-list .ds-notif-empty:not(#z){ padding:16px; }

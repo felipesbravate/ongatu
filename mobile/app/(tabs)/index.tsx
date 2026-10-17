@@ -1,12 +1,13 @@
 import { useRef } from 'react';
 import { RefreshControl, ScrollView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useScrollToTop } from 'expo-router';
+import { useRouter, useScrollToTop } from 'expo-router';
 import { useSession } from '@/lib/session';
 import { fmtFigure, fmtMoney, fmtMoneyShort, MONTH_NAMES } from '@/lib/shared';
 import { T } from '@/components/T';
 import { Icon } from '@/components/Icon';
 import { TAB_BAR_SPACE } from '@/components/OkaraTabBar';
+import { NotificationBell, useAlerts } from '@/components/Notifications';
 import { color as C, space, radius } from '@/theme/tokens';
 
 // Same rule as the web header (react-rewrite decision 1): email part before the first . - _ + or digit, capitalised.
@@ -20,6 +21,8 @@ const firstName = (email?: string | null, name?: string | null) => {
 export default function Home() {
   const { me, model, data, error, reload } = useSession();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const alerts = useAlerts(model); // the bell dot: an unread over-budget alert (same list as the web bell)
   const ref = useRef<ScrollView>(null);
   useScrollToTop(ref); // tapping Home again scrolls to the top
 
@@ -57,7 +60,7 @@ export default function Home() {
   return (
     <ScrollView ref={ref} style={{ flex: 1 }} contentContainerStyle={{ paddingTop: insets.top, paddingBottom: TAB_BAR_SPACE + insets.bottom, paddingHorizontal: space.md, gap: space.lg }}
       refreshControl={<RefreshControl refreshing={false} onRefresh={reload} />}>
-      <View style={s.topNav}><Icon name="user" size={20} fill="transparent" /></View>
+      <View style={s.topNav}><NotificationBell hasNew={alerts.hasNew} onPress={() => router.push('/notifications')} /></View>
       <View style={{ gap: space.xs }}>
         <T v="DisplayTitle" accessibilityRole="header">Hey, {firstName(me?.email, me?.name)}</T>
         <T v="BodyDefaultRegular" c={C.textSecondary}>Ready to see where you stand today? Track your spending and savings for the month.</T>
