@@ -10,7 +10,7 @@ export default function Gallery() {
   const { theme, setTheme } = useTheme();
   return (
     <div className="wrap" style={{ paddingTop: 24 }}>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
       <h1 className="app-title">Okara components</h1>
       <Toggle on={theme === 'dark'} onChange={(on) => setTheme(on ? 'dark' : 'light')} label="Dark mode" />
       {CASES.map((c) => (

@@ -295,8 +295,8 @@ html .yoy-card .legend:not(#z){ margin:0; }
    Ongatu 1067:15927 (desktop) and 1067:15929 (phones). Both cards: surface/primary, radius/card, padding space/md
    space/lg (12/16 desktop, 16/24 phones) and space/md between the rows (12 / 16). The head row is the 8px dot (KPI) or
    the 20px initial badge (Expense card), 8 before the title in Heading/Large. The Value (Value/Large + 16px Euro,
-   space/tn) and the details (12px arrow + Value/Small) sit under the title: indented by the dot or badge plus 8
-   (16 / 28). Desktop: the Expense cards are a 2-column grid (401 wide in the 814 right column), 12 apart both ways.
+   space/tn) and the details (12px arrow + Value/Small) sit under the title, flush with the dot or badge (no indent
+   since the second Oct 18 pass). Desktop: the Expense cards are a 2-column grid (401 wide in the 814 right column), 12 apart both ways.
    Phones: a sideways row of 248-wide cards, 16 apart, 24 of padding after the last, fading out over 62px. */
 html .wrap :is(.mini-kpi, .ticker-item):not(#z):not(#y){ display:flex; flex-direction:column; gap:0;
   padding:var(--space-md) var(--space-lg); border-radius:var(--radius-card); background:var(--surface-primary); height:auto; min-height:0; box-sizing:border-box; }
@@ -307,13 +307,12 @@ html .wrap .mini-kpi .label:not(#z):not(#y), html .wrap .ticker-item .ti-top:not
 html .wrap .ticker-item .ti-name:not(#z):not(#y){ font:inherit; letter-spacing:inherit; color:inherit; overflow:hidden; text-overflow:ellipsis; }
 html .wrap .mini-kpi .dot:not(#z):not(#y){ width:8px; height:8px; flex:0 0 8px; border-radius:50%; }
 html .wrap .ticker-item .ti-dot:not(#z):not(#y){ width:20px; height:20px; min-width:20px; flex:0 0 20px; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center;
-  color:var(--text-white); font-size:11px; font-weight:500; line-height:16px; letter-spacing:-0.02em; } /* unstyled in Figma: Geist Medium 11/16 −2% */
-html .wrap :is(.mini-kpi .value, .ticker-item .ti-val):not(#z):not(#y){ display:flex; align-items:center; min-height:0; padding-left:16px; color:var(--text-primary);
+  color:var(--text-white); font-size:11px; font-weight:500; line-height:16px; letter-spacing:-0.02em; } /* unstyled in Figma: Medium 11/16 −2% */
+html .wrap :is(.mini-kpi .value, .ticker-item .ti-val):not(#z):not(#y){ display:flex; align-items:center; min-height:0; padding-left:0; color:var(--text-primary);
   font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:normal; letter-spacing:var(--type-value-large-ls); }
 html .wrap :is(.mini-kpi .value, .ticker-item .ti-val) .money:not(#z):not(#y){ gap:var(--space-tn); }
-html .wrap :is(.mini-kpi .detail, .ticker-item .ti-delta):not(#z):not(#y){ display:flex; align-items:center; gap:var(--space-tn); padding-left:16px; white-space:normal;
+html .wrap :is(.mini-kpi .detail, .ticker-item .ti-delta):not(#z):not(#y){ display:flex; align-items:center; gap:var(--space-tn); padding-left:0; white-space:normal;
   font-family:var(--font-mono); font-size:var(--type-value-small-size); font-weight:var(--type-value-small-weight); line-height:normal; letter-spacing:var(--type-value-small-ls); }
-html .wrap :is(.ticker-item .ti-val, .ticker-item .ti-delta):not(#z):not(#y){ padding-left:28px; }
 html .wrap :is(.mini-kpi .detail, .ticker-item .ti-delta) svg:not(#z):not(#y){ width:12px; height:12px; flex:0 0 12px; }
 @media (min-width:641px){
   html .wrap .ticker-strip:not(#z):not(#y){ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; }
@@ -358,4 +357,15 @@ html .wrap .row1 .glance-card .insight-tags:not(#z):not(#y){ padding-top:8px; ga
   html .wrap .row1 .alloc-card .alloc-col:not(#z):not(#y){ gap:8px; }
   html .wrap .row1 .glance-card:not(#z):not(#y){ gap:12px; }
   html .wrap .row1 .glance-card .insight-tags:not(#z):not(#y){ padding-top:12px; }
+}
+
+/* Oct 18, third pass (1067:15929): on phones the card titles are Heading/Medium (16/20, the desktop frame keeps
+   Heading/Large 16/20), the initial badge text 12/20, the Expense cards 109 high; the content starts space/xs (8)
+   under the year and month nav (was space/2xl). */
+@media (max-width:640px){
+  html .wrap .mini-kpi .label:not(#z):not(#y), html .wrap .ticker-item .ti-top:not(#z):not(#y){
+    font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .wrap .ticker-item .ti-dot:not(#z):not(#y){ font-size:12px; line-height:20px; }
+  html .wrap .ticker-strip .ticker-item:not(#z):not(#y){ min-height:109px; }
+  html .wrap > .row1:not(#z):not(#y){ margin-top:var(--space-xs); }
 }

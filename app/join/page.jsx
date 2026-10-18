@@ -11,7 +11,7 @@ export default async function Page() {
   await headers(); // per-request rendering, so Next applies the CSP nonce to its scripts (middleware.js)
   return (
     <>
-      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
+      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
       <JoinRoot />
     </>
   );

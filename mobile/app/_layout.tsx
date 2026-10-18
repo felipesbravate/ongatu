@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useFonts, Geist_300Light, Geist_400Regular, Geist_500Medium, Geist_600SemiBold } from '@expo-google-fonts/geist';
+import { useFonts, Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { MartianMono_300Light, MartianMono_400Regular, MartianMono_500Medium, MartianMono_600SemiBold } from '@expo-google-fonts/martian-mono';
 import { SessionProvider, useSession } from '@/lib/session';
 import { color } from '@/theme/tokens';
@@ -34,7 +34,7 @@ function Gate() {
 }
 
 export default function RootLayout() {
-  const [loaded] = useFonts({ Geist_300Light, Geist_400Regular, Geist_500Medium, Geist_600SemiBold, MartianMono_300Light, MartianMono_400Regular, MartianMono_500Medium, MartianMono_600SemiBold });
+  const [loaded] = useFonts({ Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, MartianMono_300Light, MartianMono_400Regular, MartianMono_500Medium, MartianMono_600SemiBold });
   useEffect(() => { if (loaded) SplashScreen.hideAsync(); }, [loaded]);
   if (!loaded) return null;
   return (

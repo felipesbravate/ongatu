@@ -209,7 +209,7 @@
     --opacity-background: 0.24;   /* Figma stores this one as a percentage (24) */
 
     /* Collection: Typography */
-    --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
     /* Collection: Surface (Desktop mode; Mobile below) */
@@ -4146,7 +4146,7 @@ html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; wid
 html .ds-balance-hero .estimate-pill:not(#z){ margin:0; }
 
 /* October 17: page subtitles and board-sheet refinements.
-   Body/Default/Regular: Geist, variable weight 420, 16/20, no tracking (Okara). */
+   Body/Default/Regular: Inter, variable weight 420, 16/20, no tracking (Okara). */
 
 html .app-sub:not(#z){
   font-family:var(--font-sans);

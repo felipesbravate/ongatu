@@ -229,11 +229,11 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 32
   },
   "Value2XL": {
@@ -261,71 +261,71 @@ export const text = {
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 24
   },
   "HeadingLarge": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 20
   },
   "HeadingMedium": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16
   },
   "HeadingSmall": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 14
   },
   "BodyDefaultRegular": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 16
   },
   "BodyDefaultBold": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16
   },
   "BodySmallRegular": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 14
   },
   "BodySmallMedium": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 14
   },
   "BodyTinyRegular": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 12
   },
   "BodyTinyMedium": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 12
   },
   "BadgeMedium": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 8
   },
   "LabelLarge": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 18
   },
   "LabelDefault": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 16
   },
   "LabelSmall": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 16
   },
   "LabelTiny": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 14
   },
   "LabelMicro": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 12
   },
   "LabelNano": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Inter_400Regular",
     "fontSize": 10
   }
 } as const;

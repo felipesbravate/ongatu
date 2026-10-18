@@ -294,7 +294,7 @@ async def main():
             check('expense cards: a 2-column grid on desktop (1067:15927, Oct 18)', d['cols'] == 2, d)
             bh = await pg.evaluate("""() => { const q = s => document.querySelector(s), cs = e => getComputedStyle(e), r = e => e.getBoundingClientRect(); const h = q('#balance-card'), l = h.querySelector('.bh-label');
                 return [Math.round(r(h).height), cs(h).rowGap, cs(l).fontFamily.split(',')[0].replace(/"/g, ''), cs(l).fontSize, cs(l).fontWeight, cs(l).lineHeight, cs(l).letterSpacing, Math.round(r(h.querySelector('.bh-euro svg')).width)]; }""")
-            check('Balance hero (1161:1557, Oct 17): Surface Mobile at every width: 154 high, 24 apart, label Label/Small in Geist 16/420/20 0 (sheet, Oct 18), 24px Euro', bh == [154, '24px', 'Geist', '16px', '420', '20px', 'normal', 24], bh)
+            check('Balance hero (1161:1557, Oct 17): Surface Mobile at every width: 154 high, 24 apart, label Label/Small in Inter 16/420/20 0 (sheet, Oct 18), 24px Euro', bh == [154, '24px', 'Inter', '16px', '420', '20px', 'normal', 24], bh)
             bw = await pg.evaluate("() => [...document.querySelectorAll('.card, .mini-kpi, .ticker-item')].map(e => getComputedStyle(e).borderTopWidth + ' ' + getComputedStyle(e).borderLeftStyle)")
             check('dashboard cards, KPI boxes and expense cards have no border', len(bw) >= 8 and all(x == '0px none' for x in bw), bw)
             gp = await pg.evaluate("() => { const g = s => getComputedStyle(document.querySelector(s)); return [g('.row1').columnGap, g('.hero-left').rowGap, g('.hero-right').rowGap, g('.yoy').columnGap, g('.mini-grid').columnGap, g('.mini-grid').rowGap, g('.ticker-strip').columnGap]; }")
