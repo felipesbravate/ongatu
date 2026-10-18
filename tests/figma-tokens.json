@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Inter since the Oct 18 night re-read, Geist before; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%). Oct 18 evening (Felipe, sheet 'New Text styles'): codeWeight = the sheet's Code weight for every style (lighter than Figma: Heading/Large 450, Body Regular 380/420, Labels 420, Display/Title 500); Badge/Medium letter-spacing 0 in code (Figma -2%, kept as figmaLetterSpacing). icon/round-control removed from Figma Color. Oct 18 night: font/sans = Inter in Figma (all text styles moved to Inter; Display/Title-mobile now Semi Bold 600, code keeps the sheet's 500).",
+  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Inter since the Oct 18 night re-read, Geist before; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%). Oct 18 evening (Felipe, sheet 'New Text styles'): codeWeight = the sheet's Code weight for every style (lighter than Figma: Heading/Large 450, Body Regular 380/420, Labels 420, Display/Title 500); Badge/Medium letter-spacing 0 in code (Figma -2%, kept as figmaLetterSpacing). icon/round-control removed from Figma Color. Oct 18 night: font/sans = Inter in Figma (all text styles moved to Inter; Display/Title-mobile now Semi Bold 600, code keeps the sheet's 500). Oct 18 late (Felipe, sheet 'New Text styles' v3): code weights 480 for headings, labels and the Medium/Bold body styles, 400 for the Regular body styles, 550 for Display; Value/Medium and Value/Small letter-spacing 0 in code (Figma -4%). Value/Medium and Value/Small back to -4% letter-spacing (Figma), Felipe Oct 18.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -422,7 +422,7 @@
       "family": "sans",
       "sizeVar": "size/display-title",
       "lhVar": "lh/display-title",
-      "codeWeight": 500
+      "codeWeight": 550
     },
     "Display/Title-mobile": {
       "size": 32,
@@ -431,7 +431,7 @@
       "family": "sans",
       "sizeVar": "size/value-xl",
       "lhVar": "lh/display-title",
-      "codeWeight": 500
+      "codeWeight": 550
     },
     "Value/2XL": {
       "size": 48,
@@ -476,7 +476,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-xl",
-      "lhVar": "lh/heading-xl"
+      "lhVar": "lh/heading-xl",
+      "codeWeight": 480
     },
     "Heading/Large": {
       "size": 20,
@@ -485,7 +486,7 @@
       "family": "sans",
       "sizeVar": "size/heading-lg",
       "lhVar": "lh/heading-lg",
-      "codeWeight": 450
+      "codeWeight": 480
     },
     "Heading/Medium": {
       "size": 16,
@@ -493,7 +494,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-md",
-      "lhVar": "lh/heading-md"
+      "lhVar": "lh/heading-md",
+      "codeWeight": 480
     },
     "Heading/Small": {
       "size": 14,
@@ -501,7 +503,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-sm",
-      "lhVar": "lh/heading-sm"
+      "lhVar": "lh/heading-sm",
+      "codeWeight": 480
     },
     "Body/Default/Regular": {
       "size": 16,
@@ -509,8 +512,7 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-medium",
-      "codeWeight": 380
+      "lhVar": "lh/body-lg-medium"
     },
     "Body/Default/Bold": {
       "size": 16,
@@ -518,7 +520,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-semibold"
+      "lhVar": "lh/body-lg-semibold",
+      "codeWeight": 480
     },
     "Body/Small/Regular": {
       "size": 14,
@@ -526,8 +529,7 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md",
-      "codeWeight": 420
+      "lhVar": "lh/body-md"
     },
     "Body/Small/Medium": {
       "size": 14,
@@ -535,7 +537,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md"
+      "lhVar": "lh/body-md",
+      "codeWeight": 480
     },
     "Body/Tiny/Regular": {
       "size": 12,
@@ -544,7 +547,7 @@
       "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-sm",
-      "codeWeight": 420
+      "codeWeight": 400
     },
     "Body/Tiny/Medium": {
       "size": 12,
@@ -552,7 +555,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-sm"
+      "lhVar": "lh/body-sm",
+      "codeWeight": 480
     },
     "Badge/Medium": {
       "size": 8,
@@ -569,7 +573,7 @@
       "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-lg-semibold",
-      "codeWeight": 420
+      "codeWeight": 480
     },
     "Label/Default": {
       "size": 16,
@@ -578,7 +582,7 @@
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/heading-lg",
-      "codeWeight": 420
+      "codeWeight": 480
     },
     "Label/Small": {
       "size": 16,
@@ -587,7 +591,7 @@
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium",
-      "codeWeight": 420
+      "codeWeight": 480
     },
     "Label/Tiny": {
       "size": 14,
@@ -596,7 +600,7 @@
       "family": "sans",
       "sizeVar": "size/body-md",
       "lhVar": "lh/body-md",
-      "codeWeight": 420
+      "codeWeight": 480
     },
     "Label/Micro": {
       "size": 12,
@@ -605,7 +609,7 @@
       "family": "sans",
       "sizeVar": "size/body-sm",
       "lhVar": "lh/body-md",
-      "codeWeight": 420
+      "codeWeight": 480
     },
     "Label/Nano": {
       "size": 10,
@@ -613,7 +617,7 @@
       "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-sm",
-      "codeWeight": 420
+      "codeWeight": 480
     }
   }
 }

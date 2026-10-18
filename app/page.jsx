@@ -14,7 +14,7 @@ export default async function Page({ searchParams }) {
   await headers(); // per-request rendering, so Next applies the nonce to its scripts
   return (
     <>
-      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
+      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
       <Root />
     </>
   );

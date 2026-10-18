@@ -229,11 +229,11 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Inter_600SemiBold",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Inter_600SemiBold",
     "fontSize": 32
   },
   "Value2XL": {
@@ -305,27 +305,27 @@ export const text = {
     "fontSize": 8
   },
   "LabelLarge": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 18
   },
   "LabelDefault": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16
   },
   "LabelSmall": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 16
   },
   "LabelTiny": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 14
   },
   "LabelMicro": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 12
   },
   "LabelNano": {
-    "fontFamily": "Inter_400Regular",
+    "fontFamily": "Inter_500Medium",
     "fontSize": 10
   }
 } as const;

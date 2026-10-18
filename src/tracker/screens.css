@@ -36,7 +36,7 @@
   html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
   /* Latest line (787:14891): text, Dot, € and the figure 8 apart; € and figure Value/Medium (14, -4%). */
   html .breakdown-card .tracker-last-entry:not(#z){ gap:var(--space-xs); } /* Oct 16 (1042:45640): 4 apart */
-  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:12px; line-height:16px; letter-spacing:-0.48px; } /* Value/Medium at 12 (Oct 16) */
+  html .breakdown-card .tracker-last-entry .tle-num:not(#z){ font-size:12px; line-height:16px; letter-spacing:var(--type-value-small-ls); } /* Value/Medium at 12 (Oct 16) */
 
   /* Hero chart (581:19553): header 24 (title + Label), the chart 12 under it at 220, the legend 12 under the chart:
      swatch 9 (radius/ty) then the label 8 apart, items 12 apart, 12px Medium text/secondary. */
@@ -183,11 +183,11 @@ html .glance-card .insight-tag:not(#z){ height:24px; min-width:48px; padding:0 8
 @media (max-width:640px){
   html .breakdown-card #meters .meter-track:not(#z){ height:6px; margin-top:8px; }
   html .breakdown-card #meters .meter-amt .money:not(#z){ color:var(--text-primary); gap:4px; }
-  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-mono); font-size:14px; line-height:normal; letter-spacing:-0.56px; color:var(--text-primary); }
+  html .breakdown-card #meters .meter-amt .money > span:not(#z){ font-family:var(--font-mono); font-size:14px; line-height:normal; letter-spacing:var(--type-value-medium-ls); color:var(--text-primary); }
   html .breakdown-card .tracker-last-entry.is-phone:not(#z){ gap:4px; }
   html .tracker-last-entry.is-phone .tle-text:not(#z), html .tracker-last-entry.is-phone .tle-date:not(#z){ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--link-disable); }
   html .tracker-last-entry.is-phone .tle-value:not(#z){ gap:0; color:var(--text-accent-light); }
-  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-mono); font-size:12px; line-height:normal; letter-spacing:-0.48px; color:var(--text-accent-light); }
+  html .tracker-last-entry.is-phone .tle-num:not(#z){ font-family:var(--font-mono); font-size:12px; line-height:normal; letter-spacing:var(--type-value-small-ls); color:var(--text-accent-light); }
 }
 html .ds-balance-hero .bh-whole:not(#z){ gap:calc(var(--space-xs) + 0.16em); }
 

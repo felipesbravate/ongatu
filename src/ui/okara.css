@@ -268,11 +268,11 @@
 
     /* Collection: TextStyles */
     --type-display-title-size: var(--size-display-title);
-    --type-display-title-weight: 500;
+    --type-display-title-weight: 550;
     --type-display-title-lh: var(--lh-display-title);
     --type-display-title-ls: 0;
     --type-display-title-mobile-size: var(--size-value-xl);
-    --type-display-title-mobile-weight: 500;
+    --type-display-title-mobile-weight: 550;
     --type-display-title-mobile-lh: var(--lh-display-title);
     --type-display-title-mobile-ls: 0;
     --type-value-2xl-size: 48px;
@@ -296,43 +296,43 @@
     --type-value-small-lh: normal;
     --type-value-small-ls: -0.04em;
     --type-heading-xl-size: var(--size-heading-xl);
-    --type-heading-xl-weight: 500;
+    --type-heading-xl-weight: 480;
     --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
     --type-heading-large-size: var(--size-heading-lg);
-    --type-heading-large-weight: 450;
+    --type-heading-large-weight: 480;
     --type-heading-large-lh: var(--lh-heading-lg);
     --type-heading-large-ls: 0;
     --type-heading-medium-size: var(--size-heading-md);
-    --type-heading-medium-weight: 500;
+    --type-heading-medium-weight: 480;
     --type-heading-medium-lh: var(--lh-heading-md);
     --type-heading-medium-ls: 0;
     --type-heading-small-size: var(--size-heading-sm);
-    --type-heading-small-weight: 500;
+    --type-heading-small-weight: 480;
     --type-heading-small-lh: var(--lh-heading-sm);
     --type-heading-small-ls: 0;
     --type-body-default-regular-size: var(--size-body-lg);
-    --type-body-default-regular-weight: 380;
+    --type-body-default-regular-weight: 400;
     --type-body-default-regular-lh: var(--lh-body-lg-medium);
     --type-body-default-regular-ls: 0;
     --type-body-default-bold-size: var(--size-body-lg);
-    --type-body-default-bold-weight: 500;
+    --type-body-default-bold-weight: 480;
     --type-body-default-bold-lh: var(--lh-body-lg-semibold);
     --type-body-default-bold-ls: 0;
     --type-body-small-regular-size: var(--size-body-md);
-    --type-body-small-regular-weight: 420;
+    --type-body-small-regular-weight: 400;
     --type-body-small-regular-lh: var(--lh-body-md);
     --type-body-small-regular-ls: 0;
     --type-body-small-medium-size: var(--size-body-md);
-    --type-body-small-medium-weight: 500;
+    --type-body-small-medium-weight: 480;
     --type-body-small-medium-lh: var(--lh-body-md);
     --type-body-small-medium-ls: 0;
     --type-body-tiny-regular-size: var(--size-body-sm);
-    --type-body-tiny-regular-weight: 420;
+    --type-body-tiny-regular-weight: 400;
     --type-body-tiny-regular-lh: var(--lh-body-sm);
     --type-body-tiny-regular-ls: 0;
     --type-body-tiny-medium-size: var(--size-body-sm);
-    --type-body-tiny-medium-weight: 500;
+    --type-body-tiny-medium-weight: 480;
     --type-body-tiny-medium-lh: var(--lh-body-sm);
     --type-body-tiny-medium-ls: 0;
     --type-badge-medium-size: var(--size-badge);
@@ -340,27 +340,27 @@
     --type-badge-medium-lh: var(--lh-badge);
     --type-badge-medium-ls: 0;
     --type-label-large-size: 18px;
-    --type-label-large-weight: 420;
+    --type-label-large-weight: 480;
     --type-label-large-lh: var(--lh-body-lg-semibold);
     --type-label-large-ls: 0;
     --type-label-default-size: var(--size-body-lg);
-    --type-label-default-weight: 420;
+    --type-label-default-weight: 480;
     --type-label-default-lh: var(--lh-heading-lg);
     --type-label-default-ls: 0;
     --type-label-small-size: var(--size-body-lg);
-    --type-label-small-weight: 420;
+    --type-label-small-weight: 480;
     --type-label-small-lh: var(--lh-body-lg-medium);
     --type-label-small-ls: 0;
     --type-label-tiny-size: var(--size-body-md);
-    --type-label-tiny-weight: 420;
+    --type-label-tiny-weight: 480;
     --type-label-tiny-lh: var(--lh-body-md);
     --type-label-tiny-ls: 0;
     --type-label-micro-size: var(--size-body-sm);
-    --type-label-micro-weight: 420;
+    --type-label-micro-weight: 480;
     --type-label-micro-lh: var(--lh-body-md);
     --type-label-micro-ls: 0;
     --type-label-nano-size: 10px;
-    --type-label-nano-weight: 420;
+    --type-label-nano-weight: 480;
     --type-label-nano-lh: var(--lh-body-sm);
     --type-label-nano-ls: 0;
     /* @tokens:end */
@@ -590,6 +590,9 @@
   body{
     margin:0; background:var(--page); color:var(--ink);
     font-family:var(--font-sans); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); padding:0 var(--layout-xl);
+    /* Oct 18 (render like Figma): grayscale antialiasing (macOS browsers otherwise thicken every stroke) and Inter's
+       optical-size axis set from the font size, as Figma does. */
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; font-optical-sizing:auto; text-rendering:optimizeLegibility;
   }
   .wrap{ max-width:1238px; margin:0 auto; padding-block:var(--layout-xl) 72px; }
   h1,h2,h3{ font-family:inherit; margin:0; font-weight:500; }
@@ -2973,7 +2976,7 @@
      Value/Small 12, Mobile tokens); Editing = Tiny input with a 12px € and Value/Small. Items xs apart, 24 high. */
   .bd-row{ min-height:24px; gap:var(--space-xs); }
   .bd-row .bd-item-name{ color:var(--text-secondary); font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
-  .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
+  .bd-row .n, .bd-row .bd-amount{ font-family:var(--font-mono); font-size:14px; letter-spacing:var(--type-value-medium-ls); }
   .bd-row .n .money, .bd-row .bd-value{ gap:var(--space-tn); }
   /* Oct 3 (third pass): the newest screens (581:19517 Tracker, 232:5851 / 232:5853 Year budget) draw Surface=Mobile rows on
      desktop too, so the Desktop sizes above are no longer applied. */
@@ -3244,7 +3247,7 @@
   .budget-panel .budget-filters > .span-2:has(> .ds-action-link), .budget-panel .budget-group > div:has(> .budget-group-add),
   .budget-panel .budget-type-section > div:has(> .ds-action-link){ display:flex; }
   /* Tracker rows (581:19517): the figure is a Medium Action link (link/default; hover underlined). */
-  .bd-row .bd-amount-link{ display:inline-flex; align-items:center; flex:none; padding:0; border:0; background:none; cursor:pointer; color:var(--link-default); font-family:var(--font-mono); font-size:14px; letter-spacing:-0.04em; }
+  .bd-row .bd-amount-link{ display:inline-flex; align-items:center; flex:none; padding:0; border:0; background:none; cursor:pointer; color:var(--link-default); font-family:var(--font-mono); font-size:14px; letter-spacing:var(--type-value-medium-ls); }
   .bd-row .bd-amount-link .money-ic{ color:currentColor; }
   .bd-row .bd-amount-link:hover{ color:var(--link-hover); text-decoration:underline; text-underline-offset:3px; }
   .bd-row .bd-amount-link:focus-visible{ outline:2px solid var(--border-focus, var(--link-default)); outline-offset:2px; border-radius:4px; }
@@ -3706,7 +3709,7 @@
 .tracker-last-entry .tle-dot{ width:10px; height:10px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
 .tracker-last-entry .tle-dot i{ width:3.33px; height:3.33px; border-radius:50%; background:currentColor; }
 .tracker-last-entry .tle-num{
-  font-family:var(--font-mono); font-size:12px; font-weight:400; line-height:normal; letter-spacing:-0.48px;
+  font-family:var(--font-mono); font-size:12px; font-weight:400; line-height:normal; letter-spacing:var(--type-value-small-ls);
 }
 
 /* A single selection layer persists as Home and Account change. */
@@ -3771,13 +3774,13 @@ html #note-tip .tip-dot::before{ background:var(--action-disable); }
 html #note-tip .tip-name{ font-size:var(--size-body-lg); font-weight:var(--type-label-small-weight); line-height:var(--lh-body-lg-medium); letter-spacing:var(--type-label-small-ls); color:var(--badge-counter-text); }
 html #note-tip .tip-item.sub .tip-name{ font-weight:var(--type-label-small-weight); }
 html #note-tip .tip-date{ font-size:var(--size-body-md); font-weight:var(--type-label-tiny-weight); /* Label/Tiny Regular (Oct 16) */ line-height:var(--lh-body-md); letter-spacing:var(--type-label-tiny-ls); color:var(--badge-counter-text-secondary); }
-html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:400; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text); }
+html #note-tip .tip-amount{ font-family:var(--font-mono); font-size:var(--size-value-sm); font-weight:400; line-height:normal; letter-spacing:var(--type-value-small-ls); color:var(--badge-counter-text); }
 html #note-tip .tip-amount .money{ gap:4px; align-items:center; }
 html #note-tip .tip-amount .money-ic, html #note-tip .tip-amount .money-ic svg{ color:var(--badge-counter-pressed-icon); }
 html #note-tip .tip-del, html #note-tip .tip-del svg{ color:var(--badge-counter-close-icon); }
 html #note-tip .tip-head{ gap:10px; padding-right:0; }
 html #note-tip .tip-head-label{ font-size:var(--size-body-md); font-weight:var(--type-body-small-medium-weight); line-height:var(--lh-body-md); letter-spacing:var(--type-body-small-medium-ls); color:var(--badge-counter-text-secondary); }
-html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:400; line-height:normal; letter-spacing:-0.04em; color:var(--badge-counter-text-secondary); }
+html #note-tip .tip-head-amount{ font-family:var(--font-mono); font-size:var(--size-value-md); font-weight:400; line-height:normal; letter-spacing:var(--type-value-medium-ls); color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-amount .money{ gap:0; align-items:center; }
 html #note-tip .tip-head-amount .money-ic, html #note-tip .tip-head-amount .money-ic svg{ color:var(--badge-counter-text-secondary); }
 html #note-tip .tip-head-divider{ border:none; border-top:1px solid var(--badge-counter-divider); margin:var(--space-md) 0; }
@@ -3820,7 +3823,7 @@ html .is-trend svg.trend-flat, html .ticker-item .ti-delta svg.trend-flat{ color
   html .ticker-strip .ti-dot:not(#z){ width:20px; height:20px; min-width:20px; font-size:12px; line-height:16px; color:#fff; }
   html .ticker-strip .ti-name:not(#z){ font-size:16px; font-weight:var(--type-heading-medium-weight); line-height:16px; letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); }
   html .ticker-strip .ti-val:not(#z){ font-family:var(--font-mono); font-size:16px; font-weight:400; line-height:16px; letter-spacing:0; }
-  html .ticker-strip .ti-delta:not(#z){ gap:4px; font-size:12px; line-height:14px; letter-spacing:-0.48px; white-space:nowrap; }
+  html .ticker-strip .ti-delta:not(#z){ gap:4px; font-size:12px; line-height:14px; letter-spacing:var(--type-value-small-ls); white-space:nowrap; }
 }
 html .mini-kpi{ min-width:0; }
 html .is-trend .trend-change{ white-space:normal; }
@@ -4142,7 +4145,7 @@ html .ds-balance-hero .bh-cents:not(#z){ font-size:var(--size-value-xl); line-he
 html .ds-balance-hero .bh-euro:not(#z){ display:flex; color:var(--text-accent); }
 html .ds-balance-hero .bh-euro svg{ display:block; }
 html .ds-balance-hero .bh-code:not(#z){ font-family:var(--font-mono); font-size:var(--size-value-xl); line-height:26px; }
-html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; width:100%; font-family:var(--font-mono); font-size:var(--type-value-small-size); line-height:normal; letter-spacing:-0.04em; color:var(--text-secondary); }
+html .ds-balance-hero .bh-details:not(#z){ justify-content:center; margin:0; width:100%; font-family:var(--font-mono); font-size:var(--type-value-small-size); line-height:normal; letter-spacing:var(--type-value-small-ls); color:var(--text-secondary); }
 html .ds-balance-hero .estimate-pill:not(#z){ margin:0; }
 
 /* October 17: page subtitles and board-sheet refinements.
