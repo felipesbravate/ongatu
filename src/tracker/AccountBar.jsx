@@ -100,7 +100,7 @@ export function boardSwitcherProps(boards, firstName) {
     current,
     boards: [
       { id: null, name: personalBoardName(firstName), kind: 'personal', current: !current },
-      ...list.map((b) => ({ id: b.id, name: b.name, kind: 'joint', tag: ROLE_LABEL[b.role], current: b.id === activeId })),
+      ...list.map((b) => ({ id: b.id, name: b.name, kind: 'joint', tag: b.role === 'co_owner' ? 'Owner' : ROLE_LABEL[b.role], current: b.id === activeId })),
     ],
     onPick: (id) => { if ((id || null) !== (activeId || null)) setActiveBoard(id, '/'); },
     onCreate: startJointBoard,

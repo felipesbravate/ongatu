@@ -221,7 +221,8 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
   );
   const groupField = !grouped ? null : (groupNames.length || groupTyping) ? (
     <div className="fld">
-      <label className="fld-label" htmlFor={`${P}-group`}>Group (optional)</label>
+      {/* 703:16763 / 232:5853: "Group (Optional)" over the combobox and on the empty info box (232:5851 still says "optional"; unified). */}
+      <label className="fld-label" htmlFor={`${P}-group`}>Group (Optional)</label>
       <Combo id={`${P}-group`} value={groupText} onChange={setGroupText} options={[...(shownGroup ? [ALL_GROUPS] : []), ...groupNames]} placeholder="Select or type to create new group" autoFocus={groupTyping}
         onPick={pickGroup} onBlur={() => setTimeout(() => setGroupText(shownGroup), 150)} />
       <div className="budget-field-links">
@@ -229,7 +230,7 @@ export function BudgetPanel({ pending, month, forMonth, model, onClose, onCreate
       </div>
     </div>
   ) : (
-    <EmptyField label="Group (optional)" text="No groups created" actionLabel="Add group" actionId={`${P}-add-group`} onAdd={() => setGroupTyping(true)} />
+    <EmptyField label="Group (Optional)" text="No groups created" actionLabel="Add group" actionId={`${P}-add-group`} onAdd={() => setGroupTyping(true)} />
   );
 
   return (

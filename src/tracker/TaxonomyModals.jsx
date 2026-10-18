@@ -137,10 +137,11 @@ export function TypeModal({ open, kind, kindName, group: fixedGroup, category: f
           <div className="fld"><label className="fld-label" htmlFor={`${id}-group`}>Group (Optional)</label>
             <Combo id={`${id}-group`} value={cat} onChange={setCat} options={groupsOf(sub || null)} placeholder="Select or type to create new..." /></div>
         )}
-        {/* 577:6584 / 661:6306: "Type name"; "+ Add another item" is Medium (16/20) on phones. */}
-        <div className="fld"><span className="fld-label">Type name</span>
+        {/* 577:6584 / 577:6612: "Type name" with one row, "Type" with several; phones (663:8893 / 661:6306): "Type".
+            "+ Add another type" is Medium (16/20) on phones. */}
+        <div className="fld"><span className="fld-label">{mobile || items.length > 1 ? 'Type' : 'Type name'}</span>
           <Rows values={items} setValues={setItems} label="Type" idPrefix={`${id}-item`} placeholder={isExp ? 'e.g., Electricity, Netflix, Uber' : kind === 'income' ? 'e.g., Salary, Freelance' : kind === 'investment' ? 'e.g., Stocks, Pension' : 'e.g., Monthly donation'} /></div>
-        <ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another item</ActionLink>
+        <ActionLink size={mobile ? 'medium' : undefined} icon={plus} id={`${id}-more`} onClick={() => setItems([...items, ''])}>Add another type</ActionLink>
         {err && <InfoMessage message="danger" title={err} />}
       </div>
     </Modal>

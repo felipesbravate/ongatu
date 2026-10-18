@@ -1,45 +1,54 @@
-/* Notifications page (Ongatu notifications-desktop 840:9143 / dark 840:9327) and Account page fixes (250:3399).
-   The page reuses the Account page's shell (.acct-page, .acct-head, .acct-content, .acct-menu in okara.css). */
+/* Notifications page (Ongatu notifications-desktop 840:9143 / dark 1068:35320; phones notifications-mobile 1070:74832,
+   Oct 18). The page reuses the Account page's shell (.acct-page, .acct-head, .acct-content, .acct-menu in okara.css). */
 
-/* Pager header: title only, no subtitle (840:9147). */
-html .notif-page .acct-head:not(#z) .app-title{ margin-bottom:0; }
+/* Pager header (840:9147): "Back to dashboard", the title 12 under it, no subtitle; the content 40 under the title. */
+html .notif-page .acct-head:not(#z) .app-title{ margin:12px 0 0; }
+html .notif-mobile-nav:not(#z){ display:none; }
 
 /* Side menu (840:9150): the counter sits 8 after the label (not pushed to the right). */
 html .notif-menu .ds-menu-item .ds-menu-counter:not(#z){ margin-left:0; }
 
-/* Card (840:9152): 680 wide, surface/primary, radius/md, Card shadow, padding 16 / 24 / 24; the list padded 8 on the sides. */
+/* Card (840:9152 "Notifications"): 680 wide, surface/primary, radius/card, Card shadow, padding 24, the header (Heading/XL
+   text/primary) 24 above the list; the list full width, entries divided by border/secondary separators. */
 html .notif-card:not(#z){
-  width:680px; min-width:0; box-sizing:border-box;
-  padding:16px 24px 24px;
-  background:var(--surface-primary); border-radius:var(--radius-md);
+  width:680px; min-width:0; box-sizing:border-box; display:flex; flex-direction:column; gap:24px;
+  padding:24px;
+  background:var(--surface-primary); border-radius:var(--radius-card);
   box-shadow:0 0 20px rgba(22, 21, 15, .04);
 }
-html .notif-list:not(#z){ display:flex; flex-direction:column; padding:0 8px; }
-html .notif-list .notif-sep:not(#z){ width:100%; margin:0; }
+html .notif-card .notif-card-title:not(#z){ margin:0; color:var(--text-primary); text-transform:none;
+  font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+html .notif-list:not(#z){ display:flex; flex-direction:column; padding:0; }
+html .notif-list .notif-sep:not(#z){ width:100%; margin:0; border-top-color:var(--border-secondary); }
 
-/* Notification entry: unread 112 min high (its CTAs include "Mark as read"), read 88 with text/secondary. Padding 16. */
+/* notification-item (840:9152): padding 16, radius 16, the CTAs 12 under the text; read 88 high with text/secondary,
+   unread text/primary (with its CTAs, 108). The unread dot (840:9156) is hidden in the Oct 18 frames: none. */
 html .notif-entry:not(#z){ position:relative; }
-html .notif-entry .ds-notif-item:not(#z){ min-height:88px; padding:16px; gap:12px; box-sizing:border-box; } /* Oct 17: CTAs 12 under the text (228:469) */
-html .notif-entry.is-unread .ds-notif-item:not(#z){ min-height:112px; }
+html .notif-entry .ds-notif-item:not(#z){ min-height:88px; padding:16px; gap:12px; box-sizing:border-box; border-radius:16px; }
 html .notif-entry .ds-notif-body:not(#z){ gap:8px; }
 html .notif-entry .ds-notif-text:not(#z){
   font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight);
   line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary);
 }
 html .notif-entry.is-unread .ds-notif-text:not(#z){ color:var(--text-primary); }
-/* The unread dot (840:9156): 8px data/red-orange, 9 left of the entry, 20 from its top. */
-html .notif-unread-dot:not(#z){ position:absolute; left:-9px; top:20px; width:8px; height:8px; border-radius:50%; background:var(--primitive-data-red-orange); pointer-events:none; }
 html .notif-list .ds-notif-empty:not(#z){ padding:16px; }
 
 @media (max-width:640px){
-  /* Phones: the Account page's phone layout, the filters in a row above a full-width card. */
-  html .notif-menu.ds-side-menu:not(#z){ flex-direction:row; flex-wrap:nowrap; gap:var(--space-xs); width:auto; flex:0 0 auto; }
-  html .notif-menu .ds-menu-item:not(#z){ width:auto; min-width:0; }
-  html .notif-card:not(#z){ width:auto; padding:var(--space-lg) var(--space-md) var(--space-md); }
-  html .notif-list:not(#z){ padding:0 4px; }
-  html .notif-entry .ds-notif-item:not(#z){ padding:var(--space-md); }
-  html .notif-unread-dot:not(#z){ left:-8px; }
+  /* Phones (1070:74832): a full-screen surface/primary page, no app header or bottom nav. The nav row (64) holds the Small
+     Round button 8 from the edge; the title (Heading/XL) 16 under it; the filters (menu items 40 high, 12 apart) 24
+     under the title; the list right under them, 16 from the sides, entries 12 above and below each divider. */
+  html:has(.notif-page):not(#z), html body:has(.notif-page):not(#z){ background:var(--surface-primary); }
+  html body:has(.notif-page) .ds-app-header:not(#z), html body:has(.notif-page) .app-top-gap:not(#z){ display:none; }
+  html .wrap.notif-page:not(#z){ padding-top:0; }
+  html .notif-page #notif-page-back:not(#z){ display:none; }
+  html .notif-page .acct-head:not(#z){ gap:0; }
+  html .notif-mobile-nav:not(#z){ display:flex; align-items:center; height:64px; margin-left:-8px; }
+  html .notif-page .acct-head:not(#z) .app-title{ margin:16px 0 0; padding:0;
+    font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  html .notif-page .acct-content:not(#z){ margin-top:24px; gap:0; }
+  html .notif-menu.ds-side-menu:not(#z){ flex-direction:row; flex-wrap:nowrap; gap:12px; width:auto; flex:0 0 auto; }
+  html .notif-menu .ds-menu-item:not(#z){ width:auto; min-width:0; height:40px; min-height:40px; padding:8px 12px; }
+  html .notif-card:not(#z){ width:auto; padding:0; gap:0; background:transparent; border-radius:0; box-shadow:none; }
+  html .notif-card .notif-card-title:not(#z){ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  html .notif-list .notif-sep:not(#z){ margin:12px 0; }
 }
-
-/* Account 250:3399: the email field is as wide as the First name column (370 of 752; okara.css had 352). */
-html #profile .acct-form .acct-row.acct-email-row .field:not(#z){ width:100%; flex:1 1 auto; }

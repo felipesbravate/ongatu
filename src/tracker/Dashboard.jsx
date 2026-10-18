@@ -385,11 +385,12 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
   const cur = y.currency;
   const svgRef = useRef(null);
   const [tip, setTip] = useTip();
-  // Desktop (581:19558): 220 high, rules at 20/76/132/188. Phones (898:9252): 120 high, three rules at 20/60/100.
+  // Oct 18 (211:18753 chart, 898:9152 phones): five rules from the top of the chart to its bottom, 165 high on desktop
+  // (41 apart), 197 on phones (49 apart); the lines span the card on desktop and sit 16 in on phones, 2px strokes.
   // The svg fills the card's width at that fixed height (strokes do not scale).
   const mobile = useMobile();
-  const W = mobile ? 326 : 822, H = mobile ? 120 : 220, padL = 8, padR = 8, padT = 20, padB = mobile ? 20 : 32;
-  const rules = mobile ? 3 : 4;
+  const W = mobile ? 310 : 766, H = mobile ? 197 : 165, padL = mobile ? 16 : 2, padR = padL, padT = mobile ? 49 : 29, padB = mobile ? 13 : 1;
+  const rules = 5;
   const totals = { incomes: [], expenses: [], investments: [] };
   for (let i = 0; i < 12; i++) { const c = model.computeMonth(y, i); totals.incomes.push(c.income); totals.expenses.push(c.expenseTotal); totals.investments.push(c.invest); }
   const maxV = Math.max(1, ...totals.incomes, ...totals.expenses, ...totals.investments) * 1.15;
@@ -403,29 +404,25 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
   const color = { incomes: tok('--chart-income'), expenses: tok('--chart-expense'), investments: tok('--chart-invest') };
   const path = (vals) => vals.map((v, i) => (i === 0 ? 'M' : 'L') + x(i).toFixed(1) + ' ' + yScale(v).toFixed(1)).join(' ');
   const cw = (W - padL - padR) / 11;
-  // Phones (Trend_Chart_Section 342:8068): "€3.900 Incomes avg" = the average income of the months that have data
-  // (Felipe, Sept 28), two lines (Incomes, Expenses), no change chip. On every size (211:18753 too): no axis letters, pins,
-  // point markers or month line.
-  const incomeMonths = populated.filter((i) => totals.incomes[i] > 0);
-  const avgIncome = incomeMonths.length ? incomeMonths.reduce((a, i) => a + totals.incomes[i], 0) / incomeMonths.length : 0;
+  // Every size (211:18753, phones 898:9152, Oct 18): the three lines, the change Label and the three-item legend; no axis
+  // letters, pins, point markers or month line.
   return (
     <div className={'card hero-chart' + (mobile ? ' is-compact' : '')}>
       <div className="hc-top">
         <div>
           <div className="hc-label">Incomes · Expenses · Savings</div>
-          {/* Desktop (581:19554, Oct 12): the title and the change Label only; phones (898:9249) add the income average. */}
-          {mobile && <div className="hc-value" id="hero-value">{fmtMoneyShort(avgIncome, cur) + ' Incomes avg'}</div>}
         </div>
-        {!mobile && <Label type={up ? 'positive' : 'negative'} icon={up ? arrowStraightUp : arrowStraightDown} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
+        {/* The title and the change Label (581:19554); phones (898:9152, Oct 18) put the Label 8 under the title. */}
+        <Label type={up ? 'positive' : 'negative'} icon={up ? arrowStraightUp : arrowStraightDown} id="hero-delta" aria-label={`${up ? '+' : '-'}${Math.abs(pct).toFixed(1)}% since ${since}`}>
           {`${Math.abs(pct).toFixed(1)}% since ${since}`}
-        </Label>}
+        </Label>
       </div>
       <div className="chart-wrap">
         <svg id="trend-chart" ref={svgRef} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ height: H }}>
-          {Array.from({ length: rules }, (_, g) => { const gy = padT + g * ((H - padT - padB) / (rules - 1)); return <line key={'g' + g} className="gridline" x1="0" x2={W} y1={gy} y2={gy} vectorEffect="non-scaling-stroke" />; })}
-          <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-          {!mobile && <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="1.75" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
-          <path d={path(totals.incomes)} fill="none" stroke={color.incomes} strokeWidth="2.5" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          {Array.from({ length: rules }, (_, g) => { const gy = 0.5 + g * ((H - 1) / (rules - 1)); return <line key={'g' + g} className="gridline" x1="0" x2={W} y1={gy} y2={gy} vectorEffect="non-scaling-stroke" />; })}
+          <path d={path(totals.expenses)} fill="none" stroke={color.expenses} strokeWidth="2" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path d={path(totals.investments)} fill="none" stroke={color.investments} strokeWidth="2" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path d={path(totals.incomes)} fill="none" stroke={color.incomes} strokeWidth="2" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           {Array.from({ length: 12 }, (_, i) => (
             <rect key={'r' + i} data-mi={i} x={x(i) - cw / 2} y={padT} width={cw} height={H - padT - padB} fill="transparent" style={{ cursor: 'pointer' }}
               onMouseEnter={() => setTip({ i, ...tipPos(svgRef.current, x(i), yScale(totals.incomes[i])) })} onMouseLeave={() => setTip((t) => t && { ...t, hide: true })}
@@ -439,66 +436,74 @@ export function TrendChart({ model, y, monthIdx, onMonth }) {
       <div className="legend">
         <span><span className="swatch" style={{ background: 'var(--chart-income)' }} />Incomes</span>
         <span><span className="swatch" style={{ background: 'var(--chart-expense)' }} />Expenses</span>
-        {!mobile && <span><span className="swatch" style={{ background: 'var(--chart-invest)' }} />Savings</span>}
+        <span><span className="swatch" style={{ background: 'var(--chart-invest)' }} />Savings</span>
       </div>
     </div>
   );
 }
 
 // Year over year: annual totals per currency, so different currencies are never summed.
+// Oct 18 (211:18753 desktop, 898:9152 phones): the section sits in the right column under the trend chart (phones: last);
+// the title (Heading/XL) and its line (Body/Default/Regular), then one card per currency, stacked.
 export function YearOverYear({ model, onYear }) {
   return (
-    <>
-      <h2 className="yoy-heading">Year over year</h2>
-      <div className="hint yoy-sub" style={{ marginBottom: 'var(--space-md)' }}>Annual totals, shown separately by currency, so different currencies are never summed together.</div>
+    <section className="yoy-section" aria-labelledby="yoy-heading">
+      <div className="yoy-head">
+        <h2 className="yoy-heading" id="yoy-heading">Year over year</h2>
+        <p className="yoy-sub">Annual totals, shown separately by currency, so different currencies are never summed together.</p>
+      </div>
       <div className="yoy">
         <YoYCard model={model} cur="SEK" onYear={onYear} />
         <YoYCard model={model} cur="EUR" onYear={onYear} />
       </div>
-    </>
+    </section>
   );
 }
+// A card (211:18753 "chart"): the title, the chart (five rules; each year two bars 4 apart on the bottom rule, its label
+// under it) and the Incomes / Expenses legend.
 function YoYCard({ model, cur, onYear }) {
   const years = model.DATA.filter((y) => y.currency === cur);
-  const svgRef = useRef(null);
+  const wrapRef = useRef(null);
   const [tip, setTip] = useTip();
   const id = cur === 'SEK' ? 'yoy-sek' : 'yoy-eur';
   const lbl = years.map((y) => y.year).sort();
   const title = lbl.length ? (lbl.length > 1 ? lbl[0] + '–' + lbl[lbl.length - 1] : lbl[0]) + ' · ' + cur : cur;
-  const W = 560, H = 220, padL = 44, padR = 14, padT = 14, padB = 28;
   const n = years.length;
   const inc = years.map(model.yearIncome), exp = years.map(model.yearExpense);
-  const maxV = Math.max(1, ...inc, ...exp);
-  const bw = n ? (W - padL - padR) / n : (W - padL - padR);
-  const barW = bw * 0.32;
-  const yScale = (v) => (v / maxV) * (H - padT - padB);
+  const maxV = Math.max(1, ...inc, ...exp) * 1.1;
+  const pct = (v) => `${Math.max(0, v / maxV * 100).toFixed(2)}%`;
+  const show = (i, el) => {
+    const w = wrapRef.current; if (!w || !el) return;
+    const wr = w.getBoundingClientRect(), br = el.getBoundingClientRect();
+    setTip({ i, left: (br.left + br.width / 2 - wr.left) + 'px', top: (br.top - wr.top) + 'px' });
+  };
+  const hide = () => setTip((t) => t && { ...t, hide: true });
   return (
-    <div className="card" hidden={n === 0}>
+    <div className="card yoy-card" hidden={n === 0}>
       <h2 id={id + '-title'}>{title}</h2>
-      <div className="chart-wrap" style={{ marginTop: 'var(--space-md)' }}>
-        <svg id={id} ref={svgRef} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
-          {n === 0 ? <text className="axis-label" x="20" y="20">No years in this currency</text> : <>
-            {[0, 1, 2, 3, 4].map((g) => { const gy = padT + g * ((H - padT - padB) / 4); return <line key={g} className="gridline" x1={padL} x2={W - padR} y1={gy} y2={gy} />; })}
-            {years.map((y, i) => {
-              const cx = padL + i * bw + bw / 2, hInc = yScale(inc[i]), hExp = yScale(exp[i]);
-              const bar = (bx, h, fill) => (
-                <rect data-i={i} x={bx.toFixed(1)} y={(H - padB - h).toFixed(1)} width={barW.toFixed(1)} height={h.toFixed(1)} rx="4" fill={fill}
-                  onMouseEnter={() => setTip({ i, ...tipPos(svgRef.current, bx + barW / 2, H - padB - h) })} onMouseLeave={() => setTip((t) => t && { ...t, hide: true })}
-                  onClick={() => onYear(model.DATA.indexOf(y))} />
-              );
-              return (
-                <g key={y.year}>
-                  {bar(cx - barW - 2, hInc, 'var(--income)')}
-                  {bar(cx + 2, hExp, 'var(--expense)')}
-                  <text className="axis-label" x={cx.toFixed(1)} y={H - 10} textAnchor="middle">{y.year}</text>
-                </g>
-              );
-            })}
-          </>}
-        </svg>
-        <div className="tooltip-chart" id={id + '-tip'} style={tip ? { left: tip.left, top: tip.top, opacity: tip.hide ? 0 : 1 } : undefined}>
-          {tip && <><b>{years[tip.i].year}</b><br />{`Income ${fmtMoney(inc[tip.i], years[tip.i].currency)}`}<br />{`Expenses ${fmtMoney(exp[tip.i], years[tip.i].currency)}`}</>}
+      <div className="chart-wrap yoy-chart" ref={wrapRef}>
+        <div className="yoy-rules" aria-hidden="true"><i /><i /><i /><i /><i /></div>
+        <div className={'yoy-years' + (n > 3 ? ' is-dense' : '')} id={id} role="group" aria-labelledby={id + '-title'}>
+          {years.map((y, i) => (
+            <div className="yoy-year" key={y.year}>
+              <div className="yoy-bars">
+                {[['income', inc[i], 'Income'], ['expense', exp[i], 'Expenses']].map(([k, v, name]) => (
+                  <span key={k} className={'yoy-bar is-' + k} data-i={i} style={{ height: pct(v) }} role="button" tabIndex={-1}
+                    aria-label={`${y.year} ${name} ${fmtMoney(v, y.currency)}`}
+                    onMouseEnter={(e) => show(i, e.currentTarget)} onMouseLeave={hide} onClick={() => onYear(model.DATA.indexOf(y))} />
+                ))}
+              </div>
+              <span className="yoy-label">{y.year}</span>
+            </div>
+          ))}
         </div>
+        <div className="tooltip-chart" id={id + '-tip'} style={tip ? { left: tip.left, top: tip.top, opacity: tip.hide ? 0 : 1 } : undefined}>
+          {tip && years[tip.i] && <><b>{years[tip.i].year}</b><br />{`Income ${fmtMoney(inc[tip.i], years[tip.i].currency)}`}<br />{`Expenses ${fmtMoney(exp[tip.i], years[tip.i].currency)}`}</>}
+        </div>
+      </div>
+      <div className="legend">
+        <span><span className="swatch" style={{ background: 'var(--income)' }} />Incomes</span>
+        <span><span className="swatch" style={{ background: 'var(--expense)' }} />Expenses</span>
       </div>
     </div>
   );

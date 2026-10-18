@@ -37,7 +37,8 @@ export function BoardDropdown({ id, name, kind = 'personal', open, onToggle, mob
 //     button Medium), then the boards 12 apart, the note and "Create joint board" (Button Medium Secondary), 24 side
 //     padding.
 // boards = [{ id (null = personal), name, kind: 'personal' | 'joint', tag, current }].
-export function BoardSwitcher({ id = 'board-switcher', boards, onPick, onCreate, onSettings, onClose, note, mobile, open = true }) {
+// `title` (Oct 18): the heading, "Your boards" by default (Board settings' phone sheet shows "Select a board", 992:35130).
+export function BoardSwitcher({ id = 'board-switcher', title = 'Your boards', boards, onPick, onCreate, onSettings, onClose, note, mobile, open = true }) {
   const ref = useRef(null);
   useEffect(() => {
     if (!mobile) return;
@@ -62,7 +63,7 @@ export function BoardSwitcher({ id = 'board-switcher', boards, onPick, onCreate,
     <div className="ds-bsw-head">
       {!mobile && <button type="button" className="ds-bsw-collapse" id={id + '-close'} aria-label="Close board list" onClick={onClose}><Icon icon={chevronDown} size={12} /></button>}
       <div className="ds-bsw-title-row">
-        <h2 className="ds-bsw-title" id={titleId} tabIndex={-1}>Your boards</h2>
+        <h2 className="ds-bsw-title" id={titleId} tabIndex={-1}>{title}</h2>
         {onSettings && <RoundButton icon={settings} size={mobile ? 'small' : 'micro'} iconSize={mobile ? 20 : 16} id="board-settings" label="Board settings" onClick={onSettings} />}
       </div>
       {mobile && <RoundButton icon={x} iconSize={24} id={id + '-close'} label="Close" onClick={onClose} />}

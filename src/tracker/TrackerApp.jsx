@@ -455,9 +455,10 @@ export default function TrackerApp() {
               onAddItem={(preset) => setAddPanel({ open: true, preset })} />
             <ExpenseStrip model={model} y={y} monthIdx={monthIdx} />
             <TrendChart model={model} y={y} monthIdx={monthIdx} onMonth={selectMonth} />
+            {/* Oct 18 (211:18753, 898:9152): Year over year sits in the right column, under the trend chart. */}
+            <YearOverYear model={model} onYear={selectYear} />
           </div>
         </div>
-        <YearOverYear model={model} onYear={selectYear} />
         <footer className="note" id="app-footer">Ongatu. Your entries are encrypted before they are stored. Documents you upload are read once to extract entries and are never saved.</footer>
       </div>
       {board.active && <SharePanel open={sharing} board={{ id: board.active.id, name: board.active.name, role: board.active.role }} onClose={() => setSharing(false)} showToast={showToast} />}

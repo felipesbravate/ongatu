@@ -53,7 +53,7 @@ html[data-theme="dark"] .btn-pill.destructive{color:var(--text-primary)}
 html[data-theme] .btn-pill:not(.small):not(.tiny):not(.micro){min-height:48px;font-size:var(--type-label-default-size);line-height:var(--type-label-default-lh)}
 html[data-theme] .btn-pill.small{min-height:36px;padding:7px 15px;font-size:var(--type-label-small-size);line-height:var(--type-label-small-lh)}
 html[data-theme] .btn-pill.tiny{min-height:32px;padding:7px 11px;font-size:var(--type-label-tiny-size);line-height:var(--type-label-tiny-lh)}
-html[data-theme] .btn-pill.micro{min-height:22px;padding:3px 7px;font-size:var(--type-label-nano-size);line-height:var(--type-label-nano-lh)}
+html[data-theme] .btn-pill.micro{min-height:24px;padding:3px 7px;font-size:var(--type-label-micro-size);line-height:var(--type-label-micro-lh)} /* Oct 18 (41:119): Label/Micro */
 html[data-theme] .round-btn.small{width:36px;height:36px;min-width:36px;min-height:36px}
 html[data-theme] .round-btn.secondary{border-color:var(--border-dark)}
 html[data-theme] .round-btn.secondary:is(:hover,:active,.is-active){border-color:var(--border-hover)}
@@ -65,14 +65,14 @@ html[data-theme] .ds-input:not(.small):not(.tiny):not(#z){min-height:48px;paddin
 html[data-theme] .ds-input:not(.small):not(.tiny) input:not(#z){font-size:inherit;line-height:inherit;letter-spacing:inherit}
 html[data-theme] .ds-input.small{height:auto;min-height:36px}
 html[data-theme] .ds-dd--sm .ds-dd-trigger{min-height:36px}
-html[data-theme] .ds-dd-menu:not(#z){min-width:min(242px,calc(100vw - 16px));padding:var(--space-md);border-color:var(--border-default);box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160)}
+html[data-theme] .ds-dd-menu:not(#z){min-width:min(242px,calc(100vw - 16px));padding:var(--space-md);border-color:var(--border-secondary);box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160)}
 html[data-theme] .ds-dd-menu.is-group{gap:var(--space-md)}
 html[data-theme] .ds-dd-menu .ds-dd-items{gap:var(--space-tn)}
 html[data-theme] .ds-drop-action:not(#z){width:242px}
 html[data-theme] .ds-drop-action:not(#z) .ds-dd-item{min-height:36px;font-size:var(--type-label-small-size);line-height:var(--type-label-small-lh);letter-spacing:var(--type-label-small-ls)}
 html[data-theme] .ds-dd-group{font-size:var(--type-heading-medium-size);line-height:var(--type-heading-medium-lh);letter-spacing:var(--type-heading-medium-ls)}
 html[data-theme] .ds-dd-desc{white-space:normal}
-html[data-theme] .ds-menu-item{font-size:var(--type-body-default-regular-size);font-weight:var(--type-body-default-regular-weight);line-height:var(--type-body-default-regular-lh);letter-spacing:var(--type-body-default-regular-ls)}
+html[data-theme] .ds-menu-item{font-size:var(--type-label-default-size);font-weight:var(--type-label-default-weight);line-height:var(--type-label-default-lh);letter-spacing:var(--type-label-default-ls)} /* menu-item 304:528: Label/Default */
 .ds-menu-counter{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:24px;min-height:20px;padding:2px 4px;border:1px solid var(--border-default);border-radius:var(--radius-sm);color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--type-value-small-size);font-weight:var(--type-value-small-weight);line-height:1;letter-spacing:var(--type-value-small-ls);white-space:nowrap}
 .ds-menu-counter.is-unread{color:var(--text-notification);border-color:var(--border-notification)}
 .ds-menu-item .ds-menu-counter,.ds-dd-item .ds-menu-counter{flex:0 0 auto;margin-left:auto}

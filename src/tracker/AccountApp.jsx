@@ -6,15 +6,15 @@
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
 import '../ui/shell.css';
-import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, SideMenu, Toggle, useToast } from '../ui/index.js';
-import { Icon } from '../ui/Icon.jsx';
-import { arrowStraightLeft, lock, plus, security, trash, user } from '../ui/icons.js';
+import { ActionLink, AppHeader, Avatar, Button, Checkbox, Divider, Field, Input, RoundButton, SideMenu, Toggle, useToast } from '../ui/index.js';
+import { arrowStraightLeft, lock, security, trash, user } from '../ui/icons.js';
 import { api, deleteMe, deleteMyData, getMe, getSignIn, setSignIn, signOut } from './api.js';
 import { AccountNav } from './AccountBar.jsx';
 import { useConfirm } from './ConfirmModal.jsx';
 import { useBudgetAlertsStandalone } from './alerts.js';
 import { alertHref } from './notifications.js';
 import './notifications.css';
+import './account.css';
 import { avatarFromFile, removeAvatar, saveAvatar, saveProfile, useProfile } from './profile.js';
 
 // Side menu labels and icons as in Ongatu 250:3399 (Oct 12: "Personal preferences"). Oct 15: no Shared boards section — joint boards are managed from the header
@@ -69,9 +69,9 @@ export default function AccountApp() {
     <>
       <div className="app-top-gap" />
       <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => { router.push(alertHref(a)); }} /></AppHeader>
-      <div className="wrap acct-page">
+      <div className="wrap acct-page acct-account">
         <header className="acct-head">
-          <ActionLink href="/" onClick={(event) => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); router.push('/'); } }} size="medium" icon={arrowStraightLeft} id="acct-back">Go to dashboard</ActionLink>
+          <ActionLink href="/" onClick={(event) => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); router.push('/'); } }} size="medium" icon={arrowStraightLeft} id="acct-back">Back to dashboard</ActionLink>
           <h1 className="app-title">Account</h1>
           <div className="app-sub">Manage your personal identity, security preferences, and data privacy controls.</div>
         </header>
@@ -128,9 +128,10 @@ function ProfileCard({ me, profile, confirm, showToast }) {
         <div className="acct-avatar-row">
           <Avatar large name={profile.name} image={profile.image} />
           <div className="acct-avatar-actions">
-            {/* 250:3399: "Add image" (Button Tiny Secondary, 32 high) and a 32px tertiary Round button with a 12px Trash. */}
-            <Button size="tiny" variant="secondary" icon={plus} id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Add image</Button>
-            <button type="button" className="round-btn tiny is-destructive" id="avatar-delete" aria-label="Delete picture" disabled={!profile.image} onClick={askRemove}><Icon icon={trash} size={12} /></button>
+            {/* 250:3399 / 1068:47895: "Add image" (Button Tiny Secondary, 32 high, no icon) and a Micro Tertiary Round button
+                (24) with the 16px Trash in action/destructive, 4 apart (8 on phones). */}
+            <Button size="tiny" variant="secondary" id="avatar-upload" onClick={() => fileRef.current && fileRef.current.click()}>Add image</Button>
+            <RoundButton icon={trash} size="micro" iconSize={16} className="is-destructive" id="avatar-delete" label="Delete picture" disabled={!profile.image} onClick={askRemove} />
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden id="avatar-file" onChange={onFile} />
           </div>
         </div>

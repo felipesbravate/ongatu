@@ -4,6 +4,7 @@ import { Icon } from './Icon.jsx';
 const cx = (...c) => c.filter(Boolean).join(' ');
 
 // menu-item (DS 304:528): 40 high, padding space/sm, radius/sm, 8 between an optional 24px icon (icon-size/xl, Oct 12) and the label
+// Oct 18 (304:528 refined): 48 high (Label/Default 16/24), icon 20, icon → label space/sm (okara.css).
 // (Body/Medium/SemiBold). Unselected: text/secondary, icon surface/tertiary. Hover: text/primary, icon surface/dark.
 // Selected: surface/secondary fill, text/primary, icon surface/dark. A link with `href`, otherwise a button.
 // menu-item-counter (936:953): count badges have a separate unread color role; it follows the label, 8 after it.
@@ -13,7 +14,7 @@ export function MenuItemCounter({ children, unread = false, className }) {
 
 export function MenuItem({ label, icon, selected, href, onClick, id, count, unread }) {
   const cls = cx('ds-menu-item', selected && 'is-selected');
-  const inner = <>{icon && <Icon icon={icon} size={24} />}<span>{label}</span>{count != null && <MenuItemCounter unread={unread}>{count}</MenuItemCounter>}</>;
+  const inner = <>{icon && <Icon icon={icon} size={20} />}<span>{label}</span>{count != null && <MenuItemCounter unread={unread}>{count}</MenuItemCounter>}</>;
   const current = selected ? 'true' : undefined;
   return href
     ? <a href={href} id={id} className={cls} aria-current={current} onClick={onClick}>{inner}</a>

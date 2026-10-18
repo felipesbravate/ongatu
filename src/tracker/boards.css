@@ -4,14 +4,15 @@
    layered overrides. */
 
 /* ---------- shared pieces ---------- */
-/* Card ("Edit profile" 986:26977): surface/primary, radius md, 24 padding and 24 gap, the Card shadow. */
+/* Card ("Edit profile" 986:26977): surface/primary, radius md, padding and gap space/xl (24), the Card shadow. */
 html .jb-card:not(#z){
-  display:flex; flex-direction:column; gap:var(--space-lg); padding:var(--space-lg); box-sizing:border-box; width:100%; min-width:0;
+  display:flex; flex-direction:column; gap:var(--space-xl); padding:var(--space-xl); box-sizing:border-box; width:100%; min-width:0;
   background:var(--surface-primary); border-radius:var(--radius-md); box-shadow:0 0 20px rgba(22,21,15,.04); scroll-margin-top:88px;
 }
-/* Title block (986:26979): Heading/XL + Body/Medium/Medium, 4 apart. */
+/* Title block (986:26979): Heading/XL + Body/Default/Regular, space/xs apart (the viewer's line is Body/Small, 992:37043). */
 html .jb-card-title:not(#z){ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
-html .jb-card-text:not(#z){ margin:calc(var(--space-tn) - var(--space-lg)) 0 0; font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
+html .jb-card-text:not(#z){ margin:calc(var(--space-xs) - var(--space-xl)) 0 0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
+html .jb-name-card.is-locked:not(#z) .jb-card-text{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
 html .jb-small:not(#z){ margin:0; font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--text-secondary); }
 
 /* Privacy reassurance (the /join page) */
@@ -23,51 +24,54 @@ html .jb-note:not(#z){
 html .jb-note:not(#z) svg{ flex:0 0 auto; color:var(--icon-primary, var(--text-primary)); }
 html .jb-note:not(#z) span{ flex:1 1 auto; min-width:0; }
 
-/* Labels (1089:1055): 24 high, min 48, radius full, Body/Medium/Medium; Neutral surface/secondary, Warning
-   surface/warning + status/warning. */
+/* Labels (1089:1055, pinned to the Mobile mode): 24 high, min 48, 8 sides, radius full, Label/Tiny 14/16 Medium;
+   Neutral surface/secondary, Warning surface/warning + status/warning. */
 html .jb-tag:not(#z){
-  display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; height:24px; min-width:48px; padding:0 var(--space-xs); box-sizing:border-box;
+  display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; height:24px; min-width:48px; padding:0 8px; box-sizing:border-box;
   border-radius:var(--radius-full); background:var(--surface-secondary); color:var(--text-primary); white-space:nowrap;
-  font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls);
+  font-size:14px; font-weight:var(--type-label-tiny-weight); line-height:16px; letter-spacing:var(--type-label-tiny-ls);
 }
 html .jb-tag.is-warning:not(#z){ background:var(--surface-warning); color:var(--status-warning); }
 
 /* ---------- Board settings page ---------- */
 html .jb-page:not(#z){ display:flex; flex-direction:column; gap:var(--space-2xl); padding-bottom:var(--space-3xl); }
-/* Pager header (986:26963): the Action link, then the Title block (20 in, Display/Title + Body/Medium/Medium, 4 apart), 8 apart. */
-html .jb-head:not(#z){ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-xs); }
-html .jb-heading:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); padding:0 20px; box-sizing:border-box; width:100%; }
+/* Pager header (986:26963): the Action link, then the Title block (20 in, Display/Title + Body/Default/Regular, space/xs
+   apart), space/sm apart. */
+html .jb-head:not(#z){ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-sm); }
+html .jb-heading:not(#z){ display:flex; flex-direction:column; gap:var(--space-xs); padding:0 20px; box-sizing:border-box; width:100%; }
 html .jb-title:not(#z){ margin:0; font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--text-primary); }
-html .jb-sub:not(#z){ margin:0; font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
+html .jb-sub:not(#z){ margin:0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
 /* Content (986:26968): 1110 wide, centred: Left 246 and the 800 cards, 64 apart. */
 html .jb-content:not(#z){ display:flex; justify-content:center; align-items:flex-start; gap:var(--space-3xl); width:100%; }
 html .jb-left:not(#z){ position:sticky; top:88px; display:flex; flex-direction:column; gap:var(--space-sm); width:246px; flex:0 0 246px; z-index:2; }
-html .jb-left-title:not(#z){ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
-html .jb-cards:not(#z){ display:flex; flex-direction:column; gap:var(--space-md); width:800px; flex:0 1 800px; min-width:0; }
+html .jb-left-title:not(#z){ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html .jb-cards:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); width:800px; flex:0 1 800px; min-width:0; }
 
-/* Board pill (986:26970): border/selected-item, radius full, 16 padding; 16px icon, Label 14 link/default, 12px chevron. */
-html .jb-picker:not(#z){ position:relative; width:100%; }
+/* Board pill (986:26970): border/selected-item, radius full, padding space/md space/lg; 16px icon, Label/Default
+   link/default, 12px chevron, space/sm apart. Open (992:34665): "Your boards" lies over the title and the pill (302 wide). */
+html .jb-picker:not(#z){ position:static; width:100%; }
 html .jb-picker-btn:not(#z){
-  display:flex; align-items:center; gap:var(--space-xs); width:100%; padding:var(--space-md); box-sizing:border-box; margin:0;
+  display:flex; align-items:center; gap:var(--space-sm); width:100%; padding:var(--space-md) var(--space-lg); box-sizing:border-box; margin:0;
   border:1px solid var(--border-selected-item); border-radius:var(--radius-full); background:transparent; cursor:pointer; text-align:left;
-  font:inherit; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:20px; letter-spacing:var(--type-body-default-regular-ls); color:var(--link-default);
+  font:inherit; font-size:var(--type-label-default-size); font-weight:var(--type-label-default-weight); line-height:var(--type-label-default-lh); letter-spacing:var(--type-label-default-ls); color:var(--link-default);
 }
 html .jb-picker-btn:not(#z):hover{ color:var(--link-hover, var(--link-default)); border-color:var(--link-disable, var(--border-selected-item)); }
 html .jb-picker-btn:not(#z) svg{ flex:0 0 auto; color:var(--link-default); }
 html .jb-picker-name:not(#z){ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-html .jb-picker:not(#z) .ds-bsw.is-card{ position:static; width:100%; box-sizing:border-box; }
+html .jb-picker:not(#z) .ds-bsw.is-card{ position:absolute; top:0; left:0; right:auto; width:302px; box-sizing:border-box; z-index:5; }
+html .jb-left:not(#z):has(.jb-picker.is-open) .jb-left-title{ visibility:hidden; }
 
 /* Board name (986:26982 / 986:26984): the field, then the info message (accent-light) and Save changes, 16 apart. */
 html .jb-name-card:not(#z) .ds-input{ width:100%; border-color:var(--border-selected-item); border-radius:var(--radius-sm); }
 html .jb-name-card:not(#z) .ds-input.is-disabled{ border-color:var(--border-default); background:var(--surface-secondary); }
 html .jb-name-actions:not(#z){ display:flex; align-items:center; gap:var(--space-md); }
-html .jb-info.ds-info:not(#z){ flex:1 1 auto; min-width:0; align-items:center; min-height:40px; gap:var(--space-sm); padding:var(--space-xs) var(--space-md); box-sizing:border-box; background:var(--surface-accent-light); }
+html .jb-info.ds-info:not(#z){ flex:1 1 auto; min-width:0; align-items:center; min-height:40px; gap:var(--space-md); padding:var(--space-sm) var(--space-lg); box-sizing:border-box; background:var(--surface-accent-light); }
 html .jb-info.ds-info:not(#z) .ds-info-desc{ color:var(--text-primary); }
 html .jb-name-actions:not(#z) > .btn-pill{ flex:0 0 auto; }
 
-/* Board sharing (986:26991 / 986:26996): 12 in from the card; the field and the CTA row 12 apart; People 24 below. */
+/* Board sharing (986:26991 / 986:26996): space/md in from the card; the field and the CTA row 12 apart; People 24 below. */
 html .jb-sharing:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); width:100%; }
-html .jb-sharing-card:not(#z) .jb-sharing{ padding:0 var(--space-sm); box-sizing:border-box; }
+html .jb-sharing-card:not(#z) .jb-sharing{ padding:0 var(--space-md); box-sizing:border-box; }
 html .jb-sharing-card:not(#z) .jb-card-text{ font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
 html .jb-sharing-input:not(#z){ display:flex; flex-direction:column; gap:var(--space-sm); }
 html .jb-sharing-input:not(#z) .ds-input{ width:100%; border-radius:var(--radius-sm); }
@@ -80,9 +84,10 @@ html .jb-people-list:not(#z) .ds-divider{ margin:0; }
 html .jb-person:not(#z){ display:flex; align-items:center; gap:var(--space-xs); min-width:0; }
 html .jb-person-user:not(#z){ display:flex; align-items:center; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
 html .jb-person-user:not(#z) .ds-avatar{ flex:0 0 40px; }
-html .jb-person-info:not(#z){ display:flex; flex-direction:column; min-width:0; }
-html .jb-person-name:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-html .jb-person-email:not(#z){ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* info (1093:1077): the name (Heading/Medium, 14 high) over the email (Label/Tiny), 2 apart. */
+html .jb-person-info:not(#z){ display:flex; flex-direction:column; gap:2px; min-width:0; }
+html .jb-person-name:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-size); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .jb-person-email:not(#z){ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 /* Access dropdown (Dropdown Tiny 992:35764, 120 wide; mine = Disable 992:35766) and its menu (986:27011). */
 html .jb-role:not(#z){ position:relative; flex:0 0 120px; width:120px; }
@@ -93,15 +98,16 @@ html .jb-role-trigger:not(#z){
   font:inherit; font-size:14px; font-weight:var(--type-label-tiny-weight); line-height:16px; letter-spacing:var(--type-label-tiny-ls);
 }
 html .jb-role-trigger:not(#z) span{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-html .jb-role-trigger:not(#z) svg{ flex:0 0 auto; color:var(--icon-primary, var(--text-primary)); }
+html .jb-role-trigger:not(#z) svg{ flex:0 0 auto; color:var(--icon-secondary); }
 html .jb-role.is-open:not(#z) .jb-role-trigger{ border-color:var(--border-focus, var(--link-default)); }
 html .jb-role-trigger:not(#z):disabled{ cursor:default; background:var(--surface-secondary); border-color:var(--border-default); color:var(--text-muted); }
-html .jb-role-trigger:not(#z):disabled svg{ color:var(--text-muted); }
+html .jb-role-trigger:not(#z):disabled svg{ color:var(--icon-muted, var(--text-muted)); }
 html .jb-role-menu:not(#z){
   position:absolute; right:0; top:calc(100% + var(--space-tn)); z-index:30; width:242px; box-sizing:border-box;
   display:flex; flex-direction:column; gap:var(--space-md); padding:var(--space-md);
   background:var(--surface-body); border:1px solid var(--border-secondary); border-radius:var(--radius-lg); box-shadow:0 4px 6px var(--effect-shadow-86-82-59-160);
 }
+html .jb-role-menu.is-up:not(#z){ top:auto; bottom:calc(100% + var(--space-tn)); }
 html .jb-role-items:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); }
 html .jb-role-item:not(#z){
   display:flex; align-items:center; gap:var(--space-xs); width:100%; height:36px; padding:var(--space-xs); box-sizing:border-box; margin:0; border:0; border-radius:var(--radius-sm);
@@ -112,12 +118,16 @@ html .jb-role-item.is-destructive:not(#z){ color:var(--action-destructive); }
 html .jb-role-item.is-destructive:not(#z) svg{ color:var(--action-destructive); }
 html .jb-role-menu:not(#z) .ds-divider, html .jb-role-sheet:not(#z) .ds-divider{ margin:0; }
 
-/* Delete this board / Leave board (991:31075): 12 padding, the text and the button 24 apart. */
-html .jb-danger:not(#z){ display:flex; align-items:center; gap:var(--space-lg); padding:var(--space-sm); }
-html .jb-danger-meta:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); flex:1 1 auto; min-width:0; }
+/* Delete this board (991:31075): no padding, Heading/XL; Leave board (992:37075): space/md padding, Heading/Large. The
+   text and the button space/xl apart; title and text space/xs; the confirm row space/lg under the text, space/md in. */
+html .jb-danger:not(#z){ display:flex; align-items:center; gap:var(--space-xl); padding:var(--space-md); }
+html #board-sec-delete:not(#z) .jb-danger{ padding:0; }
+html .jb-danger-meta:not(#z){ display:flex; flex-direction:column; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
 html .jb-danger-title:not(#z){ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html #board-sec-delete:not(#z) .jb-danger-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
 html .jb-danger-text:not(#z){ margin:0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
-html .jb-danger-meta:not(#z) .ds-check{ margin-top:calc(var(--space-md) - var(--space-tn)); }
+html .jb-danger-meta:not(#z) .ds-check{ margin-top:calc(var(--space-lg) - var(--space-xs)); padding:0 var(--space-md); gap:var(--space-sm); }
+html .jb-danger-meta:not(#z) .ds-check-label{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-primary); }
 html .jb-danger:not(#z) > .btn-pill{ flex:0 0 auto; }
 
 /* ---------- Share your board (994:40586, re-measured Oct 16) ----------
@@ -148,17 +158,26 @@ html .jb-person-user:not(#z){ gap:8px; }
 html .jb-tag:not(#z){ flex:0 0 auto; }
 html .jb-role-trigger:not(#z){ padding:7px; gap:8px; min-height:32px; }
 
-/* ---------- sheets (phones): the board-sheet look (8 from the edges, radius 44) ---------- */
+/* ---------- sheets (phones): the access sheet (989:28776): 8 from the edges, radius 44, border/secondary, 0 0 8 shadow,
+   24 bottom padding, 4 gap. Top-nav 80 (16 16 16 24): the person (avatar, 12, name 16/16 over the email 14/16) and the X
+   (Round button 48, 24 icon). Then 24 in: the items (36 high, 8 padding, 4 apart; the current one surface/body), 12, the
+   divider, 12, Remove access. ---------- */
 html dialog.jb-sheet:not(#z){
   position:fixed; inset:auto 8px 8px 8px; margin:0; width:auto; max-width:none; max-height:calc(100dvh - 16px); overflow-y:auto; box-sizing:border-box;
-  display:flex; flex-direction:column; gap:var(--space-md); padding:var(--space-md) var(--space-lg) var(--space-lg); border:1px solid var(--border-secondary); border-radius:44px;
+  display:flex; flex-direction:column; gap:4px; padding:0 0 24px; border:1px solid var(--border-secondary); border-radius:44px;
   background:var(--surface-primary); color:var(--text-primary); box-shadow:0 0 8px var(--effect-shadow-86-82-59-80);
 }
 html dialog.jb-sheet:not(#z):not([open]){ display:none; }
 html dialog.jb-sheet:not(#z)::backdrop{ background:var(--surface-modal); }
-html .jb-sheet-head:not(#z){ display:flex; align-items:center; justify-content:space-between; gap:var(--space-sm); padding:var(--space-xs) 0; }
-html .jb-role-sheet:not(#z) .jb-role-item{ height:40px; padding:0 var(--space-xs); }
-html .jb-role-sheet:not(#z) .jb-role-item.is-current{ background:var(--surface-secondary); }
+html .jb-sheet-head:not(#z){ display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:80px; padding:16px 16px 16px 24px; box-sizing:border-box; }
+html .jb-sheet-head:not(#z) .jb-person-user{ gap:12px; }
+html .jb-sheet-head:not(#z) .jb-person-name{ font-size:16px; line-height:16px; }
+html .jb-sheet-head:not(#z) .jb-person-email{ font-size:14px; line-height:16px; }
+html .jb-sheet-x.round-btn:not(#z){ width:48px; height:48px; padding:12px; flex:0 0 auto; }
+html .jb-sheet-body:not(#z){ display:flex; flex-direction:column; gap:12px; padding:0 24px; }
+html .jb-role-sheet:not(#z) .jb-role-items{ gap:4px; }
+html .jb-role-sheet:not(#z) .jb-role-item{ height:36px; padding:8px; font-size:16px; line-height:20px; }
+html .jb-role-sheet:not(#z) .jb-role-item.is-current{ background:var(--surface-body); }
 
 /* ---------- /join (Accept invitation) ---------- */
 html .jb-join:not(#z){ display:flex; flex-direction:column; gap:20px; max-width:560px; margin:0 auto; padding-top:var(--space-md); padding-bottom:var(--space-3xl); }
@@ -173,26 +192,48 @@ html .jb-join-modal-text:not(#z){ display:flex; flex-direction:column; gap:20px;
 html .jb-join-modal-text:not(#z) p{ margin:0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
 html .jb-join-modal-text:not(#z) p:first-child{ font-weight:var(--type-body-small-medium-weight); }
 
-/* ---------- phones ---------- */
+/* ---------- phones (Mobile-mode tokens: tn 4, xs 8, sm 12, md 16, lg 24, xl 40) ----------
+   989:29453 / 992:37239 / 986:27262: a panel: the nav bar (64, the 36 back button 8 from the edge), 16, the title block
+   (Heading/XL 24/24 over Body/Default 16/20, 16 apart), 40, then "Select a board" and the cards, 24 apart. Cards: 24
+   padding and gap, radius 20. */
 @media (max-width:640px){
-  html .jb-card:not(#z){ padding:var(--space-lg); }
-  html .jb-page:not(#z){ gap:var(--space-lg); padding-top:var(--space-md); }
-  html .jb-head:not(#z){ gap:var(--space-lg); }
-  html .jb-heading:not(#z){ padding:0; gap:var(--space-xs); }
-  html .jb-title:not(#z){ font-size:var(--type-display-title-mobile-size); font-weight:var(--type-display-title-mobile-weight); line-height:var(--type-display-title-mobile-lh); letter-spacing:var(--type-display-title-mobile-ls); }
+  html .jb-card:not(#z){ padding:var(--space-lg); gap:var(--space-lg); border-radius:20px; }
+  html .jb-card-text:not(#z){ margin-top:calc(var(--space-tn) - var(--space-lg)); }
+  html .jb-page:not(#z){ gap:var(--space-xl); padding-top:0; }
+  html .jb-head:not(#z){ gap:var(--space-md); }
+  html .jb-nav:not(#z){ display:flex; align-items:center; height:64px; margin-left:calc(var(--space-xs) - var(--space-md)); }
+  html .jb-back.round-btn:not(#z){ width:36px; height:36px; padding:var(--space-xs); }
+  html .jb-heading:not(#z){ padding:0; gap:var(--space-md); }
+  html .jb-title:not(#z){ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
   html .jb-sub:not(#z){ font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
-  html .jb-content:not(#z){ flex-direction:column; align-items:stretch; gap:var(--space-md); }
-  html .jb-left:not(#z){ position:static; width:auto; flex:none; }
-  html .jb-cards:not(#z){ width:auto; flex:none; }
-  html .jb-name-actions:not(#z){ flex-direction:column; align-items:stretch; }
+  html .jb-content:not(#z){ flex-direction:column; align-items:stretch; gap:var(--space-lg); }
+  html .jb-left:not(#z){ position:static; width:auto; flex:none; gap:var(--space-xs); }
+  html .jb-left-title:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  /* The pill (58 high): 16 padding, a 24px icon, Label/Default 16/24, a 16px chevron, 12 apart. */
+  html .jb-picker-btn:not(#z){ padding:var(--space-md); gap:var(--space-sm); }
+  html .jb-cards:not(#z){ width:auto; flex:none; gap:var(--space-lg); }
+  /* Board name: co-owners Heading/Large + Body/Default, 4 apart (986:27262); others Heading/XL + Body/Small, 8 apart. */
+  html .jb-name-card.is-co:not(#z) .jb-card-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  html .jb-name-card:not(#z):not(.is-co) .jb-card-text{ margin-top:calc(var(--space-xs) - var(--space-lg)); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
+  html .jb-name-actions:not(#z){ flex-direction:column; align-items:stretch; gap:var(--space-lg); }
+  /* The info message (986:26985 on phones): 12 padding, the icon 16 from the text (Body/Small/Regular 14/16). */
+  html .jb-info.ds-info:not(#z){ padding:var(--space-sm); }
+  html .jb-info.ds-info:not(#z) .ds-info-desc{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
   html .jb-name-actions:not(#z) > .btn-pill{ width:100%; }
+  html .jb-sharing-card:not(#z) .jb-card-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
   html .jb-sharing-card:not(#z) .jb-sharing{ padding:0; }
-  /* People (986:27262): the access dropdown under the name, the label on the right. */
-  html .jb-person:not(#z){ display:grid; grid-template-columns:40px minmax(0,1fr) auto; column-gap:var(--space-xs); row-gap:var(--space-xs); align-items:center; }
+  /* People (986:27262 / 994:52459): heading Heading/Medium; the list 8 in, rows 16 apart, no dividers: avatar, 12, the
+     name (16/16) over the email (Label/Tiny 14/16), the label on the right; the access dropdown (104) 4 under the name. */
+  html .jb-people-title:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .jb-people-list:not(#z){ padding:0 var(--space-xs); gap:var(--space-md); }
+  html .jb-people-list:not(#z) > li > .ds-divider{ display:none; }
+  html .jb-person:not(#z){ display:grid; grid-template-columns:40px minmax(0,1fr) auto; column-gap:var(--space-sm); row-gap:var(--space-tn); align-items:center; }
   html .jb-person:not(#z) > .jb-person-user{ display:contents; }
   html .jb-person:not(#z) > .jb-person-user > .jb-tag{ grid-column:3; grid-row:1; }
-  html .jb-person:not(#z) > .jb-role{ grid-column:2; grid-row:2; }
-  html .jb-danger:not(#z){ flex-direction:column; align-items:flex-start; padding:var(--space-md) var(--space-xs) var(--space-xs); }
+  html .jb-person:not(#z) > .jb-role{ grid-column:2; grid-row:2; width:104px; flex-basis:104px; justify-self:start; }
+  html .jb-person-name:not(#z){ line-height:var(--type-heading-medium-size); }
+  /* Leave board (992:37239): 16 padding, a column 24 apart, Heading/Large over Body/Default 8 apart. */
+  html .jb-danger:not(#z){ flex-direction:column; align-items:flex-start; gap:var(--space-lg); padding:var(--space-md); }
   html dialog#share-modal.ds-modal:not(#z){ width:auto; margin:auto 8px 8px; border-radius:44px; max-height:calc(100dvh - 16px); }
   html #share-modal:not(#z) .ds-modal-content{ padding:var(--space-xs) var(--space-lg) 0; }
   html .jb-join:not(#z){ max-width:none; }

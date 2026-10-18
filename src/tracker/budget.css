@@ -55,3 +55,27 @@ html .budget-panel:not(#z) .budget-items.is-empty{ min-height:48px; display:flex
 /* Group / sub-category comboboxes (232:5853): a long placeholder ends in an ellipsis before the chevron. */
 html .fld-combo:not(#z) .ds-input{ padding-right:40px; }
 html .fld-combo:not(#z) .ds-input input{ text-overflow:ellipsis; }
+
+/* ---- Add entry panel (229:18166 desktop / 369:13388 phones) ---- */
+/* Desktop: the drop area's hint is Body/Small/Regular (12/14, 400). */
+@media (min-width:641px){
+  html #add-panel .dz-hint:not(#z){ font-weight:var(--type-body-small-regular-weight); letter-spacing:var(--type-body-small-regular-ls); }
+}
+/* Phones: the drop area is 166 tall (padding 40/24); "Upload your file" (20 high) sits 4 above the hint. */
+@media (max-width:640px){
+  html #add-panel .dropzone:not(#z){ height:166px; min-height:166px; box-sizing:border-box; }
+  html #add-panel .dz-text:not(#z){ gap:4px; }
+  html #add-panel .dz-line:not(#z), html #add-panel .dz-line .ds-action-link:not(#z){ padding-top:0; padding-bottom:0; min-height:20px; align-items:center; }
+}
+
+/* ---- Info box action (232:5851 / 703:16128): a Micro Secondary Button, 24 high, padding 4/8, label 12/16 Medium,
+   2 after the 12px Plus (the InfoMessage action drew a Nano, 22 high, 10/14). ---- */
+html .fld-info.ds-info:not(#z) .ds-info-action{ font-size:12px; line-height:16px; letter-spacing:0; font-weight:500; padding:3px 7px; gap:2px; min-height:24px; box-sizing:border-box; }
+
+@media (max-width:640px){
+  /* 703:16128 / 703:16763: a group's header, 16, its rows. */
+  html .budget-panel:not(#z) .budget-group{ gap:16px; }
+  /* Type creation on phones: 24 between header, form and actions with one row (663:8893), 40 with several (661:6306). */
+  html dialog.ds-modal[id$="type-modal"]:not(#z):has(.fld-rows:not(.is-many)) .ds-modal-body{ gap:24px; }
+  html dialog.ds-modal[id$="type-modal"]:not(#z):has(.fld-rows:not(.is-many)) .ds-modal-form{ margin-top:0; }
+}

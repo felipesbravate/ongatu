@@ -196,7 +196,8 @@ export const color = {
   "badgeCounterDivider": "#32312cff",
   "surfaceModal": "#1f1e19e0",
   "iconRoundControl": "#16150fff",
-  "surfaceGradient": "#ffffff00"
+  "surfaceGradient": "#ffffff00",
+  "dataMint": "#12b86bff"
 } as const;
 
 export const space = {
@@ -229,7 +230,7 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "Geist_500Medium",
+    "fontFamily": "Geist_600SemiBold",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
@@ -293,7 +294,7 @@ export const text = {
     "fontSize": 14
   },
   "BodyTinyRegular": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 12
   },
   "BodyTinyMedium": {
@@ -306,7 +307,7 @@ export const text = {
     "letterSpacing": -0.16
   },
   "LabelLarge": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 18
   },
   "LabelDefault": {
@@ -315,11 +316,10 @@ export const text = {
   },
   "LabelSmall": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 16,
-    "letterSpacing": -0.16
+    "fontSize": 16
   },
   "LabelTiny": {
-    "fontFamily": "Geist_400Regular",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 14
   },
   "LabelMicro": {

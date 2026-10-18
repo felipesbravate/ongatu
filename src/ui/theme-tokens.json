@@ -491,6 +491,11 @@
       "icon/round-control",
       "#16150fff",
       "#deddcfff"
+    ],
+    [
+      "data/mint",
+      "#12b86bff",
+      "#12b86bff"
     ]
   ],
   "effects": [

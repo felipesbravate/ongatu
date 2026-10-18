@@ -309,10 +309,12 @@ html .ob-page:not(#z) .ob-joint-cta{ display:flex; align-items:center; justify-c
 html .ob-page:not(#z) .ob-joint-cta.is-end{ justify-content:flex-end; margin-top:-16px; }
 html .ob-page:not(#z) .ob-cancel-board.btn-pill, html .ob-page:not(#z) .ob-cancel-board.btn-pill span{ color:var(--action-destructive); }
 html .ob-page:not(#z) .ob-cancel-board.btn-pill svg{ color:var(--action-destructive); }
-html .ob-page.is-joint:not(#z) .ob-content:has(.ob-share-card){ gap:16px; }
-html .ob-page.is-joint:not(#z) .ob-content:has(.ob-share-card) > .ds-steps{ margin-bottom:24px; }
-html .ob-page.is-joint:not(#z) .ob-content:has(.ob-share-card) > .ob-header{ margin-bottom:24px; }
-html .ob-page:not(#z) .ob-share-card{ width:100%; box-sizing:border-box; gap:24px; border-radius:var(--radius-md); box-shadow:0 0 20px #16150f0a; }
+/* Oct 18 (962:33477): Back, the two cards and the button row sit in .ob-body, 16 apart; cards padding 24, gap 24. */
+html .ob-page:not(#z) .ob-share-card{ width:100%; box-sizing:border-box; padding:24px; gap:24px; border-radius:var(--radius-md); box-shadow:0 0 20px #16150f0a; }
+html .ob-page:not(#z) .ob-share-body .ob-people{ gap:24px; }
+html .ob-page:not(#z) .ob-share-body .jb-people-title{ white-space:normal; }
+html .ob-page:not(#z) .ob-share-body .jb-person-row{ display:block; }
+html .ob-page:not(#z) .ob-share-body .ob-joint-cta{ margin-top:0; }
 html .ob-page:not(#z) .ob-share-card .ob-share-text{ font-size:14px; line-height:16px; letter-spacing:-0.28px; }
 html .ob-page:not(#z) .ob-board-name{ display:flex; flex-direction:column; gap:8px; width:100%; }
 html .ob-page:not(#z) .ob-board-name .fld-label{ font-size:14px; line-height:16px; letter-spacing:-0.28px; color:var(--text-secondary); }
@@ -321,7 +323,7 @@ html .ob-page:not(#z) .ob-invite{ display:flex; flex-direction:column; gap:12px;
 html .ob-page:not(#z) .ob-invite-cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
 html .ob-page:not(#z) .ob-invite-cta .btn-pill{ width:auto; flex:0 0 auto; }
 html .ob-page:not(#z) .ob-people{ display:flex; flex-direction:column; gap:24px; width:100%; }
-html .ob-page:not(#z) .ob-people-title{ margin:0; font-size:16px; font-weight:var(--type-body-default-bold-weight); line-height:20px; letter-spacing:var(--type-body-default-bold-ls); color:var(--text-primary); }
+html .ob-page:not(#z) .ob-people-title{ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); } /* Heading/Large (965:35549) */
 html .ob-page:not(#z) .ob-people-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:16px; }
 html .ob-page:not(#z) .ob-person{ display:flex; align-items:center; gap:8px; }
 html .ob-page:not(#z) .ob-person-who{ display:flex; flex-direction:column; min-width:0; }
@@ -340,3 +342,51 @@ html .ob-page:not(#z) .ob-person-role.ds-dd{ width:120px; flex-shrink:0; margin-
   html .ob-page:not(#z) .ob-joint-cta.is-end{ margin-top:0; align-items:center; }
   html .ob-page:not(#z) .ob-joint-cta #ob-finish{ width:100%; }
 }
+
+/* ==========================================================================================================
+   Oct 18 (Figma refresh of 568:5086 / 875:15369). Later rules here win over the Oct 9 / Oct 12 blocks above.
+   ========================================================================================================== */
+/* Page: the content hangs from the top, 48 down (40 at the bottom); every frame (399:4424, 400:4509, 401:4464 ...)
+   puts the header at y 48 whatever the content's height. Phones: 16 under the status bar (853:11208, 935:37211). */
+html .ob-page:not(.ob-welcome-page):not(#z){ padding-top:48px; padding-bottom:40px; }
+html .ob-page:not(.ob-welcome-page):not(#z) .ob-content{ margin-top:0; margin-bottom:auto; }
+
+/* "Back" over the card (Body 1070:89679 / 1070:89702 / 1070:89887): Medium Action link, 16 above the card, flush left. */
+html .ob-page:not(#z) .ob-body{ display:flex; flex-direction:column; align-items:stretch; gap:16px; width:100%; min-width:0; }
+html .ob-page:not(#z) .ob-body > .ob-back-link{ align-self:flex-start; margin:0; }
+
+/* Choose (400:4509): card padding 24, 24 from the title block to the options. */
+html .ob-page:not(#z) .ob-card.ob-choose{ padding:24px; gap:24px; }
+
+/* Set up / Review (401:4464 / 749:10871 / 930:21353): card padding 24, 24 apart; Categories | 40 | 280 summary;
+   the category selector 24 above the Sub-category / Group fields. */
+html .ob-page:not(#z) .ob-card.ob-setup{ padding:24px; gap:24px; }
+html .ob-page:not(#z) .ob-setup-cols{ gap:40px; }
+html .ob-page:not(#z) .ob-board .ob-col-board{ flex:1 1 0; min-width:0; }
+html .ob-page:not(#z) .ob-board-top{ gap:24px; }
+
+/* Import (907:18744): card padding 24, 24 apart; the drop area and tips 640 wide. Text styles from tokens:
+   "or drag and drop" Body/Default/Bold, hint Body/Small/Regular, tip titles Heading/Medium, tip text Body/Tiny/Regular. */
+html .ob-page:not(#z) .ob-card.ob-import{ padding:24px; gap:24px; }
+html .ob-page:not(#z) .ob-import-body{ width:640px; max-width:100%; }
+html .ob-page:not(#z) .ob-dropzone .dz-line{ font-size:var(--type-body-default-bold-size); font-weight:var(--type-body-default-bold-weight); line-height:var(--type-body-default-bold-lh); letter-spacing:var(--type-body-default-bold-ls); }
+html .ob-page:not(#z) .ob-dropzone .dz-hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
+html .ob-page:not(#z) .ob-tip-title,
+html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+html .ob-page:not(#z) .ob-tip-desc,
+html .ob-page:not(#z) .ob-import-note-list{ font-size:var(--type-body-tiny-regular-size); font-weight:400; line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); }
+
+@media (max-width:640px){
+  html .ob-page:not(.ob-welcome-page):not(#z){ padding-top:16px; }
+  /* From Choose on (935:37211 ...), the title is Heading/XL. */
+  html .ob-page:not(#z) .ob-header.is-compact .ob-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  /* Step progress -> card 56 (Top padding 40 + 16) on Choose; -> Back 40, Back -> card 16, card -> summary 24 on Set up. */
+  html .ob-page:not(#z) .ob-content > .ob-card.ob-choose{ margin-top:32px; }
+  html .ob-page:not(#z) .ob-content > .ob-body{ margin-top:16px; }
+  html .ob-page:not(#z) .ob-body > .ob-col-summary{ margin-top:8px; }
+  html .ob-page:not(#z) .ob-card.ob-choose, html .ob-page:not(#z) .ob-card.ob-setup, html .ob-page:not(#z) .ob-card.ob-import{ padding:16px; gap:24px; }
+  html .ob-page:not(#z) .ob-option-text{ gap:8px; }
+  html .ob-page:not(#z) .ob-import-body{ width:100%; }
+}
+/* 400:4509: the three options share one height (238) and their links line up at the bottom. */
+html .ob-page:not(#z) .ob-option-text{ flex:1 0 auto; }

@@ -15,8 +15,8 @@ export function useDismiss(open, ref, onClose, alsoRef) {
     if (!open) return;
     const inside = (r, t) => r && r.current && r.current.contains(t);
     // A click on something the click itself removed ("Mark as read" hides its own link) is not a click outside.
-    const onDoc = (e) => { if (!e.target.isConnected) return; if (ref.current && !inside(ref, e.target) && !inside(alsoRef, e.target)) onClose(); };
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const onDoc = (e) => { if (!e.target.isConnected) return; if (ref.current && !inside(ref, e.target) && !inside(alsoRef, e.target)) onClose?.(); };
+    const onKey = (e) => { if (e.key === 'Escape') onClose?.(); };
     const t = setTimeout(() => document.addEventListener('click', onDoc), 0);
     document.addEventListener('keydown', onKey);
     return () => { clearTimeout(t); document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); };

@@ -26,8 +26,9 @@ export function Button({ variant = 'primary', size = 'medium', icon, trailing, i
 // Medium hugs space/sm around a 24px icon (48, pinned Mobile); Small is a fixed 36 with a 20px icon; Tiny hugs
 // space/xs around 16 (32 / 24); Micro hugs space/tn around 16 (24 / 20). `iconSize` overrides the icon where a screen
 // draws another one. `active` draws State=Active (a menu it opens is showing).
-// Oct 3 (52:629): Medium 24, Small 20, Tiny 16, Micro 12, Nano 10.
-export const ROUND_ICON = { medium: 'xl', small: 'lg', tiny: 'md', micro: 'sm', nano: 'tn' };
+// Oct 3 (52:629): Medium 24, Small 20, Tiny 16, Micro 12, Nano 10. Oct 18 (52:629 refined): Tiny 28 with a 20px icon,
+// Micro 24 with a 16px icon.
+export const ROUND_ICON = { medium: 'xl', small: 'lg', tiny: 'lg', micro: 'md', nano: 'tn' };
 export function RoundButton({ icon, size = 'medium', iconSize, variant, active, className, label, type = 'button', ...rest }) {
   return (
     <button type={type} className={cx('round-btn', variant && variant !== 'tertiary' && variant, size !== 'medium' && size, active && 'is-active', className)} aria-label={label} {...rest}>

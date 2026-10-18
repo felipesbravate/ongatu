@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 17 October 2026 (font/sans is now Geist, a variable font: text styles use its exact weights 380/420/450/480/500; styles renamed: Body/Large -> Body/Default, Body/Medium -> Body/Small, Body/Small -> Body/Tiny, Label/Medium -> Label/Default, Badge/SemiBolt -> Badge/Medium). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights follow Felipe's \"New Text styles\" sheet (Oct 17): the Figma weight, except Value/Medium (Figma 500) and Label/Default (Figma 480) = 400 in code (codeWeight, Felipe Oct 17).",
+  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Geist; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%).",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -194,7 +194,8 @@
     "badge/counter-divider": "#32312cff",
     "surface/modal": "#1f1e19e0",
     "icon/round-control": "#16150fff",
-    "surface/gradient": "#ffffff00"
+    "surface/gradient": "#ffffff00",
+    "data/mint": "#12b86bff"
   },
   "Opacity": {
     "opacity/disabled": 0.4,
@@ -278,8 +279,8 @@
       "Desktop": 20
     },
     "lh/heading-md": {
-      "Mobile": 16,
-      "Desktop": 14
+      "Mobile": 20,
+      "Desktop": 16
     },
     "lh/heading-sm": {
       "Mobile": 14,
@@ -417,7 +418,7 @@
   "TextStyles": {
     "Display/Title": {
       "size": 40,
-      "weight": 500,
+      "weight": 600,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/display-title",
@@ -478,7 +479,7 @@
     },
     "Heading/Large": {
       "size": 20,
-      "weight": 450,
+      "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-lg",
@@ -502,7 +503,7 @@
     },
     "Body/Default/Regular": {
       "size": 16,
-      "weight": 380,
+      "weight": 400,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
@@ -518,7 +519,7 @@
     },
     "Body/Small/Regular": {
       "size": 14,
-      "weight": 420,
+      "weight": 400,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
@@ -534,7 +535,7 @@
     },
     "Body/Tiny/Regular": {
       "size": 12,
-      "weight": 420,
+      "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-sm",
@@ -558,14 +559,14 @@
     },
     "Label/Large": {
       "size": 18,
-      "weight": 420,
+      "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
       "lhVar": "lh/body-lg-semibold"
     },
     "Label/Default": {
       "size": 16,
-      "weight": 480,
+      "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
@@ -574,15 +575,15 @@
     },
     "Label/Small": {
       "size": 16,
-      "weight": 480,
-      "letterSpacing": -1,
+      "weight": 500,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-medium"
     },
     "Label/Tiny": {
       "size": 14,
-      "weight": 420,
+      "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",

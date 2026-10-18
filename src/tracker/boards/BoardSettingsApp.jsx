@@ -2,6 +2,8 @@
 // Board settings (Ongatu, Oct 15): "05 - Boards settings - Owner" 970:18246 (dark 1009:24719), with the board list open
 // 992:34665, personal board 989:29429, "Viewer/Editor" 992:37022; phones 986:27262, 989:29453, 992:37239, the board
 // sheet 992:35130 and the access sheet 989:28776. /board-settings?board=<id | personal> (else the board shown).
+//   Oct 18: re-measured against the refined frames (and their 1070:* dark twins). Phones are a panel: no App header, a
+//   64-high nav bar with the back button, then the title block.
 //   The App header; "Back to dashboard"; "Board settings" + "Manage your board name, member access, and permissions.";
 //   then, centred (1110): on the left (246) "Select a board" and the board pill (it opens "Your boards" in place; on
 //   phones a sheet); on the right (800) the cards, 16 apart:
@@ -105,7 +107,7 @@ export default function BoardSettingsApp() {
   });
 
   const nameCard = (
-    <BoardCard id="board-sec-name" className="jb-name-card" titleId="board-name-title" title="Board name"
+    <BoardCard id="board-sec-name" className={'jb-name-card ' + (isCo ? 'is-co' : boardId ? 'is-locked' : 'is-personal')} titleId="board-name-title" title="Board name"
       text={!boardId ? 'Personal boards are tied to your account and cannot be renamed.'
         : isCo ? 'This name appears for everyone on the joint board.'
           : mobile ? 'The name is set by the owner and co-owners.' : 'Only owners and co-owners can change the board name.'}>
@@ -151,11 +153,12 @@ export default function BoardSettingsApp() {
   return (
     <>
       <div className="app-top-gap" />
-      <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => router.push(alertHref(a))} /></AppHeader>
+      {/* Phones (989:29453 / 992:37239 / 986:27262): a panel with its own nav bar (the back button), no app header. */}
+      {!mobile && <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => router.push(alertHref(a))} /></AppHeader>}
       <div className="wrap acct-page jb-page" id="board-settings">
         <header className="jb-head">
           {mobile
-            ? <RoundButton icon={arrowStraightLeft} iconSize={20} className="jb-back" id="board-settings-back" label="Back to dashboard" onClick={() => router.push('/')} />
+            ? <div className="jb-nav"><RoundButton icon={arrowStraightLeft} iconSize={20} className="jb-back" id="board-settings-back" label="Back to dashboard" onClick={() => router.push('/')} /></div>
             : <ActionLink href="/" size="medium" icon={arrowStraightLeft} id="board-settings-back"
                 onClick={(e) => { if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { e.preventDefault(); router.push('/'); } }}>Back to dashboard</ActionLink>}
           <div className="jb-heading">
@@ -194,14 +197,13 @@ function BoardPicker({ boards, firstName, boardId, personalName, mobile, onPick 
   const current = list.find((b) => b.current);
   return (
     <div className={'jb-picker' + (open ? ' is-open' : '')} ref={ref}>
-      {(!open || mobile) && (
-        <button type="button" className="jb-picker-btn" id="board-settings-board" aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)}>
-          <Icon icon={boardId ? duo : user2} size={16} />
-          <span className="jb-picker-name">{current ? current.name : personalName}</span>
-          <Icon icon={chevronDown} size={12} />
-        </button>
-      )}
-      <BoardSwitcher id="board-settings-switcher" boards={list} mobile={mobile} open={open} onClose={close} note={p.note} onCreate={mobile ? undefined : p.onCreate}
+      {/* 992:34665: the open list covers the title and the pill (absolute, 302 wide); the pill stays underneath. */}
+      <button type="button" className="jb-picker-btn" id="board-settings-board" aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen((o) => !o)}>
+        <Icon icon={boardId ? duo : user2} size={mobile ? 24 : 16} />
+        <span className="jb-picker-name">{current ? current.name : personalName}</span>
+        <Icon icon={chevronDown} size={mobile ? 16 : 12} />
+      </button>
+      <BoardSwitcher id="board-settings-switcher" boards={list} mobile={mobile} open={open} onClose={close} note={mobile ? undefined : p.note} onCreate={mobile ? undefined : p.onCreate}
         onPick={(id) => { close(); onPick(id); }} />
     </div>
   );

@@ -6,6 +6,7 @@
 // settings/onboarding, so the dashboard never sends this account here again.
 import { useEffect, useRef, useState } from 'react';
 import '../ui/okara.css';
+import '../tracker/boards.css'; // the people rows of Name and share (jb-*), as the board's Sharing block
 import './onboarding.css';
 import { ActionLink, Avatar, Button, CategorySelector, Dropdown, Input, Label, Logo, Modal, illustrations, useMobile, useToast } from '../ui/index.js';
 import { Icon } from '../ui/Icon.jsx';
@@ -47,10 +48,12 @@ export function taxonomyOfBoard(board) {
   return tx;
 }
 
-function Header({ name, joint }) {
+// Oct 18: on phones the title is Display/Title on the tour (853:11208) and Heading/XL from "How do you want to start?" on
+// (935:37211, 853:10147 ...): `compact`.
+function Header({ name, joint, compact }) {
   const mobile = useMobile();
   return (
-    <header className={'ob-header' + (joint ? ' is-joint' : '')}>
+    <header className={'ob-header' + (joint ? ' is-joint' : '') + (compact ? ' is-compact' : '')}>
       {joint ? <JointArt /> : <Logo variant="symbol" height={44} />}
       {joint
         ? <><h1 className="ob-title">Set up your joint board</h1><p className="ob-sub">Manage your finances together with your partner or family.</p></>
@@ -140,17 +143,19 @@ function NameAndShare({ me, name, setName, nameError, ensureBoard, boardId, invi
     } catch (e) { showToast((e && e.message) || "Couldn't change the access.", 'fail'); }
     finally { setWorking(null); }
   };
+  // Oct 18 (962:33477, dark 1070:78228): "Back to setup" (Small Action link) above the cards; card 1 "Board name" + its
+  // line + the field (no label); card 2 "Share your board", the invite field and "People with access" (rows as the
+  // board's Sharing block, 965:35548); the button row; all 16 apart (Body 967:18197).
   return (
-    <>
+    <div className="ob-body ob-share-body">
+      <ActionLink icon={arrowStraightLeft} className="ob-back-link" id="ob-back-link" onClick={onBack}>Back to setup</ActionLink>
       <section className="ob-card ob-share-card" aria-labelledby="ob-name-title">
         <div className="ob-card-head">
-          <BackLink onClick={onBack}>Back to setup</BackLink>
-          <h2 className="ob-card-title" id="ob-name-title">Name and share</h2>
-          <p className="ob-card-text">Name your board and share access with family, partners, or friends.</p>
+          <h2 className="ob-card-title" id="ob-name-title">Board name</h2>
+          <p className="ob-card-text">This name appears for everyone on the joint board.</p>
         </div>
         <div className="fld ob-board-name">
-          <label className="fld-label" htmlFor="ob-board-name">Board name</label>
-          <Input id="ob-board-name" value={name} maxLength={60} placeholder="e.g., Home Finances, Living costs" aria-invalid={nameError ? 'true' : undefined}
+          <Input id="ob-board-name" aria-label="Board name" value={name} maxLength={60} placeholder="e.g., Home Finances, Living costs" aria-invalid={nameError ? 'true' : undefined}
             onChange={(e) => setName(e.target.value)} autoFocus={!name} />
           {nameError && <p className="ob-error" role="alert" id="ob-board-name-error">{nameError}</p>}
         </div>
@@ -168,22 +173,30 @@ function NameAndShare({ me, name, setName, nameError, ensureBoard, boardId, invi
             <Button variant="secondary" size="small" icon={send} id="ob-invite-send" disabled={!!working || !emails.trim()} onClick={sendInvites}>{working === 'send' ? 'Sending…' : 'Send invite'}</Button>
           </div>
         </div>
-        <div className="ob-people">
-          <h3 className="ob-people-title">People with access</h3>
-          <ul className="ob-people-list" id="ob-people">
-            <li className="ob-person" data-you="true">
-              <Avatar name={mine} />
-              <span className="ob-person-who"><span className="ob-person-name">{mine}</span><span className="ob-person-email">{me ? me.email : ''}</span></span>
-              <span className="ob-person-tag">You</span>
-              <Dropdown id="ob-role-you" size="tiny" emptyOption={false} disabled value="owner" options={[{ value: 'owner', label: 'Owner' }]} ariaLabel="Your access" className="ob-person-role" />
+        <div className="ob-people jb-people">
+          <h3 className="ob-people-title jb-people-title" id="ob-people-title">People with access</h3>
+          <ul className="ob-people-list jb-people-list" id="ob-people" aria-labelledby="ob-people-title">
+            <li className="ob-person jb-person-row" data-you="true">
+              <div className="jb-person">
+                <div className="jb-person-user">
+                  <Avatar name={mine} />
+                  <div className="jb-person-info"><span className="jb-person-name">{mine}</span>{me && me.email && mine !== me.email && <span className="jb-person-email">{me.email}</span>}</div>
+                  <span className="jb-tag">You</span>
+                </div>
+                <Dropdown id="ob-role-you" size="tiny" emptyOption={false} disabled value="owner" options={[{ value: 'owner', label: 'Owner' }]} ariaLabel="Your access" className="ob-person-role" />
+              </div>
             </li>
             {invites.map((row) => (
-              <li className="ob-person" key={row.email} data-email={row.email}>
-                <Avatar name={row.email} />
-                <span className="ob-person-who"><span className="ob-person-name">{row.email.split('@')[0]}</span><span className="ob-person-email">{row.email}</span></span>
-                <span className="ob-person-tag is-sent">Invite sent</span>
+              <li className="ob-person jb-person-row is-invite" key={row.email} data-email={row.email}>
+                <div className="jb-person">
+                <div className="jb-person-user">
+                  <Avatar name={row.email} />
+                  <div className="jb-person-info"><span className="jb-person-name">{row.email}</span></div>
+                  <span className="jb-tag is-warning">Invite sent</span>
+                </div>
                 <Dropdown id={'ob-role-' + row.inviteId} size="tiny" emptyOption={false} disabled={working === row.email} value={row.role} options={ROLE_OPTIONS}
                   ariaLabel={`Access for ${row.email}`} className="ob-person-role" onChange={(v) => changeRole(row, v)} />
+                </div>
               </li>
             ))}
           </ul>
@@ -194,7 +207,7 @@ function NameAndShare({ me, name, setName, nameError, ensureBoard, boardId, invi
         <CancelBoard onClick={onCancel} disabled={busy} />
         <Button id="ob-finish" disabled={busy || !!working} onClick={onFinish}>{busy ? 'Saving…' : 'Finish and start tracking'}</Button>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -345,10 +358,12 @@ function ImportFile({ onDone, onBack }) {
     } finally { setBusy(null); if (fileRef.current) fileRef.current.value = ''; }
   };
   const pick = () => { if (!busy && fileRef.current) fileRef.current.click(); };
+  // 907:18744 (Oct 18): "Back" sits above the card, 16 over it (Body 1070:89702).
   return (
+    <div className="ob-body ob-body-mid">
+    <BackLink onClick={onBack}>Back</BackLink>
     <section className="ob-card ob-import" aria-labelledby="ob-import-title">
       <div className="ob-card-head">
-        <BackLink onClick={onBack}>Back to setup options</BackLink>
         <h2 className="ob-card-title" id="ob-import-title">Upload your file</h2>
         <p className="ob-card-text">We’ll automatically organize your transactions into Income, Expenses, and Savings &amp; Investments. Nothing is saved until you review and confirm.</p>
       </div>
@@ -392,6 +407,7 @@ function ImportFile({ onDone, onBack }) {
         </div>
       </div>
     </section>
+    </div>
   );
 }
 
@@ -607,8 +623,10 @@ function Setup({ mode, onStart, onBack, busy, error, imported, saving, joint, in
   const years = [...new Set([...Array.from({ length: 6 }, (_, i) => String(nowYear - i)), ...(imported ? imported.years.filter((y) => Number(y) <= nowYear) : [])])].sort().reverse();
   const months = MONTH_NAMES.map((m, i) => ({ value: String(i), label: m, selectedLabel: m.slice(0, 3) })).filter((o) => Number(year) < nowYear || Number(o.value) <= new Date().getMonth());
   const subOptions = [...(sel === 'expense' ? [] : [NO_SUB]), ...subsOf(sel)];
-  // 03b (931:27920) draws the Cancel icon and a plain "Add"; 03d (930:21383) no icon and "+ Add sub-category".
-  const emptyIcon = mode === 'empty' ? cancel : false;
+  // Oct 18: desktop 03b / 03d (931:27920, 1070:89945) draw the Cancel icon and a short "Add"; the phones (935:39026,
+  // 935:42102) no icon and "Add sub-category" / "Add group".
+  const emptyIcon = mobile ? false : cancel;
+  const addLabel = (noun) => (mobile ? `Add ${noun}` : 'Add');
 
   // 401:4464 / 749:10871 (Oct 9): the right column is two titled boxes, "Start tracking from" (Year, Month) and
   // "Summary" (counts, note, Start tracking). Phones (853:10147 / 853:19253): both sit below the card.
@@ -649,11 +667,13 @@ function Setup({ mode, onStart, onBack, busy, error, imported, saving, joint, in
   );
   const isImport = mode === 'import' && imported;
   const subLabel = sel === 'expense' && mode !== 'empty' ? 'Sub-category' : 'Sub-category (optional)';
+  // 401:4464 / 749:10871 / 930:21353 (Oct 18): "Back" ("Back to file upload" after an import) sits above the card, 16 over
+  // it (Body 1070:89679); on phones the summary card follows the board card, 24 below (Cards 935:38302).
   return (
-    <>
+    <div className="ob-body">
+    <BackLink onClick={onBack}>{isImport ? 'Back to file upload' : 'Back'}</BackLink>
     <section className={'ob-card ob-setup ob-board' + (isImport ? ' ob-review' : '')} aria-labelledby="ob-setup-title">
       <div className="ob-card-head">
-        <BackLink onClick={onBack}>{isImport ? 'Back to file upload' : 'Back to setup options'}</BackLink>
         <h2 className="ob-card-title" id="ob-setup-title">{isImport ? 'Review your setup' : 'Set up your board'}</h2>
         <p className="ob-card-text">{mode === 'template' ? 'Keep what fits and add your own. Nothing is locked in.' : isImport ? 'We’ve organized your file into top-level categories. You can rename, move, or delete items before continuing.' : 'Start with a category, then add your own items. Organize them only if you need to.'}</p>
       </div>
@@ -672,7 +692,7 @@ function Setup({ mode, onStart, onBack, busy, error, imported, saving, joint, in
                 </PickField>
               ) : (
                 <EmptyField id="ob-sub-empty" label={subLabel} text="No sub-categories created" icon={emptyIcon}
-                  actionLabel={mode === 'empty' ? 'Add' : 'Add sub-category'} actionId="ob-add-sub" onAdd={() => setSubModal(true)} />
+                  actionLabel={addLabel('sub-category')} actionId="ob-add-sub" onAdd={() => setSubModal(true)} />
               )}
               {grouped && (groupNames.length || groupTyping) ? (
                 <PickField id="ob-group" label="Group (optional)" value={groupSel} options={[...(groupSel ? [ALL_GROUPS] : []), ...groupNames]} autoFocus={groupTyping}
@@ -681,7 +701,7 @@ function Setup({ mode, onStart, onBack, busy, error, imported, saving, joint, in
                 </PickField>
               ) : grouped ? (
                 <EmptyField id="ob-group-empty" label="Group (optional)" text="No groups created" icon={emptyIcon}
-                  actionLabel={mode === 'empty' ? 'Add' : 'Add group'} actionId="ob-add-group" onAdd={() => setGroupTyping(true)} />
+                  actionLabel={addLabel('group')} actionId="ob-add-group" onAdd={() => setGroupTyping(true)} />
               ) : null}
             </div>
           </div>
@@ -738,7 +758,7 @@ function Setup({ mode, onStart, onBack, busy, error, imported, saving, joint, in
       {confirmModal}
     </section>
     {mobile && aside}
-    </>
+    </div>
   );
 }
 
@@ -797,7 +817,7 @@ export default function OnboardingApp() {
     return () => { offY(); offS(); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const progress = step === 'tour' ? (card + 1) / (TOUR.length + 1) : step === 'choose' ? 1 / 3 : step === 'import' ? 1 / 2 : 2 / 3;
+  // Oct 18: the current step's bar is half full on every frame (tour 399:4424 / 399:4485 / 564:7633, setup 400:4509 ...).
   const current = step === 'tour' ? 1 : 2;
 
   // The joint board, created the first time it's needed (Copy link, Send invite, Finish): it needs its name.
@@ -871,7 +891,9 @@ export default function OnboardingApp() {
   };
 
   const showSteps = step !== 'welcome';
-  const doneText = 'Your board is ready. Start tracking your finances and hitting your goals.';
+  // 04 Welcome modal: 404:4571; the joint flow's 962:33425 says "joint board".
+  const doneText = joint ? 'Your joint board is ready. Start tracking your finances together and reaching your goals.' : 'Your board is ready. Start tracking your finances and hitting your goals.';
+  const goLabel = joint ? 'Go to joint board' : 'Go to your board';
   const mobile = useMobile();
   // A viewer can't set up an empty joint board: say so, and offer the personal board.
   if (sharedId && boardInfo && boardInfo.role === 'viewer') {
@@ -902,7 +924,7 @@ export default function OnboardingApp() {
             <p className="ob-welcome-desc">{doneText}</p>
           </div>
         </div>
-        <Button id="ob-go" className="ob-welcome-go" onClick={() => leavePage('/')}>Go to your board</Button>
+        <Button id="ob-go" className="ob-welcome-go" onClick={() => leavePage('/')}>{goLabel}</Button>
       </main>
     );
   }
@@ -913,10 +935,10 @@ export default function OnboardingApp() {
     <main className={'ob-page' + pageWidth + (joint ? ' is-joint' : '')}>
       {me && (
         <div className="ob-content">
-          <Header name={name} joint={joint} />
+          <Header name={name} joint={joint} compact={step !== 'tour'} />
           {showSteps && (joint
             ? <StepProgress steps={jointSteps} current={step === 'share' ? 1 : 0} />
-            : <StepProgress steps={STEPS.map((label) => ({ label, progress }))} current={current} />)}
+            : <StepProgress steps={STEPS.map((label) => ({ label, progress: 0.5 }))} current={current} />)}
           {step === 'tour' && <Tour card={card} setCard={setCard} onDone={() => setStep('choose')} />}
           {step === 'choose' && <Choose onPick={(m) => { setMode(m); setPending(null); setStep(m === 'import' ? 'import' : 'setup'); }} />}
           {step === 'import' && <ImportFile onBack={() => setStep('choose')} onDone={(r) => { setImported(r); setPending(null); setStep('setup'); }} />}
@@ -930,7 +952,7 @@ export default function OnboardingApp() {
       )}
       <Modal open={step === 'welcome' && !mobile} id="ob-welcome" illustration={illustrations.success} illustrationWidth={160} onClose={() => leavePage('/')}
         title={`You're all set${name ? `, ${name}` : ''}!`} description={doneText}
-        primary={{ label: 'Go to your board', onClick: () => leavePage('/'), id: 'ob-go' }} />
+        primary={{ label: goLabel, onClick: () => leavePage('/'), id: 'ob-go' }} />
       {toastEl}
     </main>
   );

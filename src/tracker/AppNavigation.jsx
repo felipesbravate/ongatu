@@ -17,9 +17,11 @@ export function AppNavigation({ children }) {
     return () => { if (action.current === onAdd) action.current = null; };
   }, []);
   const visible = pathname === '/' || pathname === '/account' || pathname === '/notifications';
+  // The Notifications page on phones is a full-screen page without the bar (notifications-mobile 1070:74832, Oct 18).
+  const bar = visible && pathname !== '/notifications';
   return <NavigationContext.Provider value={register}>
     <div className={visible ? 'app-route-content' : undefined} key={pathname}>{children}</div>
-    {visible && <MobileBottomNav selection={pathname === '/account' ? 'account' : 'home'} image={image}
+    {bar && <MobileBottomNav selection={pathname === '/account' ? 'account' : 'home'} image={image}
       onAdd={() => action.current ? action.current() : router.push('/?add=1')} />}
   </NavigationContext.Provider>;
 }

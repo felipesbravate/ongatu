@@ -203,6 +203,7 @@
     --surface-modal: #1f1e19e0;
     --icon-round-control: #16150fff;
     --surface-gradient: #ffffff00;
+    --data-mint: #12b86bff;
 
     /* Collection: Opacity */
     --opacity-disabled: 0.4;
@@ -231,7 +232,7 @@
     --lh-display-title: 38px;
     --lh-heading-xl: 20px;
     --lh-heading-lg: 20px;
-    --lh-heading-md: 14px;
+    --lh-heading-md: 16px;
     --lh-heading-sm: 12px;
     --lh-body-lg-medium: 16px;
     --lh-body-lg-semibold: 16px;
@@ -268,7 +269,7 @@
 
     /* Collection: TextStyles */
     --type-display-title-size: var(--size-display-title);
-    --type-display-title-weight: 500;
+    --type-display-title-weight: 600;
     --type-display-title-lh: var(--lh-display-title);
     --type-display-title-ls: 0;
     --type-display-title-mobile-size: var(--size-value-xl);
@@ -300,7 +301,7 @@
     --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
     --type-heading-large-size: var(--size-heading-lg);
-    --type-heading-large-weight: 450;
+    --type-heading-large-weight: 500;
     --type-heading-large-lh: var(--lh-heading-lg);
     --type-heading-large-ls: 0;
     --type-heading-medium-size: var(--size-heading-md);
@@ -312,7 +313,7 @@
     --type-heading-small-lh: var(--lh-heading-sm);
     --type-heading-small-ls: 0;
     --type-body-default-regular-size: var(--size-body-lg);
-    --type-body-default-regular-weight: 380;
+    --type-body-default-regular-weight: 400;
     --type-body-default-regular-lh: var(--lh-body-lg-medium);
     --type-body-default-regular-ls: 0;
     --type-body-default-bold-size: var(--size-body-lg);
@@ -320,7 +321,7 @@
     --type-body-default-bold-lh: var(--lh-body-lg-semibold);
     --type-body-default-bold-ls: 0;
     --type-body-small-regular-size: var(--size-body-md);
-    --type-body-small-regular-weight: 420;
+    --type-body-small-regular-weight: 400;
     --type-body-small-regular-lh: var(--lh-body-md);
     --type-body-small-regular-ls: 0;
     --type-body-small-medium-size: var(--size-body-md);
@@ -328,7 +329,7 @@
     --type-body-small-medium-lh: var(--lh-body-md);
     --type-body-small-medium-ls: 0;
     --type-body-tiny-regular-size: var(--size-body-sm);
-    --type-body-tiny-regular-weight: 420;
+    --type-body-tiny-regular-weight: 500;
     --type-body-tiny-regular-lh: var(--lh-body-sm);
     --type-body-tiny-regular-ls: 0;
     --type-body-tiny-medium-size: var(--size-body-sm);
@@ -340,7 +341,7 @@
     --type-badge-medium-lh: var(--lh-badge);
     --type-badge-medium-ls: -0.02em;
     --type-label-large-size: 18px;
-    --type-label-large-weight: 420;
+    --type-label-large-weight: 500;
     --type-label-large-lh: var(--lh-body-lg-semibold);
     --type-label-large-ls: 0;
     --type-label-default-size: var(--size-body-lg);
@@ -348,11 +349,11 @@
     --type-label-default-lh: var(--lh-heading-lg);
     --type-label-default-ls: 0;
     --type-label-small-size: var(--size-body-lg);
-    --type-label-small-weight: 480;
+    --type-label-small-weight: 500;
     --type-label-small-lh: var(--lh-body-lg-medium);
-    --type-label-small-ls: -0.01em;
+    --type-label-small-ls: 0;
     --type-label-tiny-size: var(--size-body-md);
-    --type-label-tiny-weight: 420;
+    --type-label-tiny-weight: 500;
     --type-label-tiny-lh: var(--lh-body-md);
     --type-label-tiny-ls: 0;
     --type-label-micro-size: var(--size-body-sm);
@@ -452,7 +453,7 @@
       --lh-display-title: 48px;
       --lh-heading-xl: 24px;
       --lh-heading-lg: 24px;
-      --lh-heading-md: 16px;
+      --lh-heading-md: 20px;
       --lh-heading-sm: 14px;
       --lh-body-lg-medium: 20px;
       --lh-body-lg-semibold: 20px;
@@ -498,7 +499,7 @@
     --lh-display-title: 48px;
     --lh-heading-xl: 24px;
     --lh-heading-lg: 24px;
-    --lh-heading-md: 16px;
+    --lh-heading-md: 20px;
     --lh-heading-sm: 14px;
     --lh-body-lg-medium: 20px;
     --lh-body-lg-semibold: 20px;
@@ -2729,20 +2730,20 @@
   .btn-pill:hover{ background:var(--action-primary-hover); }
   .btn-pill:active{ background:var(--action-primary-press); }
   .btn-pill:disabled, .btn-pill:disabled:hover{ background:var(--action-primary-press); opacity:var(--opacity-disabled, .4); cursor:not-allowed; }
-  .btn-pill.small{ padding:calc(var(--space-xs) - 1px) calc(var(--space-sm) - 1px);
+  .btn-pill.small{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px);
     font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
-  .btn-pill.small.ghost, .btn-pill.small.tertiary{ padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); }
   .btn-pill.tiny{ min-width:64px; padding:calc(var(--space-xs) - 1px) calc(var(--space-sm) - 1px);
     font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
   .btn-pill.micro{ min-width:48px; padding:calc(var(--space-tn) - 1px);
-    font-size:var(--type-label-nano-size); font-weight:var(--type-label-nano-weight); line-height:var(--type-label-nano-lh); letter-spacing:var(--type-label-nano-ls); }
+    font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
   .btn-pill.ghost{ background:transparent; color:var(--text-primary); border-color:var(--border-default); }
   .btn-pill.ghost:hover{ background:var(--action-secondary-hover); border-color:var(--border-hover); }
   .btn-pill.ghost:active{ background:var(--action-secondary-press); border-color:var(--border-hover); }
   .btn-pill.ghost:disabled, .btn-pill.ghost:disabled:hover{ background:transparent; border-color:var(--border-default); }
-  .btn-pill.tertiary, .btn-pill.tertiary:hover, .btn-pill.tertiary:active, .btn-pill.tertiary:disabled{ background:transparent; color:var(--text-primary); border-color:transparent; }
-  .btn-pill.micro.tertiary:hover{ background:var(--action-secondary-hover); }
-  .btn-pill.micro.tertiary:active{ background:var(--action-secondary-press); }
+  .btn-pill.tertiary, .btn-pill.tertiary:disabled{ background:transparent; color:var(--text-primary); border-color:transparent; }
+  /* Oct 18 (41:119): Tertiary Hover action/tertiary-hover, Press action/tertiary-press, in every size. */
+  .btn-pill.tertiary:hover{ background:var(--action-tertiary-hover); color:var(--text-primary); border-color:transparent; }
+  .btn-pill.tertiary:active{ background:var(--action-tertiary-press); color:var(--text-primary); border-color:transparent; }
   .btn-pill.ghost svg, .btn-pill.tertiary svg{ color:var(--surface-dark); }
   .btn-pill.destructive{ background:var(--action-destructive); }
   .btn-pill.destructive:hover{ background:linear-gradient(rgba(22,21,15,.12),rgba(22,21,15,.12)),var(--action-destructive); }
@@ -2754,8 +2755,10 @@
      border/hover); Primary action/primary with a surface/primary icon; Inactive 40% opacity. */
   .round-btn{ width:auto; height:auto; min-width:0; min-height:0; box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;
     padding:calc(var(--space-sm) - 1px); border:1px solid transparent; border-radius:var(--radius-full); background:transparent; color:var(--action-primary); }
-  .round-btn.small, .round-btn.tiny{ padding:calc(var(--space-xs) - 1px); }
-  .round-btn.micro{ padding:calc(var(--space-tn) - 1px); }
+  .round-btn.small{ padding:calc(var(--space-xs) - 1px); }
+  /* Oct 18 (52:629): Tiny pad tn around a 20px icon (28), Micro pad tn around 16 (24); the slot stays when a screen
+     draws a smaller icon. */
+  .round-btn.tiny, .round-btn.micro{ padding:calc(var(--space-tn) - 1px); }
   .round-btn.nano{ width:16px; height:16px; padding:0; color:var(--surface-dark); }
   .round-btn:hover{ background:var(--action-secondary-hover); }
   .round-btn:active{ background:var(--action-secondary-press); }
@@ -2807,8 +2810,8 @@
   /* Button: Tertiary Small, Tiny and Micro fill action/secondary-hover on hover and action/secondary-press on press
      (Medium Tertiary stays bare). Micro pad tn xs, items 2 apart. Disabled Primary: Medium keeps action/primary-press,
      Small / Tiny / Micro keep action/primary. */
-  .btn-pill.small.tertiary:hover, .btn-pill.tiny.tertiary:hover, .btn-pill.micro.tertiary:hover{ background:var(--action-secondary-hover); }
-  .btn-pill.small.tertiary:active, .btn-pill.tiny.tertiary:active, .btn-pill.micro.tertiary:active{ background:var(--action-secondary-press); }
+  .btn-pill.small.tertiary:hover, .btn-pill.tiny.tertiary:hover, .btn-pill.micro.tertiary:hover{ background:var(--action-tertiary-hover); }
+  .btn-pill.small.tertiary:active, .btn-pill.tiny.tertiary:active, .btn-pill.micro.tertiary:active{ background:var(--action-tertiary-press); }
   .btn-pill.small.tertiary:disabled, .btn-pill.tiny.tertiary:disabled, .btn-pill.micro.tertiary:disabled{ background:transparent; }
   .btn-pill.micro{ gap:2px; padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px); }
   .btn-pill.small:disabled, .btn-pill.tiny:disabled, .btn-pill.micro:disabled,
@@ -3421,8 +3424,8 @@
      One block that wins over the earlier passes. Rebuilding okara.css per component is still pending. */
 
   /* D2: Input. Desktop screens override it to radius 6, 12px sides, Body/Large 14/18; phones keep radius 8, 16px, 16/22. Not pinned (D1). */
-  .ds-input:not(.tiny):not(.small):not(#z){ min-height:48px; border-radius:var(--radius-sm); /* Oct 12: Figma 918:1064 is radius/sm 8 */ padding:0 11px; font-size:var(--size-body-lg); line-height:18px; letter-spacing:-0.02em; }
-  .ds-input:not(.tiny):not(.small) input:not(#z){ font-size:var(--size-body-lg); line-height:18px; letter-spacing:-0.02em; }
+  .ds-input:not(.tiny):not(.small):not(#z){ min-height:48px; border-radius:var(--radius-sm); /* Oct 12: Figma 918:1064 is radius/sm 8 */ padding:0 11px; font-size:var(--size-body-lg); line-height:18px; letter-spacing:var(--type-label-default-ls); /* Oct 18: Label/Default, no tracking */ }
+  .ds-input:not(.tiny):not(.small) input:not(#z){ font-size:var(--size-body-lg); line-height:18px; letter-spacing:var(--type-label-default-ls); }
   .ds-input.is-value:not(.tiny):not(.small) input:not(#z){ font-family:var(--font-mono); font-size:var(--size-value-lg); letter-spacing:0; }
   @media (max-width:640px){
     .ds-input:not(.tiny):not(.small):not(#z){ border-radius:var(--radius-sm); padding:0 15px; line-height:22px; }
@@ -3869,14 +3872,15 @@ html[data-theme] .ds-input-trailing{ display:inline-flex; align-items:center; ju
 html[data-theme] .ds-input-trailing:disabled{ color:var(--icon-muted); cursor:not-allowed; }
 html[data-theme] .ds-input.has-trailing input{ min-width:0; flex:1 1 auto; }
 
-/* Dropdown 71:1096: the chevron binds icon/round-control (Disable: icon/muted). */
-html[data-theme] .ds-dd-chevron svg:not(#z), html[data-theme] .fld-combo-chev > svg:not(#z){ color:var(--icon-round-control); }
+/* Dropdown 71:1096: the chevron binds icon/secondary (Oct 18; Disable: icon/muted). */
+html[data-theme] .ds-dd-chevron svg:not(#z), html[data-theme] .fld-combo-chev > svg:not(#z){ color:var(--icon-secondary); }
 html[data-theme] :is(.ds-dd-trigger:disabled, .ds-dd.is-disabled .ds-dd-trigger) .ds-dd-chevron svg:not(#z){ color:var(--icon-muted); }
 
 /* dropdown-interaction 923:2152 (Group / Simple / Action): 242 wide, padding space/md, radius/lg, border/default,
    Floating shadow 0 4 12; items space/tn apart; Group blocks space/md apart, Simple/Action description space/xs above.
+   Oct 18: surface/body with a border/secondary stroke.
    drop-item 923:2277: Action items and Hover draw their icon in icon/round-control. */
-html[data-theme] .ds-dd-menu:not(#z){ padding:var(--space-md); border:1px solid var(--border-default); border-radius:var(--radius-lg); background:var(--surface-primary); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
+html[data-theme] .ds-dd-menu:not(#z){ padding:var(--space-md); border:1px solid var(--border-secondary); border-radius:var(--radius-lg); background:var(--surface-body); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
 html[data-theme] .ds-dd-menu .ds-dd-items:not(#z),
 html[data-theme] .ds-drop-action .ds-dd-items:not(#z){ gap:var(--space-tn); }
 html[data-theme] .ds-dd-menu.has-desc:not(#z){ gap:var(--space-xs); }
@@ -3959,7 +3963,7 @@ html[data-theme] .ds-notif.is-open .round-btn:not(#z), html[data-theme] .ds-noti
 html[data-theme] .ds-notif-panel:not(#z){ padding:var(--space-xs); gap:var(--space-sm); border:1px solid var(--border-secondary); border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
 html[data-theme] .ds-notif-list{ display:flex; flex-direction:column; gap:var(--space-tn); }
 html[data-theme] .ds-notif-all:not(#z){ align-self:center; display:inline-flex; align-items:center; justify-content:center; gap:var(--space-tn); min-height:0; min-width:80px; padding:calc(var(--space-xs) - 1px) calc(var(--space-md) - 1px); text-decoration:none;
-  font-size:var(--type-label-small-size); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); color:var(--text-primary); }
+  font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); color:var(--text-primary); }
 html[data-theme] .ds-notif-all svg{ color:var(--icon-primary); }
 /* notification-item 228:469: radius/md; Day and time 4 apart around a 12px Dot (icon/primary); Read text/secondary;
    "Mark as read" (Action-link Small, 16px check) has no padding. The mobile page's back arrow binds icon/round-control. */
@@ -3976,7 +3980,7 @@ html[data-theme] .ds-user-card:not(#z){ box-shadow:0 4px 12px var(--effect-shado
 /* Toast 304:659 (pinned Mobile): 320 wide (max 400), min 64 high, 16 between strip, message and X, padding-right 16,
    1px border/secondary, Floating shadow. Strips: Positive brand/mint, Negative status/red-deep, Neutral surface/tertiary.
    The 12px X is icon/muted. */
-html[data-theme] .ds-toast:not(#z){ width:320px; min-width:min(320px, calc(100vw - 32px)); max-width:min(400px, calc(100vw - 32px)); min-height:64px; box-sizing:border-box;
+html[data-theme] .ds-toast:not(#z){ background:var(--surface-dark); width:320px; min-width:min(320px, calc(100vw - 32px)); max-width:min(400px, calc(100vw - 32px)); min-height:64px; box-sizing:border-box;
   gap:var(--space-md); padding:0 var(--space-md) 0 0; border:1px solid var(--border-secondary); border-radius:var(--radius-sm); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); overflow:hidden; }
 html[data-theme] .ds-toast-strip:not(#z){ align-self:stretch; background:var(--brand-mint); }
 html[data-theme] .ds-toast.fail .ds-toast-strip:not(#z){ background:var(--status-red-deep); }
@@ -3990,12 +3994,12 @@ html[data-theme] .round-btn.ds-toast-close:not(#z){ align-self:center; margin:0;
 html[data-theme] .ds-modal::backdrop{ background:var(--surface-modal); }
 html[data-theme] .ds-modal-header .round-btn svg{ color:var(--icon-round-control); }
 @media (min-width:641px){
-  html[data-theme] .ds-modal:not(#z){ border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); min-height:240px; gap:var(--space-xl); padding-bottom:var(--space-lg); }
+  html[data-theme] .ds-modal:not(#z){ border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); min-height:240px; gap:var(--space-sm); padding-bottom:var(--space-lg); } /* Oct 18: no gap, Content padding-top space/sm */
   html[data-theme] .ds-modal-header:not(#z){ padding:var(--space-sm); min-height:64px; box-sizing:border-box; }
   html[data-theme] #confirm-modal.ds-modal:not(#z){ width:480px; }
 }
 @media (max-width:640px){
-  html[data-theme] .ds-modal:not(#z){ width:calc(100% - 2 * var(--space-tn)); max-width:calc(100% - 2 * var(--space-tn)); margin:auto var(--space-tn) var(--space-tn); border-radius:44px;
+  html[data-theme] .ds-modal:not(#z){ width:calc(100% - 16px); max-width:calc(100% - 16px); margin:auto 8px 8px; border-radius:44px; /* Oct 18 (443:1484 Mobile): 8 (space/xs) from the sides and bottom */
     box-shadow:0 0 8px var(--effect-shadow-86-82-59-80); -webkit-backdrop-filter:blur(1px); backdrop-filter:blur(1px); }
 }
 
@@ -4014,7 +4018,7 @@ html[data-theme] .ds-info.danger:not(#z){ background:var(--surface-fail); }
 html[data-theme] .ds-info > svg{ color:var(--icon-primary); }
 html[data-theme] .ds-info-action{ display:inline-flex; align-items:center; justify-content:center; gap:2px; flex-shrink:0; min-width:48px; box-sizing:border-box; margin:0;
   padding:calc(var(--space-tn) - 1px) calc(var(--space-xs) - 1px); border:1px solid var(--border-tertiary); border-radius:var(--radius-full); background:transparent; color:var(--text-primary); cursor:pointer;
-  font-family:inherit; font-size:var(--type-label-nano-size); font-weight:var(--type-label-nano-weight); line-height:var(--type-label-nano-lh); letter-spacing:var(--type-label-nano-ls); white-space:nowrap; }
+  font-family:inherit; font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); white-space:nowrap; } /* Oct 18: Button Micro (632:905) */
 html[data-theme] .ds-info-action svg{ color:var(--icon-primary); flex-shrink:0; }
 html[data-theme] .ds-info-action:hover:not(:disabled){ background:var(--action-secondary-hover); border-color:var(--border-hover); }
 html[data-theme] .ds-info-action:active:not(:disabled){ background:var(--action-secondary-press); border-color:var(--border-tertiary); }
@@ -4044,7 +4048,7 @@ html[data-theme] .month-btn.estimated:not([aria-pressed="true"]):not(#z){ paddin
    pr space/sm, icon 24 + name (Label/Tiny, link/default) + chevron 12, space/tn apart. Hover: border link/disable, name
    link/hover. Mobile Default: no chevron, pr space/md. */
 html .ds-board-menu:not(#z){ position:relative; display:flex; justify-content:flex-end; align-items:center; min-width:220px; height:48px; padding:var(--space-tn) 0 var(--space-tn) var(--space-xs); box-sizing:border-box; }
-html .ds-board-dd:not(#z){ display:inline-flex; align-items:center; gap:var(--space-tn); min-width:0; max-width:320px; height:36px; margin:0; padding:var(--space-tn) var(--space-sm) var(--space-tn) var(--space-xs);
+html .ds-board-dd:not(#z){ display:inline-flex; align-items:center; gap:var(--space-xs); /* Oct 18: Info space/xs (1052:6292) */ min-width:0; max-width:320px; height:36px; margin:0; padding:var(--space-tn) var(--space-sm) var(--space-tn) var(--space-xs);
   border:1px solid var(--border-selected-item); border-radius:var(--radius-full); box-sizing:border-box; background:transparent; font-family:inherit; cursor:pointer; text-align:left;
   transition:border-color .12s ease, color .12s ease; }
 html .ds-board-dd .ds-board-dd-name:not(#z){ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
@@ -4112,7 +4116,7 @@ html .ds-avatar.s28:not(#z){ width:28px; height:28px; min-width:28px; }
    padding 4/8, min-width 48, radius full, Body/Small 12/16 -2% in text/primary. The item is 12 between content and CTAs. */
 html .ds-notif-item:has(.ds-notif-ctas):not(#z){ gap:var(--space-sm); }
 .ds-notif-ctas{ display:flex; align-items:center; gap:4px; }
-.ds-notif-cta{ display:inline-flex; align-items:center; justify-content:center; min-width:48px; padding:4px 8px; border:1px solid transparent; border-radius:var(--radius-full); background:transparent; color:var(--text-primary); font:inherit; font-size:12px; line-height:16px; font-weight:var(--type-label-micro-weight); letter-spacing:var(--type-label-micro-ls); cursor:pointer; }
+.ds-notif-cta{ display:inline-flex; align-items:center; justify-content:center; min-width:48px; padding:3px 7px; /* Button Micro 24 high (228:469, Oct 18) */ border:1px solid transparent; border-radius:var(--radius-full); background:transparent; color:var(--text-primary); font:inherit; font-size:12px; line-height:16px; font-weight:var(--type-label-micro-weight); letter-spacing:var(--type-label-micro-ls); cursor:pointer; }
 .ds-notif-cta.is-outline{ border-color:var(--border-tertiary); }
 .ds-notif-cta:hover:not(:disabled){ background:var(--action-secondary-hover); }
 .ds-notif-cta:active:not(:disabled){ background:var(--action-tertiary-press); }
@@ -4174,10 +4178,67 @@ html .ds-notif-item .ds-notif-head:not(#z){ min-height:0; }
    48 high (padding 12 + Label/Default 24), 12 inside, 8 apart. */
 html .ds-board-dd:not(.is-mobile):not(#z){ border-color:var(--link-default); }
 html .ds-board-dd:not(.is-mobile):hover:not(#z){ border-color:var(--link-hover); }
-html .ds-bsw.is-card:not(#z){ width:322px; }
+html .ds-bsw.is-card:not(#z){ width:320px; } /* Oct 18: Okara 1052:6292 Active is 320 */
 html .ds-bsw.is-card .ds-bsw-head:not(#z){ justify-content:flex-start; gap:var(--space-xs); }
 html .ds-bsw.is-card .ds-bsw-title-row:not(#z){ flex:1 1 auto; }
 html .ds-bsw.is-card .ds-bsw-title:not(#z){ flex:1 1 auto; }
 html .ds-bsw-collapse:not(#z){ margin:-6px 0 -6px -6px; }
 html .ds-bsw.is-card .ds-bsw-list:not(#z){ gap:var(--space-xs); }
 html .ds-bsw-item:not(#z){ height:auto; gap:var(--space-sm); }
+
+/* ===== Okara DS refinement, 18 Oct 2026 (Figma 7glNMA9d7iVJFf2CvyrzAb, every component re-read with use_figma and
+   compared with the computed styles). Component-level only. ===== */
+
+/* Round button 52:629: Tiny 28 / Micro 24 keep their slot when a screen draws a smaller icon; Nano Tertiary Active
+   action/tertiary-active. */
+html[data-theme] .round-btn.tiny:not(#z){ min-width:28px; min-height:28px; }
+html[data-theme] .round-btn.micro:not(#z){ min-width:24px; min-height:24px; }
+html[data-theme] .round-btn.nano:not(.primary):not(.secondary):is(.is-active,[aria-expanded="true"]):not(#z){ background:var(--action-tertiary-active); }
+
+/* Input field 918:1064: Default / Filled / Focus have no fill (Disable keeps surface/secondary). */
+html[data-theme] .ds-input:not(.is-disabled):not(#z){ background:transparent; }
+
+/* Amount meter 907:1659 (pinned Mobile): the name is Label/Small (16/20, 500) in text/primary. */
+html[data-theme] .meter-row .meter-name:not(#z){ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); color:var(--text-primary); }
+
+/* step 543:802: labels Label/Small (500). */
+html[data-theme] .ds-step-label:not(#z){ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+
+/* menu-item 304:528 / Side menu 304:553 (pinned Mobile): 48 high (padding space/sm around Label/Default 16/24),
+   icon → content space/sm, label → counter space/xs. */
+html[data-theme] .ds-menu-item:not(#z){ height:auto; min-height:0; padding:var(--space-sm); gap:var(--space-sm);
+  font-size:var(--type-label-default-size); font-weight:var(--type-label-default-weight); line-height:var(--type-label-default-lh); letter-spacing:var(--type-label-default-ls); }
+html[data-theme] .ds-menu-item .ds-menu-counter:not(#z){ margin-left:calc(var(--space-xs) - var(--space-sm)); }
+
+/* avatar 221:1044 (pinned Mobile): 20 Label/Micro, 28 Heading/Small, 40 Heading/Medium, 56 Heading/Large, 80 and 112 Heading/XL. */
+html[data-theme] .ds-avatar:not(#z){ font-family:inherit; font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+html[data-theme] .ds-avatar.s20:not(#z){ font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
+html[data-theme] .ds-avatar.s28:not(#z){ font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
+html[data-theme] .ds-avatar.s56:not(#z){ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+html[data-theme] .ds-avatar:is(.s80,.s112):not(#z){ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+
+/* Labels 1086:116: Regular 24 / Small 20 high; Default text/primary with an icon/primary X. */
+html[data-theme] .ds-tag:not(.positive):not(.negative):not(.warning):not(#z){ color:var(--text-primary); }
+html[data-theme] .ds-tag:not(.positive):not(.negative):not(.warning) svg:not(#z){ color:var(--icon-primary); }
+html[data-theme] .ds-tag.small:not(#z){ height:20px; }
+
+/* Expander 890:4102 (explicitly Mobile): space/xs 8 above and below the button. */
+html[data-theme] .ds-expander:not(#z){ padding:8px 0; }
+
+/* user 1053:1872, Active: the name is Label/Small (500); Sign out draws its icon in icon/round-control. */
+html[data-theme] .ds-user-card .ds-user-name:not(#z){ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
+
+/* board-dropdown 1052:6292, Active: the CTA note is 12 Regular (400). */
+html .ds-bsw-note:not(#z){ font-weight:400; }
+
+html[data-theme] .ds-user-card .ds-dd-item svg:not(#z){ color:var(--icon-round-control); }
+/* menu-item 304:528: Hover fills surface/body. */
+html[data-theme] .ds-menu-item:not(.is-selected):hover:not(#z){ background:var(--surface-body); }
+/* user 1053:1872: Default/Hover content chevron → avatar space/sm; Active (the card) keeps space/xs. */
+html[data-theme] .ds-user-trigger .ds-user-info:not(#z){ gap:var(--space-sm); }
+html[data-theme] .ds-user-card > .ds-user-info:not(#z){ gap:var(--space-xs); }
+/* Modal 443:1484: the illustration sits in a 64 x 64 slot. */
+html[data-theme] .ds-modal-title-block:not(#z){ display:flex; align-items:center; min-height:64px; }
+
+/* Phone panel back (Round button Small 52:629): 36 x 36, padding space/xs around the 20px arrow. */
+@media (max-width:640px){ html[data-theme] .round-btn.panel-close:not(#z){ min-width:36px; min-height:36px; padding:calc(var(--space-xs) - 1px); } }

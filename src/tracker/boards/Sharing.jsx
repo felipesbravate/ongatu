@@ -7,7 +7,7 @@
 //   "Copy link" (Action link, Copy): a Viewer invitation link for anyone, copied to the clipboard.
 //   "People with access · N": avatar, name, email, a Label ("You" Neutral, "Invite sent" Warning) and the access
 //     dropdown (Tiny, 120 wide; mine disabled). Its menu: Viewer, Co-owner, Collaborator, then "Remove access"
-//     (986:27011); on phones the menu is a sheet with the person on top (989:28776).
+//     (986:27011); on phones the menu is a sheet with the person on top (989:28776: top-nav 80, then the items 24 in).
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActionLink, Avatar, Button, Divider, Input, RoundButton, useDismiss, useMobile } from '../../ui/index.js';
 import { Icon } from '../../ui/Icon.jsx';
@@ -136,6 +136,7 @@ export function BoardSharing({ board, invites, reload, showToast, confirm, idPre
 function RoleMenu({ id, person, disabled, onPick, onRemove }) {
   const mobile = useMobile();
   const [open, setOpen] = useState(false);
+  const [up, setUp] = useState(false); // 986:27011: the menu opens above the dropdown when there is no room below
   const ref = useRef(null);
   const sheet = useRef(null);
   const close = useCallback(() => setOpen(false), []);
@@ -166,10 +167,10 @@ function RoleMenu({ id, person, disabled, onPick, onRemove }) {
         {['viewer', 'editor', 'co_owner'].map((r) => <option key={r} value={r}>{ACCESS_LABEL[r]}</option>)}
       </select>
       <button type="button" className="jb-role-trigger" id={id + '-trigger'} disabled={disabled} aria-haspopup="menu" aria-expanded={open ? 'true' : 'false'}
-        aria-label={`Access of ${person.name || person.email}: ${label(person)}`} onClick={() => setOpen((o) => !o)}>
+        aria-label={`Access of ${person.name || person.email}: ${label(person)}`} onClick={(e) => { setUp(e.currentTarget.getBoundingClientRect().bottom + 240 > window.innerHeight); setOpen((o) => !o); }}>
         <span>{label(person)}</span><Icon icon={chevronDown} size={12} />
       </button>
-      {open && !mobile && <div className="jb-role-menu" id={id + '-menu'}>{items}</div>}
+      {open && !mobile && <div className={'jb-role-menu' + (up ? ' is-up' : '')} id={id + '-menu'}>{items}</div>}
       <dialog ref={sheet} className="jb-sheet jb-role-sheet" aria-label={`Access of ${person.name || person.email}`}
         onCancel={(e) => { e.preventDefault(); close(); }} onClick={(e) => { if (e.target === sheet.current) close(); }}>
         {mobile && open && (
@@ -182,9 +183,9 @@ function RoleMenu({ id, person, disabled, onPick, onRemove }) {
                   {person.name && person.email && <span className="jb-person-email">{person.email}</span>}
                 </div>
               </div>
-              <RoundButton icon={x} iconSize={24} label="Close" onClick={close} />
+              <RoundButton icon={x} iconSize={24} className="jb-sheet-x" label="Close" onClick={close} />
             </div>
-            {items}
+            <div className="jb-sheet-body">{items}</div>
           </>
         )}
       </dialog>

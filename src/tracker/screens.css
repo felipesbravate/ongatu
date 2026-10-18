@@ -120,7 +120,9 @@ html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
 
   /* Create year modal (703:17437): the illustration 16 above the text. */
   html #year-modal .ds-modal-content:not(#z){ gap:var(--space-md); }
-  html #year-modal .ds-modal-form:not(#z){ margin-top:24px; } /* the text still 40 above the fields */
+  /* 1070:75031 (Oct 18): 24 between the text and the fields and 24 between the fields and the buttons. */
+  html #year-modal .ds-modal-form:not(#z){ margin-top:calc(var(--space-lg) - var(--space-md)); } /* + the content gap */
+  html #year-modal .ds-modal-body:not(#z){ gap:var(--space-lg); }
 
 }
 
@@ -130,7 +132,7 @@ html #add-panel .rv-date:not(#z){ width:42px; flex:none; }
    (8 apart) sit 8 above the name. */
 html .board-heading .board-title-row:not(#z){ display:flex; align-items:center; gap:var(--space-xl); flex-wrap:wrap; }
 html .board-heading .board-sub-name:not(#z){ margin:0; overflow-wrap:anywhere; }
-html .board-users:not(#z){ display:flex; align-items:center; gap:var(--space-sm); }
+html .board-users:not(#z){ display:flex; align-items:center; gap:4px; } /* Oct 18 (973:33223 users block): 4 apart; phones 8 */
 html .board-users > span:not(#z){ display:inline-flex; }
 html .board-users .board-share.round-btn:not(#z){ width:28px; height:28px; padding:4px; border:1px solid var(--border-tertiary); }
 html .board-users:empty:not(#z){ display:none; }
@@ -197,4 +199,94 @@ html .breakdown-card .bd-controllers > .tracker-last-entry:not(#z){ min-width:0;
 @media (max-width:640px){
   html .breakdown-card .bd-controllers:not(#z){ gap:var(--space-sm); }
   html .breakdown-card .bd-interaction:not(#z), html .breakdown-card .bd-interaction .bd-tabs-stack:not(#z){ width:100%; }
+}
+
+/* ---------------- Oct 18 refresh (Ongatu 211:18753 / 971:24139 desktop, 898:9152 / 787:15208 phones) ---------------- */
+/* Expense allocation and At a glance: radius/lg (24) on desktop (phones keep radius/card, 898:9227); the allocation
+   names Label/Default/SemiBold (+2%); the hint 11/12 Regular (-2%); the tags 4 apart. */
+@media (min-width:641px){
+  html .wrap .hero-left :is(.alloc-card, .glance-card):not(#z){ border-radius:var(--radius-lg); }
+  html .alloc-card .hint:not(#z){ font-weight:400; letter-spacing:-0.02em; }
+}
+html .alloc-card .alloc-name:not(#z){ letter-spacing:0.02em; }
+html .glance-card .insight-tags:not(#z){ gap:4px; }
+
+/* Trend chart (211:18753 "chart"): header 24, the chart 24 under it (165, five rules), the legend 24 under the chart.
+   Change Label (Labels, Label/Tiny 14/16): 8 on the sides, the icon 4 from the text. */
+html .hero-chart #hero-delta:not(#z){ padding:0 8px; gap:4px; height:24px; font-size:14px; line-height:16px; letter-spacing:0; margin-left:0; }
+@media (min-width:641px){
+  html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-xl); }
+  html .hero-chart .legend:not(#z){ margin-top:var(--space-xl); }
+}
+/* Legends (211:18753 / 898:9152): a 9px radius/ty swatch then the label (12/16 Medium text/secondary, 8 apart, items 12
+   apart on desktop; phones 14/18, 12 apart, items 16 apart). */
+html .wrap .legend:not(#z){ gap:12px; }
+html .wrap .legend > span:not(#z){ gap:8px; font-size:12px; line-height:16px; font-weight:500; letter-spacing:0; color:var(--text-secondary); }
+html .wrap .legend .swatch:not(#z){ width:9px; height:9px; border-radius:var(--radius-ty, 4px); flex:none; }
+
+/* Year over year (211:18753 "Year over year"): title Heading/XL and the line Body/Default/Regular text/secondary space/tn
+   apart, the cards space/md under them and space/lg apart. Each card: padding 24, header 24, chart and legend space/xl
+   apart; chart 165 (phones 197) with five border/secondary rules; years 24 apart (23 in from the sides on desktop), bars
+   4 apart on the bottom rule (radius/ty), the year Label/Tiny text/secondary 4 under it (phones 8, Label/Micro when
+   there are many years). */
+html .yoy-section:not(#z){ display:flex; flex-direction:column; gap:var(--space-md); min-width:0; }
+html .yoy-head:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); }
+html .yoy-section .yoy-heading:not(#z){ margin:0; color:var(--text-primary); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+html .yoy-section .yoy-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
+html .yoy-section .yoy:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); }
+html .yoy-section .yoy-card:not(#z){ display:flex; flex-direction:column; gap:var(--space-xl); padding:24px; margin:0; }
+html .yoy-section .yoy-card[hidden]:not(#z){ display:none; }
+html .yoy-card > h2:not(#z){ margin:0; min-height:24px; display:flex; align-items:center; text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+html .yoy-card .yoy-chart:not(#z){ position:relative; height:165px; margin:0; }
+html .yoy-rules:not(#z){ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none; }
+html .yoy-rules > i:not(#z){ display:block; height:1px; background:var(--border-secondary); }
+html .yoy-years:not(#z){ position:absolute; top:0; bottom:0; left:23px; right:23px; display:flex; gap:24px; }
+html .yoy-year:not(#z){ position:relative; flex:1 1 0; min-width:0; height:100%; }
+html .yoy-bars:not(#z){ height:100%; display:flex; align-items:flex-end; justify-content:center; gap:4px; }
+html .yoy-bar:not(#z){ flex:1 1 0; min-width:0; border-radius:var(--radius-ty, 4px); cursor:pointer; }
+html .yoy-bar.is-income:not(#z){ background:var(--income); }
+html .yoy-bar.is-expense:not(#z){ background:var(--expense); }
+html .yoy-label:not(#z){ position:absolute; left:-12px; right:-12px; top:calc(100% + 4px); text-align:center; white-space:nowrap; color:var(--text-secondary); font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); }
+html .yoy-card .legend:not(#z){ margin:0; }
+
+/* ---------------- Oct 18 phones (898:9152, 787:15208) ---------------- */
+@media (max-width:640px){
+  /* Page title: the nav 8 under the welcome (its own 16 padding makes the tabs 24 under); the content 48 under the nav. */
+  html .wrap > .actions-wrap:not(#z){ margin-top:var(--space-xs); }
+  html .wrap > .row1:not(#z){ margin-top:var(--space-2xl); }
+  /* Order (Dashboard_Content 898:9152): Balance, KPIs, Tracker, Expense cards, allocation, At a glance, chart, Year over year. */
+  html .row1 #balance-card:not(#z){ order:1; } html .row1 .mini-grid:not(#z){ order:2; } html .row1 .tracker-section:not(#z){ order:3; }
+  html .row1 .ticker-strip:not(#z){ order:4; } html .row1 .alloc-card:not(#z){ order:5; } html .row1 .glance-card:not(#z){ order:6; }
+  html .row1 .hero-chart:not(#z){ order:7; } html .row1 .yoy-section:not(#z){ order:8; display:flex; }
+  /* Expense cards (Data carrousell 898:9152): 224 wide. */
+  html .ticker-strip .ticker-item:not(#z){ width:224px; min-width:224px; flex:0 0 224px; }
+  /* Allocation and At a glance: titles Heading/Large, the hint Heading/Small text/secondary, the text Body/Default/Regular. */
+  html .row1 :is(.alloc-card, .glance-card) > h2:not(#z){ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  html .alloc-card .hint:not(#z){ color:var(--text-secondary); font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
+  html .glance-card .insight-text:not(#z){ font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
+  /* Trend chart (898:9152 "chart"): the title (Heading/Medium text/primary) and the change Label 8 under it; chart (197)
+     and legend 40 apart. */
+  html .hero-chart .hc-top:not(#z){ flex-direction:column; align-items:flex-start; gap:8px; }
+  html .hero-chart .hc-label:not(#z){ color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-xl); }
+  html .hero-chart.is-compact .legend:not(#z){ margin-top:var(--space-xl); }
+  html .wrap .legend:not(#z), html .hero-chart.is-compact .legend:not(#z){ gap:16px; }
+  html .wrap .legend > span:not(#z), html .hero-chart.is-compact .legend > span:not(#z){ gap:12px; font-size:14px; line-height:18px; font-weight:500; letter-spacing:0; }
+  html .wrap .legend .swatch:not(#z), html .hero-chart.is-compact .legend .swatch:not(#z){ width:9px; height:9px; border-radius:var(--radius-ty, 4px); }
+  html .yoy-card .yoy-chart:not(#z){ height:197px; }
+  html .yoy-years:not(#z){ left:0; right:0; }
+  html .yoy-label:not(#z){ top:calc(100% + 8px); }
+  html .yoy-years.is-dense .yoy-label:not(#z){ font-size:var(--type-label-micro-size); font-weight:var(--type-label-micro-weight); line-height:var(--type-label-micro-lh); letter-spacing:var(--type-label-micro-ls); }
+}
+@media (max-width:640px){
+  /* Title block (898:9152 "Title"): the line sits right under the 48px title. */
+  html .wrap > header.top .app-sub:not(#z){ margin-top:0; }
+}
+@media (max-width:640px){
+  /* Expense allocation header (898:9227): the hint 4 under the title (the card's parts are 8 apart). */
+  html .alloc-card .hint:not(#z){ margin-top:-4px; }
+}
+@media (max-width:640px){
+  /* Nav tabs on phones (898:9152, 994:41395): the + 12 from the year tabs. */
+  html .actions-wrap .years:not(#z){ gap:12px; }
 }
