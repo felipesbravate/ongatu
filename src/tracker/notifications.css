@@ -51,4 +51,10 @@ html .notif-list .ds-notif-empty:not(#z){ padding:16px; }
   html .notif-card:not(#z){ width:auto; padding:0; gap:0; background:transparent; border-radius:0; box-shadow:none; }
   html .notif-card .notif-card-title:not(#z){ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   html .notif-list .notif-sep:not(#z){ margin:12px 0; }
+  /* 407:905 (Oct 18): a 112-high fade from surface/primary at the bottom of the screen over the list. */
+  html .notif-page::after{ content:''; position:fixed; left:0; right:0; bottom:0; height:112px; pointer-events:none; z-index:2;
+    background:linear-gradient(to bottom, var(--surface-primary-transparent), var(--surface-primary)); }
 }
+/* 1267:2675 (Oct 18): the selected tab's counter reads text/primary (the component default is text/secondary). */
+html .ds-menu-item.is-selected .ds-menu-counter:not(.is-unread):not(#z){ color:var(--text-primary); }
+

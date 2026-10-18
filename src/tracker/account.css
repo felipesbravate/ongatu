@@ -12,7 +12,7 @@ html .acct-account .acct-card:not(#z){ border-radius:20px; }
 
 /* "Dark mode" beside its Toggle: Label/Tiny (14/16 Medium) in action/primary, 8 after the switch. */
 html .acct-account .acct-theme-toggle:not(#z){ gap:8px; }
-html .acct-account .acct-theme-toggle:not(#z) label{ font-size:14px; line-height:16px; font-weight:500; letter-spacing:0; color:var(--action-primary); }
+html .acct-account .acct-theme-toggle:not(#z) label{ font-size:14px; line-height:16px; font-weight:var(--type-label-tiny-weight); letter-spacing:0; color:var(--action-primary); }
 
 /* The avatar's actions: "Add image" then the Micro Trash round button, 4 apart; 16 after the avatar. */
 html .acct-account .acct-avatar-row:not(#z){ gap:16px; }

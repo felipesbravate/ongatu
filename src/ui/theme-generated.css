@@ -93,7 +93,6 @@ html[data-theme="light"]{
   --badge-counter-close-icon:#aaa698ff;
   --badge-counter-divider:#32312cff;
   --surface-modal:#1f1e19e0;
-  --icon-round-control:#16150fff;
   --data-mint:#12b86bff;
 }
 html[data-theme="dark"]{
@@ -190,7 +189,6 @@ html[data-theme="dark"]{
   --badge-counter-close-icon:#aaa698ff;
   --badge-counter-divider:#32312cff;
   --surface-modal:#32312ce0;
-  --icon-round-control:#deddcfff;
   --data-mint:#12b86bff;
 }
 :root{--card-shadow:0px 0px 20px 0px rgba(22,21,15,0.04);}

@@ -70,7 +70,7 @@ html .fld-combo:not(#z) .ds-input input{ text-overflow:ellipsis; }
 
 /* ---- Info box action (232:5851 / 703:16128): a Micro Secondary Button, 24 high, padding 4/8, label 12/16 Medium,
    2 after the 12px Plus (the InfoMessage action drew a Nano, 22 high, 10/14). ---- */
-html .fld-info.ds-info:not(#z) .ds-info-action{ font-size:12px; line-height:16px; letter-spacing:0; font-weight:500; padding:3px 7px; gap:2px; min-height:24px; box-sizing:border-box; }
+html .fld-info.ds-info:not(#z) .ds-info-action{ font-size:12px; line-height:16px; letter-spacing:0; font-weight:var(--type-label-micro-weight); padding:3px 7px; gap:2px; min-height:24px; box-sizing:border-box; }
 
 @media (max-width:640px){
   /* 703:16128 / 703:16763: a group's header, 16, its rows. */

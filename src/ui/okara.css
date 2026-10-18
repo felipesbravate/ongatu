@@ -201,7 +201,6 @@
     --badge-counter-close-icon: #aaa698ff;
     --badge-counter-divider: #32312cff;
     --surface-modal: #1f1e19e0;
-    --icon-round-control: #16150fff;
     --surface-gradient: #ffffff00;
     --data-mint: #12b86bff;
 
@@ -269,7 +268,7 @@
 
     /* Collection: TextStyles */
     --type-display-title-size: var(--size-display-title);
-    --type-display-title-weight: 600;
+    --type-display-title-weight: 500;
     --type-display-title-lh: var(--lh-display-title);
     --type-display-title-ls: 0;
     --type-display-title-mobile-size: var(--size-value-xl);
@@ -301,7 +300,7 @@
     --type-heading-xl-lh: var(--lh-heading-xl);
     --type-heading-xl-ls: 0;
     --type-heading-large-size: var(--size-heading-lg);
-    --type-heading-large-weight: 500;
+    --type-heading-large-weight: 450;
     --type-heading-large-lh: var(--lh-heading-lg);
     --type-heading-large-ls: 0;
     --type-heading-medium-size: var(--size-heading-md);
@@ -313,7 +312,7 @@
     --type-heading-small-lh: var(--lh-heading-sm);
     --type-heading-small-ls: 0;
     --type-body-default-regular-size: var(--size-body-lg);
-    --type-body-default-regular-weight: 400;
+    --type-body-default-regular-weight: 380;
     --type-body-default-regular-lh: var(--lh-body-lg-medium);
     --type-body-default-regular-ls: 0;
     --type-body-default-bold-size: var(--size-body-lg);
@@ -321,7 +320,7 @@
     --type-body-default-bold-lh: var(--lh-body-lg-semibold);
     --type-body-default-bold-ls: 0;
     --type-body-small-regular-size: var(--size-body-md);
-    --type-body-small-regular-weight: 400;
+    --type-body-small-regular-weight: 420;
     --type-body-small-regular-lh: var(--lh-body-md);
     --type-body-small-regular-ls: 0;
     --type-body-small-medium-size: var(--size-body-md);
@@ -329,7 +328,7 @@
     --type-body-small-medium-lh: var(--lh-body-md);
     --type-body-small-medium-ls: 0;
     --type-body-tiny-regular-size: var(--size-body-sm);
-    --type-body-tiny-regular-weight: 500;
+    --type-body-tiny-regular-weight: 420;
     --type-body-tiny-regular-lh: var(--lh-body-sm);
     --type-body-tiny-regular-ls: 0;
     --type-body-tiny-medium-size: var(--size-body-sm);
@@ -339,29 +338,29 @@
     --type-badge-medium-size: var(--size-badge);
     --type-badge-medium-weight: 500;
     --type-badge-medium-lh: var(--lh-badge);
-    --type-badge-medium-ls: -0.02em;
+    --type-badge-medium-ls: 0;
     --type-label-large-size: 18px;
-    --type-label-large-weight: 500;
+    --type-label-large-weight: 420;
     --type-label-large-lh: var(--lh-body-lg-semibold);
     --type-label-large-ls: 0;
     --type-label-default-size: var(--size-body-lg);
-    --type-label-default-weight: 400;
+    --type-label-default-weight: 420;
     --type-label-default-lh: var(--lh-heading-lg);
     --type-label-default-ls: 0;
     --type-label-small-size: var(--size-body-lg);
-    --type-label-small-weight: 500;
+    --type-label-small-weight: 420;
     --type-label-small-lh: var(--lh-body-lg-medium);
     --type-label-small-ls: 0;
     --type-label-tiny-size: var(--size-body-md);
-    --type-label-tiny-weight: 500;
+    --type-label-tiny-weight: 420;
     --type-label-tiny-lh: var(--lh-body-md);
     --type-label-tiny-ls: 0;
     --type-label-micro-size: var(--size-body-sm);
-    --type-label-micro-weight: 500;
+    --type-label-micro-weight: 420;
     --type-label-micro-lh: var(--lh-body-md);
     --type-label-micro-ls: 0;
     --type-label-nano-size: 10px;
-    --type-label-nano-weight: 500;
+    --type-label-nano-weight: 420;
     --type-label-nano-lh: var(--lh-body-sm);
     --type-label-nano-ls: 0;
     /* @tokens:end */
@@ -603,7 +602,7 @@
      App header. */
   header.top{ position:relative; margin-bottom:var(--layout-lg); }
   .app-title{ font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--ink); }
-  .app-sub{ color:var(--text-secondary); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); margin-top:var(--layout-xs); }
+  .app-sub{ color:var(--text-secondary); font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); margin-top:var(--layout-xs); }
 
   /* ---- Buttons — matches DS "Button" component (Components page, node 4:43) exactly:
      Size=Medium/Small/Tiny × Style=Primary/Secondary/Tertiary, pulled directly from the
@@ -1011,7 +1010,7 @@
   .hero-chart .hc-value{ font-family:var(--font-mono); font-size:var(--type-value-large-size); font-weight:var(--type-value-large-weight); line-height:var(--type-value-large-lh); letter-spacing:var(--type-value-large-ls); margin-top:var(--layout-xs); font-variant-numeric:tabular-nums; }
   .hc-delta{ margin-left:8px; }
   .legend{ display:flex; gap:var(--layout-md); flex-wrap:wrap; margin-top:var(--layout-md); font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--legend-text); }
-  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:500; }
+  .legend span{ display:inline-flex; align-items:center; gap:var(--layout-xs); font-weight:var(--type-label-micro-weight); }
   .swatch{ width:9px; height:9px; border-radius:var(--radius-ty); display:inline-block; }
 
   /* Icons carry their DS size (10 / 12 / 20) as width/height attributes (Icon.jsx); CSS never resizes them. */
@@ -1753,10 +1752,10 @@
     font-family:inherit; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-secondary);
     transition:background-color .12s ease, color .12s ease;
   }
-  .ds-menu-item svg{ flex-shrink:0; color:var(--surface-tertiary); transition:color .12s ease; }
+  .ds-menu-item svg{ flex-shrink:0; color:var(--icon-secondary); transition:color .12s ease; } /* 304:528 (Oct 18): icon/secondary, icon/primary on hover/selected */
   .ds-menu-item span{ flex:1; min-width:0; }
   .ds-menu-item:hover, .ds-menu-item.is-selected{ color:var(--text-primary); }
-  .ds-menu-item:hover svg, .ds-menu-item.is-selected svg{ color:var(--surface-dark); }
+  .ds-menu-item:hover svg, .ds-menu-item.is-selected svg{ color:var(--icon-primary); }
   .ds-menu-item.is-selected{ background:var(--surface-secondary); }
   .ds-menu-item:focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
 
@@ -2396,8 +2395,9 @@
      the month under it in Body/Medium/Medium; meter names Body/Large/Medium; the group blocks under the meters
      Heading/XL with types in Body/Large/Medium (text/secondary); the at-a-glance tags Label/Tiny. */
   .balance-card .label{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
-  .mini-kpi .label, .ticker-item .ti-name{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
-  .card h2, .hero-chart .hc-label{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+   .mini-kpi .label{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+   .ticker-item .ti-name{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  .card h2, .hero-chart .hc-label{ text-transform:none; color:var(--text-primary); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   .card.tracker-card > .card-head h2, #tracker-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
   .bd-title h2{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
   .bd-title .hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
@@ -3443,7 +3443,7 @@
   /* Main page (211:18753 / 342:7993). */
   .month-btn.estimated:not([aria-pressed="true"]):not(#z){ background:var(--surface-secondary); color:var(--text-secondary); border:none; }
   .alloc-name:not(#z){ font-size:var(--size-label-default); line-height:var(--lh-label-default); font-weight:600; letter-spacing:-0.02em; color:var(--text-muted); }
-  .legend:not(#z), .legend:not(#z) span{ font-size:var(--size-body-md); line-height:normal; font-weight:500; color:var(--text-secondary); }
+  .legend:not(#z), .legend:not(#z) span{ font-size:var(--size-body-md); line-height:normal; font-weight:var(--type-label-micro-weight); color:var(--text-secondary); }
   #tracker-menu-btn:not(.x){ width:40px; height:40px; }
   .seg-tabs:not(#z) button{ letter-spacing:0; }
   @media (max-width:640px){
@@ -3878,13 +3878,16 @@ html[data-theme] :is(.ds-dd-trigger:disabled, .ds-dd.is-disabled .ds-dd-trigger)
 /* dropdown-interaction 923:2152 (Group / Simple / Action): 242 wide, padding space/md, radius/lg, border/default,
    Floating shadow 0 4 12; items space/tn apart; Group blocks space/md apart, Simple/Action description space/xs above.
    Oct 18: surface/body with a border/secondary stroke.
-   drop-item 923:2277: Action items and Hover draw their icon in icon/round-control. */
+   drop-item 923:2277: Action items and Hover draw their icon in icon/primary (icon/round-control removed Oct 18). */
 html[data-theme] .ds-dd-menu:not(#z){ padding:var(--space-md); border:1px solid var(--border-secondary); border-radius:var(--radius-lg); background:var(--surface-body); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
 html[data-theme] .ds-dd-menu .ds-dd-items:not(#z),
 html[data-theme] .ds-drop-action .ds-dd-items:not(#z){ gap:var(--space-tn); }
 html[data-theme] .ds-dd-menu.has-desc:not(#z){ gap:var(--space-xs); }
 html[data-theme] :is(.ds-drop-action,.ds-dd-menu) .ds-dd-item:not(.is-destructive):is(:hover,:focus-visible,.is-active) svg:not(#z),
-html[data-theme] .ds-drop-action .ds-dd-item:not(.is-destructive) svg:not(#z){ color:var(--icon-round-control); }
+html[data-theme] .ds-drop-action .ds-dd-item:not(.is-destructive) svg:not(#z){ color:var(--icon-primary); }
+/* drop-item State=Selected (1227:6997, Oct 18): the chosen option sits on surface/secondary. Hover stays surface/accent-light:
+   Figma draws Hover in surface/body, the same fill as the menu, so it would not show. */
+html[data-theme] .ds-dd-menu .ds-dd-item[aria-selected="true"]:not(.is-active):not(:hover):not(#z){ background:var(--surface-secondary); }
 
 /* chip-selector 540:785 (pinned Mobile: 24 high, padding 4/8, gap 4, Label/Micro 12/16). Semantic colours so dark works:
    Unselected-Hover status/green-pale + brand/mint, label action/primary, a 10px X after the label; Selected brand/mint-light. */
@@ -3913,14 +3916,14 @@ html[data-theme] .ds-cat-item:last-of-type:not(#z){ border-radius:0 calc(var(--r
 
 /* Tab 53:801 / Nav tabs 795:1227 / Add year 79:1242: tabs min-width 48; Unselected-Hover text/accent; the selected
    tab's delete button 16px (X 10), 40 from the tab's left and 10 above it; 16 between the add button and the tabs;
-   the add pill carries the Floating shadow and its close X binds icon/round-control. */
+   the add pill carries the Floating shadow and its close X binds icon/primary (icon/round-control removed Oct 18). */
 html[data-theme] .year-btn:not(#z){ min-width:48px; }
 html[data-theme] .year-btn:not([aria-pressed="true"]):hover:not(#z){ color:var(--text-accent); }
 html[data-theme] .year-del-btn:not(#z){ width:16px; height:16px; top:-10px; right:-8px; }
 html[data-theme] .year-tabs:not(#z){ padding-top:10px; margin-top:-10px; }
 html[data-theme] .years:not(#z){ gap:var(--space-lg); }
 html[data-theme] .year-add-pill:not(#z){ box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
-html[data-theme] .year-add-pill .round-btn:not(.primary) svg{ color:var(--icon-round-control); }
+html[data-theme] .year-add-pill .round-btn:not(.primary) svg{ color:var(--icon-primary); }
 @media (max-width:640px){
   html[data-theme] .years:not(#z){ gap:var(--space-md); }
   html[data-theme] .year-tabs:not(#z){ padding-top:12px; margin-top:-12px; }
@@ -3946,15 +3949,15 @@ html[data-theme] .ds-expander:not(#z){ background:linear-gradient(180deg, var(--
 html[data-theme] .ds-pager-dot:not(.is-current):not(#z){ background:var(--surface-track); }
 
 /* Step progress 543:798 / step 543:802: no list indent; track surface/track, fill brand/mint, the On going ring
-   icon/round-control. */
+   icon/primary (icon/round-control removed Oct 18). */
 html[data-theme] .ds-steps:not(#z){ margin:0; padding:0; list-style:none; }
 html[data-theme] .ds-step-bar:not(#z){ background:var(--surface-track); }
 html[data-theme] .ds-step-fill:not(#z){ background:var(--brand-mint); }
-html[data-theme] .ds-step.is-current .ds-step-ring::before{ border-color:var(--icon-round-control); }
+html[data-theme] .ds-step.is-current .ds-step-ring::before{ border-color:var(--icon-primary); }
 
-/* Notification 228:455 (bell, Product header 728:1445, User nav 230:618): the bell binds icon/round-control, the dot
+/* Notification 228:455 (bell, Product header 728:1445, User nav 230:618): the bell binds icon/primary (icon/round-control removed Oct 18), the dot
    data/red-orange; Active is only the action/secondary-active fill (no shadow). */
-html[data-theme] .ds-notif .round-btn:not(.primary) svg:not(#z), html[data-theme] #notif-btn svg{ color:var(--icon-round-control); }
+html[data-theme] .ds-notif .round-btn:not(.primary) svg:not(#z), html[data-theme] #notif-btn svg{ color:var(--icon-primary); }
 html[data-theme] .ds-notif-badge:not(#z){ background:var(--data-red-orange); }
 html[data-theme] .ds-notif.is-open .round-btn:not(#z), html[data-theme] .ds-notif .round-btn.is-active:not(#z){ box-shadow:none; }
 /* Panel (State=Active, pinned Mobile): padding space/xs 8, list → button space/sm 12, items space/tn apart, radius/lg,
@@ -3965,13 +3968,13 @@ html[data-theme] .ds-notif-all:not(#z){ align-self:center; display:inline-flex; 
   font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); color:var(--text-primary); }
 html[data-theme] .ds-notif-all svg{ color:var(--icon-primary); }
 /* notification-item 228:469: radius/md; Day and time 4 apart around a 12px Dot (icon/primary); Read text/secondary;
-   "Mark as read" (Action-link Small, 16px check) has no padding. The mobile page's back arrow binds icon/round-control. */
+   "Mark as read" (Action-link Small, 16px check) has no padding. The mobile page's back arrow binds icon/primary (icon/round-control removed Oct 18). */
 html[data-theme] .ds-notif-item:not(#z){ border-radius:var(--radius-md); padding:var(--space-md); gap:var(--space-xs); }
 html[data-theme] .ds-notif-when:not(#z){ gap:var(--space-tn); }
 html[data-theme] .ds-notif-dot:not(#z){ width:12px; height:12px; }
 html[data-theme] .ds-notif-dot::before{ left:4px; top:4px; width:4px; height:4px; background:var(--icon-primary); }
 html[data-theme] .ds-notif-item:not(.is-unread):not(.ds-notif-empty) .ds-notif-text:not(#z){ color:var(--text-secondary); }
-html[data-theme] .ds-notif-page-nav .round-btn svg{ color:var(--icon-round-control); }
+html[data-theme] .ds-notif-page-nav .round-btn svg{ color:var(--icon-primary); }
 
 /* user 221:1048, Active: the card carries the Floating shadow 0 4 12. */
 html[data-theme] .ds-user-card:not(#z){ box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); }
@@ -3988,10 +3991,10 @@ html[data-theme] .ds-toast-msg:not(#z){ align-self:center; padding:var(--space-m
 html[data-theme] .round-btn.ds-toast-close:not(#z){ align-self:center; margin:0; color:var(--icon-muted); }
 
 /* Modal 443:1484. Desktop (Surface=Desktop): radius/lg, Floating shadow, min-height 240, Top-nav padding space/sm (64
-   high), 24 (space/xl) to the content, bottom padding space/lg; its X binds icon/round-control. Mobile: the sheet sits
+   high), 24 (space/xl) to the content, bottom padding space/lg; its X binds icon/primary (icon/round-control removed Oct 18). Mobile: the sheet sits
    4px (space/tn) from the sides and bottom, radius 44, shadow 0 0 8 ink@8%, background blur 2; scrim surface/modal. */
 html[data-theme] .ds-modal::backdrop{ background:var(--surface-modal); }
-html[data-theme] .ds-modal-header .round-btn svg{ color:var(--icon-round-control); }
+html[data-theme] .ds-modal-header .round-btn svg{ color:var(--icon-primary); }
 @media (min-width:641px){
   html[data-theme] .ds-modal:not(#z){ border-radius:var(--radius-lg); box-shadow:0 4px 12px var(--effect-shadow-86-82-59-160); min-height:240px; gap:var(--space-sm); padding-bottom:var(--space-lg); } /* Oct 18: no gap, Content padding-top space/sm */
   html[data-theme] .ds-modal-header:not(#z){ padding:var(--space-sm); min-height:64px; box-sizing:border-box; }
@@ -4224,13 +4227,13 @@ html[data-theme] .ds-tag.small:not(#z){ height:20px; }
 /* Expander 890:4102 (explicitly Mobile): space/xs 8 above and below the button. */
 html[data-theme] .ds-expander:not(#z){ padding:8px 0; }
 
-/* user 1053:1872, Active: the name is Label/Small (500); Sign out draws its icon in icon/round-control. */
+/* user 1053:1872, Active: the name is Label/Small (500); Sign out draws its icon in icon/primary (icon/round-control removed Oct 18). */
 html[data-theme] .ds-user-card .ds-user-name:not(#z){ font-size:var(--type-label-small-size); font-weight:var(--type-label-small-weight); line-height:var(--type-label-small-lh); letter-spacing:var(--type-label-small-ls); }
 
 /* board-dropdown 1052:6292, Active: the CTA note is 12 Regular (400). */
 html .ds-bsw-note:not(#z){ font-weight:400; }
 
-html[data-theme] .ds-user-card .ds-dd-item svg:not(#z){ color:var(--icon-round-control); }
+html[data-theme] .ds-user-card .ds-dd-item svg:not(#z){ color:var(--icon-primary); }
 /* menu-item 304:528: Hover fills surface/body. */
 html[data-theme] .ds-menu-item:not(.is-selected):hover:not(#z){ background:var(--surface-body); }
 /* user 1053:1872: Default/Hover content chevron → avatar space/sm; Active (the card) keeps space/xs. */

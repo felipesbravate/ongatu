@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Geist; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%).",
+  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Geist; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%). Oct 18 evening (Felipe, sheet 'New Text styles'): codeWeight = the sheet's Code weight for every style (lighter than Figma: Heading/Large 450, Body Regular 380/420, Labels 420, Display/Title 500); Badge/Medium letter-spacing 0 in code (Figma -2%, kept as figmaLetterSpacing). icon/round-control removed from Figma Color.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -193,7 +193,6 @@
     "badge/counter-close-icon": "#aaa698ff",
     "badge/counter-divider": "#32312cff",
     "surface/modal": "#1f1e19e0",
-    "icon/round-control": "#16150fff",
     "surface/gradient": "#ffffff00",
     "data/mint": "#12b86bff"
   },
@@ -422,7 +421,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/display-title",
-      "lhVar": "lh/display-title"
+      "lhVar": "lh/display-title",
+      "codeWeight": 500
     },
     "Display/Title-mobile": {
       "size": 32,
@@ -483,7 +483,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/heading-lg",
-      "lhVar": "lh/heading-lg"
+      "lhVar": "lh/heading-lg",
+      "codeWeight": 450
     },
     "Heading/Medium": {
       "size": 16,
@@ -507,7 +508,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-medium"
+      "lhVar": "lh/body-lg-medium",
+      "codeWeight": 380
     },
     "Body/Default/Bold": {
       "size": 16,
@@ -523,7 +525,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md"
+      "lhVar": "lh/body-md",
+      "codeWeight": 420
     },
     "Body/Small/Medium": {
       "size": 14,
@@ -539,7 +542,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-sm"
+      "lhVar": "lh/body-sm",
+      "codeWeight": 420
     },
     "Body/Tiny/Medium": {
       "size": 12,
@@ -552,17 +556,19 @@
     "Badge/Medium": {
       "size": 8,
       "weight": 500,
-      "letterSpacing": -2,
+      "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/badge",
-      "lhVar": "lh/badge"
+      "lhVar": "lh/badge",
+      "figmaLetterSpacing": -2
     },
     "Label/Large": {
       "size": 18,
       "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
-      "lhVar": "lh/body-lg-semibold"
+      "lhVar": "lh/body-lg-semibold",
+      "codeWeight": 420
     },
     "Label/Default": {
       "size": 16,
@@ -571,7 +577,7 @@
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/heading-lg",
-      "codeWeight": 400
+      "codeWeight": 420
     },
     "Label/Small": {
       "size": 16,
@@ -579,7 +585,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-lg",
-      "lhVar": "lh/body-lg-medium"
+      "lhVar": "lh/body-lg-medium",
+      "codeWeight": 420
     },
     "Label/Tiny": {
       "size": 14,
@@ -587,7 +594,8 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-md",
-      "lhVar": "lh/body-md"
+      "lhVar": "lh/body-md",
+      "codeWeight": 420
     },
     "Label/Micro": {
       "size": 12,
@@ -595,14 +603,16 @@
       "letterSpacing": 0,
       "family": "sans",
       "sizeVar": "size/body-sm",
-      "lhVar": "lh/body-md"
+      "lhVar": "lh/body-md",
+      "codeWeight": 420
     },
     "Label/Nano": {
       "size": 10,
       "weight": 500,
       "letterSpacing": 0,
       "family": "sans",
-      "lhVar": "lh/body-sm"
+      "lhVar": "lh/body-sm",
+      "codeWeight": 420
     }
   }
 }
