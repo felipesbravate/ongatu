@@ -396,7 +396,7 @@
        Additional pink; the allocation bars draw Extra in data/blue. */
     --income:      var(--data-purple);
     --expense:     var(--data-pink);
-    --invest:      var(--data-light-blue);
+    --invest:      var(--data-mint);   /* Savings/Investments = data/mint (Felipe, Oct 18) */
     --additional:  var(--data-pink);
     --group-fixed:    var(--data-purple);
     --group-variable: var(--data-light-blue);
@@ -404,7 +404,7 @@
     --group-additional: var(--data-pink);
     --kpi-income:  var(--surface-accent);
     --kpi-expense: var(--data-pink);
-    --kpi-invest:  var(--data-lime);
+    --kpi-invest:  var(--data-mint);
     --alloc-extra: var(--data-blue);
     /* The Fixed badge on the Expense cards is bound to surface/accent in Figma, not to data/purple. */
     --badge-fixed: var(--surface-accent);
@@ -412,11 +412,10 @@
     --border:      color-mix(in srgb, var(--text-primary) 9%, transparent);
     --border-2:    color-mix(in srgb, var(--text-primary) 16%, transparent);
     /* Series colours of the trend chart, as the lines are drawn in Figma (Sept 22):
-       Income = indigo 2.5px (the file binds it to border/focus, same #4f46e5), Expenses = data/pink, Savings = data/lime.
-       The file's legend paints the Savings swatch #17a768 (green) although the line is lime; the swatch follows the line here. */
+       Income = indigo 2.5px (the file binds it to border/focus, same #4f46e5), Expenses = data/pink, Savings = data/mint (Oct 18: no longer lime). */
     --chart-income:  var(--surface-accent);
     --chart-expense: var(--data-pink);
-    --chart-invest:  var(--data-lime);
+    --chart-invest:  var(--data-mint);
     /* Values the designs use without a variable, or with a binding the Okara Design System no longer has.
        Kept in one place so they are easy to bind later. */
     --divider:       #d3d2cd;   /* border/card: dividers and the panel edge (not in DS Color today) */

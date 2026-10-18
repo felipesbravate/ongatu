@@ -52,7 +52,7 @@ export default function Home() {
           <Kpi label="INCOMES" dot={C.surfaceAccent} value={c.income} />
           <Kpi label="EXPENSES" dot={C.dataPink} value={c.expenseTotal} />
         </View>
-        <Kpi label="SAVINGS & INVESTMENTS" dot={C.dataLime} value={c.invest} detail={rate == null ? 'No income recorded' : `${rate}% rate of monthly incomes`} />
+        <Kpi label="SAVINGS & INVESTMENTS" dot={C.dataMint} value={c.invest} detail={rate == null ? 'No income recorded' : `${rate}% rate of monthly incomes`} />
       </>
     );
   };

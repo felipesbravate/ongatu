@@ -120,7 +120,7 @@ export function TrackerCard({ model, y, monthIdx, breakdownType, breakdownGroup,
     // Oct 9 (Felipe): Expenses shows one sub-category at a time (Fixed first), so the line follows the one shown.
     group: topTab === 'Expenses' ? effType : null,
   });
-  const color = GROUP_COLOR[effType] || 'var(--data-lime)';
+  const color = GROUP_COLOR[effType] || 'var(--invest)';
   // What a row's "Add entry" adds to: the tab's kind, sub-category and the row's group.
   const rowTarget = (block, it) => (effType === 'Income' || effType === 'Investments'
     ? { type: effType === 'Income' ? 'income' : 'investment', group: block.group || null, cat: null, item: it.item }
