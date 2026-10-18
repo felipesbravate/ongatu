@@ -3888,9 +3888,11 @@ html[data-theme] .ds-drop-action .ds-dd-items:not(#z){ gap:var(--space-tn); }
 html[data-theme] .ds-dd-menu.has-desc:not(#z){ gap:var(--space-xs); }
 html[data-theme] :is(.ds-drop-action,.ds-dd-menu) .ds-dd-item:not(.is-destructive):is(:hover,:focus-visible,.is-active) svg:not(#z),
 html[data-theme] .ds-drop-action .ds-dd-item:not(.is-destructive) svg:not(#z){ color:var(--icon-primary); }
-/* drop-item State=Selected (1227:6997, Oct 18): the chosen option sits on surface/secondary. Hover stays surface/accent-light:
-   Figma draws Hover in surface/body, the same fill as the menu, so it would not show. */
-html[data-theme] .ds-dd-menu .ds-dd-item[aria-selected="true"]:not(.is-active):not(:hover):not(#z){ background:var(--surface-secondary); }
+/* drop-item (923:2277, Oct 18, Felipe): Default no fill; Hover (and keyboard focus / the active option) surface/body;
+   Selected surface/secondary. Text text/primary, icon icon/primary, radius/sm. Note: the dropdown-interaction menus are
+   surface/body too, so inside them the hover matches the menu fill (as drawn in Figma). */
+html[data-theme] .ds-dd-item:not(.is-destructive):is(:hover, :focus-visible, .is-active):not(#z):not(#y){ background:var(--surface-body); color:var(--text-primary); }
+html[data-theme] .ds-dd-item[aria-selected="true"]:not(#z):not(#y){ background:var(--surface-secondary); color:var(--text-primary); }
 
 /* chip-selector 540:785 (pinned Mobile: 24 high, padding 4/8, gap 4, Label/Micro 12/16). Semantic colours so dark works:
    Unselected-Hover status/green-pale + brand/mint, label action/primary, a 10px X after the label; Selected brand/mint-light. */
