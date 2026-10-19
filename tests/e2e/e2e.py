@@ -332,15 +332,19 @@ async def main():
                          year: [getComputedStyle(yb).fontSize, getComputedStyle(yb).lineHeight] }; }""")
             check('phone (699:11387 / 699:11765): the month row scrolls and opens on the selected month, as far left as it goes (no space after Dec), labels Jan, Feb, Mar…; year tabs Label/Large 18/20',
                   ms['over'] and abs(ms['scroll'] - ms['want']) <= 1 and ms['visible'] and ms['endRoom'] == '' and ms['labels'][:3] == ['Jan', 'Feb', 'Mar'] and ms['year'] == ['18px', '20px'], ms)
-            await mp.click('#notif-btn'); await mp.wait_for_selector('.ds-notif-page')
+            # Oct 19: on a phone the bell opens the Notifications page (Ongatu 1070:74832), not an overlay.
+            await mp.click('#notif-btn'); await mp.wait_for_url('**/notifications'); await mp.wait_for_selector('#notif-page-back-mobile'); await mp.wait_for_timeout(400)
             np_ = await mp.evaluate("""() => { const q = s => document.querySelector(s), r = e => e.getBoundingClientRect(), cs = e => getComputedStyle(e);
-                const pg = q('.ds-notif-page'), nav = q('.ds-notif-page-nav'), t = q('.ds-notif-page-title'), list = q('.ds-notif-page-list'), it = list.querySelector('.ds-notif-item');
-                return { page: [Math.round(r(pg).width), Math.round(r(pg).height), cs(pg).backgroundColor], nav: [r(nav).height, cs(nav).paddingLeft, Math.round(r(q('#notif-back')).width)],
-                         title: [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight], list: [cs(list).rowGap, cs(list).paddingLeft, Math.round(r(list).top - r(nav).bottom)], itemX: it ? Math.round(r(it).left) : null }; }""")
-            check('phone: the bell opens the Notifications page (407:905): full screen, 64 bar, back 36 (audit D4), Heading/Large 20/480/24 (sheet, Oct 18), items 12 apart at 16',
-                  np_['page'][:2] == [390, 844] and np_['page'][2] == 'rgb(255, 255, 255)' and np_['nav'] == [64, '8px', 36] and np_['title'] == ['20px', '480', '24px'] and np_['list'] == ['12px', '16px', 16] and np_['itemX'] == 16, np_)
-            await mp.click('#notif-back'); await mp.wait_for_timeout(200)
-            check('phone: the back arrow closes the Notifications page', await mp.locator('.ds-notif-page').count() == 0)
+                const nav = q('.notif-mobile-nav'), b = q('#notif-page-back-mobile'), t = q('.notif-page h1'), tabs = q('.notif-menu'), list = q('.notif-list'), it = list.querySelector('.ds-notif-item');
+                return { header: !!q('.ds-app-header') && cs(q('.ds-app-header')).display !== 'none', bg: cs(document.body).backgroundColor, nav: [Math.round(r(nav).height), Math.round(r(b).width), Math.round(r(b).left)],
+                         title: [cs(t).fontSize, cs(t).fontWeight, cs(t).lineHeight, Math.round(r(t).top - r(nav).bottom), Math.round(r(t).left)],
+                         tabs: [Math.round(r(tabs).top - r(t).bottom), Math.round(r(tabs).height), [...tabs.querySelectorAll('.ds-menu-item')].map(e => e.textContent.replace(/\\d+/g, '').trim())],
+                         list: [Math.round(r(list).top - r(tabs).bottom), it ? Math.round(r(it).left) : null] }; }""")
+            check('phone: the bell opens the Notifications page (1070:74832): no app header, 64 bar with the 36 back arrow at 8, Heading/XL 24 title 16 below, All / Unread tabs 24 below (40), the list right under them at 16',
+                  not np_['header'] and np_['bg'] == 'rgb(255, 255, 255)' and np_['nav'] == [64, 36, 8] and np_['title'][:3] == ['24px', '480', '24px'] and np_['title'][3:] == [16, 16]
+                  and np_['tabs'] == [24, 40, ['All', 'Unread']] and np_['list'] == [0, 16], np_)
+            await mp.click('#notif-page-back-mobile'); await mp.wait_for_url(BASE + '/'); await mp.wait_for_selector('#notif-btn'); await mp.wait_for_timeout(400)
+            check('phone: the back arrow returns to the dashboard', mp.url.rstrip('/') == BASE)
             # Mobile Create year (703:17437 -> 703:16128, Oct 4)
             await mp.click('#year-add-toggle'); await mp.wait_for_selector('#year-modal[open]'); await mp.wait_for_timeout(300)
             yrm = await mp.evaluate("""() => { const m = document.getElementById('year-modal'), il = m.querySelector('.ds-illustration');

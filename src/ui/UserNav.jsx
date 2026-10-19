@@ -129,7 +129,9 @@ export function NotificationItem({ date, time, children, action, onMarkRead, cta
 // State=Mobile (407:905, Ongatu 381:6397): on a phone the bell opens a full page over the app: a 64px bar (back arrow =
 // Round button Small Tertiary, "Notifications" in Heading/Large) and the items 12 apart with a divider between them.
 // `seeAllHref` (Oct 12, 211:19682): the "See all notifications" Tertiary Medium button under the list → the Notifications page.
-export function Notification({ open, onToggle, onClose, unread, seeAllHref, children }) {
+// `onOpenPage` (Oct 19): on a phone the bell opens the Notifications page itself (Ongatu 1070:74832: title under the
+// back arrow, All / Unread tabs) instead of the old full-screen overlay (407:905), which only stays as a fallback.
+export function Notification({ open, onToggle, onClose, unread, seeAllHref, onOpenPage, children }) {
   const ref = useRef(null);
   const pageRef = useRef(null);
   const mobile = useMobile();
@@ -144,7 +146,7 @@ export function Notification({ open, onToggle, onClose, unread, seeAllHref, chil
   return (
     <div className={cx('ds-notif', open && 'is-open')} ref={ref}>
       <RoundButton icon={bell} size="small" active={open && !mobile} id="notif-btn" label={unread ? 'Notifications (new)' : 'Notifications'}
-        aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'} onClick={onToggle} />
+        aria-haspopup="dialog" aria-expanded={open ? 'true' : 'false'} onClick={mobile && onOpenPage ? onOpenPage : onToggle} />
       {unread && <span className="ds-notif-badge" aria-hidden="true" />}
       {open && !mobile && (
         <div className="ds-notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
@@ -152,7 +154,7 @@ export function Notification({ open, onToggle, onClose, unread, seeAllHref, chil
           {seeAllHref && <a className="btn-pill tertiary ds-notif-all" id="notif-all" href={seeAllHref}><span>See all notifications</span><Icon icon={arrowStraightRight} size={16} /></a>}
         </div>
       )}
-      {open && mobile && createPortal(
+      {open && mobile && !onOpenPage && createPortal(
         <div className="ds-notif-page" id="notif-panel" role="dialog" aria-modal="true" aria-labelledby="notif-page-title" ref={pageRef}>
           <div className="ds-notif-page-nav">
             <RoundButton icon={arrowStraightLeft} size="small" iconSize="lg" id="notif-back" label="Back" onClick={onClose} />

@@ -76,6 +76,7 @@ function AccountNavView({ me, profile, onOpenAlert, n }) {
     <>
       <UserNav board={<BoardMenu boards={boards} firstName={name} open={open === 'board'} onToggle={() => setOpen((o) => (o === 'board' ? null : 'board'))} onClose={close} />}>
         <Notification open={open === 'notif'} unread={n.hasNew} onClose={close} seeAllHref="/notifications"
+          onOpenPage={() => { if (location.pathname !== '/notifications') router.push('/notifications'); }}
           onToggle={() => { setOpen((o) => (o === 'notif' ? null : 'notif')); if (open !== 'notif') { n.reload(); n.markSeen(); } }}>
           {n.items.length
             ? n.items.map((it) => <NotificationEntry key={it.key} it={it} n={n} onOpenAlert={onOpenAlert} onView={close} />)
