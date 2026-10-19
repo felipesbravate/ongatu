@@ -10,7 +10,7 @@ html .jb-card:not(#z){
   background:var(--surface-primary); border-radius:var(--radius-md); box-shadow:0 0 20px rgba(22,21,15,.04); scroll-margin-top:88px;
 }
 /* Title block (986:26979): Heading/XL + Body/Default/Regular, space/xs apart (the viewer's line is Body/Small, 992:37043). */
-html .jb-card-title:not(#z){ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
+html .jb-card-title:not(#z){ margin:0; font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
 html .jb-card-text:not(#z){ margin:calc(var(--space-xs) - var(--space-xl)) 0 0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
 html .jb-name-card.is-locked:not(#z) .jb-card-text{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
 html .jb-small:not(#z){ margin:0; font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--text-secondary); }
@@ -39,12 +39,12 @@ html .jb-page:not(#z){ display:flex; flex-direction:column; gap:var(--space-2xl)
    apart), space/sm apart. */
 html .jb-head:not(#z){ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-sm); }
 html .jb-heading:not(#z){ display:flex; flex-direction:column; gap:var(--space-xs); padding:0 20px; box-sizing:border-box; width:100%; }
-html .jb-title:not(#z){ margin:0; font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--text-primary); }
+html .jb-title:not(#z){ margin:0; font-family:var(--type-display-title-family); font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); color:var(--text-primary); }
 html .jb-sub:not(#z){ margin:0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
 /* Content (986:26968): 1110 wide, centred: Left 246 and the 800 cards, 64 apart. */
 html .jb-content:not(#z){ display:flex; justify-content:center; align-items:flex-start; gap:var(--space-3xl); width:100%; }
 html .jb-left:not(#z){ position:sticky; top:88px; display:flex; flex-direction:column; gap:var(--space-sm); width:246px; flex:0 0 246px; z-index:2; }
-html .jb-left-title:not(#z){ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html .jb-left-title:not(#z){ margin:0; font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
 html .jb-cards:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); width:800px; flex:0 1 800px; min-width:0; }
 
 /* Board pill (986:26970): border/selected-item, radius full, padding space/md space/lg; 16px icon, Label/Default
@@ -77,7 +77,7 @@ html .jb-sharing-input:not(#z){ display:flex; flex-direction:column; gap:var(--s
 html .jb-sharing-input:not(#z) .ds-input{ width:100%; border-radius:var(--radius-sm); }
 html .jb-sharing-cta:not(#z){ display:flex; align-items:center; justify-content:space-between; gap:var(--space-sm); }
 html .jb-people:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); }
-html .jb-people-title:not(#z){ margin:0; white-space:pre; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html .jb-people-title:not(#z){ margin:0; white-space:pre; font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
 html .jb-people-list:not(#z){ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--space-md); }
 html .jb-people-list:not(#z) > li{ display:flex; flex-direction:column; gap:var(--space-md); }
 html .jb-people-list:not(#z) .ds-divider{ margin:0; }
@@ -86,7 +86,7 @@ html .jb-person-user:not(#z){ display:flex; align-items:center; gap:var(--space-
 html .jb-person-user:not(#z) .ds-avatar{ flex:0 0 40px; }
 /* info (1093:1077): the name (Heading/Medium, 14 high) over the email (Label/Tiny), 2 apart. */
 html .jb-person-info:not(#z){ display:flex; flex-direction:column; gap:2px; min-width:0; }
-html .jb-person-name:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-size); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .jb-person-name:not(#z){ font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-size); letter-spacing:var(--type-heading-medium-ls); color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 html .jb-person-email:not(#z){ font-size:var(--type-label-tiny-size); font-weight:var(--type-label-tiny-weight); line-height:var(--type-label-tiny-lh); letter-spacing:var(--type-label-tiny-ls); color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 /* Access dropdown (Dropdown Tiny 992:35764, 120 wide; mine = Disable 992:35766) and its menu (986:27011). */
@@ -123,8 +123,8 @@ html .jb-role-menu:not(#z) .ds-divider, html .jb-role-sheet:not(#z) .ds-divider{
 html .jb-danger:not(#z){ display:flex; align-items:center; gap:var(--space-xl); padding:var(--space-md); }
 html #board-sec-delete:not(#z) .jb-danger{ padding:0; }
 html .jb-danger-meta:not(#z){ display:flex; flex-direction:column; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
-html .jb-danger-title:not(#z){ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
-html #board-sec-delete:not(#z) .jb-danger-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+html .jb-danger-title:not(#z){ margin:0; font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
+html #board-sec-delete:not(#z) .jb-danger-title{ font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
 html .jb-danger-text:not(#z){ margin:0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
 html .jb-danger-meta:not(#z) .ds-check{ margin-top:calc(var(--space-lg) - var(--space-xs)); padding:0 var(--space-md); gap:var(--space-sm); }
 html .jb-danger-meta:not(#z) .ds-check-label{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-primary); }
@@ -183,7 +183,7 @@ html .jb-role-sheet:not(#z) .jb-role-item.is-current{ background:var(--surface-b
 html .jb-join:not(#z){ display:flex; flex-direction:column; gap:20px; max-width:560px; margin:0 auto; padding-top:var(--space-md); padding-bottom:var(--space-3xl); }
 html .jb-join:not(#z) .jb-heading{ padding:0; gap:var(--space-xs); }
 html .jb-join-card:not(#z){ gap:var(--space-sm); }
-html .jb-join-card:not(#z) .jb-card-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+html .jb-join-card:not(#z) .jb-card-title{ font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
 html .jb-join-from:not(#z){ margin:0; font-size:var(--type-body-small-regular-size); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-secondary); }
 html .jb-join-role:not(#z){ margin:0; font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); color:var(--text-accent); }
 html .jb-join-card:not(#z) .btn-pill{ align-self:flex-start; margin-top:var(--space-xs); }
@@ -204,27 +204,27 @@ html .jb-join-modal-text:not(#z) p:first-child{ font-weight:var(--type-body-smal
   html .jb-nav:not(#z){ display:flex; align-items:center; height:64px; margin-left:calc(var(--space-xs) - var(--space-md)); }
   html .jb-back.round-btn:not(#z){ width:36px; height:36px; padding:var(--space-xs); }
   html .jb-heading:not(#z){ padding:0; gap:var(--space-md); }
-  html .jb-title:not(#z){ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  html .jb-title:not(#z){ font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
   html .jb-sub:not(#z){ font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
   html .jb-content:not(#z){ flex-direction:column; align-items:stretch; gap:var(--space-lg); }
   html .jb-left:not(#z){ position:static; width:auto; flex:none; gap:var(--space-xs); }
-  html .jb-left-title:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .jb-left-title:not(#z){ font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   /* The pill (58 high): 16 padding, a 24px icon, Label/Default 16/24, a 16px chevron, 12 apart. */
   html .jb-picker-btn:not(#z){ padding:var(--space-md); gap:var(--space-sm); }
   html .jb-cards:not(#z){ width:auto; flex:none; gap:var(--space-lg); }
   /* Board name: co-owners Heading/Large + Body/Default, 4 apart (986:27262); others Heading/XL + Body/Small, 8 apart. */
-  html .jb-name-card.is-co:not(#z) .jb-card-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  html .jb-name-card.is-co:not(#z) .jb-card-title{ font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
   html .jb-name-card:not(#z):not(.is-co) .jb-card-text{ margin-top:calc(var(--space-xs) - var(--space-lg)); font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
   html .jb-name-actions:not(#z){ flex-direction:column; align-items:stretch; gap:var(--space-lg); }
   /* The info message (986:26985 on phones): 12 padding, the icon 16 from the text (Body/Small/Regular 14/16). */
   html .jb-info.ds-info:not(#z){ padding:var(--space-sm); }
   html .jb-info.ds-info:not(#z) .ds-info-desc{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
   html .jb-name-actions:not(#z) > .btn-pill{ width:100%; }
-  html .jb-sharing-card:not(#z) .jb-card-title{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  html .jb-sharing-card:not(#z) .jb-card-title{ font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
   html .jb-sharing-card:not(#z) .jb-sharing{ padding:0; }
   /* People (986:27262 / 994:52459): heading Heading/Medium; the list 8 in, rows 16 apart, no dividers: avatar, 12, the
      name (16/16) over the email (Label/Tiny 14/16), the label on the right; the access dropdown (104) 4 under the name. */
-  html .jb-people-title:not(#z){ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .jb-people-title:not(#z){ font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   html .jb-people-list:not(#z){ padding:0 var(--space-xs); gap:var(--space-md); }
   html .jb-people-list:not(#z) > li > .ds-divider{ display:none; }
   html .jb-person:not(#z){ display:grid; grid-template-columns:40px minmax(0,1fr) auto; column-gap:var(--space-sm); row-gap:var(--space-tn); align-items:center; }

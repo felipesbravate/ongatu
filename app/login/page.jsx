@@ -36,7 +36,7 @@ export default async function Page({ searchParams }) {
   const message = (MESSAGES[step] && MESSAGES[step][err]) || null;
   return (
     <>
-      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
+      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:opsz,wght@14..32,100..900&family=Martian+Mono:wght@300;400;500;600&display=swap" />
       <LoginApp step={step} email={step === 'email' ? '' : email} kind={ctx ? ctx.k : 'code'} name={ctx ? ctx.n : ''}
         message={message} sent={q.sent === '1' && step === 'code'} />
     </>

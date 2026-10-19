@@ -18,6 +18,7 @@ const cssName = (collection, name) => (collection === 'Primitives' ? '--primitiv
 const FONT_FALLBACK = {
   'font/sans': 'system-ui, -apple-system, "Segoe UI", sans-serif',
   'font/mono': 'ui-monospace, SFMono-Regular, Menlo, monospace',
+  'font/title': 'system-ui, -apple-system, "Segoe UI", sans-serif',
 };
 
 test('every Figma variable is in :root with the same value (aliases as var() to the same Primitive)', () => {

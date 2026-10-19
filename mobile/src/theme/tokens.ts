@@ -229,11 +229,11 @@ export const opacity = {
 
 export const text = {
   "DisplayTitle": {
-    "fontFamily": "Inter_600SemiBold",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 40
   },
   "DisplayTitleMobile": {
-    "fontFamily": "Inter_600SemiBold",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 32
   },
   "Value2XL": {
@@ -261,19 +261,19 @@ export const text = {
     "letterSpacing": -0.48
   },
   "HeadingXL": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 24
   },
   "HeadingLarge": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 20
   },
   "HeadingMedium": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 16
   },
   "HeadingSmall": {
-    "fontFamily": "Inter_500Medium",
+    "fontFamily": "Geist_500Medium",
     "fontSize": 14
   },
   "BodyDefaultRegular": {
@@ -303,6 +303,10 @@ export const text = {
   "BadgeMedium": {
     "fontFamily": "Inter_500Medium",
     "fontSize": 8
+  },
+  "LabelTab": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 18
   },
   "LabelLarge": {
     "fontFamily": "Inter_500Medium",

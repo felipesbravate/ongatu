@@ -5,7 +5,7 @@ html[data-theme] .acct-preferences-actions{justify-content:space-between;gap:var
 .acct-theme-toggle{display:flex;align-items:center;gap:var(--space-xs);color:var(--text-primary);font-family:var(--font-sans);font-size:var(--type-body-tiny-regular-size);font-weight:var(--type-body-tiny-regular-weight);line-height:var(--type-body-small-regular-lh);letter-spacing:var(--type-body-tiny-regular-ls)}
 .acct-theme-toggle label{cursor:pointer}
 html[data-theme] .acct-email-row{width:calc(50% - var(--space-md)/2);max-width:100%}
-html[data-theme] .acct-card-head h2{font-size:var(--type-heading-xl-size);line-height:var(--type-heading-xl-lh)}
+html[data-theme] .acct-card-head h2{font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size);line-height:var(--type-heading-xl-lh)}
 html[data-theme] .acct-card-head p{font-size:var(--type-body-default-regular-size);line-height:var(--type-body-default-regular-lh)}
 html[data-theme] .btn-pill:not(.ghost):not(.secondary):not(.tertiary):not(.destructive):not(.is-destructive){color:var(--text-on-primary)}
 html[data-theme] .round-btn.primary{color:var(--icon-light)}
@@ -70,7 +70,7 @@ html[data-theme] .ds-dd-menu.is-group{gap:var(--space-md)}
 html[data-theme] .ds-dd-menu .ds-dd-items{gap:var(--space-tn)}
 html[data-theme] .ds-drop-action:not(#z){width:242px}
 html[data-theme] .ds-drop-action:not(#z) .ds-dd-item{min-height:36px;font-size:var(--type-label-small-size);line-height:var(--type-label-small-lh);letter-spacing:var(--type-label-small-ls)}
-html[data-theme] .ds-dd-group{font-size:var(--type-heading-medium-size);line-height:var(--type-heading-medium-lh);letter-spacing:var(--type-heading-medium-ls)}
+html[data-theme] .ds-dd-group{font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size);line-height:var(--type-heading-medium-lh);letter-spacing:var(--type-heading-medium-ls)}
 html[data-theme] .ds-dd-desc{white-space:normal}
 html[data-theme] .ds-menu-item{font-size:var(--type-label-default-size);font-weight:var(--type-label-default-weight);line-height:var(--type-label-default-lh);letter-spacing:var(--type-label-default-ls)} /* menu-item 304:528: Label/Default */
 .ds-menu-counter{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:24px;min-height:20px;padding:2px 4px;border:1px solid var(--border-default);border-radius:var(--radius-sm);color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--type-value-small-size);font-weight:var(--type-value-small-weight);line-height:1;letter-spacing:var(--type-value-small-ls);white-space:nowrap}

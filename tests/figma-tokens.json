@@ -1,5 +1,5 @@
 {
-  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Inter since the Oct 18 night re-read, Geist before; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%). Oct 18 evening (Felipe, sheet 'New Text styles'): codeWeight = the sheet's Code weight for every style (lighter than Figma: Heading/Large 450, Body Regular 380/420, Labels 420, Display/Title 500); Badge/Medium letter-spacing 0 in code (Figma -2%, kept as figmaLetterSpacing). icon/round-control removed from Figma Color. Oct 18 night: font/sans = Inter in Figma (all text styles moved to Inter; Display/Title-mobile now Semi Bold 600, code keeps the sheet's 500). Oct 18 late (Felipe, sheet 'New Text styles' v3): code weights 480 for headings, labels and the Medium/Bold body styles, 400 for the Regular body styles, 550 for Display; Value/Medium and Value/Small letter-spacing 0 in code (Figma -4%). Value/Medium and Value/Small back to -4% letter-spacing (Figma), Felipe Oct 18.",
+  "_note": "Okara Design System snapshot, 18 October 2026 (font/sans Inter since the Oct 18 night re-read, Geist before; text styles re-read: Display/Title 600, Heading/Large, Label/* and Body/Tiny/Regular 500, Body/Default/Regular and Body/Small/Regular 400, Label/Small letter spacing 0; lh/heading-md 20/16; Color data/mint added). File 7glNMA9d7iVJFf2CvyrzAb. Resolved Primitives and Light Color values; Surface includes Mobile and Desktop. Full Color modes and styles are in src/ui/theme-tokens. Code weights = Figma weights except the codeWeight overrides Felipe set (Value/Medium 400, Label/Default 400). Body/Default/Regular letter spacing 0 in code (Felipe, Oct 17; Figma +1%). Oct 18 evening (Felipe, sheet 'New Text styles'): codeWeight = the sheet's Code weight for every style (lighter than Figma: Heading/Large 450, Body Regular 380/420, Labels 420, Display/Title 500); Badge/Medium letter-spacing 0 in code (Figma -2%, kept as figmaLetterSpacing). icon/round-control removed from Figma Color. Oct 18 night: font/sans = Inter in Figma (all text styles moved to Inter; Display/Title-mobile now Semi Bold 600, code keeps the sheet's 500). Oct 18 late (Felipe, sheet 'New Text styles' v3): code weights 480 for headings, labels and the Medium/Bold body styles, 400 for the Regular body styles, 550 for Display; Value/Medium and Value/Small letter-spacing 0 in code (Figma -4%). Value/Medium and Value/Small back to -4% letter-spacing (Figma), Felipe Oct 18. Oct 19: new Typography variable font/title = Geist, bound by Display/*, Heading/* and the new Label/Tab (Geist Medium 18/20, lh/body-lg-semibold); everything else stays font/sans (Inter). Body/Default/Bold is Body/Default/Medium in Figma (CSS prefix kept). Badge/Medium no longer exists in Figma. Code weights from the sheet: Display 520, Headings, Labels and Medium body styles 480, Regular body 400.",
   "Primitives": {
     "neutral/page": "#eef5f4ff",
     "neutral/surface": "#ffffffff",
@@ -202,7 +202,8 @@
   },
   "Typography": {
     "font/sans": "Inter",
-    "font/mono": "Martian Mono"
+    "font/mono": "Martian Mono",
+    "font/title": "Geist"
   },
   "Surface": {
     "size/display-title": {
@@ -419,19 +420,19 @@
       "size": 40,
       "weight": 600,
       "letterSpacing": 0,
-      "family": "sans",
+      "family": "title",
       "sizeVar": "size/display-title",
       "lhVar": "lh/display-title",
-      "codeWeight": 550
+      "codeWeight": 520
     },
     "Display/Title-mobile": {
       "size": 32,
       "weight": 600,
       "letterSpacing": 0,
-      "family": "sans",
+      "family": "title",
       "sizeVar": "size/value-xl",
       "lhVar": "lh/display-title",
-      "codeWeight": 550
+      "codeWeight": 520
     },
     "Value/2XL": {
       "size": 48,
@@ -474,7 +475,7 @@
       "size": 24,
       "weight": 500,
       "letterSpacing": 0,
-      "family": "sans",
+      "family": "title",
       "sizeVar": "size/heading-xl",
       "lhVar": "lh/heading-xl",
       "codeWeight": 480
@@ -483,7 +484,7 @@
       "size": 20,
       "weight": 500,
       "letterSpacing": 0,
-      "family": "sans",
+      "family": "title",
       "sizeVar": "size/heading-lg",
       "lhVar": "lh/heading-lg",
       "codeWeight": 480
@@ -492,7 +493,7 @@
       "size": 16,
       "weight": 500,
       "letterSpacing": 0,
-      "family": "sans",
+      "family": "title",
       "sizeVar": "size/heading-md",
       "lhVar": "lh/heading-md",
       "codeWeight": 480
@@ -501,7 +502,7 @@
       "size": 14,
       "weight": 500,
       "letterSpacing": 0,
-      "family": "sans",
+      "family": "title",
       "sizeVar": "size/heading-sm",
       "lhVar": "lh/heading-sm",
       "codeWeight": 480
@@ -521,7 +522,8 @@
       "family": "sans",
       "sizeVar": "size/body-lg",
       "lhVar": "lh/body-lg-semibold",
-      "codeWeight": 480
+      "codeWeight": 480,
+      "figmaName": "Body/Default/Medium"
     },
     "Body/Small/Regular": {
       "size": 14,
@@ -565,7 +567,16 @@
       "family": "sans",
       "sizeVar": "size/badge",
       "lhVar": "lh/badge",
-      "figmaLetterSpacing": -2
+      "figmaLetterSpacing": -2,
+      "note": "Removed from Figma on Oct 19; kept for the code that still uses it."
+    },
+    "Label/Tab": {
+      "size": 18,
+      "weight": 500,
+      "letterSpacing": 0,
+      "family": "title",
+      "lhVar": "lh/body-lg-semibold",
+      "codeWeight": 480
     },
     "Label/Large": {
       "size": 18,

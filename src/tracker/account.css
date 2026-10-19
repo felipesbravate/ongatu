@@ -39,14 +39,14 @@ html .acct-account .acct-meta .ds-check:not(#z){ gap:8px; align-items:center; }
   html .acct-account #acct-back:not(#z){ display:none; }
   html .acct-account .acct-menu:not(#z){ display:none; }
   html .acct-account .acct-head:not(#z){ gap:0; padding-top:8px; }
-  html .acct-account .acct-head:not(#z) .app-title{ margin:0; padding:0 20px; font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); }
+  html .acct-account .acct-head:not(#z) .app-title{ margin:0; padding:0 20px; font-family:var(--type-display-title-family); font-size:var(--type-display-title-size); font-weight:var(--type-display-title-weight); line-height:var(--type-display-title-lh); letter-spacing:var(--type-display-title-ls); }
   html .acct-account .acct-head:not(#z) .app-sub{ margin:0; padding:0 20px; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
   html .acct-account .acct-content:not(#z){ margin-top:24px; gap:24px; }
   html .acct-account .acct-cards:not(#z){ gap:24px; }
   /* Cards: padding 24, sections 24 apart; header Heading/Large (20/24) over Body/Default/Regular (16/20), 4 apart. */
   html .acct-account .acct-card:not(#z){ padding:24px; gap:24px; }
   html .acct-account .acct-card:not(#z) .acct-card-head{ gap:4px; }
-  html .acct-account .acct-card:not(#z) .acct-card-head h2{ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  html .acct-account .acct-card:not(#z) .acct-card-head h2{ font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
   html .acct-account .acct-card:not(#z) .acct-card-head p{ font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
   html .acct-account .acct-card-body:not(#z){ gap:24px; }
   /* Fields stacked 12 apart (the First / Last name row too). */
@@ -56,7 +56,7 @@ html .acct-account .acct-meta .ds-check:not(#z){ gap:8px; align-items:center; }
   html .acct-account .acct-avatar-actions:not(#z){ gap:8px; }
   /* Options and data rows: no padding; title Heading/Medium (16/20) over Body/Small/Regular (14/16), 8 apart. */
   html .acct-account .acct-meta:not(#z){ gap:8px; }
-  html .acct-account .acct-meta:not(#z) h3{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .acct-account .acct-meta:not(#z) h3{ font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   html .acct-account .acct-meta:not(#z) p{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
   html .acct-account #security .acct-option:not(#z){ gap:8px; padding:0; }
   /* Data rows: the text, 16, the button at the right. */

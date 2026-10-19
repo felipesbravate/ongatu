@@ -54,7 +54,7 @@ html .login-page .login-card{
   background-color:var(--surface-primary); box-shadow:0 0 20px rgba(22,21,15,0.04);
 }
 html .login-page .login-head{ gap:24px; }
-html .login-page .login-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+html .login-page .login-title{ font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
 html .login-page .login-form, html .login-page .login-body{ gap:40px; }
 html .login-page .login-field{ gap:8px; }
 /* Labels: Label/Small, text/secondary. */
@@ -71,7 +71,7 @@ html .login-page:not(.is-email) .login-card:not(#z){ box-shadow:none; }
 html .login-page .login-user{ gap:12px; }
 html .login-page .login-user-text{ display:flex; flex-direction:column; gap:0; }
 html .login-page .login-avatar{ width:48px; height:48px; min-width:48px; background:var(--surface-accent); color:var(--text-white, #fff); font-size:20px; line-height:24px; }
-html .login-page .login-hello{ color:var(--text-primary); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+html .login-page .login-hello{ color:var(--text-primary); font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
 html .login-page .login-email{ color:var(--text-accent-light); font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
 
 /* "Check your inbox" (713:18371): title 4 above the line; the line Body/Default/Regular text/secondary, the email in

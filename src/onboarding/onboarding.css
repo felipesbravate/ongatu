@@ -323,7 +323,7 @@ html .ob-page:not(#z) .ob-invite{ display:flex; flex-direction:column; gap:12px;
 html .ob-page:not(#z) .ob-invite-cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
 html .ob-page:not(#z) .ob-invite-cta .btn-pill{ width:auto; flex:0 0 auto; }
 html .ob-page:not(#z) .ob-people{ display:flex; flex-direction:column; gap:24px; width:100%; }
-html .ob-page:not(#z) .ob-people-title{ margin:0; font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); } /* Heading/Large (965:35549) */
+html .ob-page:not(#z) .ob-people-title{ margin:0; font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); } /* Heading/Large (965:35549) */
 html .ob-page:not(#z) .ob-people-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:16px; }
 html .ob-page:not(#z) .ob-person{ display:flex; align-items:center; gap:8px; }
 html .ob-page:not(#z) .ob-person-who{ display:flex; flex-direction:column; min-width:0; }
@@ -372,14 +372,14 @@ html .ob-page:not(#z) .ob-import-body{ width:640px; max-width:100%; }
 html .ob-page:not(#z) .ob-dropzone .dz-line{ font-size:var(--type-body-default-bold-size); font-weight:var(--type-body-default-bold-weight); line-height:var(--type-body-default-bold-lh); letter-spacing:var(--type-body-default-bold-ls); }
 html .ob-page:not(#z) .ob-dropzone .dz-hint{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); }
 html .ob-page:not(#z) .ob-tip-title,
-html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+html .ob-page:not(#z) .ob-import-note .ob-import-note-head{ font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
 html .ob-page:not(#z) .ob-tip-desc,
 html .ob-page:not(#z) .ob-import-note-list{ font-size:var(--type-body-tiny-regular-size); font-weight:400; line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); }
 
 @media (max-width:640px){
   html .ob-page:not(.ob-welcome-page):not(#z){ padding-top:16px; }
   /* From Choose on (935:37211 ...), the title is Heading/XL. */
-  html .ob-page:not(#z) .ob-header.is-compact .ob-title{ font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  html .ob-page:not(#z) .ob-header.is-compact .ob-title{ font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
   /* Step progress -> card 56 (Top padding 40 + 16) on Choose; -> Back 40, Back -> card 16, card -> summary 24 on Set up. */
   html .ob-page:not(#z) .ob-content > .ob-card.ob-choose{ margin-top:32px; }
   html .ob-page:not(#z) .ob-content > .ob-body{ margin-top:16px; }

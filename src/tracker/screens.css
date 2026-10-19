@@ -148,7 +148,7 @@ html .board-users:empty:not(#z){ display:none; }
    space/xl to their right; meters and list space/2xl apart (desktop) or 24 (phones). */
 html .tracker-section:not(#z){ display:flex; flex-direction:column; gap:8px; min-width:0; }
 html .tracker-head:not(#z){ display:flex; align-items:center; justify-content:space-between; padding-left:var(--space-xs); min-height:48px; }
-html .tracker-title:not(#z){ margin:0; font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
+html .tracker-title:not(#z){ margin:0; font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); color:var(--text-primary); }
 html .tracker-head .bd-menu .round-btn:not(#z){ width:48px; height:48px; padding:12px; }
 html .row1 .tracker-section .breakdown-card:not(#z){ padding:24px; }
 html .breakdown-card .bd-controllers:not(#z){ align-items:flex-end; gap:var(--space-xl); }
@@ -231,12 +231,12 @@ html .wrap .legend .swatch:not(#z){ width:9px; height:9px; border-radius:var(--r
    there are many years). */
 html .yoy-section:not(#z){ display:flex; flex-direction:column; gap:var(--space-md); min-width:0; }
 html .yoy-head:not(#z){ display:flex; flex-direction:column; gap:var(--space-tn); }
-html .yoy-section .yoy-heading:not(#z){ margin:0; color:var(--text-primary); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+html .yoy-section .yoy-heading:not(#z){ margin:0; color:var(--text-primary); font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
 html .yoy-section .yoy-sub:not(#z){ margin:0; color:var(--text-secondary); font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
 html .yoy-section .yoy:not(#z){ display:flex; flex-direction:column; gap:var(--space-lg); }
 html .yoy-section .yoy-card:not(#z){ display:flex; flex-direction:column; gap:var(--space-xl); padding:24px; margin:0; }
 html .yoy-section .yoy-card[hidden]:not(#z){ display:none; }
-html .yoy-card > h2:not(#z){ margin:0; min-height:24px; display:flex; align-items:center; text-transform:none; color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+html .yoy-card > h2:not(#z){ margin:0; min-height:24px; display:flex; align-items:center; text-transform:none; color:var(--text-primary); font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
 html .yoy-card .yoy-chart:not(#z){ position:relative; height:165px; margin:0; }
 html .yoy-rules:not(#z){ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none; }
 html .yoy-rules > i:not(#z){ display:block; height:1px; background:var(--border-secondary); }
@@ -261,13 +261,13 @@ html .yoy-card .legend:not(#z){ margin:0; }
   /* Expense cards (Data carrousell 898:9152): 224 wide. */
   html .ticker-strip .ticker-item:not(#z){ width:224px; min-width:224px; flex:0 0 224px; }
   /* Allocation and At a glance: titles Heading/Large, the hint Heading/Small text/secondary, the text Body/Default/Regular. */
-  html .row1 :is(.alloc-card, .glance-card) > h2:not(#z){ font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
-  html .alloc-card .hint:not(#z){ color:var(--text-secondary); font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
+  html .row1 :is(.alloc-card, .glance-card) > h2:not(#z){ font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  html .alloc-card .hint:not(#z){ color:var(--text-secondary); font-family:var(--type-heading-small-family); font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
   html .glance-card .insight-text:not(#z){ font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
   /* Trend chart (898:9152 "chart"): the title (Heading/Medium text/primary) and the change Label 8 under it; chart (197)
      and legend 40 apart. */
   html .hero-chart .hc-top:not(#z){ flex-direction:column; align-items:flex-start; gap:8px; }
-  html .hero-chart .hc-label:not(#z){ color:var(--text-primary); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+  html .hero-chart .hc-label:not(#z){ color:var(--text-primary); font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   html .hero-chart .chart-wrap:not(#z){ margin-top:var(--space-xl); }
   html .hero-chart.is-compact .legend:not(#z){ margin-top:var(--space-xl); }
   html .wrap .legend:not(#z), html .hero-chart.is-compact .legend:not(#z){ gap:16px; }
@@ -303,7 +303,7 @@ html .wrap :is(.mini-kpi, .ticker-item):not(#z):not(#y){ display:flex; flex-dire
 html .wrap :is(.mini-kpi, .ticker-item) > *:not(#z):not(#y){ margin:0; }
 html .wrap .mini-kpi .label:not(#z):not(#y), html .wrap .ticker-item .ti-top:not(#z):not(#y){ display:flex; align-items:center; gap:8px; min-width:0;
   text-transform:none; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
 html .wrap .ticker-item .ti-name:not(#z):not(#y){ font:inherit; letter-spacing:inherit; color:inherit; overflow:hidden; text-overflow:ellipsis; }
 html .wrap .mini-kpi .dot:not(#z):not(#y){ width:8px; height:8px; flex:0 0 8px; border-radius:50%; }
 html .wrap .ticker-item .ti-dot:not(#z):not(#y){ width:20px; height:20px; min-width:20px; flex:0 0 20px; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center;
@@ -340,7 +340,7 @@ html .wrap .ticker-strip .ticker-item:not(#z):not(#y){ min-height:111px; }
 html .wrap .row1 :is(.alloc-card, .glance-card):not(#z):not(#y){ display:flex; flex-direction:column; padding:var(--space-lg); }
 html .wrap .row1 :is(.alloc-card, .glance-card) > *:not(#z):not(#y){ margin:0; }
 html .wrap .row1 :is(.alloc-card, .glance-card) > h2:not(#z):not(#y){ color:var(--text-primary); text-transform:none;
-  font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
+  font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); }
 html .wrap .row1 .alloc-card:not(#z):not(#y){ gap:0; }
 html .wrap .row1 .alloc-card .hint:not(#z):not(#y){ margin-top:4px; color:var(--text-secondary);
   font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); }
@@ -352,7 +352,7 @@ html .wrap .row1 .glance-card .insight-text:not(#z):not(#y){ color:var(--text-pr
 html .wrap .row1 .glance-card .insight-tags:not(#z):not(#y){ padding-top:8px; gap:4px; }
 @media (max-width:640px){
   html .wrap .row1 :is(.alloc-card, .glance-card):not(#z):not(#y){ padding:var(--space-lg); }
-  html .wrap .row1 .alloc-card .hint:not(#z):not(#y){ font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
+  html .wrap .row1 .alloc-card .hint:not(#z):not(#y){ font-family:var(--type-heading-small-family); font-size:var(--type-heading-small-size); font-weight:var(--type-heading-small-weight); line-height:var(--type-heading-small-lh); letter-spacing:var(--type-heading-small-ls); }
   html .wrap .row1 .alloc-card .alloc-bars:not(#z):not(#y){ margin-top:8px; gap:16px; }
   html .wrap .row1 .alloc-card .alloc-col:not(#z):not(#y){ gap:8px; }
   html .wrap .row1 .glance-card:not(#z):not(#y){ gap:12px; }
@@ -364,7 +364,7 @@ html .wrap .row1 .glance-card .insight-tags:not(#z):not(#y){ padding-top:8px; ga
    under the year and month nav (was space/2xl). */
 @media (max-width:640px){
   html .wrap .mini-kpi .label:not(#z):not(#y), html .wrap .ticker-item .ti-top:not(#z):not(#y){
-    font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
+    font-family:var(--type-heading-medium-family); font-size:var(--type-heading-medium-size); font-weight:var(--type-heading-medium-weight); line-height:var(--type-heading-medium-lh); letter-spacing:var(--type-heading-medium-ls); }
   html .wrap .ticker-item .ti-dot:not(#z):not(#y){ font-size:12px; line-height:20px; }
   html .wrap .ticker-strip .ticker-item:not(#z):not(#y){ min-height:109px; }
   html .wrap > .row1:not(#z):not(#y){ margin-top:var(--space-xs); }

@@ -16,6 +16,7 @@ const strip = (name, prefix) => (name.startsWith(prefix + '/') ? name.slice(pref
 // font (380, 420, 450, 480, 500); React Native gets the nearest static cut (nearestCut below).
 const FONT = {
   sans: { 300: 'Inter_300Light', 400: 'Inter_400Regular', 500: 'Inter_500Medium', 600: 'Inter_600SemiBold' },
+  title: { 300: 'Geist_300Light', 400: 'Geist_400Regular', 500: 'Geist_500Medium', 600: 'Geist_600SemiBold' }, // Oct 19: Display, Heading, Label/Tab
   mono: { 300: 'MartianMono_300Light', 400: 'MartianMono_400Regular', 500: 'MartianMono_500Medium', 600: 'MartianMono_600SemiBold' },
 };
 

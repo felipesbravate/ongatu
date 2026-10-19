@@ -17,7 +17,7 @@ html .notif-card:not(#z){
   box-shadow:0 0 20px rgba(22, 21, 15, .04);
 }
 html .notif-card .notif-card-title:not(#z){ margin:0; color:var(--text-primary); text-transform:none;
-  font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+  font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
 html .notif-list:not(#z){ display:flex; flex-direction:column; padding:0; }
 html .notif-list .notif-sep:not(#z){ width:100%; margin:0; border-top-color:var(--border-secondary); }
 
@@ -44,7 +44,7 @@ html .notif-list .ds-notif-empty:not(#z){ padding:16px; }
   html .notif-page .acct-head:not(#z){ gap:0; }
   html .notif-mobile-nav:not(#z){ display:flex; align-items:center; height:64px; margin-left:-8px; }
   html .notif-page .acct-head:not(#z) .app-title{ margin:16px 0 0; padding:0;
-    font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+    font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
   html .notif-page .acct-content:not(#z){ margin-top:24px; gap:0; }
   html .notif-menu.ds-side-menu:not(#z){ flex-direction:row; flex-wrap:nowrap; gap:12px; width:auto; flex:0 0 auto; }
   html .notif-menu .ds-menu-item:not(#z){ width:auto; min-width:0; height:40px; min-height:40px; padding:8px 12px; }

@@ -14,6 +14,7 @@ export const cssName = (collection, name) => (collection === 'Primitives' ? '--p
 export const FONT_FALLBACK = {
   'font/sans': 'system-ui, -apple-system, "Segoe UI", sans-serif',
   'font/mono': 'ui-monospace, SFMono-Regular, Menlo, monospace',
+  'font/title': 'system-ui, -apple-system, "Segoe UI", sans-serif',
 };
 // Surface (Sept 29) holds spacing, radius and the text sizes / line heights in two modes. The page gets the Desktop
 // values in :root and the Mobile values under MOBILE_QUERY (the same 640px the phone layout uses).
@@ -31,7 +32,9 @@ export const codeWeight = (w, override) => Number(override ?? w);
 export const textStyleVars = (name, t) => {
   const k = '--type-' + kebab(name);
   return [[k + '-size', t.sizeVar ? `var(${cssName('Surface', t.sizeVar)})` : t.size + 'px'], [k + '-weight', String(codeWeight(t.weight, t.codeWeight))],
-    [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : t.lineHeight ? t.lineHeight + 'px' : 'normal'], [k + '-ls', t.letterSpacing ? t.letterSpacing / 100 + 'em' : '0']];
+    [k + '-lh', t.lhVar ? `var(${cssName('Surface', t.lhVar)})` : t.lineHeight ? t.lineHeight + 'px' : 'normal'], [k + '-ls', t.letterSpacing ? t.letterSpacing / 100 + 'em' : '0'],
+    // Oct 19: each style also names its family (font/title = Geist for Display, Heading and Label/Tab; font/sans = Inter; font/mono).
+    [k + '-family', `var(--font-${t.family || 'sans'})`]];
 };
 export const fontStack = (name, family) => `"${family}", ${FONT_FALLBACK[name] || 'sans-serif'}`;
 
