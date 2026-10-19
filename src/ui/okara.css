@@ -4249,3 +4249,15 @@ html[data-theme] .ds-modal-title-block:not(#z){ display:flex; align-items:center
 
 /* Phone panel back (Round button Small 52:629): 36 x 36, padding space/xs around the 20px arrow. */
 @media (max-width:640px){ html[data-theme] .round-btn.panel-close:not(#z){ min-width:36px; min-height:36px; padding:calc(var(--space-xs) - 1px); } }
+
+/* Notification panel (Okara 228:462, Oct 19): the list scrolls inside the panel and "See all notifications" stays a
+   full-width Small Tertiary button (36) at the bottom, space/sm under the list. Before, the whole panel scrolled and the
+   button, a flex child of a height-capped column, was squeezed to a thin pill over the items. */
+html[data-theme] .ds-notif-panel:not(#z):not(#y){ overflow:hidden; }
+html[data-theme] .ds-notif-panel .ds-notif-list:not(#z):not(#y){ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; }
+html[data-theme] .ds-notif-panel .ds-notif-list::-webkit-scrollbar{ display:none; }
+html[data-theme] .ds-notif-panel .ds-notif-all:not(#z):not(#y){ flex:0 0 auto; align-self:stretch; width:auto; min-height:36px; box-sizing:border-box; }
+/* notification-item State=Unread (228:470, Oct 19): the text is Body/Small/Medium in text/primary; Read keeps
+   Body/Small/Regular in text/secondary. */
+html[data-theme] .ds-notif-item.is-unread .ds-notif-text:not(#z):not(#y){ color:var(--text-primary);
+  font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }

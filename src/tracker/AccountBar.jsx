@@ -34,7 +34,8 @@ export function NotificationEntry({ it, n, onOpenAlert, onView, idPrefix = 'noti
   return (
     <NotificationItem date={it.date} time={it.time} id={idPrefix + it.id}
       onMarkRead={it.unread ? () => n.markRead(it.id) : undefined}
-      action={onOpenAlert ? { label: 'View', onClick: () => { if (onView) onView(); onOpenAlert(it.alert); } } : undefined}>
+      /* 228:462 (Oct 19): unread alerts carry View + Mark as read; read ones show only the date and the text. */
+      action={onOpenAlert && it.unread ? { label: 'View', onClick: () => { if (onView) onView(); onOpenAlert(it.alert); } } : undefined}>
       {it.text}
     </NotificationItem>
   );

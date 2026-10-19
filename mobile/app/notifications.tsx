@@ -61,8 +61,8 @@ export default function NotificationsScreen() {
           <Fragment key={it.id}>
             {i > 0 && <View style={s.divider} />}
             <NotificationItem date={it.date} text={it.text} unread={it.unread}
-              ctas={[{ label: 'View', outline: true, onPress: () => { markRead(it.id); router.back(); } },
-                ...(it.unread ? [{ label: 'Mark as read', onPress: () => markRead(it.id) }] : [])]} />
+              ctas={it.unread ? [{ label: 'View', outline: true, onPress: () => { markRead(it.id); router.back(); } },
+                { label: 'Mark as read', onPress: () => markRead(it.id) }] : []} /* read: date and text only (228:462) */ />
           </Fragment>
         ))}
       </ScrollView>

@@ -7,7 +7,7 @@ import { color as C, radius, space } from '@/theme/tokens';
 import { fmtMoney } from '@/lib/shared';
 
 // notification-item (Okara 228:469, Oct 17), same component as the web (src/ui/UserNav.jsx): the date (Body/Small/Medium),
-// 8 below the text (Body/Small/Regular, text/secondary once read), 12 below the CTAs (Nano buttons 4 apart, the first
+// 8 below the text (Body/Small/Medium while unread (228:470, Oct 19), Body/Small/Regular in text/secondary once read), 12 below the CTAs (Nano buttons 4 apart, the first
 // outlined in border/tertiary, the rest text only, Label/Micro). Padding 16, radius/md. Phones have no hover, so the
 // unread Dot (State=Unread-hover) shows while the item is pressed.
 export type Cta = { label: string; onPress: () => void; outline?: boolean; disabled?: boolean };
@@ -22,7 +22,7 @@ export function NotificationItem({ date, text, unread, ctas = [] }: { date: stri
           <T v="BodySmallMedium">{date}</T>
           {unread && pressed && <Icon name="dot" size={12} fill={C.iconPrimary} />}
         </View>
-        <T v="BodySmallRegular" c={unread ? C.textPrimary : C.textSecondary}>{text}</T>
+        <T v={unread ? 'BodySmallMedium' : 'BodySmallRegular'} c={unread ? C.textPrimary : C.textSecondary}>{text}</T>
       </View>
       {ctas.length > 0 && (
         <View style={s.ctas}>

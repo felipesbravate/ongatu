@@ -745,10 +745,18 @@ async def main():
             mk = pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').locator('.ds-notif-mark')
             n_mk = await mk.count()
             check('an unread alert offers "Mark as read" (211:19682)', n_mk >= 1, n_mk)
-            await mk.first.click(); await pg.wait_for_timeout(400)
-            check('"Mark as read" takes the link away', await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').locator('.ds-notif-mark').count() == n_mk - 1)
-            await pg.locator('#notif-panel .ds-notif-item', has_text='Groceries').get_by_role('button', name='View').first.click(); await pg.wait_for_timeout(400)
+            # 228:462 (Oct 19): only unread alerts carry View + Mark as read; a read one shows the date and the text.
+            await pg.locator('#notif-panel .ds-notif-item.is-unread', has_text='Groceries').get_by_role('button', name='View').first.click(); await pg.wait_for_timeout(400)
             check('View opens the Variable expenses of that month', await pg.locator('#notif-panel').count() == 0 and 'Groceries' in await pg.inner_text('.breakdown-card'))
+            await pg.click('#notif-btn'); await pg.wait_for_selector('#notif-panel'); await pg.wait_for_timeout(200)
+            gi = pg.locator('#notif-panel .ds-notif-item', has_text='Groceries')
+            n_un = await gi.locator('.ds-notif-mark').count()
+            if n_un:
+                await gi.locator('.ds-notif-mark').first.click(); await pg.wait_for_timeout(400)
+            n_views = await gi.get_by_role('button', name='View').count()
+            check('"Mark as read" takes the actions away (a read alert has no View or Mark as read, 228:462)', await gi.locator('.ds-notif-mark').count() == max(0, n_un - 1) and n_views == max(0, n_un - 1), [n_un, n_views])
+            await pg.keyboard.press('Escape'); await pg.wait_for_timeout(200)
+            if await pg.locator('#notif-panel').count(): await pg.click('#notif-btn'); await pg.wait_for_timeout(200)
             le = await pg.evaluate("() => { const e = document.querySelector('.bd-controllers > .tracker-last-entry'); return e && [e.querySelector('.tle-text').textContent, [...e.querySelectorAll('.tle-num')].map(n => n.textContent), !!e.querySelector('.tle-dot'), getComputedStyle(e.querySelector('.tle-text')).fontSize, getComputedStyle(e.querySelector('.tle-num')).fontSize]; }")
             check('Latest line (1042:45640, Oct 16): under the segments and the Add button, "Latest: <item>/<description>, <Mon D>", the Dot, then the figure and € in mono (14/16 text, Value/Medium 12)',
                   bool(le) and re.fullmatch(r'Latest: Groceries/[^,]+, [A-Z][a-z]{2} \d{1,2}', le[0]) and le[1][1] == '€' and re.fullmatch(r'[\d.]+,\d\d', le[1][0]) and le[2] and le[3:] == ['14px', '12px'], le)
