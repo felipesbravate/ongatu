@@ -45,7 +45,12 @@ export function errCopy(e) {
     case 'image_rejected': return "Couldn't read this image.";
     // Oct 2: every failure used to say "Couldn't read this file", which hid the reason (a preview deployment has no
     // API key, a timeout, an answer that wasn't JSON). Each now says what happened.
-    case 'not_available': return "Reading isn't set up on this server";
+    case 'not_configured': return "Reading isn't set up: the server has no Claude API key";
+    case 'not_ai_auth': return 'The Claude API key on the server was refused';
+    case 'not_ai_credit': return 'The Claude account is out of credit';
+    case 'not_ai_model': return "The Claude model set on the server isn't available";
+    case 'not_ai_busy': return 'Claude is busy. Try again in a moment';
+    case 'not_available': return "Reading isn't available right now";
     case 'bad_output': return "Claude's answer couldn't be read. Try again";
     case 'too_large': return 'File too large to read';
     case 'network': return 'No connection. Try again';
@@ -158,6 +163,8 @@ export class DocReader {
   add(list) {
     if (this.analyzing || !this.sampleFn) return;
     Array.from(list || []).forEach((f) => {
+      // Oct 21: the same file twice (name, size and date) is added once; it would give the same entries twice.
+      if (this.docs.some((d) => d.file && d.name === f.name && d.size === f.size && d.file.lastModified === f.lastModified)) return;
       const isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
       const isText = !isPdf && (/^text\//.test(f.type) || TEXT_EXT.test(f.name));
       const isImg = !isPdf && !isText && /^image\/(jpeg|png|webp|gif)$/.test(f.type);
@@ -278,7 +285,7 @@ export class DocReader {
           if (e && e.code === 'cancelled') d.status = 'ready';
           else {
             d.status = 'error'; d.note = errCopy(e);
-            if (e && ['not_granted', 'sampling_disabled', 'rate_limited', 'session_expired'].includes(e.code)) fatal = e;
+            if (e && ['not_granted', 'sampling_disabled', 'rate_limited', 'session_expired', 'not_configured', 'not_ai_auth', 'not_ai_credit', 'not_ai_model'].includes(e.code)) fatal = e; // the same for every file: stop and say why
           }
         }
         this.changed();

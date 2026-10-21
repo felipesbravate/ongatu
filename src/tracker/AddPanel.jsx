@@ -143,7 +143,11 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
       const p = ks.length ? ks[ks.length - 1] : model.defaultPeriodKey(yearIdx, monthIdx);
       setReview(fitRows({ rows: res.rows, period: p, editing: null, snap: null, status: null }, model));
       if (panelRef.current) panelRef.current.scrollTop = 0;
-    } else setDocStatus({ err: true, text: res.fatal ? errCopyFatal(res.fatal) : 'No entries found in these files.' });
+    } else {
+      // No rows: say whether the files were read and empty, or could not be read at all.
+      const readable = reader.docs.some((d) => d.status === 'empty' || d.status === 'done');
+      setDocStatus({ err: true, text: res.fatal ? errCopyFatal(res.fatal) : readable ? 'No entries found in these files.' : "Couldn't read these files." });
+    }
   };
   const closeReview = () => { setReview(null); reader.clear(); setDocStatus(null); };
 
@@ -300,13 +304,18 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
   );
 }
 
+// Oct 21: the bottom line says why nothing was read (it said "No entries found" even when no file could be read).
 const errCopyFatal = (e) => {
   switch (e && e.code) {
     case 'not_granted': return 'Claude access was declined for this page.';
     case 'sampling_disabled': return 'Claude isn’t available for this account.';
     case 'rate_limited': return 'Usage limit reached. Try again later.';
     case 'session_expired': return 'Your session expired. Sign in again.';
-    default: return "Couldn't read this file";
+    case 'not_configured': return 'Reading files isn’t set up yet: the server has no Claude API key. Enter the entry by hand below.';
+    case 'not_ai_auth': return 'The server’s Claude API key was refused, so the files couldn’t be read.';
+    case 'not_ai_credit': return 'The Claude account is out of credit, so the files couldn’t be read.';
+    case 'not_ai_model': return 'The Claude model set on the server isn’t available, so the files couldn’t be read.';
+    default: return "Couldn't read these files.";
   }
 };
 

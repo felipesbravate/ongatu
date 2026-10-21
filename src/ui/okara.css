@@ -4291,3 +4291,8 @@ html[data-theme] .ds-notif-panel .ds-notif-all:not(#z):not(#y){ flex:0 0 auto; a
    Body/Small/Regular in text/secondary. */
 html[data-theme] .ds-notif-item.is-unread .ds-notif-text:not(#z):not(#y){ color:var(--text-primary);
   font-size:var(--type-body-small-medium-size); font-weight:var(--type-body-small-medium-weight); line-height:var(--type-body-small-medium-lh); letter-spacing:var(--type-body-small-medium-ls); }
+/* Upload actions (Oct 21): the status message wraps under "Add files" instead of being squeezed beside it; on phones it
+   always takes its own line under the full-width button. */
+html[data-theme] #add-panel #doc-actions:not(#z):not(#y){ flex-wrap:wrap; row-gap:var(--space-xs); }
+html[data-theme] #add-panel #doc-status:not(#z):not(#y){ flex:1 1 220px; min-width:0; }
+@media (max-width:640px){ html[data-theme] #add-panel #doc-status:not(#z):not(#y){ flex-basis:100%; } }

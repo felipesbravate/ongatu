@@ -35,7 +35,7 @@ export function getDeps() {
     // Optional: without an API key the app runs normally and document reading reports "not configured".
     ai: process.env.ANTHROPIC_API_KEY
       ? anthropicClient({ apiKey: process.env.ANTHROPIC_API_KEY, model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-5' })
-      : { async complete() { throw Object.assign(new Error('Document reading is not configured on this server'), { code: 'not_available' }); } },
+      : { async complete() { throw Object.assign(new Error('Document reading is not configured on this server'), { code: 'not_configured' }); } }, // no ANTHROPIC_API_KEY
     admins: parseAdminEmails(process.env.ADMIN_EMAILS),
     // Oct 4: open sign-up (no admin approval). Set REQUIRE_APPROVAL=1 on Vercel to bring the approval step back.
     requireApproval: process.env.REQUIRE_APPROVAL === '1',
