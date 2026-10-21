@@ -90,6 +90,9 @@ export async function handle(req, deps) {
       const used = await deps.usage.increment(user.id, day);
       if (used > deps.dailyReadCap) return json(429, { error: { code: 'rate_limited', message: `Daily limit of ${deps.dailyReadCap} document reads reached` } });
       const text = await deps.ai.complete({ prompt, images: imgs, maxTokens: 4000 });
+      // Oct 21: the shape of the answer only (never its content) so an empty result can be told apart in Vercel → Logs.
+      const t = String(text || '').trim();
+      console.info('[ai] read', { images: imgs.length, chars: t.length, starts: t.slice(0, 1), empty: t === '[]' });
       return json(200, { text });
     }
 

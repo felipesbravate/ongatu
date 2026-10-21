@@ -85,7 +85,7 @@ Extract every transaction shown and reply with ONLY a JSON array (no prose). One
 {"date":"YYYY-MM-DD" or null,"description":string,"amount":number,"currency":"EUR","type":"expense"|"income"|"investment","group":"Fixed"|"Variable"|"Extra"|"Additional" or null,"category":string or null,"item":string,"certainty":"sure"|"guess"}
 
 Rules:
-- A receipt or invoice is ONE object for its total. A statement is one object per transaction line; skip balances, totals and headers.
+- A receipt or invoice is ONE object for its total (still inside the array: [ {...} ]). A statement is one object per transaction line; skip balances, totals and headers.
 - amount is a positive number with a dot as decimal separator and no thousands separator. currency is the ISO code printed on the document.
 - description is a short label (max 40 characters) for what it was, usually the merchant. Use "" if you cannot tell.
 - Money going out is "expense". Money coming in (salary, refunds of income, interest) is "income". Money moved into savings or investments is "investment".
@@ -101,6 +101,21 @@ Document text:
 """
 ${chunk}
 """` : ''}`;
+}
+
+// Oct 21: Claude's answer -> transaction objects. The prompt asks for a JSON array, but a receipt often comes back as
+// ONE object, or the array is wrapped ({"transactions": [...]}, {"entries": [...]}, {"data": [...]}). Those used to be
+// dropped silently and the file showed "No entries found". `answerRows.shape` says what was recognised.
+const looksLikeTx = (x) => x && typeof x === 'object' && !Array.isArray(x) && ('amount' in x || 'description' in x || 'item' in x);
+export function answerRows(out) {
+  if (Array.isArray(out)) return out.flatMap((x) => (Array.isArray(x) ? x : [x])).filter((x) => x && typeof x === 'object');
+  if (looksLikeTx(out)) return [out];
+  if (out && typeof out === 'object') {
+    for (const k of ['entries', 'transactions', 'items', 'data', 'results', 'rows']) if (Array.isArray(out[k])) return answerRows(out[k]);
+    const arr = Object.values(out).find((v) => Array.isArray(v) && v.some(looksLikeTx));
+    if (arr) return answerRows(arr);
+  }
+  return [];
 }
 
 let rowSeq = 0;
@@ -268,7 +283,7 @@ export class DocReader {
     targets.forEach((d) => { d.status = 'reading'; d.rows = []; d.wasRead = true; });
     this.changed();
     let fatal = null; const queue = targets.slice();
-    const toArr = (out) => (Array.isArray(out) ? out : (out && Array.isArray(out.entries) ? out.entries : []));
+    const toArr = answerRows;
     const worker = async () => {
       while (queue.length && !ctl.signal.aborted && !fatal) {
         const d = queue.shift();
@@ -279,7 +294,7 @@ export class DocReader {
           } else {
             arr = toArr(await this.sampleFn.json(buildPrompt(model, d), { images: d.images, signal: ctl.signal }));
           }
-          d.rows = arr.filter((x) => x && typeof x === 'object').map((x) => normalizeRow(model, x, d));
+          d.rows = arr.filter((x) => x && typeof x === 'object').map((x) => normalizeRow(model, x, d)).filter((r) => r.amount > 0 || r.description);
           d.status = d.rows.length ? 'done' : 'empty';
         } catch (e) {
           if (e && e.code === 'cancelled') d.status = 'ready';
