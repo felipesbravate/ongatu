@@ -82,7 +82,7 @@ export function buildPrompt(model, d, chunk, i, n) {
   return `You are reading a personal-finance document (a receipt, invoice, bank or card statement, or a screenshot of one) for a monthly costs tracker. ${src} Today is ${todayISO()}.
 
 Extract every transaction shown and reply with ONLY a JSON array (no prose). One object per transaction:
-{"date":"YYYY-MM-DD" or null,"description":string,"amount":number,"currency":"EUR","type":"expense"|"income"|"investment","group":"Fixed"|"Variable"|"Extra"|"Additional" or null,"category":string or null,"item":string,"certainty":"sure"|"guess"}
+{"date":"YYYY-MM-DD" or null,"description":string,"amount":number,"currency":"<ISO code, e.g. EUR, GBP, BRL>","type":"expense"|"income"|"investment","group":"Fixed"|"Variable"|"Extra"|"Additional" or null,"category":string or null,"item":string,"certainty":"sure"|"guess"}
 
 Rules:
 - A receipt or invoice is ONE object for its total (still inside the array: [ {...} ]). A statement is one object per transaction line; skip balances, totals and headers.
@@ -137,7 +137,10 @@ export function normalizeRow(model, raw, d) {
   } else {
     item = findIn((type === 'income' ? TX.incomes : TX.investments) || [], raw.item);
   }
-  const cur = String(raw.currency || 'EUR').trim().toUpperCase();
+  // Oct 21: compared with the currency of the year the row lands in (EUR, GBP, BRL or SEK), not always EUR.
+  const yr = (model.DATA || []).find((y) => String(y.year) === String(yearLabelOfDate(date)));
+  const want = (yr && yr.currency) || 'EUR';
+  const cur = String(raw.currency || want).trim().toUpperCase();
   return {
     id: ++rowSeq, fileId: d.id, fileName: d.name, date,
     description: String(raw.description || '').trim().slice(0, 80),
@@ -145,7 +148,7 @@ export function normalizeRow(model, raw, d) {
     // Only trusted when the reader says "sure" (and didn't have to move it to another group). Never saved.
     guess: raw.certainty !== 'sure' || regrouped,
     amount: parseAmount(raw.amount),
-    flag: cur && cur !== 'EUR' ? `Amount is in ${cur} — enter it in EUR` : '',
+    flag: cur && cur !== want ? `Amount is in ${cur} — enter it in ${want}` : '',
   };
 }
 

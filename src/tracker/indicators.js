@@ -8,12 +8,13 @@
 // Each result is { head?, tone: 'good' | 'bad' | 'neutral', dir: 'up' | 'down' | 'flat' | null, text }: `head` is the
 // plain part before the comparison ("Kept 62% of incomes"), `text` the coloured comparison after the arrow.
 import { MONTH_ABBR } from './model.js';
+import { currencySymbol } from '../ui/format.js';
 
 const pct = (v) => `${Math.round(v * 100)}%`;
 const money = (v, cur) => {
   const n = Math.round(Math.abs(v));
   const s = n.toLocaleString('de-DE');
-  return `${s}\u00a0${cur === 'EUR' ? '€' : cur === 'SEK' ? 'kr' : cur}`; // "1.235 €" (Oct 16)
+  return `${s}\u00a0${currencySymbol(cur)}`; // "1.235 €" (Oct 16)
 };
 
 // The months to compare with: { prev: { c, label } | null, avg: c-like | null, state, budget }.

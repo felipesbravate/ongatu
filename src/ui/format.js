@@ -1,6 +1,17 @@
 // Money formatting, European style: "1.234,56 €" — the symbol after the figure, a no-break space between (Oct 16,
 // Felipe: € after everywhere, as in the new Figma frames).
-const sym = (cur) => (cur === 'EUR' ? '€' : cur === 'SEK' ? 'kr' : cur);
+// Oct 21: the currencies a year (and a board) can be kept in. Every amount uses the same European format with the symbol
+// after the figure ("1.234,56 €", "1.234,56 £", "1.234,56 R$"), like the rest of the app.
+export const CURRENCIES = Object.freeze([
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'GBP', symbol: '£', name: 'British pound' },
+  { code: 'BRL', symbol: 'R$', name: 'Brazilian real' },
+  { code: 'SEK', symbol: 'kr', name: 'Swedish krona' },
+]);
+export const CURRENCY_CODES = CURRENCIES.map((c) => c.code);
+/** The symbol shown after a figure: €, £, R$, kr (an unknown code shows the code). */
+export const currencySymbol = (cur) => (CURRENCIES.find((c) => c.code === cur) || { symbol: cur || '€' }).symbol;
+const sym = currencySymbol;
 const de = (v, digits) => Math.abs(v).toLocaleString('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
 /** "1.234,56 €" (EUR) or "1.234,56 kr" (others). */

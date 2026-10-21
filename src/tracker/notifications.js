@@ -20,7 +20,7 @@ export function whenOf(iso) {
   return { date: `${MON[d.getMonth()]} ${d.getDate()}`, time: dateOnly ? '' : `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}` };
 }
 
-export const alertText = (a) => `${a.item} (${a.group}) is over budget in ${MON[a.mi]}: ${fmtMoney(a.spent, 'EUR')} of ${fmtMoney(a.budget, 'EUR')}.`;
+export const alertText = (a) => `${a.item} (${a.group}) is over budget in ${MON[a.mi]}: ${fmtMoney(a.spent, a.currency || 'EUR')} of ${fmtMoney(a.budget, a.currency || 'EUR')}.`;
 
 // The dashboard URL that shows an alert's month and group (pages other than the dashboard link there).
 export const alertHref = (a) => '/?alert=' + encodeURIComponent([a.year, a.mi, a.group, a.type || 'expense'].join('|'));

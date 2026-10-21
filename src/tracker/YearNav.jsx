@@ -1,9 +1,16 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Button, Dropdown, InfoMessage, Modal, MonthSelector, RoundButton, YearAddButton, illustrations, useMobile } from '../ui/index.js';
+import { Button, CURRENCIES, Dropdown, InfoMessage, Modal, MonthSelector, RoundButton, YearAddButton, illustrations, useMobile } from '../ui/index.js';
 import { plus, x } from '../ui/icons.js';
 import { Icon } from '../ui/Icon.jsx';
 import { currentYearLabel } from './model.js';
+
+/** The board's currency: its newest year's (Oct 21), EUR for a board with no years. */
+export const boardCurrency = (model) => {
+  const ys = (model && model.DATA) || [];
+  const last = ys.slice().sort((a, b) => String(a.year).localeCompare(String(b.year))).pop();
+  return (last && last.currency) || 'EUR';
+};
 
 // A year before the current one is history: it can't be deleted from here.
 const isPastYear = (label) => { const n = parseInt(label, 10); return !isNaN(n) && n < parseInt(currentYearLabel(), 10); };
@@ -102,7 +109,7 @@ function AddYearModal({ open, onClose, onSubmit, model, canSave }) {
   const [label, setLabel] = useState('');
   const [currency, setCurrency] = useState('EUR');
   const [err, setErr] = useState(null);
-  useEffect(() => { if (open) { setLabel(options.length ? options[0].value : ''); setCurrency('EUR'); setErr(null); } }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (open) { setLabel(options.length ? options[0].value : ''); setCurrency(boardCurrency(model)); setErr(null); } }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
   const next = () => { const l = label.trim(); const e = yearError(model, l, canSave); if (e) return setErr(e); onSubmit(l, currency); };
   return (
     <Modal open={open} onClose={onClose} id="year-modal" illustration={illustrations.calendar} illustrationWidth={97} title="Set up a new year"
@@ -113,7 +120,7 @@ function AddYearModal({ open, onClose, onSubmit, model, canSave }) {
           <Dropdown id="year-modal-year" size="md" emptyOption={false} placeholder="Year" value={label} onChange={setLabel} options={options} /></div>
         <div className="fld"><label className="fld-label" htmlFor="year-modal-currency-trigger">Currency</label>
           <Dropdown id="year-modal-currency" size="md" emptyOption={false} value={currency} onChange={setCurrency}
-            options={[{ value: 'EUR', label: '€' }, { value: 'SEK', label: 'kr' }]} /></div>
+            options={CURRENCIES.map((c) => ({ value: c.code, label: c.symbol }))} /></div>
         {err && <InfoMessage message="danger" title={err} />}
       </div>
     </Modal>
@@ -123,7 +130,8 @@ function AddYearModal({ open, onClose, onSubmit, model, canSave }) {
 // Nav tabs - Add year (79:1242): close, year, currency, "Add year". It only validates; the Year budget panel creates the year.
 function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
   const [label, setLabel] = useState('');
-  // 229:19777 (Oct 12): both fields start empty ("Year", "Currency"); a year added without a currency is in EUR.
+  // 229:19777 (Oct 12): both fields start empty ("Year", "Currency"); a year added without a currency takes the board's
+  // currency (its newest year's, Oct 21), EUR on a new board.
   const [currency, setCurrency] = useState('');
   const [status, setStatus] = useState(canSave ? null : { err: true, text: "This view can't save a new year (no database access)." });
   const yearOptions = addableYears(model);
@@ -131,7 +139,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
   const submit = () => {
     const l = label.trim();
     const e = yearError(model, l, canSave); if (e) return setStatus({ err: true, text: e });
-    onSubmit(l, currency || 'EUR');
+    onSubmit(l, currency || boardCurrency(model)); // no pick: the board's currency (Oct 21; EUR for a new board)
   };
   return (
     <div className={'year-add-pill' + (open ? ' open' : '')} id="year-add-panel" role="dialog" aria-label="Add a year">
@@ -142,7 +150,7 @@ function AddYearPill({ open, onClose, onSubmit, model, canSave }) {
         </div>
         <div className="year-add-pill-currency">
           <Dropdown id="year-add-currency" ariaLabel="Currency" size="tiny" placeholder="Currency" value={currency} onChange={setCurrency} emptyOption={false}
-            options={[{ value: 'EUR', label: 'EUR' }, { value: 'SEK', label: 'SEK' }]} />
+            options={CURRENCIES.map((c) => ({ value: c.code, label: c.code }))} />
         </div>
       </div>
       <Button size="tiny" id="year-add-submit" onClick={submit}>Add</Button>

@@ -504,6 +504,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
         out.push({
           id: [y.year, mi, b.group, b.category || '', b.item].join('|'), year: y.year, mi, type: b.type, group: b.group, category: b.category || null, item: b.item,
           spent: Math.round(run * 100) / 100, budget: b.amount, at: crossed.createdAt || crossed.date || null, date: crossed.date || null,
+          currency: y.currency || 'EUR', // Oct 21: the alert reads in its year's currency
         });
       }
     }

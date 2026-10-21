@@ -39,7 +39,7 @@ export function convertSheet(data, opts = {}) {
   let negatives = 0, notes = 0, notesWithoutEntry = 0;
   for (const y of data.years || []) {
     const label = String(y.year);
-    years.push({ year: label, currency: y.currency === 'SEK' ? 'SEK' : 'EUR', createdAt: now, taxonomy: taxonomyOfYear(y) });
+    years.push({ year: label, currency: ['SEK', 'GBP', 'BRL'].includes(y.currency) ? y.currency : 'EUR', createdAt: now, taxonomy: taxonomyOfYear(y) });
     /** @type {{type:string, group:string|null, list:any[]}[]} */
     const groups = [
       { type: 'income', group: null, list: y.incomes || [] },

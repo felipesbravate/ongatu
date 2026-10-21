@@ -67,7 +67,7 @@ export function useAlerts(model: any) {
   const alerts = useMemo(() => (model ? model.budgetAlerts() : []), [model]);
   const items = useMemo(() => alerts.map((a: any) => ({
     id: a.id as string, date: whenOf(a.at), unread: !!read && !read.has(a.id),
-    text: `${a.item} (${a.group}) is over budget in ${MON[a.mi]}: ${fmtMoney(a.spent, 'EUR')} of ${fmtMoney(a.budget, 'EUR')}.`,
+    text: `${a.item} (${a.group}) is over budget in ${MON[a.mi]}: ${fmtMoney(a.spent, a.currency || 'EUR')} of ${fmtMoney(a.budget, a.currency || 'EUR')}.`,
   })), [alerts, read]);
   const markRead = useCallback((id: string) => {
     setRead((r) => {

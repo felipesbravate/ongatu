@@ -2,6 +2,7 @@
 import { Icon } from './Icon.jsx';
 import { Money } from './Money.jsx';
 import { Input } from './Field.jsx';
+import { currencySymbol } from './format.js';
 import { euro, arrowStraightDown, arrowStraightUp, minus } from './icons.js';
 
 // A comparison line (src/tracker/indicators.js): { head?, tone: good|bad|neutral, dir: up|down|flat|null, text }.
@@ -43,7 +44,7 @@ export function BalanceHero({ label, value, currency, trend, labelId, valueId, t
         </span>
         {currency === 'EUR'
           ? <span className="bh-euro" aria-hidden="true"><Icon icon={euro} size={24} /* Oct 17: 24 at every width (1161:1546) */ /></span>
-          : <span className="bh-code" aria-hidden="true">{currency === 'SEK' ? 'kr' : currency}</span>}
+          : <span className="bh-code" aria-hidden="true">{currencySymbol(currency)}</span>}
       </div>
       {trend && <TrendLine trend={trend} className="bh-details" id={trendId} />}
       {children}

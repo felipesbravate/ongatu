@@ -22,3 +22,12 @@ test('typed amounts are read the European way, and a plain dot decimal still wor
   assert.equal(parseAmount(''), 0);
   assert.equal(parseAmount(64.2), 64.2);
 });
+
+test('GBP and BRL amounts (Oct 21): European figure, symbol after', async () => {
+  const { fmtMoney, fmtMoneyShort, currencySymbol, CURRENCY_CODES } = await import('../src/ui/format.js');
+  assert.equal(fmtMoney(1234.5, 'GBP'), '1.234,50 £');
+  assert.equal(fmtMoney(-1234.5, 'BRL'), '-1.234,50 R$');
+  assert.equal(fmtMoneyShort(999.6, 'GBP'), '1.000 £');
+  assert.equal(currencySymbol('SEK'), 'kr');
+  assert.deepEqual(CURRENCY_CODES, ['EUR', 'GBP', 'BRL', 'SEK']);
+});

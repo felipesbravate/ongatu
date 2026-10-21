@@ -9,6 +9,8 @@
 //   phones a sheet); on the right (800) the cards, 16 apart:
 //     Board name: the name field; co-owners get the info message + "Save changes"; others / the personal board a
 //       disabled field and a line saying why.
+//     Currency (Oct 21): the board's currency (all its years); owners / co-owners can change it while the board has
+//       no entries. Budgets keep their numbers.
 //     Board sharing (co-owners): Sharing.jsx.
 //     Delete this board (co-owners): the confirm checkbox + Delete board. Leave board (others, and co-owners when
 //       another co-owner remains).
@@ -17,11 +19,11 @@ import { useRouter } from 'next/navigation';
 import '../../ui/okara.css';
 import '../../ui/shell.css';
 import '../notifications.css';
-import { ActionLink, AppHeader, BoardSwitcher, Button, Checkbox, InfoMessage, Input, RoundButton, useDismiss, useMobile, useToast } from '../../ui/index.js';
+import { ActionLink, AppHeader, BoardSwitcher, Button, Checkbox, CURRENCIES, Dropdown, InfoMessage, Input, RoundButton, useDismiss, useMobile, useToast } from '../../ui/index.js';
 import { Icon } from '../../ui/Icon.jsx';
 import { arrowStraightLeft, chevronDown, duo, information, user2 } from '../../ui/icons.js';
 import { AppSkeleton } from '../../ui/Loading.jsx';
-import { boardsApi, getActiveBoard, getMe, setActiveBoard } from '../api.js';
+import { api, boardsApi, getActiveBoard, getMe, setActiveBoard } from '../api.js';
 import { AccountNav, boardSwitcherProps } from '../AccountBar.jsx';
 import { useBudgetAlertsStandalone } from '../alerts.js';
 import { alertHref } from '../notifications.js';
@@ -69,6 +71,20 @@ export default function BoardSettingsApp() {
   }, [boards.boards, boardId]);
 
   const people = useBoardPeople(boardId || null);
+  // Currency (Oct 21): the selected board's years and how many entries it has (zero = the currency can still change).
+  const [money, setMoney] = useState(null); // { years: [{ id, data }], entries: number } | { error }
+  const [cur, setCur] = useState('');
+  const dbBase = (id) => (id ? `/api/boards/${id}/db/` : '/api/db/');
+  const loadMoney = useCallback(async (id) => {
+    try {
+      const [y, e] = await Promise.all([api('GET', dbBase(id) + 'years'), api('GET', dbBase(id) + 'entries')]);
+      const years = (y && y.docs) || [];
+      setMoney({ years, entries: ((e && e.docs) || []).length });
+      const newest = years.slice().sort((a, b) => String(a.data.year).localeCompare(String(b.data.year))).pop();
+      setCur((newest && newest.data.currency) || 'EUR');
+    } catch (err) { setMoney({ error: err.message || "Couldn't load the board." }); }
+  }, []);
+  useEffect(() => { if (boardId !== undefined) { setMoney(null); loadMoney(boardId); } }, [boardId, loadMoney]);
   const board = boardId ? people.board : null;
   useEffect(() => { if (board) setName(board.name); }, [board]);
   useEffect(() => { setSure(false); }, [boardId]);
@@ -88,6 +104,20 @@ export default function BoardSettingsApp() {
     setBusy('rename');
     try { await boardsApi.rename(boardId, n); showToast('Changes saved.', 'success'); await Promise.all([people.reload(), boards.reload()]); }
     catch (e) { showToast(e.message || "Couldn't save your changes.", 'fail'); }
+    finally { setBusy(''); }
+  };
+  const canEditMoney = !boardId || isCo;
+  const yearCurrencies = money && money.years ? [...new Set(money.years.map((d) => d.data.currency || 'EUR'))] : [];
+  const zeroed = !!money && !money.error && money.entries === 0;
+  const changeCurrency = async () => {
+    if (!money || !money.years || !zeroed || !canEditMoney) return;
+    setBusy('currency');
+    try {
+      // Every year of the board moves to the new currency (the year docs keep everything else).
+      for (const d of money.years) if ((d.data.currency || 'EUR') !== cur) await api('PUT', dbBase(boardId) + 'years/' + encodeURIComponent(d.id), { ...d.data, currency: cur });
+      showToast('Currency updated.', 'success');
+      await loadMoney(boardId);
+    } catch (e) { showToast(e.message || "Couldn't change the currency.", 'fail'); }
     finally { setBusy(''); }
   };
   const leaveOrDelete = (kind) => confirm({
@@ -117,6 +147,21 @@ export default function BoardSettingsApp() {
         <div className="jb-name-actions">
           <InfoMessage className="jb-info" icon={information}>{`Renaming this board won't change your active workspace. To switch boards, use the selector ${mobile ? 'in the top menu' : 'on the left'}.`}</InfoMessage>
           <Button id="board-rename" disabled={busy === 'rename' || !name.trim() || name.trim() === board.name} onClick={rename}>Save changes</Button>
+        </div>
+      )}
+    </BoardCard>
+  );
+  const currencyCard = money && !money.error && money.years.length > 0 && (
+    <BoardCard id="board-sec-currency" className={'jb-currency-card' + (canEditMoney && zeroed ? ' is-co' : ' is-locked')} titleId="board-currency-title" title="Currency"
+      text={!canEditMoney ? 'Only owners and co-owners can change the board currency.'
+        : zeroed ? 'This board has no entries yet, so you can still change its currency. Budgets keep their amounts.'
+          : `The currency can only be changed while the board has no entries. This board has ${money.entries} ${money.entries === 1 ? 'entry' : 'entries'}.`}>
+      <Dropdown id="board-currency" size="md" emptyOption={false} ariaLabel="Board currency" value={cur} onChange={setCur} disabled={!canEditMoney || !zeroed || busy === 'currency'}
+        options={CURRENCIES.map((c) => ({ value: c.code, label: `${c.symbol}  ${c.name} (${c.code})` }))} />
+      {canEditMoney && zeroed && yearCurrencies.length > 1 && <p className="jb-small">{`The years of this board use ${yearCurrencies.join(' and ')}. Saving puts all of them in the currency above.`}</p>}
+      {canEditMoney && zeroed && (
+        <div className="jb-name-actions">
+          <Button id="board-currency-save" disabled={busy === 'currency' || (yearCurrencies.length === 1 && yearCurrencies[0] === cur)} onClick={changeCurrency}>Save changes</Button>
         </div>
       )}
     </BoardCard>
@@ -163,7 +208,7 @@ export default function BoardSettingsApp() {
                 onClick={(e) => { if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { e.preventDefault(); router.push('/'); } }}>Back to dashboard</ActionLink>}
           <div className="jb-heading">
             <h1 className="jb-title">Board settings</h1>
-            <p className="jb-sub">Manage your board name, member access, and permissions.</p>
+            <p className="jb-sub">Manage your board name, currency, member access, and permissions.</p>
           </div>
         </header>
         <div className="jb-content">
@@ -174,7 +219,7 @@ export default function BoardSettingsApp() {
           <div className="jb-cards">
             {boardId && !board
               ? <BoardCard className="jb-name-card"><p className="jb-small" role="status">{people.error || 'Loading…'}</p></BoardCard>
-              : <>{nameCard}{sharingCard}{deleteCard}{leaveCard}</>}
+              : <>{nameCard}{currencyCard}{sharingCard}{deleteCard}{leaveCard}</>}
           </div>
         </div>
       </div>

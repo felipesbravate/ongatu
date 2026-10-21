@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ActionLink, BalanceHero, Button, Expander, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
+import { ActionLink, BalanceHero, Button, Expander, MenuList, RoundButton, useDismiss, useMobile, EntriesTooltip, EntryCounter, ExpenseCard, KpiCard, TrendLine, TONE_COLOR, Label, currencySymbol, CURRENCY_CODES, Meter, BreakdownRow, Segments, TooltipEntryItem, fmtFigure, fmtMoney, fmtMoneyShort } from '../ui/index.js';
 import { actions as actionsIcon, euro, arrowStraightDown, arrowStraightUp, edit, minus, plus, reload } from '../ui/icons.js';
 import { EXP_GROUPS, GROUP_COLOR, MONTH_ABBR, MONTH_NAMES } from './model.js';
 
@@ -329,7 +329,7 @@ function LatestEntry({ entry, currency, mobile }) {
         <span className="tle-value">
           {currency === 'EUR'
             ? <><span className="tle-num">{(neg ? '-' : '') + fmtFigure(Math.abs(entry.amount))}</span><Icon icon={euro} size={12} className="tle-euro" /></>
-            : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currency === 'SEK' ? 'kr' : currency}`}</span>}
+            : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currencySymbol(currency)}`}</span>}
         </span>
       </div>
     );
@@ -341,7 +341,7 @@ function LatestEntry({ entry, currency, mobile }) {
       <span className="tle-dot" aria-hidden="true"><i /></span>
       {currency === 'EUR'
         ? <><span className="tle-num">{(neg ? '-' : '') + fmtFigure(Math.abs(entry.amount))}</span><span className="tle-num">€</span></>
-        : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currency === 'SEK' ? 'kr' : currency}`}</span>}
+        : <span className="tle-num">{`${fmtFigure(entry.amount)} ${currencySymbol(currency)}`}</span>}
     </div>
   );
 }
@@ -453,8 +453,8 @@ export function YearOverYear({ model, onYear }) {
         <p className="yoy-sub">Annual totals, shown separately by currency, so different currencies are never summed together.</p>
       </div>
       <div className="yoy">
-        <YoYCard model={model} cur="SEK" onYear={onYear} />
-        <YoYCard model={model} cur="EUR" onYear={onYear} />
+        {/* Oct 21: one card per currency the board's years use (SEK first as before, then the others). */}
+        {['SEK', ...CURRENCY_CODES.filter((c) => c !== 'SEK')].filter((c) => model.DATA.some((y) => y.currency === c)).map((c) => <YoYCard key={c} model={model} cur={c} onYear={onYear} />)}
       </div>
     </section>
   );
@@ -465,7 +465,7 @@ function YoYCard({ model, cur, onYear }) {
   const years = model.DATA.filter((y) => y.currency === cur);
   const wrapRef = useRef(null);
   const [tip, setTip] = useTip();
-  const id = cur === 'SEK' ? 'yoy-sek' : 'yoy-eur';
+  const id = 'yoy-' + String(cur).toLowerCase(); // yoy-sek, yoy-eur (ids the tests use), yoy-gbp, yoy-brl
   const lbl = years.map((y) => y.year).sort();
   const title = lbl.length ? (lbl.length > 1 ? lbl[0] + '–' + lbl[lbl.length - 1] : lbl[0]) + ' · ' + cur : cur;
   const n = years.length;

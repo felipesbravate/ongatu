@@ -264,3 +264,9 @@ html .jb-sharing-cta:not(#z) .ds-action-link{ gap:4px; }
   html #share-modal:not(#z) .jb-tag{ padding:0 8px; font-size:14px; line-height:16px; letter-spacing:-0.28px; }
   html #share-modal:not(#z) .jb-role{ width:104px; flex-basis:104px; justify-self:start; }
 }
+
+/* Currency card (Oct 21): the board's currency in a Medium dropdown across the card; "Save changes" on the right (phones:
+   full width, as the name card). Locked when the board has entries or for members who aren't owners. */
+html .jb-currency-card:not(#z) .ds-dd{ width:100%; }
+html .jb-currency-card:not(#z) .jb-name-actions{ justify-content:flex-end; }
+html .jb-currency-card:not(#z) .jb-small{ margin:0; color:var(--text-secondary); font-size:var(--type-body-small-regular-size); line-height:var(--type-body-small-regular-lh); }
