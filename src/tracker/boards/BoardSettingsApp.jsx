@@ -159,11 +159,11 @@ export default function BoardSettingsApp() {
       <Dropdown id="board-currency" size="md" emptyOption={false} ariaLabel="Board currency" value={cur} onChange={setCur} disabled={!canEditMoney || !zeroed || busy === 'currency'}
         options={CURRENCIES.map((c) => ({ value: c.code, label: `${c.symbol}  ${c.name} (${c.code})` }))} />
       {canEditMoney && zeroed && yearCurrencies.length > 1 && <p className="jb-small">{`The years of this board use ${yearCurrencies.join(' and ')}. Saving puts all of them in the currency above.`}</p>}
-      {canEditMoney && zeroed && (
-        <div className="jb-name-actions">
-          <Button id="board-currency-save" disabled={busy === 'currency' || (yearCurrencies.length === 1 && yearCurrencies[0] === cur)} onClick={changeCurrency}>Save changes</Button>
-        </div>
-      )}
+      {/* Oct 21 (Felipe): the button is always there; with entries on the board (or for members who aren't owners) the
+          whole block is locked: the dropdown and the button both disabled. */}
+      <div className="jb-name-actions">
+        <Button id="board-currency-save" disabled={!canEditMoney || !zeroed || busy === 'currency' || (yearCurrencies.length === 1 && yearCurrencies[0] === cur)} onClick={changeCurrency}>Save changes</Button>
+      </div>
     </BoardCard>
   );
   const sharingCard = isCo && (
