@@ -8,6 +8,8 @@ import { useFonts, Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600S
 import { Geist_300Light, Geist_400Regular, Geist_500Medium, Geist_600SemiBold } from '@expo-google-fonts/geist'; // Oct 19: Display, Heading, Label/Tab
 import { MartianMono_300Light, MartianMono_400Regular, MartianMono_500Medium, MartianMono_600SemiBold } from '@expo-google-fonts/martian-mono';
 import { SessionProvider, useSession } from '@/lib/session';
+import { ToastProvider } from '@/components/Toast';
+import { BusyProvider } from '@/components/BusyOverlay';
 import { color } from '@/theme/tokens';
 
 SplashScreen.preventAutoHideAsync();
@@ -42,8 +44,12 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <SessionProvider>
-          <StatusBar style="dark" />
-          <Gate />
+          <ToastProvider>
+            <BusyProvider>
+              <StatusBar style="dark" />
+              <Gate />
+            </BusyProvider>
+          </ToastProvider>
         </SessionProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

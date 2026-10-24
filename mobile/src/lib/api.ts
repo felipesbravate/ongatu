@@ -24,9 +24,16 @@ export async function api<T = any>(method: string, path: string, body?: unknown)
 }
 
 export const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetDefaults'] as const;
-export type Collections = Record<(typeof COLLECTIONS)[number], any[]>;
+export type CollectionName = (typeof COLLECTIONS)[number];
+export type Collections = Record<CollectionName, any[]>;
 
 export async function loadAll(): Promise<Collections> {
   const lists = await Promise.all(COLLECTIONS.map((c) => api<{ docs: { id: string; data: any }[] }>('GET', '/api/db/' + c)));
   return Object.fromEntries(COLLECTIONS.map((c, i) => [c, lists[i].docs.map((d) => ({ id: d.id, ...d.data }))])) as Collections;
+}
+
+/** Reloads only these collections (after a write()). */
+export async function loadSome(cols: CollectionName[]): Promise<Partial<Collections>> {
+  const lists = await Promise.all(cols.map((c) => api<{ docs: { id: string; data: any }[] }>('GET', '/api/db/' + c)));
+  return Object.fromEntries(cols.map((c, i) => [c, lists[i].docs.map((d) => ({ id: d.id, ...d.data }))]));
 }
