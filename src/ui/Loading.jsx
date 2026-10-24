@@ -1,6 +1,8 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppHeader, Logo } from './Brand.jsx';
+import { Illustration } from './Modal.jsx';
+import { calculating } from './illustrations.js';
 import './okara.css';
 import './loading.css';
 
@@ -59,10 +61,11 @@ export function AppSkeleton({ error, account = false }) {
   </>;
 }
 
-// Busy overlay (Oct 24, Felipe): saving a month's budget or many entries makes the app recalculate everything, and the
-// screen can't be used for a few seconds. A modal <dialog> (top layer, so it covers open panels and modals too; the
-// page behind is inert, Escape does nothing) on the modal scrim with a card: the spinner, what is happening, and
-// "This may take a few seconds." The ring turns with a CSS transform, so it keeps turning while the page recalculates.
+// Busy overlay (Oct 24, Felipe; Ongatu 1106:41629 desktop / 1106:41718 phones): saving a month's budget or many entries
+// makes the app recalculate everything, and the screen can't be used for a few seconds. A modal <dialog> (top layer, so
+// it covers open panels and modals too; the page behind is inert, Escape does nothing) on surface/modal with the Modal
+// card: the Calculating illustration (72 high), the title in Heading/XL and "This may take a few seconds." in
+// Body/Default/Regular, text/secondary, all centred.
 export function BusyOverlay({ message, hint = 'This may take a few seconds.' }) {
   const ref = useRef(null);
   useEffect(() => {
@@ -72,11 +75,12 @@ export function BusyOverlay({ message, hint = 'This may take a few seconds.' }) 
   }, []);
   return <dialog ref={ref} className="ds-busy" id="busy-overlay" aria-busy="true" aria-labelledby="busy-overlay-title" onCancel={(e) => e.preventDefault()}>
     <div className="ds-busy-card" role="status">
-      <Spinner />
+      <div className="ds-busy-art"><Illustration art={calculating} width={BUSY_ART_W} /></div>
       <div className="ds-busy-text"><p className="ds-busy-title" id="busy-overlay-title">{message}</p><p className="ds-busy-hint">{hint}</p></div>
     </div>
   </dialog>;
 }
+const BUSY_ART_W = Math.round((72 * calculating.width / calculating.height) * 100) / 100; // 72 high
 
 const nextPaint = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 0))));
 

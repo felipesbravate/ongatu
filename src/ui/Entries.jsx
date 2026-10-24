@@ -1,3 +1,4 @@
+import { useCallback, useLayoutEffect, useRef } from 'react';
 import { Icon } from './Icon.jsx';
 import { x, chart } from './icons.js';
 import { Money } from './Money.jsx';
@@ -38,6 +39,17 @@ export function TooltipEntryItem({ name, date, amount, currency, estimate, prefi
 export function EntriesTooltip({ visible, style, footnote, children, tipRef, budget, budgetLabel = 'Budget set', currency }) {
   const hasLines = Array.isArray(children) ? children.length > 0 : !!children;
   const empty = budget != null && !hasLines && !footnote;
+  // Oct 24: a long list scrolls inside the tooltip (the header and footnote stay put); a fade at the top / bottom edge
+  // says there's more that way. The list starts at the top each time the tooltip opens on another figure.
+  const listRef = useRef(null);
+  const edges = useCallback(() => {
+    const el = listRef.current;
+    if (!el) return;
+    el.classList.toggle('can-up', el.scrollTop > 1);
+    el.classList.toggle('can-down', el.scrollTop + el.clientHeight < el.scrollHeight - 1);
+  }, []);
+  useLayoutEffect(edges);
+  useLayoutEffect(() => { if (listRef.current) { listRef.current.scrollTop = 0; edges(); } }, [style && style.left, style && style.top, edges]);
   return (
     <div id="note-tip" ref={tipRef} className={[visible && 'visible', empty && 'is-empty'].filter(Boolean).join(' ') || undefined} style={style}>
       {budget != null && (
@@ -46,7 +58,7 @@ export function EntriesTooltip({ visible, style, footnote, children, tipRef, bud
           <hr className="tip-head-divider" />
         </>
       )}
-      {hasLines && <div className="tip-entries">{children}</div>}
+      {hasLines && <div className="tip-entries" ref={listRef} onScroll={edges}>{children}</div>}
       {empty && <div className="tip-empty">There's no entries yet.</div>}
       {footnote && <div className="tip-foot">{footnote}</div>}
     </div>

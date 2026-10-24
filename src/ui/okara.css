@@ -4299,3 +4299,16 @@ html[data-theme] #add-panel #doc-status:not(#z):not(#y){ flex:1 1 220px; min-wid
 
 /* Board dropdown, locked (Oct 21): on Board settings the header pill is disabled and pale (opacity/disabled), no hover. */
 html[data-theme] .ds-board-dd:disabled:not(#z):not(#y){ opacity:var(--opacity-disabled); cursor:default; pointer-events:none; }
+
+/* Entries tooltip, long lists (Oct 24): the tooltip is at most 400 high (and the window less 8 a side); the entries scroll
+   inside it while the "Budget set" header and the footnote stay. A fade on the edge that has more; a thin light scrollbar
+   in the 8px right padding; scrolling stops at the ends instead of moving the page. */
+html #note-tip:not(#z){ display:flex; flex-direction:column; max-height:min(400px, calc(100vh - 16px)); }
+html #note-tip:not(#z) > .tip-head, html #note-tip:not(#z) > .tip-head-divider, html #note-tip:not(#z) > .tip-foot, html #note-tip:not(#z) > .tip-empty{ flex:none; }
+html #note-tip:not(#z) .tip-entries{ flex:0 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; margin-right:calc(-1 * var(--space-xs)); padding-right:var(--space-xs);
+  scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.28) transparent; --tip-fade:24px; }
+html #note-tip:not(#z) .tip-entries::-webkit-scrollbar{ width:4px; }
+html #note-tip:not(#z) .tip-entries::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.28); border-radius:999px; }
+html #note-tip:not(#z) .tip-entries.can-down{ -webkit-mask-image:linear-gradient(#000 calc(100% - var(--tip-fade)), transparent); mask-image:linear-gradient(#000 calc(100% - var(--tip-fade)), transparent); }
+html #note-tip:not(#z) .tip-entries.can-up{ -webkit-mask-image:linear-gradient(transparent, #000 var(--tip-fade)); mask-image:linear-gradient(transparent, #000 var(--tip-fade)); }
+html #note-tip:not(#z) .tip-entries.can-up.can-down{ -webkit-mask-image:linear-gradient(transparent, #000 var(--tip-fade), #000 calc(100% - var(--tip-fade)), transparent); mask-image:linear-gradient(transparent, #000 var(--tip-fade), #000 calc(100% - var(--tip-fade)), transparent); }

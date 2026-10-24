@@ -25,14 +25,20 @@
 @media(prefers-reduced-motion:reduce){.ds-spinner{animation-duration:2.4s}}
 .login-spinner{display:flex;flex-direction:column;align-items:center;gap:var(--space-md);min-height:160px;justify-content:center;text-align:center}
 .login-loading-overlay{align-items:center;text-align:center}
-/* Oct 24: busy overlay (Loading.jsx BusyOverlay). Modal scrim, a 320 card on surface/primary, radius/md, Floating shadow,
-   spinner over Body/Default/Bold + Body/Small/Regular secondary, centred. */
-dialog.ds-busy{border:none;padding:0;margin:auto;background:transparent;max-width:calc(100vw - 2 * var(--space-md));overflow:visible;outline:none}
-dialog.ds-busy::backdrop{background:var(--surface-modal, rgba(22,21,15,.32));animation:ds-fade-in .2s cubic-bezier(.2,0,0,1)}
+/* Oct 24: busy overlay (Loading.jsx BusyOverlay; Ongatu 1106:41629 / 1106:41718). Scrim surface/modal; the Modal card:
+   480 wide (phones: the screen less 16 a side), min 240 high, surface/primary, radius/lg 24, shadow 0 4 12 ink@16%,
+   padding 8 40 16, content centred: the Calculating illustration 72 high, 24 above the text; title Heading/XL and the
+   hint Body/Default/Regular text/secondary, 8 apart. */
+dialog.ds-busy{border:none;padding:0;margin:auto;background:transparent;width:480px;max-width:calc(100vw - 32px);overflow:visible;outline:none}
+dialog.ds-busy::backdrop{background:var(--surface-modal, rgba(31,30,25,.88));animation:ds-fade-in .2s cubic-bezier(.2,0,0,1)}
 dialog.ds-busy[open]{animation:ds-busy-in .2s cubic-bezier(.2,0,0,1)}
 @keyframes ds-busy-in{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
-.ds-busy-card{width:320px;max-width:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:var(--space-md);padding:var(--space-xl) var(--space-lg);border-radius:var(--radius-md);background:var(--surface-primary);box-shadow:0 0 8px color-mix(in srgb, var(--text-primary) 8%, transparent);text-align:center}
-.ds-busy-text{display:flex;flex-direction:column;gap:var(--space-tn)}
-.ds-busy-title{margin:0;color:var(--text-primary);font-family:var(--type-body-default-bold-family, var(--font-sans));font-size:var(--type-body-default-bold-size);font-weight:var(--type-body-default-bold-weight);line-height:var(--type-body-default-bold-lh);letter-spacing:var(--type-body-default-bold-ls)}
-.ds-busy-hint{margin:0;color:var(--text-secondary);font-family:var(--font-sans);font-size:var(--type-body-small-regular-size);font-weight:var(--type-body-small-regular-weight);line-height:var(--type-body-small-regular-lh);letter-spacing:var(--type-body-small-regular-ls)}
-@media(prefers-reduced-motion:reduce){dialog.ds-busy[open],dialog.ds-busy::backdrop{animation:none}}
+.ds-busy-card{width:100%;min-height:240px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:8px 40px 16px;border-radius:var(--radius-lg, 24px);background:var(--surface-primary);box-shadow:0 4px 12px 0 var(--effect-shadow-86-82-59-160, rgba(22,21,15,.16));text-align:center;overflow:hidden}
+.ds-busy-art{display:flex;align-items:center;justify-content:center;height:72px}
+.ds-busy-art .ds-illustration{display:block;transform-origin:50% 85%;animation:ds-busy-wobble 1.4s cubic-bezier(.45,0,.55,1) infinite}
+/* Oct 24b: the calculator wobbles while the save runs (a transform, so it keeps moving while the page recalculates). */
+@keyframes ds-busy-wobble{0%,100%{transform:rotate(0)}20%{transform:rotate(-6deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+.ds-busy-text{display:flex;flex-direction:column;gap:8px;width:100%;word-break:break-word}
+.ds-busy-title{margin:0;color:var(--text-primary);font-family:var(--type-heading-xl-family, var(--font-sans));font-size:var(--type-heading-xl-size);font-weight:var(--type-heading-xl-weight);line-height:var(--type-heading-xl-lh);letter-spacing:var(--type-heading-xl-ls)}
+.ds-busy-hint{margin:0;color:var(--text-secondary);font-family:var(--type-body-default-regular-family, var(--font-sans));font-size:var(--type-body-default-regular-size);font-weight:var(--type-body-default-regular-weight);line-height:var(--type-body-default-regular-lh);letter-spacing:var(--type-body-default-regular-ls)}
+@media(prefers-reduced-motion:reduce){dialog.ds-busy[open],dialog.ds-busy::backdrop,.ds-busy-art .ds-illustration{animation:none}}

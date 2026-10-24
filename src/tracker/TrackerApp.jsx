@@ -15,7 +15,7 @@ import { planDeleteSub, planRename } from './rename.js';
 import { useProfile } from './profile.js';
 import { BudgetPanel } from './BudgetPanel.jsx';
 import { ExpenseStrip, HeroLeft, TrackerCard, TrendChart, YearOverYear } from './Dashboard.jsx';
-import { MONTH_ABBR, addTypeToTaxonomy, budgetDefaultDocId, createModel, currentYearLabel, foldLegacyCustom, parseAmount, yearsFromDocs } from './model.js';
+import { MONTH_ABBR, MONTH_NAMES, addTypeToTaxonomy, budgetDefaultDocId, createModel, currentYearLabel, foldLegacyCustom, parseAmount, yearsFromDocs } from './model.js';
 import { YearNav } from './YearNav.jsx';
 
 import { useAppNavigation } from './AppNavigation.jsx';
@@ -227,7 +227,7 @@ export default function TrackerApp() {
       }
       // Many rows (Oct 24): one reload and one recalculation at the end (db.batch), behind the busy overlay from 5 rows.
       const write = () => db.batch(() => Promise.allSettled(docs.map((d) => db.collection('entries').add(d))));
-      const results = docs.length >= BUSY_ROWS ? await busy(`Adding ${docs.length} entries…`, write) : await write();
+      const results = docs.length >= BUSY_ROWS ? await busy(`Adding ${docs.length} entries`, write) : await write();
       const ok = [], failed = [];
       results.forEach((r, i) => (r.status === 'fulfilled' ? ok : failed).push(i));
       const added = ok.map((i) => docs[i]);
@@ -296,7 +296,7 @@ export default function TrackerApp() {
     ]));
     const undo = async () => {
       hideYearToast();
-      await busy(`Restoring ${snap.year}…`, () => db.batch(async () => {
+      await busy(`Restoring ${snap.year}`, () => db.batch(async () => {
       await db.collection('years').add({ year: snap.year, currency: snap.currency, createdAt: snap.createdAt, ...(snap.taxonomy ? { taxonomy: snap.taxonomy } : {}) }).catch(() => {});
       for (const e of snap.entrySnaps) { const { id, ...rest } = e; await db.collection('entries').add(rest).catch(() => {}); }
       for (const o of snap.overrideSnaps) { const { id, ...rest } = o; await db.collection('overrides').add(rest).catch(() => {}); }
@@ -319,7 +319,7 @@ export default function TrackerApp() {
       // Types added in the panel ("+ Add type") join the new year's taxonomy.
       const tx = mergeTypes(copy(modelRef.current.taxonomyForYear(label)), rows.filter((r) => r.added));
       // Oct 24: the year and its budgets reload once at the end (db.batch), behind the busy overlay.
-      await busy(`Creating ${label}…`, () => db.batch(async () => {
+      await busy(`Creating ${label}`, () => db.batch(async () => {
         await db.collection('years').add({ year: label, currency, createdAt: new Date().toISOString(), taxonomy: tx });
         await inPool(rows, async (r) => {
           const amount = Math.round(parseAmount(r.value) * 100) / 100; // typed in European format (1.163,59)
@@ -384,7 +384,7 @@ export default function TrackerApp() {
     const old = m.BUDGETS.filter((b) => b.year === label && b.monthIndex === mi);
     try {
       // Oct 24: the writes go out a few at a time and the budgets reload once at the end (db.batch), behind the overlay.
-      await busy(`Saving the ${MONTH_ABBR[mi]} ${label} budget…`, () => db.batch(async () => {
+      await busy(`Saving the ${MONTH_NAMES[mi]} ${label} budget`, () => db.batch(async () => {
         await Promise.all(old.map((b) => db.doc('budgets/' + b.id).delete().catch(() => {})));
         await inPool(rows, (r) => {
           const amount = Math.round(parseAmount(r.value) * 100) / 100;
