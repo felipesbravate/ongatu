@@ -57,7 +57,8 @@ function AccountNavOwn(props) {
   return <AccountNavView {...props} n={n} />;
 }
 
-function AccountNavView({ me, profile, onOpenAlert, n }) {
+// `boardLocked` (Oct 21): on Board settings the header's board pill is disabled and pale (the page has its own picker).
+function AccountNavView({ me, profile, onOpenAlert, n, boardLocked }) {
   const router = useRouter();
   const [open, setOpen] = useState(null); // 'notif' | 'user' | 'board' | null
   const [dialog, setDialog] = useState(null); // 'admin'
@@ -74,7 +75,7 @@ function AccountNavView({ me, profile, onOpenAlert, n }) {
   ];
   return (
     <>
-      <UserNav board={<BoardMenu boards={boards} firstName={name} open={open === 'board'} onToggle={() => setOpen((o) => (o === 'board' ? null : 'board'))} onClose={close} />}>
+      <UserNav board={<BoardMenu boards={boards} firstName={name} locked={!!boardLocked} open={open === 'board' && !boardLocked} onToggle={() => setOpen((o) => (o === 'board' ? null : 'board'))} onClose={close} />}>
         <Notification open={open === 'notif'} unread={n.hasNew} onClose={close} seeAllHref="/notifications"
           onOpenPage={() => { if (location.pathname !== '/notifications') router.push('/notifications'); }}
           onToggle={() => { setOpen((o) => (o === 'notif' ? null : 'notif')); if (open !== 'notif') { n.reload(); n.markSeen(); } }}>
@@ -111,7 +112,7 @@ export function boardSwitcherProps(boards, firstName) {
   };
 }
 
-function BoardMenu({ boards, firstName, open, onToggle, onClose }) {
+function BoardMenu({ boards, firstName, locked, open, onToggle, onClose }) {
   const ref = useRef(null);
   const mobile = useMobile();
   useDismiss(open && !mobile, ref, onClose);
@@ -119,7 +120,8 @@ function BoardMenu({ boards, firstName, open, onToggle, onClose }) {
   const name = current ? current.name : personalBoardName(firstName);
   return (
     <div className={'ds-board-menu' + (open ? ' is-open' : '') + (mobile ? ' is-mobile' : '')} ref={ref}>
-      <BoardDropdown id="board-dd" name={name} kind={current ? 'joint' : 'personal'} mobile={mobile} open={open} onToggle={onToggle} />
+      <BoardDropdown id="board-dd" name={name} kind={current ? 'joint' : 'personal'} mobile={mobile} open={open} onToggle={locked ? undefined : onToggle}
+        disabled={locked} className={locked ? 'is-locked' : undefined} title={locked ? 'Pick the board on this page' : undefined} />
       <BoardSwitcher {...p} mobile={mobile} open={open} onClose={onClose} />
     </div>
   );

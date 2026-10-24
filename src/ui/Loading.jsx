@@ -1,4 +1,5 @@
 'use client';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppHeader, Logo } from './Brand.jsx';
 import './okara.css';
 import './loading.css';
@@ -56,4 +57,37 @@ export function AppSkeleton({ error, account = false }) {
       </div>
     </main>
   </>;
+}
+
+// Busy overlay (Oct 24, Felipe): saving a month's budget or many entries makes the app recalculate everything, and the
+// screen can't be used for a few seconds. A modal <dialog> (top layer, so it covers open panels and modals too; the
+// page behind is inert, Escape does nothing) on the modal scrim with a card: the spinner, what is happening, and
+// "This may take a few seconds." The ring turns with a CSS transform, so it keeps turning while the page recalculates.
+export function BusyOverlay({ message, hint = 'This may take a few seconds.' }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const d = ref.current;
+    if (d && !d.open) { try { d.showModal(); } catch { d.setAttribute('open', ''); } }
+    return () => { if (d && d.open) d.close(); };
+  }, []);
+  return <dialog ref={ref} className="ds-busy" id="busy-overlay" aria-busy="true" aria-labelledby="busy-overlay-title" onCancel={(e) => e.preventDefault()}>
+    <div className="ds-busy-card" role="status">
+      <Spinner />
+      <div className="ds-busy-text"><p className="ds-busy-title" id="busy-overlay-title">{message}</p><p className="ds-busy-hint">{hint}</p></div>
+    </div>
+  </dialog>;
+}
+
+const nextPaint = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 0))));
+
+/** [overlay, run]: run(message, fn) shows the overlay, lets it paint, runs fn, and hides it once the result is drawn. */
+export function useBusy() {
+  const [message, setMessage] = useState(null);
+  const run = useCallback(async (msg, fn) => {
+    setMessage(msg);
+    await nextPaint(); // the overlay is on screen before the heavy part starts
+    try { return await fn(); }
+    finally { await nextPaint(); await nextPaint(); setMessage(null); } // the recalculated screen is drawn first
+  }, []);
+  return [message ? <BusyOverlay message={message} /> : null, run];
 }

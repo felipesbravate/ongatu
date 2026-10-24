@@ -19,11 +19,20 @@ import { MONTH_ABBR, addTypeToTaxonomy, budgetDefaultDocId, createModel, current
 import { YearNav } from './YearNav.jsx';
 
 import { useAppNavigation } from './AppNavigation.jsx';
-import { AppSkeleton } from '../ui/Loading.jsx';
+import { AppSkeleton, useBusy } from '../ui/Loading.jsx';
 
 const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetDefaults'];
 const docsOf = (snap) => snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 const copy = (o) => JSON.parse(JSON.stringify(o));
+
+// Oct 24: from this many rows a save shows the busy overlay; writes go out POOL at a time (order doesn't matter).
+const BUSY_ROWS = 5;
+const POOL = 6;
+async function inPool(items, fn) {
+  let next = 0;
+  const worker = async () => { while (next < items.length) { const i = next++; await fn(items[i], i); } };
+  await Promise.all(Array.from({ length: Math.min(POOL, items.length) }, worker));
+}
 
 export default function TrackerApp() {
   const [me, setMe] = useState(null);
@@ -60,6 +69,7 @@ export default function TrackerApp() {
   const [addingYear, setAddingYear] = useState(false);
   const [yearToast, setYearToast] = useState(null); // { message, undo }
   const [toastEl, showToast] = useToast();
+  const [busyEl, busy] = useBusy(); // the "may take a few seconds" overlay for big saves (Oct 24)
   const [sharing, setSharing] = useState(false); // the Share panel (boards-b's SharePanel) on a joint board
   const yearToastTimer = useRef(null);
   // The line under the greeting: 211:18753 (desktop) adds "Track your spending…"; phones (898:9152) keep the short one.
@@ -215,7 +225,9 @@ export default function TrackerApp() {
         focusMonthOf(docs); showToast(toastFor(docs), 'success');
         return { failed: [] };
       }
-      const results = await Promise.allSettled(docs.map((d) => db.collection('entries').add(d)));
+      // Many rows (Oct 24): one reload and one recalculation at the end (db.batch), behind the busy overlay from 5 rows.
+      const write = () => db.batch(() => Promise.allSettled(docs.map((d) => db.collection('entries').add(d))));
+      const results = docs.length >= BUSY_ROWS ? await busy(`Adding ${docs.length} entries…`, write) : await write();
       const ok = [], failed = [];
       results.forEach((r, i) => (r.status === 'fulfilled' ? ok : failed).push(i));
       const added = ok.map((i) => docs[i]);
@@ -276,18 +288,20 @@ export default function TrackerApp() {
     const budgetSnaps = m.BUDGETS.filter((b) => b.year === label).map((b) => ({ ...b }));
     const extraDoc = fdata.years.find((e) => e.id === y.dbId) || {};
     const snap = { year: label, currency: y.currency, createdAt: extraDoc.createdAt || new Date().toISOString(), entrySnaps, overrideSnaps, budgetSnaps, taxonomy: extraDoc.taxonomy || null };
-    await Promise.all([
+    await db.batch(() => Promise.all([
       ...entrySnaps.map((e) => db.doc('entries/' + e.id).delete().catch(() => {})),
       ...overrideSnaps.map((o) => db.doc('overrides/' + o.id).delete().catch(() => {})),
       ...budgetSnaps.map((b) => db.doc('budgets/' + b.id).delete().catch(() => {})),
       db.doc('years/' + y.dbId).delete().catch(() => {}),
-    ]);
+    ]));
     const undo = async () => {
       hideYearToast();
+      await busy(`Restoring ${snap.year}…`, () => db.batch(async () => {
       await db.collection('years').add({ year: snap.year, currency: snap.currency, createdAt: snap.createdAt, ...(snap.taxonomy ? { taxonomy: snap.taxonomy } : {}) }).catch(() => {});
       for (const e of snap.entrySnaps) { const { id, ...rest } = e; await db.collection('entries').add(rest).catch(() => {}); }
       for (const o of snap.overrideSnaps) { const { id, ...rest } = o; await db.collection('overrides').add(rest).catch(() => {}); }
       for (const b of snap.budgetSnaps) { const { id, ...rest } = b; await db.collection('budgets').add(rest).catch(() => {}); }
+      }));
     };
     clearTimeout(yearToastTimer.current);
     setYearToast({ message: `"${label}" deleted — ${entrySnaps.length} entr${entrySnaps.length === 1 ? 'y' : 'ies'} removed with it.`, undo });
@@ -304,16 +318,19 @@ export default function TrackerApp() {
       // A new year starts with the categories of the nearest existing year (copied, so later edits never leak).
       // Types added in the panel ("+ Add type") join the new year's taxonomy.
       const tx = mergeTypes(copy(modelRef.current.taxonomyForYear(label)), rows.filter((r) => r.added));
-      await db.collection('years').add({ year: label, currency, createdAt: new Date().toISOString(), taxonomy: tx });
-      for (const r of rows) {
-        const amount = Math.round(parseAmount(r.value) * 100) / 100; // typed in European format (1.163,59)
-        const computed = parseFloat(r.computed) || 0;
-        const group = r.group || null, category = r.category || null;
-        if (amount > 0) await db.collection('budgets').add({ year: label, type: r.type, group, category, item: r.item, amount, createdAt: new Date().toISOString() }).catch(() => {});
-        if (Math.abs(amount - computed) > 0.004) {
-          await db.doc('budgetDefaults/' + budgetDefaultDocId(r.type, group, category, r.item)).set({ type: r.type, group, category, item: r.item, amount, updatedAt: new Date().toISOString() }).catch(() => {});
-        }
-      }
+      // Oct 24: the year and its budgets reload once at the end (db.batch), behind the busy overlay.
+      await busy(`Creating ${label}…`, () => db.batch(async () => {
+        await db.collection('years').add({ year: label, currency, createdAt: new Date().toISOString(), taxonomy: tx });
+        await inPool(rows, async (r) => {
+          const amount = Math.round(parseAmount(r.value) * 100) / 100; // typed in European format (1.163,59)
+          const computed = parseFloat(r.computed) || 0;
+          const group = r.group || null, category = r.category || null;
+          if (amount > 0) await db.collection('budgets').add({ year: label, type: r.type, group, category, item: r.item, amount, createdAt: new Date().toISOString() }).catch(() => {});
+          if (Math.abs(amount - computed) > 0.004) {
+            await db.doc('budgetDefaults/' + budgetDefaultDocId(r.type, group, category, r.item)).set({ type: r.type, group, category, item: r.item, amount, updatedAt: new Date().toISOString() }).catch(() => {});
+          }
+        });
+      }));
       setPendingYear(null);
       showToast(`${label} created.`, 'success');
     } catch (err) {
@@ -328,9 +345,11 @@ export default function TrackerApp() {
     const d = dataRef.current;
     const plan = planRename({ type, from, to, year, mi, data: { years: d.years || [], entries: d.entries || [], overrides: d.overrides || [], budgets: d.budgets || [], budgetDefaults: d.budgetDefaults || [] }, taxonomyForYear: modelRef.current.taxonomyForYear });
     try {
-      for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
-      for (const x of plan.adds) await db.collection(x.col).add(x.doc);
-      for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
+      await db.batch(async () => {
+        for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
+        for (const x of plan.adds) await db.collection(x.col).add(x.doc);
+        for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
+      });
       showToast(`"${from}" is now "${to}" from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep "${from}".`, 'success');
     } catch (err) {
       showToast(`Could not rename "${from}".`, 'fail');
@@ -344,9 +363,11 @@ export default function TrackerApp() {
     const plan = planDeleteSub({ type, sub, year, mi, data: { years: d.years || [], entries: d.entries || [], overrides: d.overrides || [], budgets: d.budgets || [], budgetDefaults: d.budgetDefaults || [] }, taxonomyForYear: modelRef.current.taxonomyForYear });
     if (plan.entriesFrom) { showToast(`"${sub}" still has ${plan.entriesFrom} entr${plan.entriesFrom === 1 ? 'y' : 'ies'} from ${MONTH_ABBR[mi]} ${year} on. Move or delete them first.`, 'fail'); return false; }
     try {
-      for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
-      for (const x of plan.adds) await db.collection(x.col).add(x.doc);
-      for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
+      await db.batch(async () => {
+        for (const x of plan.deletes) await db.doc(x.col + '/' + x.id).delete().catch(() => {});
+        for (const x of plan.adds) await db.collection(x.col).add(x.doc);
+        for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
+      });
       showToast(`"${sub}" was deleted from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep it.`, 'success');
       return true;
     } catch (err) {
@@ -362,14 +383,17 @@ export default function TrackerApp() {
     const label = yr.year;
     const old = m.BUDGETS.filter((b) => b.year === label && b.monthIndex === mi);
     try {
-      await Promise.all(old.map((b) => db.doc('budgets/' + b.id).delete().catch(() => {})));
-      for (const r of rows) {
-        const amount = Math.round(parseAmount(r.value) * 100) / 100;
-        await db.collection('budgets').add({ year: label, monthIndex: mi, type: r.type, group: r.group || null, category: r.category || null, item: r.item, amount, createdAt: new Date().toISOString() });
-      }
-      // The stand-in year has no saved doc yet: create it with every row's type, so the month and its types stick.
-      const added = yr.isPlaceholder ? rows : rows.filter((r) => r.added);
-      if (added.length || yr.isPlaceholder) await addRowsToYear(label, added);
+      // Oct 24: the writes go out a few at a time and the budgets reload once at the end (db.batch), behind the overlay.
+      await busy(`Saving the ${MONTH_ABBR[mi]} ${label} budget…`, () => db.batch(async () => {
+        await Promise.all(old.map((b) => db.doc('budgets/' + b.id).delete().catch(() => {})));
+        await inPool(rows, (r) => {
+          const amount = Math.round(parseAmount(r.value) * 100) / 100;
+          return db.collection('budgets').add({ year: label, monthIndex: mi, type: r.type, group: r.group || null, category: r.category || null, item: r.item, amount, createdAt: new Date().toISOString() });
+        });
+        // The stand-in year has no saved doc yet: create it with every row's type, so the month and its types stick.
+        const added = yr.isPlaceholder ? rows : rows.filter((r) => r.added);
+        if (added.length || yr.isPlaceholder) await addRowsToYear(label, added);
+      }));
       setMonthBudget(null);
       showToast(`${MONTH_ABBR[mi]} ${label} budget saved.`, 'success');
     } catch (err) {
@@ -463,6 +487,7 @@ export default function TrackerApp() {
       </div>
       {board.active && <SharePanel open={sharing} board={{ id: board.active.id, name: board.active.name, role: board.active.role }} onClose={() => setSharing(false)} showToast={showToast} />}
       {toastEl}
+      {busyEl}
       <Toast id="year-toast" type="neutral" visible={!!yearToast} onClose={hideYearToast}
         action={yearToast ? <Button size="tiny" variant="secondary" className="toast-undo" onClick={yearToast.undo}>Undo</Button> : null}>{yearToast ? yearToast.message : ''}</Toast>
       {confirmModal}

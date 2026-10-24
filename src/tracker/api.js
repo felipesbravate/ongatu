@@ -59,7 +59,13 @@ const snapshotOf = (docs) => ({ docs: docs.map((d) => ({ id: d.id, data: () => d
 let leaving = false;
 export function leavePage(url) { leaving = true; location.replace(url); }
 
+// Batches (Oct 24): every write reloads its whole collection and redraws the app, so 40 budget rows meant 40 reloads
+// and 40 full recalculations, the screen frozen in between. Inside db.batch() writes only mark their collection;
+// each marked collection reloads once when the outermost batch ends.
+let batchDepth = 0;
+const dirty = new Set();
 async function refresh(name) {
+  if (batchDepth > 0) { dirty.add(name); return; }
   const subs = listeners[name] || [];
   if (!subs.length || leaving) return;
   lastRefresh[name] = Date.now();
@@ -88,6 +94,15 @@ function hookFocus() {
 }
 
 export const db = {
+  /** Runs fn(); the collections its writes touch reload once at the end, not after every write. */
+  async batch(fn) {
+    batchDepth++;
+    try { return await fn(); }
+    finally {
+      batchDepth--;
+      if (batchDepth === 0 && dirty.size) { const names = [...dirty]; dirty.clear(); await Promise.all(names.map((n) => refresh(n))); }
+    }
+  },
   collection(name) {
     return {
       async add(data) { const r = await api('POST', collectionBase(name) + encodeURIComponent(name), data); await refresh(name); return { id: r.id }; },

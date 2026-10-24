@@ -4296,3 +4296,6 @@ html[data-theme] .ds-notif-item.is-unread .ds-notif-text:not(#z):not(#y){ color:
 html[data-theme] #add-panel #doc-actions:not(#z):not(#y){ flex-wrap:wrap; row-gap:var(--space-xs); }
 html[data-theme] #add-panel #doc-status:not(#z):not(#y){ flex:1 1 220px; min-width:0; }
 @media (max-width:640px){ html[data-theme] #add-panel #doc-status:not(#z):not(#y){ flex-basis:100%; } }
+
+/* Board dropdown, locked (Oct 21): on Board settings the header pill is disabled and pale (opacity/disabled), no hover. */
+html[data-theme] .ds-board-dd:disabled:not(#z):not(#y){ opacity:var(--opacity-disabled); cursor:default; pointer-events:none; }

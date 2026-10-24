@@ -199,7 +199,7 @@ export default function BoardSettingsApp() {
     <>
       <div className="app-top-gap" />
       {/* Phones (989:29453 / 992:37239 / 986:27262): a panel with its own nav bar (the back button), no app header. */}
-      {!mobile && <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} onOpenAlert={(a) => router.push(alertHref(a))} /></AppHeader>}
+      {!mobile && <AppHeader><AccountNav me={me} profile={profile} alerts={alerts} boardLocked onOpenAlert={(a) => router.push(alertHref(a))} /></AppHeader>}
       <div className="wrap acct-page jb-page" id="board-settings">
         <header className="jb-head">
           {mobile
