@@ -4312,3 +4312,10 @@ html #note-tip:not(#z) .tip-entries::-webkit-scrollbar-thumb{ background:rgba(25
 html #note-tip:not(#z) .tip-entries.can-down{ -webkit-mask-image:linear-gradient(#000 calc(100% - var(--tip-fade)), transparent); mask-image:linear-gradient(#000 calc(100% - var(--tip-fade)), transparent); }
 html #note-tip:not(#z) .tip-entries.can-up{ -webkit-mask-image:linear-gradient(transparent, #000 var(--tip-fade)); mask-image:linear-gradient(transparent, #000 var(--tip-fade)); }
 html #note-tip:not(#z) .tip-entries.can-up.can-down{ -webkit-mask-image:linear-gradient(transparent, #000 var(--tip-fade), #000 calc(100% - var(--tip-fade)), transparent); mask-image:linear-gradient(transparent, #000 var(--tip-fade), #000 calc(100% - var(--tip-fade)), transparent); }
+
+/* Type row, long names (Oct 24; Ongatu 1108:42251): the name is cut on one line with "…" and keeps the counter right
+   after it; the name block stops 16 before the Value; the Value and the Actions button keep their size. */
+html .bd-row:not(#z) > .bd-item-name{ display:flex; align-items:center; flex:1 1 0; min-width:0; padding-right:16px; box-sizing:border-box; }
+html .bd-row:not(#z) > .bd-item-name > .bd-item-label{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html .bd-row:not(#z) > .bd-item-name > .note-count{ flex:none; }
+html .bd-row:not(#z) > .n, html .bd-row:not(#z) > .bd-amount-link, html .bd-row:not(#z) > .bd-edit-input, html .bd-row:not(#z) > .br-actions{ flex:none; }
