@@ -78,7 +78,7 @@ export function YearNav({ model, yearIdx, monthIdx, onYear, onMonth, onAddYear, 
           </div>
           <div className="months" id="months" ref={monthsRef} role="tablist" aria-label="Month">
             {y.months.map((m, i) => {
-              const future = model.isFutureMonth(y, i);
+              const future = model.isProjectedMonth(y, i); // Oct 28: dashed only until the month has a real entry
               const has = !future && model.monthHasData(y, i);
               return <MonthSelector key={m} label={m.slice(0, 1).toUpperCase() + m.slice(1, 3).toLowerCase()} selected={i === monthIdx} state={future ? 'estimated' : has ? undefined : 'empty'} onSelect={() => onMonth(i)} />;
             })}

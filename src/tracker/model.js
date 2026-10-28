@@ -203,6 +203,10 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     if (yNum !== now.getFullYear()) return yNum > now.getFullYear();
     return mi > now.getMonth();
   }
+  // Oct 28 (Felipe): a month that hasn't come yet is only a projection until it has a real entry. Once anything is
+  // added to it (by hand or from an upload) it counts like a month in progress: real figures only, no budget guesses,
+  // no "Projected" labels. The calendar test (isFutureMonth) still decides what can be planned (Adjust month's budget).
+  function isProjectedMonth(y, mi) { return isFutureMonth(y, mi) && entriesFor(y.year, mi).length === 0; }
   function defaultMonth(y) {
     for (let i = 11; i >= 0; i--) { if (!isFutureMonth(y, i) && monthHasData(y, i)) return i; }
     const now = new Date();
@@ -278,7 +282,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     ? BUDGETS.filter((b) => b.year === yearLabel && b.monthIndex === mi)
     : BUDGETS.filter((b) => b.year === yearLabel && !isMonthBudget(b)));
   // A month's budget counts where figures are planned: any month of a year added here, future months of the others.
-  const budgetApplies = (y, mi) => y.isExtra || y.isPlaceholder || (hasMonthBudget(y.year, mi) && isFutureMonth(y, mi));
+  const budgetApplies = (y, mi) => y.isExtra || y.isPlaceholder || (hasMonthBudget(y.year, mi) && isProjectedMonth(y, mi));
   const findBudget = (yearLabel, type, group, category, itemName, mi) => budgetsFor(yearLabel, mi).find((b) => b.type === type && sameGroup(b.group, group) && (b.category || null) === (category || null) && b.item === itemName);
   const findBudgetDefault = (type, group, category, itemName) => BUDGET_DEFAULTS.find((b) => b.type === type && sameGroup(b.group, group) && (b.category || null) === (category || null) && b.item === itemName);
   const budgetItemsFor = (yearLabel, type, group, mi) => budgetsFor(yearLabel, mi).filter((b) => b.type === type && sameGroup(b.group, group)).map((b) => ({ item: b.item, category: b.category || null }));
@@ -346,7 +350,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     list.forEach((it) => seen.set((it.category || '') + '␟' + it.item, { item: it.item, category: it.category || null, fromRoster: false }));
     const budgetItems = budgetApplies(y, mi) ? budgetItemsFor(y.year, type, group, mi) : [];
     budgetItems.forEach((b) => { const k = (b.category || '') + '␟' + b.item; if (!seen.has(k)) seen.set(k, { item: b.item, category: b.category || null, fromRoster: false }); });
-    if (!list.length && !budgetItems.length && isFutureMonth(y, mi) && !hasMonthBudget(y.year, mi)) {
+    if (!list.length && !budgetItems.length && isProjectedMonth(y, mi) && !hasMonthBudget(y.year, mi)) {
       rosterFor(yi, mi, type, group).forEach((r) => { const k = (r.category || '') + '␟' + r.item; if (!seen.has(k)) seen.set(k, { item: r.item, category: r.category || null, fromRoster: true }); });
     }
     entriesFor(y.year, mi).forEach((e) => {
@@ -365,7 +369,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     const manualSum = manual.reduce((a, e) => a + (e.amount || 0), 0);
     const ov = findOverride(y.year, mi, type, group, category, itemName);
     const deleted = !!ov;
-    const future = isFutureMonth(y, mi);
+    const future = isProjectedMonth(y, mi);
     const budget = budgetApplies(y, mi) ? findBudget(y.year, type, group, category, itemName, mi) : null;
     const isGuess = future || !!budget;
     const sheetVal = deleted ? 0 : (budget ? budget.amount : realSheetValue(y, mi, type, group, category, itemName));
@@ -431,7 +435,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
     const groups = subsOf('expense', y.year, mi);
     groups.forEach((g) => { byGroup[g] = groupTotal('expense', g); });
     const expenseTotal = groups.reduce((a, g) => a + byGroup[g], 0);
-    const out = { mi, income, invest, byGroup, expenseTotal, balance: income - invest - expenseTotal, manual: entriesFor(y.year, mi), isEstimateMonth: isFutureMonth(y, mi) };
+    const out = { mi, income, invest, byGroup, expenseTotal, balance: income - invest - expenseTotal, manual: entriesFor(y.year, mi), isEstimateMonth: isProjectedMonth(y, mi) };
     monthCache.set(key, out);
     return out;
   }
@@ -693,7 +697,7 @@ export function createModel({ data: DATA, entries: ENTRIES, overrides: OVERRIDES
 
   return {
     DATA, ENTRIES, OVERRIDES, BUDGETS, BUDGET_DEFAULTS, canAdjustMonthBudget, monthBudgetRows,
-    entriesFor, entriesForYear, currentYearMonthIndex, monthHasData, isFutureMonth, defaultMonth,
+    entriesFor, entriesForYear, currentYearMonthIndex, monthHasData, isFutureMonth, isProjectedMonth, defaultMonth,
     computeMonth, buildBreakdown, buildBudgetSuggestions, yearIncome, yearExpense, budgetAlerts, budgetsFor,
     taxonomyForYear, catOptions, typeOptsForYear, typeOpts, kindsOf, subsOf, combosOf,
     resolveDate, isOpenNextMonthDate, periodYears, periodExists, periodOptions, defaultPeriodKey, entryDateBounds, promptYearLabel,

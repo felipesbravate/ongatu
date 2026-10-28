@@ -4,7 +4,7 @@
 //   current month  -> the month's budget when one is set, otherwise a share of the 3 months' average
 //                     ("55% of €2.837 avg": a month in progress is never "down" against whole months; the kept and
 //                     saved rates only compare with a plan, as incomes land early and spending builds up);
-//   future month   -> nothing to compare: "Projected from budget".
+//   future month   -> nothing to compare: "Projected from budget"; once it has a real entry, read as the current month.
 // Each result is { head?, tone: 'good' | 'bad' | 'neutral', dir: 'up' | 'down' | 'flat' | null, text }: `head` is the
 // plain part before the comparison ("Kept 62% of incomes"), `text` the coloured comparison after the arrow.
 import { MONTH_ABBR } from './model.js';
@@ -22,7 +22,10 @@ export function comparisonBase(model, y, mi, now = new Date()) {
   const DATA = model.DATA;
   const yNum = parseInt(y.year, 10);
   const isCurrent = yNum === now.getFullYear() && mi === now.getMonth();
-  const state = model.isFutureMonth(y, mi) ? 'future' : isCurrent ? 'current' : 'past';
+  // Oct 28: a coming month with real entries is read like the month in progress (against its budget), not projected.
+  const future = model.isFutureMonth(y, mi);
+  const projected = model.isProjectedMonth ? model.isProjectedMonth(y, mi) : future;
+  const state = projected ? 'future' : (isCurrent || future) ? 'current' : 'past';
   // The months before this one that have figures, newest first (crossing into the year before).
   const back = [];
   let yy = y, m = mi;
