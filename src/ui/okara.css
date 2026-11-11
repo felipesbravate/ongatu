@@ -4319,3 +4319,6 @@ html .bd-row:not(#z) > .bd-item-name{ display:flex; align-items:center; flex:1 1
 html .bd-row:not(#z) > .bd-item-name > .bd-item-label{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 html .bd-row:not(#z) > .bd-item-name > .note-count{ flex:none; }
 html .bd-row:not(#z) > .n, html .bd-row:not(#z) > .bd-amount-link, html .bd-row:not(#z) > .bd-edit-input, html .bd-row:not(#z) > .br-actions{ flex:none; }
+/* Nov 11 fix: the list is a flex column with a max height, so its rows shrank below their content and a wrapped name
+   (two lines) ran into the next row. Rows keep their own height; the list scrolls instead. */
+html #note-tip:not(#z) .tip-entries > *{ flex:none; }
