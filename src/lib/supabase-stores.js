@@ -58,6 +58,7 @@ export function supabaseStores(sb) {
       },
       async remove(/** @type {string} */ u, /** @type {string} */ c, /** @type {string} */ i) { ok(await sb.from('documents').delete().eq('user_id', u).eq('collection', c).eq('doc_id', i)); },
       async removeAll(/** @type {string} */ u) { ok(await sb.from('documents').delete().eq('user_id', u)); },
+      async removeCollection(/** @type {string} */ u, /** @type {string} */ c) { ok(await sb.from('documents').delete().eq('user_id', u).eq('collection', c)); },
     },
     profiles: {
       async get(/** @type {string} */ u) { return ok(await sb.from('profiles').select('*').eq('user_id', u).maybeSingle()); },
@@ -121,6 +122,7 @@ export function supabaseStores(sb) {
         },
         async remove(/** @type {string} */ b, /** @type {string} */ c, /** @type {string} */ i) { ok(await sb.from('board_documents').delete().eq('board_id', b).eq('collection', c).eq('doc_id', i)); },
         async removeAll(/** @type {string} */ b) { ok(await sb.from('board_documents').delete().eq('board_id', b)); },
+        async removeCollection(/** @type {string} */ b, /** @type {string} */ c) { ok(await sb.from('board_documents').delete().eq('board_id', b).eq('collection', c)); },
       },
     },
     usage: {

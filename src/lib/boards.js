@@ -18,7 +18,7 @@
 // document store (board_keys, board_documents). Inside the Vault a board is addressed as `board:<uuid>`, so its key
 // and every document are bound (AAD) to the board, never to a person.
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { COLLECTIONS, VaultError } from './vault.js';
+import { BOARD_DATA, COLLECTIONS, VaultError } from './vault.js';
 import { validateImportBatch } from './import-commit.js';
 
 export const ROLES = Object.freeze(['viewer', 'editor', 'co_owner']);
@@ -76,6 +76,7 @@ export function boardVaultStores(store) {
       putMany: (/** @type {any[]} */ rows) => store.docs.putMany(rows.map((row) => ({ ...row, board_id: id(row.user_id), user_id: undefined }))),
       remove: (/** @type {string} */ s, /** @type {string} */ c, /** @type {string} */ i) => store.docs.remove(id(s), c, i),
       removeAll: (/** @type {string} */ s) => store.docs.removeAll(id(s)),
+      removeCollection: (/** @type {string} */ s, /** @type {string} */ c) => store.docs.removeCollection(id(s), c),
     },
   };
 }
@@ -184,6 +185,15 @@ export async function handleBoards(req, deps, { user }) {
         return json(200, { id: boardId, deleted: true });
       }
       return err(405, 'bad_method', 'Method not allowed');
+    }
+
+    // ---- start over (Nov 13, co-owners): the board's years, entries and budgets go; its name, members and invite
+    // links stay. With no years left, everyone on the board is taken to the board setup (/welcome) again.
+    if (rest === '/start-over') {
+      if (method !== 'POST') return err(405, 'bad_method', 'Method not allowed');
+      const { res } = await membership(boardId, 'co_owner'); if (res) return res;
+      await V.clearCollections(boardSpace(boardId), BOARD_DATA);
+      return json(200, { id: boardId, cleared: true });
     }
 
     // ---- members: change a role, remove someone, or leave ----
@@ -516,6 +526,7 @@ export function memoryBoards() {
         async putMany(/** @type {any[]} */ rows) { for (const row of rows) { const { user_id, ...r } = row; void user_id; docMap.set(dk(r.board_id, r.collection, r.doc_id), r); } },
         async remove(/** @type {string} */ b, /** @type {string} */ c, /** @type {string} */ i) { docMap.delete(dk(b, c, i)); },
         async removeAll(/** @type {string} */ b) { for (const [k, r] of docMap) if (r.board_id === b) docMap.delete(k); },
+        async removeCollection(/** @type {string} */ b, /** @type {string} */ c) { for (const [k, r] of docMap) if (r.board_id === b && r.collection === c) docMap.delete(k); },
       },
   };
 }

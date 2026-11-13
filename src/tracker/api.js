@@ -166,6 +166,7 @@ export const signOut = () => {
 };
 export const deleteMe = () => api('DELETE', '/api/me');           // erase everything and close the account
 export const deleteMyData = () => api('DELETE', '/api/me/data');  // erase everything, keep the account
+export const startOverPersonal = () => api('POST', '/api/me/start-over'); // Nov 13: wipe the personal board, set it up again
 export const getSignIn = () => api('GET', '/api/account/sign-in');                  // { method: 'code' | 'password' }
 export const setSignIn = (body) => api('POST', '/api/account/sign-in', body);         // { method, password?, current? }
 export const listUsers = () => api('GET', '/api/admin/users');
@@ -179,6 +180,7 @@ export const boardsApi = {
   get: (id) => api('GET', bpath(id)),
   rename: (id, name) => api('PATCH', bpath(id), { name }),
   remove: (id) => api('DELETE', bpath(id)),
+  startOver: (id) => api('POST', bpath(id, '/start-over')), // Nov 13 (co-owners): wipe the board's data, keep name + members
   setRole: (id, userId, role) => api('PATCH', bpath(id, '/members/' + encodeURIComponent(userId)), { role }),
   removeMember: (id, userId) => api('DELETE', bpath(id, '/members/' + encodeURIComponent(userId))),
   invites: (id) => api('GET', bpath(id, '/invites')),

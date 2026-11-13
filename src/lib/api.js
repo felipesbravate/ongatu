@@ -5,7 +5,7 @@
 //          authKind ('cookie' default | 'bearer' for the native app) }
 // deps : { vault, profiles, usage, ai, admins, appOrigin, limiter, dailyReadCap, accounts?, boards?, boardVault?, mailer? }
 import { effectiveStatus, newAccountStatus, passesCsrf, safeError } from './security.js';
-import { VaultError } from './vault.js';
+import { BOARD_DATA, VaultError } from './vault.js';
 import { validateImportBatch } from './import-commit.js';
 import { handleBoards, leaveAllBoards } from './boards.js';
 
@@ -113,6 +113,13 @@ export async function handle(req, deps) {
     // ---- data erase: every document and the data key go, the account stays approved (a fresh key is made on
     // the next write). ----
     // Account settings (name, picture: the `settings` collection) are kept: they are re-saved under the new key.
+    // Start over (Nov 13): the personal board's years, entries and budgets go, and so does the onboarding mark, so the
+    // next visit goes through the board setup (/welcome) again. Name, picture and notification settings stay.
+    if (method === 'POST' && path === '/api/me/start-over') {
+      await deps.vault.clearCollections(user.id, BOARD_DATA);
+      await deps.vault.remove(user.id, 'settings', 'onboarding');
+      return json(200, { cleared: true });
+    }
     if (method === 'DELETE' && path === '/api/me/data') {
       const keep = await deps.vault.list(user.id, 'settings');
       await deps.vault.eraseUser(user.id);

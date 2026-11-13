@@ -14,6 +14,8 @@ import { DekCache, newDek, unwrapDek, wrapDek } from './keyring.js';
 
 /** Collections the app is allowed to use. Anything else is rejected before touching storage. */
 export const COLLECTIONS = Object.freeze(['entries', 'years', 'overrides', 'budgets', 'budgetDefaults', 'settings']);
+/** A board's money and plan: what "Start over" empties (Nov 13). `settings` (name, picture, notifications) stays. */
+export const BOARD_DATA = Object.freeze(['entries', 'years', 'overrides', 'budgets', 'budgetDefaults']);
 const ID_RE = /^[A-Za-z0-9_.~:@+-]{1,200}$/; // superset of what the app's own id slugs produce
 const BAD_ID_RE = /^\.{1,2}$/;
 
@@ -146,6 +148,19 @@ export class Vault {
   }
 
   /**
+   * Start over (Nov 13): empties these collections of one user / board space, keeping its key (and every other
+   * collection). One delete per collection when the store offers it, else one per document.
+   * @param {string} userId @param {string[]} collections
+   */
+  async clearCollections(userId, collections) {
+    for (const c of collections) {
+      assertRef(c);
+      if (this.docs.removeCollection) await this.docs.removeCollection(userId, c);
+      else for (const row of await this.docs.list(userId, c)) await this.docs.remove(userId, c, row.doc_id);
+    }
+  }
+
+  /**
    * Crypto-shredding: deleting the wrapped key alone makes every backup of the user's rows
    * unreadable; rows are removed too.
    */
@@ -186,6 +201,7 @@ export function memoryStores() {
       async putMany(rows) { for (const row of rows) docMap.set(k(row.user_id, row.collection, row.doc_id), row); },
       async remove(u, c, i) { docMap.delete(k(u, c, i)); },
       async removeAll(u) { for (const [key, r] of docMap) if (r.user_id === u) docMap.delete(key); },
+      async removeCollection(u, c) { for (const [key, r] of docMap) if (r.user_id === u && r.collection === c) docMap.delete(key); },
     },
   };
 }

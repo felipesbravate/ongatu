@@ -788,7 +788,9 @@ export default function OnboardingApp() {
   const [nameError, setNameError] = useState('');
   const [invites, setInvites] = useState([]); // [{ email, role, inviteId }] sent from Name and share
   const [pending, setPending] = useState(null); // { board, year, month } from Setup, kept for Name and share
-  const [step, setStep] = useState(joint ? 'choose' : 'tour');
+  // Nov 13: /welcome?restart=1 = the personal board was started over from Board settings: no tour, straight to the choice.
+  const restart = typeof window !== 'undefined' && new URLSearchParams(location.search).get('restart') === '1';
+  const [step, setStep] = useState(joint || restart ? 'choose' : 'tour');
   const [card, setCard] = useState(0);
   const [mode, setMode] = useState(null);
   const [imported, setImported] = useState(null); // board-from-file result + fileName

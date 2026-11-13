@@ -23,7 +23,7 @@ import { ActionLink, AppHeader, BoardSwitcher, Button, Checkbox, CURRENCIES, Dro
 import { Icon } from '../../ui/Icon.jsx';
 import { arrowStraightLeft, chevronDown, duo, information, user2 } from '../../ui/icons.js';
 import { AppSkeleton } from '../../ui/Loading.jsx';
-import { api, boardsApi, getActiveBoard, getMe, setActiveBoard } from '../api.js';
+import { api, boardsApi, getActiveBoard, getMe, setActiveBoard, startOverPersonal } from '../api.js';
 import { AccountNav, boardSwitcherProps } from '../AccountBar.jsx';
 import { useBudgetAlertsStandalone } from '../alerts.js';
 import { alertHref } from '../notifications.js';
@@ -51,6 +51,7 @@ export default function BoardSettingsApp() {
   const [name, setName] = useState('');
   const [busy, setBusy] = useState('');
   const [sure, setSure] = useState(false);
+  const [sureReset, setSureReset] = useState(false);
 
   useEffect(() => {
     getMe().then((m) => {
@@ -87,7 +88,7 @@ export default function BoardSettingsApp() {
   useEffect(() => { if (boardId !== undefined) { setMoney(null); loadMoney(boardId); } }, [boardId, loadMoney]);
   const board = boardId ? people.board : null;
   useEffect(() => { if (board) setName(board.name); }, [board]);
-  useEffect(() => { setSure(false); }, [boardId]);
+  useEffect(() => { setSure(false); setSureReset(false); }, [boardId]);
 
   useAppNavigation(me ? profile.image : undefined, () => router.push('/?add=1'));
   if (!me || boardId === undefined) return <AppSkeleton account error={loadError} />;
@@ -136,6 +137,23 @@ export default function BoardSettingsApp() {
     },
   });
 
+  // Start over (Nov 13): the board's years, entries and budgets are deleted and the board setup (/welcome) opens on it.
+  // The personal board: its owner; a joint board: co-owners, for everyone on it (name, members and invite links stay).
+  const startOver = () => confirm({
+    title: `Are you sure you want to start “${boardId ? board.name : personalName}” over?`,
+    description: boardId
+      ? 'All its years, entries and budgets are deleted for everyone on it, and you set it up again from the beginning. Its name, members and invite links stay. This cannot be undone.'
+      : 'All its years, entries and budgets are deleted, and you set it up again from the beginning. Your name, picture and sign-in stay. This cannot be undone.',
+    confirmLabel: 'Start over', busyLabel: 'Deleting…',
+    onConfirm: async () => {
+      try {
+        if (boardId) await boardsApi.startOver(boardId); else await startOverPersonal();
+        // The setup runs on the board that was wiped (a joint board opens its own setup; the personal one skips the tour).
+        setActiveBoard(boardId || null, boardId ? '/welcome' : '/welcome?restart=1');
+      } catch (e) { showToast(e.message || "Couldn't start the board over.", 'fail'); }
+    },
+  });
+
   const nameCard = (
     <BoardCard id="board-sec-name" className={'jb-name-card ' + (isCo ? 'is-co' : boardId ? 'is-locked' : 'is-personal')} titleId="board-name-title" title="Board name"
       text={!boardId ? 'Personal boards are tied to your account and cannot be renamed.'
@@ -169,6 +187,20 @@ export default function BoardSettingsApp() {
   const sharingCard = isCo && (
     <BoardCard id="board-sec-sharing" className="jb-sharing-card" titleId="board-sharing-title" title="Board sharing" text="As the owner, you can change access or remove a member.">
       <BoardSharing board={board} invites={people.invites} reload={people.reload} showToast={showToast} confirm={confirm} idPrefix="board" />
+    </BoardCard>
+  );
+  const resetCard = (!boardId || isCo) && (
+    <BoardCard id="board-sec-reset" className="jb-danger-card">
+      <div className="jb-danger">
+        <div className="jb-danger-meta">
+          <h3 className="jb-danger-title">Start over</h3>
+          <p className="jb-danger-text">{boardId
+            ? 'Delete every year, entry and budget of this board for everyone on it, and set it up again from the beginning. Its name and members stay.'
+            : 'Delete every year, entry and budget of this board and set it up again from the beginning. Your account stays.'}</p>
+          <Checkbox id="board-reset-confirm" checked={sureReset} onChange={setSureReset}>I understand that this deletes all of the board’s data and cannot be undone.</Checkbox>
+        </div>
+        <Button size="small" variant="destructive" id="board-reset" disabled={!sureReset} onClick={startOver}>Start over</Button>
+      </div>
     </BoardCard>
   );
   const deleteCard = isCo && (
@@ -219,7 +251,7 @@ export default function BoardSettingsApp() {
           <div className="jb-cards">
             {boardId && !board
               ? <BoardCard className="jb-name-card"><p className="jb-small" role="status">{people.error || 'Loading…'}</p></BoardCard>
-              : <>{nameCard}{currencyCard}{sharingCard}{deleteCard}{leaveCard}</>}
+              : <>{nameCard}{currencyCard}{sharingCard}{resetCard}{deleteCard}{leaveCard}</>}
           </div>
         </div>
       </div>
