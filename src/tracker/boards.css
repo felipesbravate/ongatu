@@ -118,13 +118,13 @@ html .jb-role-item.is-destructive:not(#z){ color:var(--action-destructive); }
 html .jb-role-item.is-destructive:not(#z) svg{ color:var(--action-destructive); }
 html .jb-role-menu:not(#z) .ds-divider, html .jb-role-sheet:not(#z) .ds-divider{ margin:0; }
 
-/* Delete this board (991:31075): no padding, Heading/XL; Leave board (992:37075): space/md padding, Heading/Large. The
+/* Delete this board (991:31075) and Start over (Nov 14: same as Delete): no padding, Heading/XL; Leave board (992:37075): space/md padding, Heading/Large. The
    text and the button space/xl apart; title and text space/xs; the confirm row space/lg under the text, space/md in. */
 html .jb-danger:not(#z){ display:flex; align-items:center; gap:var(--space-xl); padding:var(--space-md); }
-html #board-sec-delete:not(#z) .jb-danger{ padding:0; }
+html #board-sec-delete:not(#z) .jb-danger, html #board-sec-reset:not(#z) .jb-danger{ padding:0; }
 html .jb-danger-meta:not(#z){ display:flex; flex-direction:column; gap:var(--space-xs); flex:1 1 auto; min-width:0; }
 html .jb-danger-title:not(#z){ margin:0; font-family:var(--type-heading-large-family); font-size:var(--type-heading-large-size); font-weight:var(--type-heading-large-weight); line-height:var(--type-heading-large-lh); letter-spacing:var(--type-heading-large-ls); color:var(--text-primary); }
-html #board-sec-delete:not(#z) .jb-danger-title{ font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
+html #board-sec-delete:not(#z) .jb-danger-title, html #board-sec-reset:not(#z) .jb-danger-title{ font-family:var(--type-heading-xl-family); font-size:var(--type-heading-xl-size); font-weight:var(--type-heading-xl-weight); line-height:var(--type-heading-xl-lh); letter-spacing:var(--type-heading-xl-ls); }
 html .jb-danger-text:not(#z){ margin:0; font-size:var(--type-body-default-regular-size); font-weight:var(--type-body-default-regular-weight); line-height:var(--type-body-default-regular-lh); letter-spacing:var(--type-body-default-regular-ls); color:var(--text-secondary); }
 html .jb-danger-meta:not(#z) .ds-check{ margin-top:calc(var(--space-lg) - var(--space-xs)); padding:0 var(--space-md); gap:var(--space-sm); }
 html .jb-danger-meta:not(#z) .ds-check-label{ font-size:var(--type-body-small-regular-size); font-weight:var(--type-body-small-regular-weight); line-height:var(--type-body-small-regular-lh); letter-spacing:var(--type-body-small-regular-ls); color:var(--text-primary); }
