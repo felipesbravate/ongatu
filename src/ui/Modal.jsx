@@ -27,6 +27,20 @@ export function Illustration({ art, width = 64, className }) {
 // Closing plays the exit (desktop: fade + 8px down; phones: the sheet slides back down, Oct 9) before the dialog
 // closes; while it plays the modal keeps the content it had open, so callers that clear it on close don't blank it.
 const MODAL_EXIT_MS = 200;
+
+// Nov 17: showModal() focuses the first control, the glass close button, and phones then draw a focus ring on it
+// (the focus counts as "visible" because no pointer moved it). The dialog takes the focus itself instead: Tab still
+// reaches the close button first (with the DS ring), Escape still closes, and a screen reader reads the title.
+// A field marked autoFocus keeps its focus.
+export function showModalCalm(d) {
+  if (!d || d.open) return;
+  d.showModal();
+  const f = document.activeElement;
+  if (f && d.contains(f) && f !== d && !f.hasAttribute('autofocus') && f.classList.contains('is-glass')) {
+    if (!d.hasAttribute('tabindex')) d.setAttribute('tabindex', '-1');
+    d.focus({ preventScroll: true });
+  }
+}
 export function Modal(props) {
   const { open, onClose, id } = props;
   const ref = useRef(null);
@@ -37,7 +51,7 @@ export function Modal(props) {
     const d = ref.current; if (!d) return;
     if (open) {
       d.classList.remove('is-closing');
-      if (!d.open) d.showModal();
+      showModalCalm(d);
       return;
     }
     if (!d.open) return;

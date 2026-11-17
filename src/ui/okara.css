@@ -4346,3 +4346,8 @@ html .round-btn.is-glass.is-popping:not(#z):not(#y){ animation:ds-glass-pop 120m
   100%{ transform:scale(1); background-color:color-mix(in srgb, var(--surface-mobile-nav-bg) 40%, transparent); }
 }
 @media (prefers-reduced-motion:reduce){ html .round-btn.is-glass.is-popping:not(#z):not(#y){ animation:none; } }
+/* Nov 17: the glass close button shows the DS focus ring (2px border/focus, 2 away) only for keyboard focus, never the
+   browser's default ring; a dialog holding the focus itself (showModalCalm) draws no outline. */
+html .round-btn.is-glass:not(#z):not(#y):focus{ outline:none; }
+html .round-btn.is-glass:not(#z):not(#y):focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
+html dialog[tabindex="-1"]:focus{ outline:none; }

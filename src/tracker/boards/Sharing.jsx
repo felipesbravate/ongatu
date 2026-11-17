@@ -9,7 +9,7 @@
 //     dropdown (Tiny, 120 wide; mine disabled). Its menu: Viewer, Co-owner, Collaborator, then "Remove access"
 //     (986:27011); on phones the menu is a sheet with the person on top (989:28776: top-nav 80, then the items 24 in).
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActionLink, Avatar, Button, Divider, Input, RoundButton, useDismiss, useMobile } from '../../ui/index.js';
+import { ActionLink, Avatar, Button, Divider, Input, RoundButton, showModalCalm, useDismiss, useMobile } from '../../ui/index.js';
 import { Icon } from '../../ui/Icon.jsx';
 import { chevronDown, copy as copyIcon, remove as removeIcon, send, x } from '../../ui/icons.js';
 import { boardsApi } from '../api.js';
@@ -143,7 +143,7 @@ function RoleMenu({ id, person, disabled, onPick, onRemove }) {
   useDismiss(open && !mobile, ref, close);
   useEffect(() => {
     const d = sheet.current; if (!d) return;
-    if (open && mobile && !d.open) d.showModal();
+    if (open && mobile && !d.open) showModalCalm(d);
     if ((!open || !mobile) && d.open) d.close();
   }, [open, mobile]);
   const pick = (r) => { close(); if (r !== person.role) onPick(r); };

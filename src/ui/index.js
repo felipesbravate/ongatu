@@ -15,7 +15,7 @@ export { Field, FieldGroup, Input } from './Field.jsx';
 export { Logo, Toggle, Checkbox, AppHeader } from './Brand.jsx';
 export { MenuItem, MenuItemCounter, SideMenu } from './SideMenu.jsx';
 export { PanelHeader } from './Panel.jsx';
-export { Modal, Illustration } from './Modal.jsx';
+export { Modal, Illustration, showModalCalm } from './Modal.jsx';
 export * as illustrations from './illustrations.js';
 export * from './format.js';
 export { MobileNavItem, MobileBottomNav } from './MobileNav.jsx';
