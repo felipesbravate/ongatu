@@ -30,11 +30,32 @@ export function Button({ variant = 'primary', size = 'medium', icon, trailing, i
 // Micro 24 with a 16px icon.
 export const ROUND_ICON = { medium: 'xl', small: 'lg', tiny: 'lg', micro: 'md', nano: 'tn' };
 export function RoundButton({ icon, size = 'medium', iconSize, variant, active, className, label, type = 'button', ...rest }) {
+  const glass = variant === 'glass';
   return (
-    <button type={type} className={cx('round-btn', variant && variant !== 'tertiary' && variant, size !== 'medium' && size, active && 'is-active', className)} aria-label={label} {...rest}>
-      <Icon icon={icon} size={iconSize || ROUND_ICON[size] || 20} />
+    <button type={type} className={cx('round-btn', glass ? 'is-glass' : variant && variant !== 'tertiary' && variant, size !== 'medium' && size, active && 'is-active', className)} aria-label={label}
+      {...rest} {...(glass ? glassPress(rest) : {})}>
+      <Icon icon={icon} size={glass ? 'xl' : iconSize || ROUND_ICON[size] || 20} />
     </button>
   );
+}
+
+// Nav round button (Okara 1364:682, Nov 17), the "glass" round button of modal, panel and sheet close buttons: 48,
+// surface/mobile-nav-bg at 40% over a 4px backdrop blur, 1px border/secondary, a 24px icon. A press plays the
+// prototype's Smart Animate: Default -> "Hover" (52, surface/body at 40%) in 48 ms ease-out, holds 24 ms, and back in
+// 48 ms ease-out (okara.css @keyframes ds-glass-pop). Started on pointer-down (and Enter / Space), so it shows before
+// the click closes the modal.
+export function glassPop(el) {
+  if (!el) return;
+  el.classList.remove('is-popping');
+  void el.offsetWidth; // restart the animation on a quick second press
+  el.classList.add('is-popping');
+}
+export function glassPress(rest = {}) {
+  return {
+    onPointerDown: (e) => { glassPop(e.currentTarget); rest.onPointerDown?.(e); },
+    onKeyDown: (e) => { if (e.key === 'Enter' || e.key === ' ') glassPop(e.currentTarget); rest.onKeyDown?.(e); },
+    onAnimationEnd: (e) => { if (e.animationName === 'ds-glass-pop') e.currentTarget.classList.remove('is-popping'); rest.onAnimationEnd?.(e); },
+  };
 }
 
 // Action link (DS 920:1492, Oct 8): no padding, gap space/tn, link/default. size: small (default, Label/Tiny) |

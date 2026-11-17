@@ -51,7 +51,7 @@ export function Modal(props) {
   return (
     <dialog ref={ref} className="ds-modal" id={id} aria-labelledby={titleId} onCancel={(e) => { e.preventDefault(); onClose && onClose(); }}
       onClick={(e) => { if (e.target === ref.current && onClose) onClose(); }}>
-      <div className="ds-modal-header"><RoundButton icon={x} iconSize={24} label="Close" onClick={onClose} /></div>
+      <div className="ds-modal-header"><RoundButton icon={x} variant="glass" label="Close" onClick={onClose} /></div>
       <div className="ds-modal-body">
         <div className="ds-modal-content">
           {illustration && <div className="ds-modal-title-block"><Illustration art={illustration} width={illustrationWidth} /></div>}

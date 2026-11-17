@@ -4322,3 +4322,27 @@ html .bd-row:not(#z) > .n, html .bd-row:not(#z) > .bd-amount-link, html .bd-row:
 /* Nov 11 fix: the list is a flex column with a max height, so its rows shrank below their content and a wrapped name
    (two lines) ran into the next row. Rows keep their own height; the list scrolls instead. */
 html #note-tip:not(#z) .tip-entries > *{ flex:none; }
+
+/* Nav round button, glass (Okara 1364:682, Nov 17): the close button of every modal, side panel and sheet. 48 round,
+   surface/mobile-nav-bg at 40% over the Glass effect (radius 4 -> a 4px backdrop blur; Figma's refraction and light have
+   no CSS equivalent), 1px border/secondary, a 24px icon (icon/primary). Press: the prototype's Smart Animate, Default ->
+   "Hover" (52 = scale 1.0833, surface/body at 40%) in 48 ms ease-out, 24 ms held, back in 48 ms ease-out (120 ms). */
+html .round-btn.is-glass:not(#z):not(#y){
+  width:48px; height:48px; min-width:48px; min-height:48px; padding:11px; box-sizing:border-box; flex:0 0 auto;
+  border:1px solid var(--border-secondary); border-radius:var(--radius-full);
+  background:color-mix(in srgb, var(--surface-mobile-nav-bg) 40%, transparent);
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  color:var(--icon-primary); box-shadow:none; transform-origin:center;
+}
+html .round-btn.is-glass:not(#z):not(#y):hover, html .round-btn.is-glass:not(#z):not(#y):active{
+  background:color-mix(in srgb, var(--surface-mobile-nav-bg) 40%, transparent);
+}
+html .round-btn.is-glass:not(#z):not(#y) svg{ color:var(--icon-primary); }
+html .round-btn.is-glass.is-popping:not(#z):not(#y){ animation:ds-glass-pop 120ms both; }
+@keyframes ds-glass-pop{
+  0%{ transform:scale(1); background-color:color-mix(in srgb, var(--surface-mobile-nav-bg) 40%, transparent); animation-timing-function:ease-out; }
+  40%{ transform:scale(1.0833); background-color:color-mix(in srgb, var(--surface-body) 40%, transparent); }
+  60%{ transform:scale(1.0833); background-color:color-mix(in srgb, var(--surface-body) 40%, transparent); animation-timing-function:ease-out; }
+  100%{ transform:scale(1); background-color:color-mix(in srgb, var(--surface-mobile-nav-bg) 40%, transparent); }
+}
+@media (prefers-reduced-motion:reduce){ html .round-btn.is-glass.is-popping:not(#z):not(#y){ animation:none; } }

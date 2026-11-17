@@ -183,7 +183,7 @@ function RoleMenu({ id, person, disabled, onPick, onRemove }) {
                   {person.name && person.email && <span className="jb-person-email">{person.email}</span>}
                 </div>
               </div>
-              <RoundButton icon={x} iconSize={24} className="jb-sheet-x" label="Close" onClick={close} />
+              <RoundButton icon={x} variant="glass" className="jb-sheet-x" label="Close" onClick={close} />
             </div>
             <div className="jb-sheet-body">{items}</div>
           </>

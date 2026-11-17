@@ -66,7 +66,7 @@ export function BoardSwitcher({ id = 'board-switcher', title = 'Your boards', bo
         <h2 className="ds-bsw-title" id={titleId} tabIndex={-1}>{title}</h2>
         {onSettings && <RoundButton icon={settings} size={mobile ? 'small' : 'micro'} iconSize={mobile ? 20 : 16} id="board-settings" label="Board settings" onClick={onSettings} />}
       </div>
-      {mobile && <RoundButton icon={x} iconSize={24} id={id + '-close'} label="Close" onClick={onClose} />}
+      {mobile && <RoundButton icon={x} variant="glass" id={id + '-close'} label="Close" onClick={onClose} />}
     </div>
   );
   const body = (
