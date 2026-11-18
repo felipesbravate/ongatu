@@ -4,7 +4,8 @@ import { ActionLink, Button, Divider, Dropdown, Field, Illustration, Input, Pane
 import { Icon } from '../ui/Icon.jsx';
 import { calendar, chevronDown, documentIcon, euro, image, plus, questionOutlined, upload, x } from '../ui/icons.js';
 import { KINDS, TypeModal } from './TaxonomyModals.jsx';
-import { sample } from './api.js';
+import { api, db, sample } from './api.js';
+import { MERCHANTS_DOC, applyMerchants, learnMerchants, typedRows } from './merchants.js';
 import { DocReader, docIconName, docMeta } from './reader.js';
 import { EXP_GROUPS, TYPE_OPTS, hasGroups, fmtDateEU, fmtNum, parseAmount, periodKeyOfDate, periodLabel, periodMismatch, todayISO, typeKeyOf, yearLabelOfDate } from './model.js';
 
@@ -102,7 +103,9 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     if (!(amt > 0)) return err('Enter an amount greater than 0.');
     setBusy(true);
     try {
-      await save.entries(periodKey, [{ type: entryType, group: entryGroupOut, category: grouped ? (itemCat || null) : null, item: itemVal, description, amount: amt, date }]);
+      const entry = { type: entryType, group: entryGroupOut, category: grouped ? (itemCat || null) : null, item: itemVal, description, amount: amt, date };
+      await save.entries(periodKey, [entry]);
+      rememberMerchants(typedRows([entry])); // Nov 18: the category chosen here comes back on the next upload
       resetManual();
     } catch (e) {
       err('Could not save: ' + (e && e.message ? e.message : 'unknown error'));
@@ -138,6 +141,8 @@ export function AddPanel({ open, preset, model, yearIdx, monthIdx, onClose, save
     const res = await reader.analyze(model);
     if (!res || res.aborted) return;
     if (res.rows.length) { setFinishing(true); await new Promise((r) => setTimeout(r, 350)); setFinishing(false); }
+    // Nov 18: merchants this person saved before arrive with their name and category (merchants.js). Never blocks reading.
+    if (res.rows.length) res.rows = applyMerchants(res.rows, await loadMerchants(), model);
     if (res.rows.length) {
       const ks = res.rows.map((r) => periodKeyOfDate(r.date)).filter((k) => k && model.periodExists(k)).sort();
       const p = ks.length ? ks[ks.length - 1] : model.defaultPeriodKey(yearIdx, monthIdx);
@@ -319,6 +324,21 @@ const errCopyFatal = (e) => {
   }
 };
 
+// ---------------- remembered names (Nov 18) ----------------
+// The person's list (settings/merchants, always their own settings, also on a joint board). Failures are quiet: the
+// worst case is a row that arrives with the document's name, as before.
+export async function loadMerchants() {
+  try { const r = await api('GET', '/api/db/settings'); const d = (r.docs || []).find((x) => x.id === MERCHANTS_DOC); return d ? d.data : null; }
+  catch { return null; }
+}
+async function rememberMerchants(savedRows) {
+  try {
+    if (!savedRows.some((r) => r.readDescription != null)) return;
+    const { store, changed } = learnMerchants(await loadMerchants(), savedRows, new Date().toISOString());
+    if (changed) await db.doc('settings/' + MERCHANTS_DOC).set(store);
+  } catch { /* remembered next time */ }
+}
+
 // ---------------- review ----------------
 const rowCatLabel = (r) => (!r.item ? '' : r.type === 'expense' ? (r.category ? `${r.category}/${r.item}` : '') : r.item);
 function rowIssues(r, period) {
@@ -393,6 +413,7 @@ function Review({ review, setReview, model, reader, onCancel, save, onDone, mobi
     try {
       const res = await save.entries(period, rows.map((r) => ({ type: r.type, group: r.type === 'expense' ? r.group : null, category: r.type === 'expense' ? r.category : null, item: r.item, description: r.description.trim(), amount: r.amount, date: r.date })), true);
       if (!res) { update((rv) => ({ ...rv, status: { err: true, text: `Could not create ${period.slice(0, 4)}. Try Submit again.` } })); return; }
+      rememberMerchants(rows.filter((_, i) => !res.failed.includes(i)));
       if (res.failed.length === 0) onDone();
       else update((rv) => ({ ...rv, rows: rv.rows.filter((_, i) => res.failed.includes(i)), status: { err: true, text: `${res.failed.length} of ${rows.length} couldn't be saved. Try Submit again.` } }));
     } finally { setSubmitting(false); }
@@ -482,8 +503,10 @@ function ReviewRow({ r, iss, editing, mobile, period, yl, model, patchRow }) {
   return (
     <div className="rv-row is-editing" data-id={r.id}>{date}
       <div className="c-fields">
-        <div className={'c-desc' + (has('desc') ? ' bad' : '')} title={'From ' + r.fileName}><Input size={mobile ? 'medium' : 'tiny'} data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
-          onChange={(e) => patchRow(r.id, { description: e.target.value })} /></div>
+        <div className={'c-desc' + (has('desc') ? ' bad' : '')} title={'From ' + r.fileName + (r.renamedFrom ? ` (on the document: ${r.renamedFrom})` : '')}><Input size={mobile ? 'medium' : 'tiny'} data-f="desc" aria-label="Description" defaultValue={r.description} placeholder="Description" autoComplete="off"
+          onChange={(e) => patchRow(r.id, { description: e.target.value })} />
+          {/* Nov 18: a remembered name replaced the document's; the document's name stays visible. */}
+          {r.renamedFrom && <span className="rv-was">Was: {r.renamedFrom}</span>}</div>
         <div className="c-type rv-select">
           <Dropdown size={mobile ? 'md' : 'tiny'} ariaLabel="Type" emptyOption={false} value={typeKey} options={typeOptions} selectProps={{ 'data-f': 'type' }} icon={guess && mobile ? questionOutlined : undefined}
             onChange={(v) => {

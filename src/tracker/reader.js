@@ -144,6 +144,8 @@ export function normalizeRow(model, raw, d) {
   return {
     id: ++rowSeq, fileId: d.id, fileName: d.name, date,
     description: String(raw.description || '').trim().slice(0, 80),
+    // Nov 18: the name as the document has it, kept so a renamed row can be remembered (merchants.js). Never saved.
+    readDescription: String(raw.description || '').trim().slice(0, 80),
     type, group: type === 'expense' ? group : null, category, item,
     // Only trusted when the reader says "sure" (and didn't have to move it to another group). Never saved.
     guess: raw.certainty !== 'sure' || regrouped,

@@ -4351,3 +4351,13 @@ html .round-btn.is-glass.is-popping:not(#z):not(#y){ animation:ds-glass-pop 120m
 html .round-btn.is-glass:not(#z):not(#y):focus{ outline:none; }
 html .round-btn.is-glass:not(#z):not(#y):focus-visible{ outline:2px solid var(--border-focus); outline-offset:2px; }
 html dialog[tabindex="-1"]:focus{ outline:none; }
+/* Nov 18: under a review row's description, the document's own name when a remembered name replaced it
+   ("Was: Mercat de Sants"): Body/Tiny/Regular, text/secondary, one line. */
+html #ap-review:not(#z) .rv-was{ display:block; margin-top:var(--space-tn); font-size:var(--type-body-tiny-regular-size); font-weight:var(--type-body-tiny-regular-weight); line-height:var(--type-body-tiny-regular-lh); letter-spacing:var(--type-body-tiny-regular-ls); color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* Desktop: the note hangs under the input without moving the row's line (date, fields and value stay centred); the
+   row takes the note's height as extra space below it. */
+@media (min-width:641px){
+  html #ap-review:not(#z) .c-desc{ position:relative; }
+  html #ap-review:not(#z) .rv-was{ position:absolute; top:calc(100% + var(--space-tn)); left:0; right:0; margin-top:0; }
+  html #ap-review:not(#z) .rv-row:has(.rv-was){ margin-bottom:var(--space-md); }
+}

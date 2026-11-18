@@ -9,7 +9,8 @@ import { db, getActiveBoard, getMe, leavePage } from './api.js';
 import { boardMembers, useBoards, useMemberNames } from './boards.js';
 import { AccountNav, firstNameOf } from './AccountBar.jsx';
 import { SharePanel } from './boards/SharePanel.jsx';
-import { AddPanel } from './AddPanel.jsx';
+import { AddPanel, loadMerchants } from './AddPanel.jsx';
+import { MERCHANTS_DOC, renameMerchantGroup } from './merchants.js';
 import { useConfirm } from './ConfirmModal.jsx';
 import { planDeleteSub, planRename } from './rename.js';
 import { useProfile } from './profile.js';
@@ -351,6 +352,8 @@ export default function TrackerApp() {
         for (const x of plan.sets) await db.doc(x.col + '/' + x.id).set(x.doc);
       });
       showToast(`"${from}" is now "${to}" from ${MONTH_ABBR[mi]} ${year} on. Earlier months keep "${from}".`, 'success');
+      // Remembered merchants (merchants.js) follow the new name; quiet on failure.
+      loadMerchants().then((st) => { const r = renameMerchantGroup(st, type, from, to); if (r.changed) return db.doc('settings/' + MERCHANTS_DOC).set(r.store); }).catch(() => {});
     } catch (err) {
       showToast(`Could not rename "${from}".`, 'fail');
       throw err;
