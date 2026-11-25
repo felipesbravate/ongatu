@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -36,11 +36,11 @@ export default function AddScreen() {
 // Phones (native and narrow browsers) keep the sheet / full screen.
 function Shell({ children }: { children: ReactNode }) {
   const wide = useWide();
-  const router = useRouter();
+  const close = useClose();
   if (!wide && Platform.OS === 'web') return (
     <View style={{ flex: 1, backgroundColor: C.surfacePrimary }} nativeID="add-panel">
       <View style={s.navNarrow}>
-        <Pressable nativeID="entry-close-btn" onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close" style={({ pressed }: any) => [s.close, pressed && { transform: [{ scale: 0.94 }] }]}>
+        <Pressable nativeID="entry-close-btn" onPress={close} accessibilityRole="button" accessibilityLabel="Close" style={({ pressed }: any) => [s.close, pressed && { transform: [{ scale: 0.94 }] }]}>
           <Icon name="x" size={24} />
         </Pressable>
       </View>
@@ -50,10 +50,10 @@ function Shell({ children }: { children: ReactNode }) {
   if (!wide) return <>{children}</>;
   return (
     <View style={StyleSheet.absoluteFill}>
-      <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: C.surfaceModal, opacity: 0.35 }]} onPress={() => router.back()} accessibilityLabel="Close" />
+      <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: C.surfaceModal, opacity: 0.35 }]} onPress={close} accessibilityLabel="Close" />
       <View style={s.panel} nativeID="add-panel" accessibilityRole={'dialog' as any} aria-modal>
         <View style={s.nav}>
-          <Pressable nativeID="entry-close-btn" onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close"
+          <Pressable nativeID="entry-close-btn" onPress={close} accessibilityRole="button" accessibilityLabel="Close"
             style={({ pressed, hovered }: any) => [s.close, (hovered || pressed) && { backgroundColor: C.actionSecondaryActive }, pressed && { transform: [{ scale: 0.94 }] }]}>
             <Icon name="x" size={24} />
           </Pressable>
@@ -62,6 +62,17 @@ function Shell({ children }: { children: ReactNode }) {
       </View>
     </View>
   );
+}
+
+// Closing: back to where the panel was opened from. Opened straight from a link (no history), the web build goes to
+// the site's dashboard and the app to Home — before, Close and Save did nothing in that case (bug bash, Nov 25).
+function useClose() {
+  const router = useRouter();
+  return () => {
+    if (router.canGoBack()) router.back();
+    else if (Platform.OS === 'web') location.assign('/');
+    else router.replace('/');
+  };
 }
 
 // Remembered merchants (Nov 18, shared merchants.js): read before the review, written after a save. Quiet on failure.
@@ -94,6 +105,8 @@ function AddEntry() {
   const [periodTouched, setPeriodTouched] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false); // a second press while the first save runs does nothing (bug bash: 3 fast clicks = 3 entries)
+  const close = useClose();
   const wide = useWide();
   const [review, setReviewState] = useState<ReviewState | null>(null);
   const [reviewMeta, setReviewMeta] = useState<{ failed: number; clear: () => void } | null>(null);
@@ -139,17 +152,18 @@ function AddEntry() {
   };
   const closeReview = () => { reviewMeta?.clear(); setReviewState(null); setReviewMeta(null); };
   const submitReview = async () => {
-    if (!review) return;
+    if (!review || saving.current) return;
+    saving.current = true;
     setSubmitting(true);
     try {
       const rows = review.rows;
       const res = await saveEntries(review.period, rows.map((r) => ({ type: r.type, group: r.type === 'expense' ? r.group : null, category: r.type === 'expense' ? r.category : null, item: r.item as string, description: r.description.trim(), amount: r.amount, date: r.date })));
       rememberMerchants(rows.filter((_, i) => !res.failed.includes(i)));
-      if (!res.failed.length) { reviewMeta?.clear(); router.back(); }
+      if (!res.failed.length) { reviewMeta?.clear(); close(); }
       else setReview((rv) => ({ ...rv, rows: rv.rows.filter((_, i) => res.failed.includes(i)), status: { err: true, text: `${res.failed.length} of ${rows.length} couldn't be saved. Try Submit again.` } }));
     } catch (e: any) {
       setReview((rv) => ({ ...rv, status: { err: true, text: e?.message || 'Could not save.' } }));
-    } finally { setSubmitting(false); }
+    } finally { setSubmitting(false); saving.current = false; }
   };
 
   // "Track in" follows the date (when that month exists) until the person picks one.
@@ -159,6 +173,7 @@ function AddEntry() {
   };
 
   const submit = async () => {
+    if (saving.current) return;
     setStatus(null);
     const description = desc.trim();
     const amt = Math.round(parseAmount(amount) * 100) / 100;
@@ -167,14 +182,15 @@ function AddEntry() {
     if (periodMismatch(dateVal, periodKey)) return setStatus(`The date of the entry (${fmtDateEU(dateVal)}) doesn't match the month and year selected (${periodLabel(periodKey)}). Change the date or the month.`);
     if (!(amt > 0)) return setStatus('Enter an amount greater than 0.');
     setBusy(true);
+    saving.current = true;
     try {
       const entry = { type: entryType, group: isExp ? entryGroup : (subVal || null), category: grouped ? (itemCat || null) : null, item: itemVal, description, amount: amt, date: dateVal };
       await saveEntries(periodKey, [entry]);
       rememberMerchants(typedRows([entry])); // Nov 18: the category chosen here comes back on the next upload
-      router.back();
+      close();
     } catch (e: any) {
       setStatus('Could not save: ' + (e?.message || 'unknown error'));
-    } finally { setBusy(false); }
+    } finally { setBusy(false); saving.current = false; }
   };
 
   return (
@@ -219,7 +235,7 @@ function AddEntry() {
           <View style={s.pair}>
             <TextField nativeID="entry-amount" style={{ flex: 1 }} label="Amount" mono placeholder="0,00" keyboardType="decimal-pad" value={amount} onChangeText={setAmount}
               onBlur={() => { if (amount.trim()) setAmount(fmtNum(parseAmount(amount))); }} />
-            <DateField style={{ flex: 1 }} label="Date" value={dateVal} onChange={onDate} min={bounds.min} max={bounds.max} />
+            <DateField nativeID="entry-date" style={{ flex: 1 }} label="Date" value={dateVal} onChange={onDate} min={bounds.min} max={bounds.max} />
           </View>
         </View>
 

@@ -84,6 +84,18 @@ async def main():
                     await q.screenshot(path=f'{OUT}/desktop-review-was.png')
                     await q.click('#rv-cancel'); await q.wait_for_timeout(300)
                     check('desktop: Cancel returns to the form', await q.locator('#entry-desc').count() == 1)
+                    # Bug bash (Nov 25): CSP, keyboard menus, desktop calendar, closing without history.
+                    r = await q.request.get(C.BASE + '/rn/add')
+                    check('desktop: /rn has its own CSP (script-src self, no inline scripts)', "script-src 'self'" in (r.headers.get('content-security-policy') or ''), r.headers.get('content-security-policy'))
+                    await q.focus('#entry-desc'); await q.keyboard.press('Shift+Tab'); await q.keyboard.press('Enter'); await q.wait_for_timeout(300)
+                    await q.keyboard.press('ArrowDown'); await q.keyboard.press('Enter'); await q.wait_for_timeout(300)
+                    check('desktop: keyboard opens a menu, arrows + Enter pick, focus returns', await q.evaluate("document.activeElement && document.activeElement.id") == 'entry-sub'
+                          and 'Variable' in (await q.get_attribute('#entry-sub', 'aria-label')), await q.get_attribute('#entry-sub', 'aria-label'))
+                    await q.click('#entry-date'); await q.wait_for_timeout(300)
+                    check('desktop: the calendar opens as a 320 menu, not the phone sheet', await q.evaluate("(() => { const m = document.querySelector('[role=menu]'); return !!m && Math.round(m.getBoundingClientRect().width) === 320; })()"))
+                    await q.keyboard.press('Escape'); await q.wait_for_timeout(200)
+                    await q.click('#entry-close-btn'); await q.wait_for_timeout(800)
+                    check('desktop: Close with no history goes to the dashboard', q.url.rstrip('/') == C.BASE, q.url)
                 await c2.close()
             # the web app shows the entries the RN build saved
             await pg.goto(C.BASE + '/'); await pg.wait_for_selector('#user-nav'); await pg.wait_for_timeout(800)

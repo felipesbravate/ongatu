@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, Animated, Easing, Modal, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Animated, Easing, Modal, Platform, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { T } from './T';
 import { illustrationAssets } from './illustrationAssets';
@@ -20,7 +20,7 @@ export function BusyOverlay({ message, hint = 'This may take a few seconds.' }: 
     AccessibilityInfo.isReduceMotionEnabled().then((reduce) => {
       if (reduce) return;
       // A damped swing every 1.4 s, like the web's ds-busy-wobble: −6°, +5°, −3°, +2°, rest.
-      const to = (v: number, ms: number) => Animated.timing(turn, { toValue: v, duration: ms, easing: Easing.inOut(Easing.quad), useNativeDriver: true });
+      const to = (v: number, ms: number) => Animated.timing(turn, { toValue: v, duration: ms, easing: Easing.inOut(Easing.quad), useNativeDriver: Platform.OS !== 'web' });
       loop = Animated.loop(Animated.sequence([to(-6, 280), to(5, 280), to(-3, 280), to(2, 280), to(0, 280)]));
       loop.start();
     });

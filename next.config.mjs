@@ -1,3 +1,5 @@
+import { rnCsp } from './src/lib/headers.js';
+
 /** @type {import('next').NextConfig} */
 export default {
   // Keep production checks from overwriting a running development server's chunks.
@@ -16,6 +18,9 @@ export default {
       { key: 'Referrer-Policy', value: 'same-origin' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
-    ] }];
+    ] }, {
+      // The Expo web build (trial): the middleware's nonce CSP doesn't reach static files, so it gets its own.
+      source: '/rn/:path*', headers: [{ key: 'Content-Security-Policy', value: rnCsp() }, { key: 'Cache-Control', value: 'no-store' }],
+    }, { source: '/rn', headers: [{ key: 'Content-Security-Policy', value: rnCsp() }] }];
   },
 };

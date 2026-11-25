@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './supabase';
 import { api, dbPath, loadAll, loadSome, type Collections, type CollectionName } from './api';
@@ -42,6 +42,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setError(null);
       const m = await api<Me>('GET', '/api/me');
       setMe(m);
+      // Web build: an account waiting for approval or blocked goes to the site's page for it, as the web app does
+      // (bug bash, Nov 25: it stayed on "Loading…").
+      if (m.status !== 'approved' && Platform.OS === 'web') { location.assign(m.status === 'blocked' ? '/blocked' : '/pending'); return; }
       if (m.status === 'approved') { setData(await loadAll()); setLoadedAt(Date.now()); }
     } catch (e: any) { setError(e?.message ?? 'Something went wrong'); }
   }, []);

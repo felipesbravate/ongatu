@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { T } from './T';
 import { Icon } from './Icon';
@@ -113,7 +113,13 @@ export function Upload({ model, onRows, onBusy }: { model: any; onRows: (rows: R
                 </View>
                 {d.status === 'preparing' ? <T v="BodyTinyRegular">{d.pct}%</T>
                   : d.status === 'reading' ? null
-                  : <Button label="×" variant="tertiary" size="small" onPress={() => { setStatus(null); reader.remove(d.id); }} />}
+                  : (
+                    // Tiny round X (as the web's .doc-remove), named for screen readers (bug bash: it read "×").
+                    <Pressable onPress={() => { setStatus(null); reader.remove(d.id); }} accessibilityRole="button" accessibilityLabel={'Remove ' + d.name}
+                      style={({ hovered, pressed }: any) => [s.rm, (hovered || pressed) && { backgroundColor: C.actionSecondaryActive }]}>
+                      <Icon name="x" size={16} />
+                    </Pressable>
+                  )}
               </View>
             );
           })}
@@ -137,5 +143,6 @@ const s = StyleSheet.create({
   track: { width: '100%', height: 8, borderRadius: radius.full, backgroundColor: C.surfaceSecondary, overflow: 'hidden' },
   fill: { height: '100%', borderRadius: radius.full, backgroundColor: '#17a768' },
   doc: { flexDirection: 'row', alignItems: 'flex-start', gap: space.xs, minHeight: 32 },
+  rm: { width: 32, height: 32, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center' },
   actions: { flexDirection: 'row', alignItems: 'center', gap: space.md, flexWrap: 'wrap' },
 });

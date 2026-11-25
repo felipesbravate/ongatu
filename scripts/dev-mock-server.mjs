@@ -10,7 +10,7 @@ import { handle, memoryAccounts, memoryProfiles, memoryUsage, pageAccess } from 
 import { Vault, memoryStores } from '../src/lib/vault.js';
 import { boardVaultStores, memoryBoards } from '../src/lib/boards.js';
 import { RateLimiter, parseAdminEmails } from '../src/lib/security.js';
-import { securityHeaders } from '../src/lib/headers.js';
+import { rnCsp, securityHeaders } from '../src/lib/headers.js';
 import { EMAIL_COOKIE, LOGIN_CTX_COOKIE, LOGIN_NAME_COOKIE, cleanCode, cleanEmail, cleanName, encodeCtx, greetingName } from '../src/lib/otp-login.js';
 
 if (process.env.NODE_ENV === 'production') { console.error('mock server must not run in production'); process.exit(1); }
@@ -119,10 +119,12 @@ export const server = createServer(async (req, res) => {
     let decoded; try { decoded = decodeURIComponent(path); } catch { return send(res, 400, 'Bad path'); }
     const file = normalize(join(root, 'public', decoded)); // icon/illustration files have spaces in their names
     if (!file.startsWith(join(root, 'public') + '/')) return send(res, 404, 'Not found');
-    try { return send(res, 200, await readFile(file), { 'content-type': MIME[extname(file)] || 'application/octet-stream' }); }
+    // Trial (Nov 25): the Expo web build gets the same CSP as next.config.mjs gives it.
+    const rnHeaders = path === '/rn' || path.startsWith('/rn/') ? { 'content-security-policy': rnCsp() } : {};
+    try { return send(res, 200, await readFile(file), { 'content-type': MIME[extname(file)] || 'application/octet-stream', ...rnHeaders }); }
     catch {
       // Trial (Nov 25): the Expo web build in public/rn/ is a single-page app, like the next.config.mjs fallback.
-      if (path === '/rn' || path.startsWith('/rn/')) return send(res, 200, await readFile(join(root, 'public', 'rn', 'index.html')), { 'content-type': 'text/html; charset=utf-8' });
+      if (path === '/rn' || path.startsWith('/rn/')) return send(res, 200, await readFile(join(root, 'public', 'rn', 'index.html')), { 'content-type': 'text/html; charset=utf-8', ...rnHeaders });
       return send(res, 404, 'Not found');
     }
   } catch (e) { console.error(e); send(res, 500, 'error'); }

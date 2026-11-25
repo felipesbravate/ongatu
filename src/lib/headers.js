@@ -37,3 +37,24 @@ export function trackerCsp(nonce, o = {}) {
     "frame-ancestors 'none'",
   ].join('; ');
 }
+
+/**
+ * CSP for the Expo web build under /rn (trial, Nov 25). Its index.html is a static export, so it cannot carry a
+ * per-request nonce; the bundle is a same-origin file, so 'self' allows exactly it (and pdf.js from /vendor). Styles:
+ * react-native-web injects <style> tags at runtime ('unsafe-inline', as the tracker page). Fonts are bundled files.
+ */
+export function rnCsp() {
+  return [
+    "default-src 'none'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
+    "img-src 'self' data: blob:",
+    "connect-src 'self'",
+    "worker-src 'self' blob:",
+    "manifest-src 'self'",
+    "base-uri 'none'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join('; ');
+}
