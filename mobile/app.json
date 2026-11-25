@@ -28,7 +28,12 @@
       "expo-font"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/rn"
+    },
+    "web": {
+      "output": "single",
+      "bundler": "metro"
     }
   }
 }

@@ -120,7 +120,11 @@ export const server = createServer(async (req, res) => {
     const file = normalize(join(root, 'public', decoded)); // icon/illustration files have spaces in their names
     if (!file.startsWith(join(root, 'public') + '/')) return send(res, 404, 'Not found');
     try { return send(res, 200, await readFile(file), { 'content-type': MIME[extname(file)] || 'application/octet-stream' }); }
-    catch { return send(res, 404, 'Not found'); }
+    catch {
+      // Trial (Nov 25): the Expo web build in public/rn/ is a single-page app, like the next.config.mjs fallback.
+      if (path === '/rn' || path.startsWith('/rn/')) return send(res, 200, await readFile(join(root, 'public', 'rn', 'index.html')), { 'content-type': 'text/html; charset=utf-8' });
+      return send(res, 404, 'Not found');
+    }
   } catch (e) { console.error(e); send(res, 500, 'error'); }
 });
 

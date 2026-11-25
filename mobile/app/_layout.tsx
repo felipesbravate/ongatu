@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,6 +22,8 @@ function Gate() {
   useEffect(() => {
     if (!ready) return;
     const inAuth = segments[0] === 'sign-in';
+    // Web (trial, Nov 25): the site's own /login signs in; the page only runs behind its cookie.
+    if (!session && Platform.OS === 'web') { location.assign('/login'); return; }
     if (!session && !inAuth) router.replace('/sign-in');
     else if (session && inAuth) router.replace('/');
   }, [session, ready, segments]);
@@ -31,7 +34,9 @@ function Gate() {
       {/* Notifications (Okara 228:455 State=Mobile): a full screen pushed over the tabs. */}
       <Stack.Screen name="notifications" options={{ contentStyle: { backgroundColor: color.surfacePrimary } }} />
       {/* Add entry opens as a native iOS sheet with detents; drag down to close. */}
-      <Stack.Screen name="add" options={{ presentation: 'formSheet', sheetAllowedDetents: [0.6, 1], sheetGrabberVisible: true, sheetCornerRadius: 24, contentStyle: { backgroundColor: color.surfacePrimary } }} />
+      <Stack.Screen name="add" options={Platform.OS === 'web'
+        ? { presentation: 'transparentModal', animation: 'none', contentStyle: { backgroundColor: 'transparent' } } // web: AddScreen draws its own panel
+        : { presentation: 'formSheet', sheetAllowedDetents: [0.6, 1], sheetGrabberVisible: true, sheetCornerRadius: 24, contentStyle: { backgroundColor: color.surfacePrimary } }} />
     </Stack>
   );
 }

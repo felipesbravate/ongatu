@@ -230,11 +230,13 @@ export const opacity = {
 export const text = {
   "DisplayTitle": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 40
+    "fontSize": 40,
+    "lineHeight": 48
   },
   "DisplayTitleMobile": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 32
+    "fontSize": 32,
+    "lineHeight": 48
   },
   "Value2XL": {
     "fontFamily": "MartianMono_500Medium",
@@ -262,75 +264,220 @@ export const text = {
   },
   "HeadingXL": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 24
+    "fontSize": 24,
+    "lineHeight": 24
   },
   "HeadingLarge": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 20
+    "fontSize": 20,
+    "lineHeight": 24
   },
   "HeadingMedium": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 16
+    "fontSize": 16,
+    "lineHeight": 20
   },
   "HeadingSmall": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 14
+    "fontSize": 14,
+    "lineHeight": 14
   },
   "BodyDefaultRegular": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 16
+    "fontSize": 16,
+    "lineHeight": 20
   },
   "BodyDefaultBold": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 16
+    "fontSize": 16,
+    "lineHeight": 20
   },
   "BodySmallRegular": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 14
+    "fontSize": 14,
+    "lineHeight": 16
   },
   "BodySmallMedium": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 14
+    "fontSize": 14,
+    "lineHeight": 16
   },
   "BodyTinyRegular": {
     "fontFamily": "Inter_400Regular",
-    "fontSize": 12
+    "fontSize": 12,
+    "lineHeight": 14
   },
   "BodyTinyMedium": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 12
+    "fontSize": 12,
+    "lineHeight": 14
   },
   "BadgeMedium": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 8
+    "fontSize": 8,
+    "lineHeight": 8
   },
   "LabelTab": {
     "fontFamily": "Geist_500Medium",
-    "fontSize": 18
+    "fontSize": 18,
+    "lineHeight": 20
   },
   "LabelLarge": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 18
+    "fontSize": 18,
+    "lineHeight": 20
   },
   "LabelDefault": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 16
+    "fontSize": 16,
+    "lineHeight": 24
   },
   "LabelSmall": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 16
+    "fontSize": 16,
+    "lineHeight": 20
   },
   "LabelTiny": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 14
+    "fontSize": 14,
+    "lineHeight": 16
   },
   "LabelMicro": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 12
+    "fontSize": 12,
+    "lineHeight": 16
   },
   "LabelNano": {
     "fontFamily": "Inter_500Medium",
-    "fontSize": 10
+    "fontSize": 10,
+    "lineHeight": 14
+  }
+} as const;
+
+export const textDesktop = {
+  "DisplayTitle": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 32,
+    "lineHeight": 38
+  },
+  "DisplayTitleMobile": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 24,
+    "lineHeight": 38
+  },
+  "Value2XL": {
+    "fontFamily": "MartianMono_500Medium",
+    "fontSize": 48,
+    "lineHeight": 40
+  },
+  "ValueXL": {
+    "fontFamily": "MartianMono_500Medium",
+    "fontSize": 24,
+    "lineHeight": 26
+  },
+  "ValueLarge": {
+    "fontFamily": "MartianMono_400Regular",
+    "fontSize": 14
+  },
+  "ValueMedium": {
+    "fontFamily": "MartianMono_400Regular",
+    "fontSize": 12,
+    "letterSpacing": -0.48
+  },
+  "ValueSmall": {
+    "fontFamily": "MartianMono_400Regular",
+    "fontSize": 11,
+    "letterSpacing": -0.44
+  },
+  "HeadingXL": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 20,
+    "lineHeight": 20
+  },
+  "HeadingLarge": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 16,
+    "lineHeight": 20
+  },
+  "HeadingMedium": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 14,
+    "lineHeight": 16
+  },
+  "HeadingSmall": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 12,
+    "lineHeight": 12
+  },
+  "BodyDefaultRegular": {
+    "fontFamily": "Inter_400Regular",
+    "fontSize": 14,
+    "lineHeight": 16
+  },
+  "BodyDefaultBold": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 14,
+    "lineHeight": 16
+  },
+  "BodySmallRegular": {
+    "fontFamily": "Inter_400Regular",
+    "fontSize": 12,
+    "lineHeight": 14
+  },
+  "BodySmallMedium": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 12,
+    "lineHeight": 14
+  },
+  "BodyTinyRegular": {
+    "fontFamily": "Inter_400Regular",
+    "fontSize": 11,
+    "lineHeight": 12
+  },
+  "BodyTinyMedium": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 11,
+    "lineHeight": 12
+  },
+  "BadgeMedium": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 8,
+    "lineHeight": 8
+  },
+  "LabelTab": {
+    "fontFamily": "Geist_500Medium",
+    "fontSize": 18,
+    "lineHeight": 16
+  },
+  "LabelLarge": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 18,
+    "lineHeight": 16
+  },
+  "LabelDefault": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 14,
+    "lineHeight": 20
+  },
+  "LabelSmall": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 14,
+    "lineHeight": 16
+  },
+  "LabelTiny": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 12,
+    "lineHeight": 14
+  },
+  "LabelMicro": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 11,
+    "lineHeight": 14
+  },
+  "LabelNano": {
+    "fontFamily": "Inter_500Medium",
+    "fontSize": 10,
+    "lineHeight": 12
   }
 } as const;
 

@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { AppState } from 'react-native';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './supabase';
-import { api, loadAll, loadSome, type Collections, type CollectionName } from './api';
+import { api, dbPath, loadAll, loadSome, type Collections, type CollectionName } from './api';
 import { createModel, yearsFromDocs } from './shared';
 
 type Me = { email: string; status: 'approved' | 'pending' | 'blocked'; isAdmin: boolean; name: string | null };
@@ -56,7 +56,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => { await supabase.auth.signOut(); }, []);
   const write = useCallback(async <T,>(fn: (db: Writer) => Promise<T>) => {
     const dirty = new Set<CollectionName>();
-    const path = (col: CollectionName, id?: string) => '/api/db/' + col + (id ? '/' + encodeURIComponent(id) : '');
+    const path = dbPath;
     const db: Writer = {
       add: async (col, doc) => { dirty.add(col); return (await api<{ id: string }>('POST', path(col), doc)).id; },
       set: async (col, id, doc) => { dirty.add(col); await api('PUT', path(col, id), doc); },

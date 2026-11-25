@@ -27,6 +27,9 @@ export const COLLECTIONS = ['entries', 'years', 'overrides', 'budgets', 'budgetD
 export type CollectionName = (typeof COLLECTIONS)[number];
 export type Collections = Record<CollectionName, any[]>;
 
+/** Where a collection lives (the phone app only knows the personal board). */
+export const dbPath = (col: string, id?: string) => '/api/db/' + col + (id ? '/' + encodeURIComponent(id) : '');
+
 export async function loadAll(): Promise<Collections> {
   const lists = await Promise.all(COLLECTIONS.map((c) => api<{ docs: { id: string; data: any }[] }>('GET', '/api/db/' + c)));
   return Object.fromEntries(COLLECTIONS.map((c, i) => [c, lists[i].docs.map((d) => ({ id: d.id, ...d.data }))])) as Collections;
